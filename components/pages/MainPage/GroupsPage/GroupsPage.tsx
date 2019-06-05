@@ -14,7 +14,7 @@ export default class GroupsPage extends Component<IGroupsPageProps, IGroupsPageS
     render(): JSX.Element {
         return (
             <>
-                <View style={[styles.scene, { backgroundColor: "#FFC681" }]} />
+                <View style={[styles.scene, { backgroundColor: "white" }]} />
             </>
         );
     }
