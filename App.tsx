@@ -1,22 +1,39 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Styles } from "./ts-tools/Styles";
+import { AppLoading } from "expo";
+import {
+    Provider as PaperProvider,
+    DarkTheme,
+    DefaultTheme,
+} from "react-native-paper";
+import { StatusBar } from "react-native";
+import Main from "./components/pages/Main/Main";
 
-export default class App extends Component {
-  render(): JSX.Element {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
-    );
-  }
+interface IAppState {
+    resourcesLoaded: boolean;
 }
 
-const styles: Styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default class App extends Component<void, IAppState> {
+    state: IAppState = {
+        resourcesLoaded: true,
+    };
+
+    /*async componentDidMount(): Promise<void> {
+        await loadFonts();
+        this.setState({ resourcesLoaded: true });
+    }*/
+    
+    componentDidMount(): void {
+    }
+
+    render(): JSX.Element {
+        if (!this.state.resourcesLoaded) {
+            return <AppLoading />;
+        }
+
+        return (
+            <PaperProvider theme={DefaultTheme /*DarkTheme*/}>
+                <Main />
+            </PaperProvider>
+        );
+    }
+}
