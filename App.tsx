@@ -6,7 +6,7 @@ import {
     DefaultTheme,
 } from "react-native-paper";
 import { StatusBar } from "react-native";
-import Main from "./components/pages/Main/Main";
+import MainPage from "./components/pages/MainPage/MainPage";
 
 interface IAppState {
     resourcesLoaded: boolean;
@@ -32,7 +32,7 @@ export default class App extends Component<void, IAppState> {
 
         return (
             <PaperProvider theme={DefaultTheme /*DarkTheme*/}>
-                <Main />
+                <MainPage />
             </PaperProvider>
         );
     }
