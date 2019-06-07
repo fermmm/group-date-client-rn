@@ -27,7 +27,7 @@ export default class ImagesScroll extends Component<IImagesScrollProps, IImagesS
 
         return (
             <View style={[{ height: 200 }, style]} onLayout={e => this.setState({ imagesWidth: e.nativeEvent.layout.width, imagesHeight: e.nativeEvent.layout.height })}>
-                <ScrollView style={[scrollViewStyle]} horizontal={true} pagingEnabled={true}>
+                <ScrollView style={[scrollViewStyle]} horizontal={true} pagingEnabled={true} >
                     {
                         images.map((value: string, i: number) =>
                             !onImageClick
