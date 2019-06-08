@@ -1,3 +1,9 @@
 import { Theme } from "react-native-paper/typings";
 
-export interface IThemed { theme: Theme; }
+export interface ITheme extends Theme{
+    backgroundImage?: {};
+}
+
+export interface IThemed { 
+    theme: ITheme; 
+}

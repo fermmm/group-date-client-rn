@@ -23,7 +23,7 @@ export default class ImagesScroll extends Component<IImagesScrollProps, IImagesS
 
     render(): JSX.Element {
         const { imagesWidth, imagesHeight }: Partial<IImagesScrollState> = this.state;
-        const { images, style, imagesStyle, scrollViewStyle, onImageClick, renderImage }: Partial<IImagesScrollProps> = this.props;
+        const { images, style, imagesStyle, scrollViewStyle, onImageClick }: Partial<IImagesScrollProps> = this.props;
 
         return (
             <View style={[{ height: 200 }, style]} onLayout={e => this.setState({ imagesWidth: e.nativeEvent.layout.width, imagesHeight: e.nativeEvent.layout.height })}>

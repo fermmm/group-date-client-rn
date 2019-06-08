@@ -6,12 +6,12 @@ export default {
   dark: false,
   roundness: 4,
   colors: {
-    primary: "#C56A6A",
-    accent: "#CD7E83",
+    primary: "#D08686",
+    accent: "#F9F5F6",
     background: "#634865",
     surface: "#835A74",
     error: "#FF7A8F",
-    text: "#DCC4CA",
+    text: "#F6EFF1",
     disabled: color("#DCC4CA")
       .alpha(0.26)
       .rgb()
@@ -27,6 +27,7 @@ export default {
     notification: pinkA400,
   },
   fonts,
+  backgroundImage: require("../../assets/backgroundLight3.png"),
   animation: {
     scale: 1.0,
   },

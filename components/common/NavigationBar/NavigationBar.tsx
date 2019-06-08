@@ -41,7 +41,7 @@ class NavigationBar extends Component<INavBarProps, INavBarState> {
                         renderIcon={({ route, focused }) =>
                             <Icon
                                 name={route.icon}
-                                color={focused ? colors.text : colors.accent}
+                                color={focused ? colors.accent : colors.primary}
                                 size={22}
                             />
                         }

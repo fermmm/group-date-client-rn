@@ -1,10 +1,13 @@
 import React, { Component } from "react";
-import { ImageProps, Image, StatusBar } from "react-native";
-import { Card, Paragraph } from "react-native-paper";
+import color from "color";
+import { ImageProps, Image, StatusBar, StyleSheet, ImageBackground, ImageStyle } from "react-native";
+import { Card, Paragraph, withTheme, Theme } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
+import { Styles } from "../../../common-tools/ts-tools/Styles";
+import { IThemed, ITheme } from "../../../common-tools/ts-tools/Themed";
 
-export interface IProfileCardProps {
+export interface IProfileCardProps extends IThemed {
     images: string[];
 }
 
@@ -13,7 +16,7 @@ export interface IProfileCardState {
     imageSelected: number;
 }
 
-export default class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
+class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
     state: IProfileCardState = {
         renderImageModal: false,
         imageSelected: 0,
@@ -22,17 +25,27 @@ export default class ProfileCard extends Component<IProfileCardProps, IProfileCa
     render(): JSX.Element {
         const { images }: Partial<IProfileCardProps> = this.props;
         const { renderImageModal, imageSelected }: Partial<IProfileCardState> = this.state;
+        const { colors, backgroundImage }: ITheme = this.props.theme;
+
         StatusBar.setHidden(renderImageModal, "slide");
         return (
-            <Card>
-                <ImagesScroll
-                    images={images}
-                    style={{ height: 250 }}
-                    onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
-                    renderImage={(image: string, imageProps: ImageProps) =>
-                        <Image {...imageProps} key={image} />
-                    }
-                />
+            <Card style={{ backgroundColor: color("black").alpha(0.3) } as unknown}>
+                <ImageBackground source={backgroundImage} style={{ width: "100%", height: 300 }}>
+                    <ImagesScroll
+                        images={images}
+                        style={{ height: 300 }}
+                        imagesStyle={{ backgroundColor: color("black").alpha(0.25) } as unknown}
+                        onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
+                        renderImage={(image: string, imageProps: ImageProps) =>
+                            <Image
+                                {...imageProps}
+                                resizeMethod={"resize"}
+                                resizeMode={"contain"}
+                                key={image}
+                            />
+                        }
+                    />
+                </ImageBackground>
                 {
                     renderImageModal === true &&
                     <ImagesModal
@@ -43,13 +56,21 @@ export default class ProfileCard extends Component<IProfileCardProps, IProfileCa
                     />
                 }
                 <Card.Title
-                    title="Malumaa"
-                    subtitle="25 · Caballito"
+                    title="martukrasinsky"
+                    subtitle="28 · Caballito"
                 />
                 <Card.Content>
-                    <Paragraph>Descripcion</Paragraph>
+                    <Paragraph>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </Paragraph>
                 </Card.Content>
             </Card>
         );
     }
 }
+
+const styles: Styles = StyleSheet.create({
+    smallImage: {
+        backgroundColor: "black",
+    },
+});
+
+export default withTheme(ProfileCard);

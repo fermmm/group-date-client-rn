@@ -41,7 +41,7 @@
     "no-any": true,
     "no-object": true,
     "ban-ts-ignore-except-imports": true,
-    "no-require-imports": true,
+    "no-require-imports": false,
     "max-line-length": [false],
     "no-var-requires": false,
     "ordered-imports": false,
