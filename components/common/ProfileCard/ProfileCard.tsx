@@ -28,14 +28,19 @@ export default class ProfileCard extends Component<IProfileCardProps, IProfileCa
                 <ImagesScroll
                     images={images}
                     style={{ height: 250 }}
-                    onImageClick={(i: number) => this.setState({imageSelected: i, renderImageModal: true})}
+                    onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
                     renderImage={(image: string, imageProps: ImageProps) =>
                         <Image {...imageProps} key={image} />
                     }
                 />
                 {
-                    renderImageModal === true && 
-                        <ImagesModal visible={renderImageModal} images={images} initialPage={imageSelected} onClose={() => this.setState({renderImageModal: false})}/>
+                    renderImageModal === true &&
+                    <ImagesModal
+                        visible={renderImageModal}
+                        images={images}
+                        initialPage={imageSelected}
+                        onClose={() => this.setState({ renderImageModal: false })}
+                    />
                 }
                 <Card.Title
                     title="Malumaa"

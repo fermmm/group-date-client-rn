@@ -3,8 +3,11 @@ import { StyleSheet, Dimensions, StatusBar } from "react-native";
 import { TabView, SceneMap, TabBar, Route } from "react-native-tab-view";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
+import { IThemed } from "../../../common-tools/ts-tools/Themed";
+import { withTheme } from "react-native-paper";
+import { Theme } from "react-native-paper/typings";
 
-interface INavBarProps {
+interface INavBarProps extends IThemed {
     sections: { [key: string]: () => JSX.Element };
     routes: Route[];
 }
@@ -13,28 +16,32 @@ interface INavBarState {
     index: number;
 }
 
-export default class NavigationBar extends Component<INavBarProps, INavBarState> {
+class NavigationBar extends Component<INavBarProps, INavBarState> {
     state: INavBarState = {
         index: 0,
     };
 
     render(): JSX.Element {
+        const { routes }: INavBarProps = this.props;
+        const { colors }: Theme = this.props.theme;
+        const { index }: INavBarState = this.state;
+
         return (
             <TabView
                 swipeEnabled={false}
-                navigationState={{index: this.state.index, routes: this.props.routes}}
+                navigationState={{index, routes}}
                 renderScene={SceneMap(this.props.sections)}
-                onIndexChange={index => this.setState({ index })}
+                onIndexChange={i => this.setState({ index: i })}
                 initialLayout={{ width: Dimensions.get("window").width }}
                 renderTabBar={props =>
                     <TabBar
                         {...props}
-                        indicatorStyle={{ backgroundColor: "white" }}
-                        style={styles.tabBar}
-                        renderIcon={({ route, focused, color }) =>
+                        indicatorStyle={{ backgroundColor: colors.primary }}
+                        style={[styles.tabBar, {backgroundColor: colors.surface}]}
+                        renderIcon={({ route, focused }) =>
                             <Icon
                                 name={route.icon}
-                                color={color}
+                                color={focused ? colors.text : colors.accent}
                                 size={22}
                             />
                         }
@@ -47,7 +54,8 @@ export default class NavigationBar extends Component<INavBarProps, INavBarState>
 
 const styles: Styles = StyleSheet.create({
     tabBar: {
-        backgroundColor: "#01B3A2",
         paddingTop: StatusBar.currentHeight,
     },
 });
+
+export default withTheme(NavigationBar);

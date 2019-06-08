@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import { AppLoading } from "expo";
-import {
-    Provider as PaperProvider,
-    DarkTheme,
-    DefaultTheme,
-} from "react-native-paper";
-import { StatusBar } from "react-native";
+import { Provider as PaperProvider } from "react-native-paper";
 import MainPage from "./components/pages/MainPage/MainPage";
+import LightTheme from "./common-tools/themes/LightTheme";
+import DarkTheme from "./common-tools/themes/DarkTheme";
 
 interface IAppState {
     resourcesLoaded: boolean;
@@ -31,7 +28,7 @@ export default class App extends Component<void, IAppState> {
         }
 
         return (
-            <PaperProvider theme={DefaultTheme /*DarkTheme*/}>
+            <PaperProvider theme={LightTheme /*DarkTheme*/}>
                 <MainPage />
             </PaperProvider>
         );
