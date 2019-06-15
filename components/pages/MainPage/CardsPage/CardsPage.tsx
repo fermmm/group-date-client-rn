@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, View, ImageBackground } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import ProfileCard from "../../../common/ProfileCard/ProfileCard";
 import { IThemed } from "../../../../common-tools/ts-tools/Themed";
 import { withTheme } from "react-native-paper";
 import { Theme } from "react-native-paper/typings";
 
-export interface ICardsPageProps extends IThemed {}
+export interface ICardsPageProps extends IThemed { }
 export interface ICardsPageState { }
 
 class CardsPage extends Component<ICardsPageProps, ICardsPageState> {
@@ -22,17 +22,20 @@ class CardsPage extends Component<ICardsPageProps, ICardsPageState> {
         const { colors }: Theme = this.props.theme;
 
         return (
-            // <ImageBackground source={require("../../../../assets/backgroundLight2.png")} style={{width: "100%", height: "100%"}}>
-                <View style={[styles.scene, {backgroundColor: colors.background}]}>
-                    <ProfileCard images={this.images} />
-                </View>
+            // <ImageBackground source={require("../../../../assets/backgroundLight3.png")} style={{width: "100%", height: "100%"}}>
+            <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
+                <ProfileCard 
+                    images={this.images}
+                    showLikeDislikeButtons={true} 
+                />
+            </View>
             // </ImageBackground>
         );
     }
 }
 
 const styles: Styles = StyleSheet.create({
-    scene: {
+    mainContainer: {
         flex: 1,
         padding: 5,
     },

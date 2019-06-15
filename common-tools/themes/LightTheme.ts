@@ -9,9 +9,11 @@ export default {
     primary: "#D08686",
     accent: "#F9F5F6",
     background: "#634865",
+    background2: "#392F3A",
     surface: "#835A74",
     error: "#FF7A8F",
     text: "#F6EFF1",
+    text2: "#C7BBC9",
     disabled: color("#DCC4CA")
       .alpha(0.26)
       .rgb()
