@@ -81,8 +81,8 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
                         <LinearGradient
                             locations={[0, 1.0]}
                             colors={[
-                                color(colors.background).alpha(0).string(),
-                                color(colors.background).alpha(1).darken(0.5).string(),
+                                color(colors.background2).alpha(0).string(),
+                                color(colors.background2).alpha(1).darken(0.5).string(),
                             ]}
                             style={styles.bottomGradient}
                         />
@@ -105,6 +105,8 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
             return;
         }
 
+        this.scrolledToBottom = scrolledToBottom;
+
         Animated.timing(
             this.state.bottomFadeOpacity,
             {
@@ -112,8 +114,6 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
                 duration: 300,
             },
         ).start();
-
-        this.scrolledToBottom = scrolledToBottom;
     }
 }
 

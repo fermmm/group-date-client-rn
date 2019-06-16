@@ -9,7 +9,7 @@ export default {
     primary: "#D08686",
     accent: "#F9F5F6",
     background: "#634865",
-    background2: "#392F3A",
+    background2: "#363E44",
     surface: "#835A74",
     error: "#FF7A8F",
     text: "#F6EFF1",
