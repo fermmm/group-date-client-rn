@@ -19,7 +19,11 @@ export interface IProfileCardState {
     renderImageModal: boolean;
     imageSelected: number;
     bottomFadeOpacity: Animated.Value;
+    contentHeight: number;
+    viewportHeight: number;
 }
+
+// TODO: The bottom gradient should be part of the ScrollExtended component.
 
 class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
     scrolledToBottom: boolean;
@@ -27,25 +31,44 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
     state: IProfileCardState = {
         renderImageModal: false,
         imageSelected: 0,
-        bottomFadeOpacity: new Animated.Value(1),
+        bottomFadeOpacity: new Animated.Value(0),
+        contentHeight: 0,
+        viewportHeight: 0,
     };
 
     render(): JSX.Element {
         const { images, showLikeDislikeButtons }: Partial<IProfileCardProps> = this.props;
-        const { renderImageModal, imageSelected, bottomFadeOpacity }: Partial<IProfileCardState> = this.state;
+        const { renderImageModal, imageSelected, bottomFadeOpacity, contentHeight, viewportHeight }: Partial<IProfileCardState> = this.state;
         const { colors, backgroundImage }: ITheme = this.props.theme;
 
         StatusBar.setHidden(renderImageModal, "slide");
+
         return (
             <View style={[styles.mainContainer, { paddingBottom: showLikeDislikeButtons ? styles.mainContainer.paddingBottom : 0 }]}>
                 <View style={[styles.scrollContainer]}>
-                    <ScrollViewExtended style={styles.scrollView} onBottomDetector={(s) => this.onScroll(s)}>
+                    <ScrollViewExtended 
+                        style={[styles.scrollView]} 
+                        onBottomDetector={(s) => this.onScroll(s)} 
+                        onContentSizeChange={(w, h) => this.setState({contentHeight: h})}
+                        onLayout={e => {
+                            const vh: number = e.nativeEvent.layout.height;
+                            this.setState({viewportHeight: vh});
+
+                            Animated.timing(
+                                this.state.bottomFadeOpacity,
+                                {
+                                    toValue: contentHeight > vh ? 1 : 0,
+                                    duration: 300,
+                                },
+                            ).start();
+                        }}
+                    >
                         <Card style={[styles.card, { backgroundColor: colors.background2 }]}>
                             <ImageBackground source={backgroundImage} style={styles.galleryBackground}>
                                 <ImagesScroll
                                     images={images}
                                     style={styles.galleryScroll}
-                                    imagesStyle={{ backgroundColor: color("black").alpha(0.25) } as unknown}
+                                    imagesStyle={{ backgroundColor: color("black").alpha(0.25).string() }}
                                     onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
                                     renderImage={(image: string, imageProps: ImageProps) =>
                                         <Image
@@ -69,15 +92,17 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
                             <Card.Title
                                 title="martukrasinsky"
                                 subtitle="28 · Caballito"
-                                titleStyle={{ color: colors.text2 } as unknown}
-                                subtitleStyle={{ color: colors.text2 } as unknown}
+                                titleStyle={{ color: colors.text2 }}
+                                subtitleStyle={{ color: colors.text2 }}
                             />
                             <Card.Content>
-                                <Paragraph style={{ color: colors.text2 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </Paragraph>
+                                <Paragraph style={{ color: colors.text2 }}>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 
+                                </Paragraph>
                             </Card.Content>
                         </Card>
                     </ScrollViewExtended>
-                    <Animated.View style={{ opacity: bottomFadeOpacity as unknown as number }}>
+                    <Animated.View style={{ opacity: bottomFadeOpacity }}>
                         <LinearGradient
                             locations={[0, 1.0]}
                             colors={[
@@ -126,10 +151,10 @@ const styles: Styles<IGenericStyle> = StyleSheet.create({
         paddingBottom: 35,          // The bottom padding under the like-dislike buttons (only applied when buttons are present). 
     },
     scrollContainer: {
-
+        
     },
     scrollView: {
-        height: "auto",
+        flexGrow: 0,
     },
     card: {
         paddingBottom: 30,          // Bottom padding to prevent like-dislike buttons from covering text when scrolled all the way down. (Only applied if the like-dislike buttons are visible).
