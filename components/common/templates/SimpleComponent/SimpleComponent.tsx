@@ -8,6 +8,10 @@ export interface IProps extends IThemed {}
 export interface IState {}
 
 class SimpleComponent extends Component<IProps, IState> {
+    static defaultProps: Partial<IProps> = {
+        
+    };
+
     render(): JSX.Element {
         const { colors }: ITheme = this.props.theme;
         
@@ -19,7 +23,7 @@ class SimpleComponent extends Component<IProps, IState> {
 }
 
 const styles: Styles = StyleSheet.create({
-    example: {
+    mainContainer: {
         flex: 1,
     },
 });

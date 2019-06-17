@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import color from "color";
-import { ImageProps, Image, StatusBar, StyleSheet, ImageBackground, View, Animated } from "react-native";
+import { ImageProps, Image, StatusBar, StyleSheet, ImageBackground, View } from "react-native";
 import { Card, Paragraph, withTheme } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
-import { Styles, IGenericStyle } from "../../../common-tools/ts-tools/Styles";
+import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { IThemed, ITheme } from "../../../common-tools/ts-tools/Themed";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
-import { LinearGradient } from "expo";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
 
 export interface IProfileCardProps extends IThemed {
@@ -18,51 +17,26 @@ export interface IProfileCardProps extends IThemed {
 export interface IProfileCardState {
     renderImageModal: boolean;
     imageSelected: number;
-    bottomFadeOpacity: Animated.Value;
-    contentHeight: number;
-    viewportHeight: number;
 }
 
-// TODO: The bottom gradient should be part of the ScrollExtended component.
-
 class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
-    scrolledToBottom: boolean;
-
     state: IProfileCardState = {
         renderImageModal: false,
         imageSelected: 0,
-        bottomFadeOpacity: new Animated.Value(0),
-        contentHeight: 0,
-        viewportHeight: 0,
+
     };
 
     render(): JSX.Element {
         const { images, showLikeDislikeButtons }: Partial<IProfileCardProps> = this.props;
-        const { renderImageModal, imageSelected, bottomFadeOpacity, contentHeight, viewportHeight }: Partial<IProfileCardState> = this.state;
+        const { renderImageModal, imageSelected }: Partial<IProfileCardState> = this.state;
         const { colors, backgroundImage }: ITheme = this.props.theme;
 
         StatusBar.setHidden(renderImageModal, "slide");
 
         return (
             <View style={[styles.mainContainer, { paddingBottom: showLikeDislikeButtons ? styles.mainContainer.paddingBottom : 0 }]}>
-                <View style={[styles.scrollContainer]}>
-                    <ScrollViewExtended 
-                        style={[styles.scrollView]} 
-                        onBottomDetector={(s) => this.onScroll(s)} 
-                        onContentSizeChange={(w, h) => this.setState({contentHeight: h})}
-                        onLayout={e => {
-                            const vh: number = e.nativeEvent.layout.height;
-                            this.setState({viewportHeight: vh});
-
-                            Animated.timing(
-                                this.state.bottomFadeOpacity,
-                                {
-                                    toValue: contentHeight > vh ? 1 : 0,
-                                    duration: 300,
-                                },
-                            ).start();
-                        }}
-                    >
+                <View>
+                    <ScrollViewExtended style={[styles.scrollView]} showBottomGradient={true} bottomGradientColor={colors.background2}>
                         <Card style={[styles.card, { backgroundColor: colors.background2 }]}>
                             <ImageBackground source={backgroundImage} style={styles.galleryBackground}>
                                 <ImagesScroll
@@ -102,16 +76,6 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
                             </Card.Content>
                         </Card>
                     </ScrollViewExtended>
-                    <Animated.View style={{ opacity: bottomFadeOpacity }}>
-                        <LinearGradient
-                            locations={[0, 1.0]}
-                            colors={[
-                                color(colors.background2).alpha(0).string(),
-                                color(colors.background2).alpha(1).darken(0.5).string(),
-                            ]}
-                            style={styles.bottomGradient}
-                        />
-                    </Animated.View>
                     {
                         showLikeDislikeButtons &&
                         <LikeDislikeButtons
@@ -124,34 +88,15 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
             </View>
         );
     }
-
-    onScroll(scrolledToBottom: boolean): void {
-        if (this.scrolledToBottom === scrolledToBottom) {
-            return;
-        }
-
-        this.scrolledToBottom = scrolledToBottom;
-
-        Animated.timing(
-            this.state.bottomFadeOpacity,
-            {
-                toValue: scrolledToBottom ? 0 : 1,
-                duration: 300,
-            },
-        ).start();
-    }
 }
 
-const styles: Styles<IGenericStyle> = StyleSheet.create({
+const styles: Styles = StyleSheet.create({
     mainContainer: {
         height: "auto",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         paddingBottom: 35,          // The bottom padding under the like-dislike buttons (only applied when buttons are present). 
-    },
-    scrollContainer: {
-        
     },
     scrollView: {
         flexGrow: 0,
@@ -165,12 +110,6 @@ const styles: Styles<IGenericStyle> = StyleSheet.create({
     galleryBackground: {
         width: "100%",
         height: "auto",
-    },
-    bottomGradient: {
-        position: "absolute",
-        bottom: 0,
-        width: "100%",
-        height: 80,                 // This controls the height of the bottom "fade gradient"
     },
     likeDislikeButtons: {
         alignSelf: "center",        // This controls the horizontal position of the buttons.
