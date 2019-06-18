@@ -3,7 +3,7 @@ import { pinkA400 } from "react-native-paper/src/styles/colors";
 import fonts from "react-native-paper/src/styles/fonts";
 
 export default {
-  dark: false,
+  dark: true,
   roundness: 4,
   colors: {
     primary: "#D08686",

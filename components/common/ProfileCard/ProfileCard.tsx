@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import color from "color";
-import { ImageProps, Image, StatusBar, StyleSheet, ImageBackground, View } from "react-native";
+import { ImageProps, Image, StatusBar, StyleSheet, ImageBackground, View, Dimensions } from "react-native";
 import { Card, Paragraph, withTheme } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
@@ -36,7 +36,7 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
         return (
             <View style={[styles.mainContainer, { paddingBottom: showLikeDislikeButtons ? styles.mainContainer.paddingBottom : 0 }]}>
                 <View>
-                    <ScrollViewExtended style={[styles.scrollView]} showBottomGradient={true} bottomGradientColor={colors.background2}>
+                    <ScrollViewExtended style={[styles.scrollView]} showBottomGradient={true} bottomGradientColor={colors.background2} indicatorStyle={"white"}>
                         <Card style={[styles.card, { backgroundColor: colors.background2 }]}>
                             <ImageBackground source={backgroundImage} style={styles.galleryBackground}>
                                 <ImagesScroll
@@ -105,7 +105,7 @@ const styles: Styles = StyleSheet.create({
         paddingBottom: 30,          // Bottom padding to prevent like-dislike buttons from covering text when scrolled all the way down. (Only applied if the like-dislike buttons are visible).
     },
     galleryScroll: {
-        height: 350,                // This controls the height of the images area.
+        height: Dimensions.get("window").height * 0.5,  // This controls the height of the images area.
     },
     galleryBackground: {
         width: "100%",

@@ -11,10 +11,10 @@ export interface ICardsPageState { }
 
 class CardsPage extends Component<ICardsPageProps, ICardsPageState> {
     images: string[] = [
+        "https://i.postimg.cc/jdKQrj0X/61409457-172211943787907-7676116613910237160-n.jpg",
+        "https://i.postimg.cc/jSSHLkjn/46051978-200921290817965-13954598237702697-n.jpg",
         "https://i.postimg.cc/j26HJpNP/40256728-466576210514467-4631245209299058688-n.jpg",
         "https://i.postimg.cc/J7jcgkg0/45851002-1832370293557567-4819309139041196322-n.jpg",
-        "https://i.postimg.cc/jSSHLkjn/46051978-200921290817965-13954598237702697-n.jpg",
-        "https://i.postimg.cc/jdKQrj0X/61409457-172211943787907-7676116613910237160-n.jpg",
         "https://i.postimg.cc/Nj20J1JP/maluma.jpg",
     ];
 

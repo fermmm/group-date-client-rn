@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, StyleProp, ViewStyle, ImageStyle, TouchableHighlight, ImageProps } from "react-native";
+import { View, Image, StyleProp, ViewStyle, ImageStyle, TouchableHighlight, ImageProps, ScrollView } from "react-native";
 
 export interface IImagesScrollProps {
     images: string[];
@@ -27,7 +27,7 @@ export default class ImagesScroll extends Component<IImagesScrollProps, IImagesS
 
         return (
             <View style={[{ height: 200 }, style]} onLayout={e => this.setState({ imagesWidth: e.nativeEvent.layout.width, imagesHeight: e.nativeEvent.layout.height })}>
-                <ScrollView style={[scrollViewStyle]} horizontal={true} pagingEnabled={true} >
+                <ScrollView style={[scrollViewStyle]} horizontal={true} pagingEnabled={true} indicatorStyle={"white"}>
                     {
                         images.map((value: string, i: number) =>
                             !onImageClick
