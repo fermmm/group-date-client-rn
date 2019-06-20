@@ -27,6 +27,8 @@ class CardsPage extends Component<ICardsPageProps, ICardsPageState> {
                 <ProfileCard 
                     images={this.images}
                     showLikeDislikeButtons={true} 
+                    onLikeClick={() => console.log("Like clicked")}
+                    onDislikeClick={() => console.log("Dislike clicked")}
                 />
             </View>
             // </ImageBackground>

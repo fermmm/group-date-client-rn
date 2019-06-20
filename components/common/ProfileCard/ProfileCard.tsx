@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 import color from "color";
 import { ImageProps, Image, StatusBar, StyleSheet, ImageBackground, View, Dimensions } from "react-native";
-import { Card, Paragraph, withTheme } from "react-native-paper";
+import { Card, Paragraph, withTheme, Caption, Headline, Subheading, Title, Text, Surface } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { IThemed, ITheme } from "../../../common-tools/ts-tools/Themed";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
+import QuestionInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
 
 export interface IProfileCardProps extends IThemed {
     images: string[];
     showLikeDislikeButtons?: boolean;
+    onLikeClick?: () => void;
+    onDislikeClick?: () => void;
 }
 
 export interface IProfileCardState {
@@ -27,13 +30,14 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
     };
 
     render(): JSX.Element {
-        const { images, showLikeDislikeButtons }: Partial<IProfileCardProps> = this.props;
+        const { images, showLikeDislikeButtons, onLikeClick, onDislikeClick }: Partial<IProfileCardProps> = this.props;
         const { renderImageModal, imageSelected }: Partial<IProfileCardState> = this.state;
         const { colors, backgroundImage }: ITheme = this.props.theme;
 
         StatusBar.setHidden(renderImageModal, "slide");
 
         return (
+        <>
             <View style={[styles.mainContainer, { paddingBottom: showLikeDislikeButtons ? styles.mainContainer.paddingBottom : 0 }]}>
                 <View>
                     <ScrollViewExtended style={[styles.scrollView]} showBottomGradient={true} bottomGradientColor={colors.background2} indicatorStyle={"white"}>
@@ -54,15 +58,6 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
                                     }
                                 />
                             </ImageBackground>
-                            {
-                                renderImageModal === true &&
-                                <ImagesModal
-                                    visible={renderImageModal}
-                                    images={images}
-                                    initialPage={imageSelected}
-                                    onClose={() => this.setState({ renderImageModal: false })}
-                                />
-                            }
                             <Card.Title
                                 title="martukrasinsky"
                                 subtitle="28 · Caballito"
@@ -70,9 +65,18 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
                                 subtitleStyle={{ color: colors.text2 }}
                             />
                             <Card.Content>
-                                <Paragraph style={{ color: colors.text2 }}>
+                                <Paragraph style={[styles.descriptionParagraph, { color: colors.text2 }]}>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 
                                 </Paragraph>
+                                <View style={styles.questionsContainer}>
+                                    <QuestionInProfileCard questionText="Lorem ipsum" responseText="amet"/>    
+                                    <QuestionInProfileCard questionText="Lorem ipsum dolor sit amet" responseText="sed do eiusmod tempor"/>    
+                                    <QuestionInProfileCard questionText="Lorem" responseText="sit"/>    
+                                    <QuestionInProfileCard questionText="Lorem ipsum" responseText="amet"/>    
+                                    <QuestionInProfileCard questionText="Lorem" responseText="sit"/>    
+                                    <QuestionInProfileCard questionText="Lorem ipsum dolor sit amet" responseText="sed do eiusmod tempor"/>    
+                                    <QuestionInProfileCard questionText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" responseText="Que gane el mejor."/>    
+                                </View>
                             </Card.Content>
                         </Card>
                     </ScrollViewExtended>
@@ -80,12 +84,22 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
                         showLikeDislikeButtons &&
                         <LikeDislikeButtons
                             style={styles.likeDislikeButtons}
-                            onLikeClick={() => console.log("Like clicked")}
-                            onDislikeClick={() => console.log("Dislike clicked")}
+                            onLikeClick={() => onLikeClick()}
+                            onDislikeClick={() => onDislikeClick()}
                         />
                     }
                 </View>
             </View>
+            {
+                renderImageModal === true &&
+                <ImagesModal
+                    visible={renderImageModal}
+                    images={images}
+                    initialPage={imageSelected}
+                    onClose={() => this.setState({ renderImageModal: false })}
+                />
+            }
+        </>
         );
     }
 }
@@ -110,6 +124,13 @@ const styles: Styles = StyleSheet.create({
     galleryBackground: {
         width: "100%",
         height: "auto",
+    },
+    descriptionParagraph: {
+        marginBottom: 15,
+    },
+    questionsContainer: {
+        flexDirection: "row",  
+        flexWrap: "wrap",
     },
     likeDislikeButtons: {
         alignSelf: "center",        // This controls the horizontal position of the buttons.
