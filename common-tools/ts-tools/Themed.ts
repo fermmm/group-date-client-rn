@@ -17,6 +17,9 @@ export interface ITheme extends Theme {
         disabled: string;
         placeholder: string;
         backdrop: string;
+        statusOk: string;
+        statusWarning: string;
+        statusBad: string;
     };
     fonts: {
         regular: string;

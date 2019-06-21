@@ -14,6 +14,9 @@ export default {
     error: "#FF7A8F",
     text: "#F6EFF1",
     text2: "#C7BBC9",
+    statusOk: "#00C781",
+    statusWarning: "#FFAA15",
+    statusBad: "#FF4040",
     disabled: color("#DCC4CA")
       .alpha(0.26)
       .rgb()
