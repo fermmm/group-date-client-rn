@@ -58,12 +58,22 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
                                     }
                                 />
                             </ImageBackground>
-                            <Card.Title
-                                title="martukrasinsky"
-                                subtitle="28 · Caballito"
-                                titleStyle={{ color: colors.text2 }}
-                                subtitleStyle={{ color: colors.text2 }}
-                            />
+                            <View style={styles.titleAreaContainer}>
+                                <Card.Title
+                                    title="martukrasinsky"
+                                    subtitle="28 · Caballito"
+                                    style={{flex: 1}}
+                                    titleStyle={{ color: colors.text2 }}
+                                    subtitleStyle={{ color: colors.text2 }}
+                                />
+                                <Text style={[styles.compatibilityPercentage, {
+                                    borderColor: color(colors.statusOk).alpha(0.3).string(),
+                                    backgroundColor: color(colors.statusOk).alpha(0.3).string(),
+                                }]}>
+                                    99%
+                                </Text>
+                            </View>
+                            
                             <Card.Content>
                                 <Paragraph style={[styles.descriptionParagraph, { color: colors.text2 }]}>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 
@@ -75,7 +85,7 @@ class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
                                     <QuestionInProfileCard questionText="Lorem ipsum" responseText="amet"/>    
                                     <QuestionInProfileCard questionText="Lorem" responseText="sit"/>    
                                     <QuestionInProfileCard questionText="Lorem ipsum dolor sit amet" responseText="sed do eiusmod tempor"/>    
-                                    <QuestionInProfileCard questionText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" responseText="Que gane el mejor."/>    
+                                    <QuestionInProfileCard questionText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" responseText="Sed do eiusmod tempor."/>    
                                 </View>
                             </Card.Content>
                         </Card>
@@ -124,6 +134,19 @@ const styles: Styles = StyleSheet.create({
     galleryBackground: {
         width: "100%",
         height: "auto",
+    },
+    titleAreaContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    compatibilityPercentage: {
+        marginRight: 30,
+        width: 50,
+        height: 50,
+        borderRadius: 50 / 2,
+        borderWidth: 0.5,
+        textAlign: "center",
+        textAlignVertical: "center",
     },
     descriptionParagraph: {
         marginBottom: 15,
