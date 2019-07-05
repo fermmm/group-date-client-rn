@@ -8,12 +8,13 @@ export interface ITheme extends Theme {
     colors: {
         primary: string;
         background: string;
-        background2?: string;
+        background2: string;
         surface: string;
         accent: string;
+        accent2: string;
         error: string;
         text: string;
-        text2?: string;
+        text2: string;
         disabled: string;
         placeholder: string;
         backdrop: string;

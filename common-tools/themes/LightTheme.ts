@@ -8,6 +8,7 @@ export default {
   colors: {
     primary: "#D08686",
     accent: "#F9F5F6",
+    accent2: "#fe4e4e",
     background: "#634865",
     background2: "#363E44",
     surface: "#835A74",
