@@ -1,6 +1,6 @@
 import { Theme, Colors } from "react-native-paper/typings";
 
-export interface ITheme extends Theme {
+export interface ThemeExt extends Theme {
     dark: boolean;
     roundness: number;
     backgroundImage?: {};
@@ -30,6 +30,6 @@ export interface ITheme extends Theme {
     };
 }
 
-export interface IThemed {
-    theme: ITheme;
+export interface Themed {
+    theme: ThemeExt;
 }

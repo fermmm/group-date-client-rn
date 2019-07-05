@@ -4,7 +4,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LinearGradient } from "expo";
 import color from "color";
 
-export interface IScrollViewExtendedProps extends ScrollViewProps {
+export interface ScrollViewExtendedProps extends ScrollViewProps {
     showBottomGradient?: boolean;
     bottomGradientColor?: string;
     /**
@@ -20,26 +20,26 @@ export interface IScrollViewExtendedProps extends ScrollViewProps {
     onScrollActivatedDetector?: (scrollIsActivated: boolean) => void;
 }
 
-export interface IScrollViewExtendedState {
+export interface ScrollViewExtendedState {
     bottomFadeOpacity: Animated.Value;
     contentHeight: number;
     viewportHeight: number;
 }
 
-class ScrollViewExtended extends Component<IScrollViewExtendedProps, IScrollViewExtendedState> {
-    static defaultProps: Partial<IScrollViewExtendedProps> = {
+class ScrollViewExtended extends Component<ScrollViewExtendedProps, ScrollViewExtendedState> {
+    static defaultProps: Partial<ScrollViewExtendedProps> = {
         bottomGradientColor: "black",
     };
     scrolledToBottom: boolean;
-    state: IScrollViewExtendedState = {
+    state: ScrollViewExtendedState = {
         bottomFadeOpacity: new Animated.Value(0),
         contentHeight: 0,
         viewportHeight: 0,
     };
 
     render(): JSX.Element {
-        const { bottomFadeOpacity }: Partial<IScrollViewExtendedState> = this.state;
-        const { showBottomGradient, bottomGradientColor }: Partial<IScrollViewExtendedProps> = this.props;
+        const { bottomFadeOpacity }: Partial<ScrollViewExtendedState> = this.state;
+        const { showBottomGradient, bottomGradientColor }: Partial<ScrollViewExtendedProps> = this.props;
         
         return (
             <View>
@@ -102,7 +102,7 @@ class ScrollViewExtended extends Component<IScrollViewExtendedProps, IScrollView
     }
 
     onLayout(event: LayoutChangeEvent): void {
-        const { contentHeight }: Partial<IScrollViewExtendedState> = this.state;
+        const { contentHeight }: Partial<ScrollViewExtendedState> = this.state;
 
         const vh: number = event.nativeEvent.layout.height;
         const scrolingActivated: boolean = contentHeight > vh;

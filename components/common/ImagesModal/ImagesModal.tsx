@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Gallery from "./Gallery/Gallery";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 
-export interface IImagesModalProps {
+export interface ImagesModalProps {
     images: string[];
     visible: boolean;
     initialPage?: number;
@@ -12,7 +12,7 @@ export interface IImagesModalProps {
     renderImage?: (imageProps: ImageProps, dimentions: {width: number, height: number}) => JSX.Element;
 }
 
-export default class ImagesModal extends Component<IImagesModalProps> {
+export default class ImagesModal extends Component<ImagesModalProps> {
     render(): JSX.Element {
         const imagesGalleryFormat: ImageData = this.props.images.map((uri: string, i: number) => ({source: {uri}}));
         return (

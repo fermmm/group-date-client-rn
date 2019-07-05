@@ -2,15 +2,14 @@ import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { withTheme } from "react-native-paper";
-import { IThemed } from "../../../../common-tools/ts-tools/Themed";
-import { Theme } from "react-native-paper/typings";
+import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
 
-export interface ISettingsPageProps extends IThemed {}
-export interface ISettingsPageState {}
+export interface SettingsPageProps extends Themed {}
+export interface SettingsPageState {}
 
-class SettingsPage extends Component<ISettingsPageProps, ISettingsPageState> {
+class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
     render(): JSX.Element {
-        const { colors }: Theme = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme;
 
         return (
             <>

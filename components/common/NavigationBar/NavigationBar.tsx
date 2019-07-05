@@ -3,28 +3,28 @@ import { StyleSheet, Dimensions, StatusBar } from "react-native";
 import { TabView, SceneMap, TabBar, Route } from "react-native-tab-view";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { IThemed } from "../../../common-tools/ts-tools/Themed";
+import { ThemeExt, Themed } from "../../../common-tools/ts-tools/Themed";
 import { withTheme } from "react-native-paper";
 import { Theme } from "react-native-paper/typings";
 
-interface INavBarProps extends IThemed {
+interface NavBarProps extends Themed {
     sections: { [key: string]: () => JSX.Element };
     routes: Route[];
 }
 
-interface INavBarState {
+interface NavBarState {
     index: number;
 }
 
-class NavigationBar extends Component<INavBarProps, INavBarState> {
-    state: INavBarState = {
+class NavigationBar extends Component<NavBarProps, NavBarState> {
+    state: NavBarState = {
         index: 0,
     };
 
     render(): JSX.Element {
-        const { routes }: INavBarProps = this.props;
-        const { colors }: Theme = this.props.theme;
-        const { index }: INavBarState = this.state;
+        const { routes }: NavBarProps = this.props;
+        const { colors }: ThemeExt = this.props.theme;
+        const { index }: NavBarState = this.state;
 
         return (
             <TabView

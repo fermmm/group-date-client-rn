@@ -1,20 +1,20 @@
 import React, { Component } from "react";
 import { StyleSheet, View, ViewStyle, StyleProp } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
-import { IThemed, ITheme } from "../../../../common-tools/ts-tools/Themed";
+import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
 import { withTheme, FAB } from "react-native-paper";
 import color from "color";
 
-export interface ILikeDislikeProps extends IThemed { 
+export interface LikeDislikeProps extends Themed { 
     style?: StyleProp<ViewStyle>;
     onLikeClick: () => void;
     onDislikeClick: () => void;
 }
 
-class LikeDislikeButtons extends Component<ILikeDislikeProps> {
+class LikeDislikeButtons extends Component<LikeDislikeProps> {
 
     render(): JSX.Element {
-        const { colors }: ITheme = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme;
 
         return (
             <View style={[styles.container, this.props.style]}>

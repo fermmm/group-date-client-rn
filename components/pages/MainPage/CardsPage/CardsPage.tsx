@@ -2,14 +2,13 @@ import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import ProfileCard from "../../../common/ProfileCard/ProfileCard";
-import { IThemed } from "../../../../common-tools/ts-tools/Themed";
+import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
 import { withTheme } from "react-native-paper";
-import { Theme } from "react-native-paper/typings";
 
-export interface ICardsPageProps extends IThemed { }
-export interface ICardsPageState { }
+export interface CardsPageProps extends Themed { }
+export interface CardsPageState { }
 
-class CardsPage extends Component<ICardsPageProps, ICardsPageState> {
+class CardsPage extends Component<CardsPageProps, CardsPageState> {
     images: string[] = [
         "https://i.postimg.cc/jdKQrj0X/61409457-172211943787907-7676116613910237160-n.jpg",
         "https://i.postimg.cc/jSSHLkjn/46051978-200921290817965-13954598237702697-n.jpg",
@@ -19,7 +18,7 @@ class CardsPage extends Component<ICardsPageProps, ICardsPageState> {
     ];
 
     render(): JSX.Element {
-        const { colors }: Theme = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme;
 
         return (
             // <ImageBackground source={require("../../../../assets/backgroundLight3.png")} style={{width: "100%", height: "100%"}}>

@@ -5,12 +5,12 @@ import MainPage from "./components/pages/MainPage/MainPage";
 import LightTheme from "./common-tools/themes/LightTheme";
 import DarkTheme from "./common-tools/themes/DarkTheme";
 
-interface IAppState {
+interface AppState {
     resourcesLoaded: boolean;
 }
 
-export default class App extends Component<void, IAppState> {
-    state: IAppState = {
+export default class App extends Component<void, AppState> {
+    state: AppState = {
         resourcesLoaded: true,
     };
 

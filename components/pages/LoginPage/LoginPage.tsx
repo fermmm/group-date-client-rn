@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet, Text } from "react-native";
 import { withTheme } from "react-native-paper";
-import { ITheme, IThemed } from "../../../common-tools/ts-tools/Themed";
+import { ThemeExt, Themed } from "../../../common-tools/ts-tools/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LinearGradient } from "expo";
 import { LogoSvg } from "../../../assets/LogoSvg";
 
-export interface IProps extends IThemed { }
+export interface IProps extends Themed { }
 export interface IState { }
 
 class LoginPage extends Component<IProps, IState> {
@@ -15,7 +15,7 @@ class LoginPage extends Component<IProps, IState> {
     };
 
     render(): JSX.Element {
-        const { colors }: ITheme = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme;
 
         return (
             <LinearGradient

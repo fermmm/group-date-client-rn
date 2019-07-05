@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Image, StyleProp, ViewStyle, ImageStyle, TouchableHighlight, ImageProps, ScrollView } from "react-native";
 
-export interface IImagesScrollProps {
+export interface ImagesScrollProps {
     images: string[];
     renderImage?: (image: string, imageProps: ImageProps) => JSX.Element;
     onImageClick?: (index: number) => void;
@@ -10,20 +10,20 @@ export interface IImagesScrollProps {
     imagesStyle?: StyleProp<ImageStyle>;
 }
 
-interface IImagesScrollState {
+interface ImagesScrollState {
     imagesWidth: number;
     imagesHeight: number;
 }
 
-export default class ImagesScroll extends Component<IImagesScrollProps, IImagesScrollState> {
-    state: IImagesScrollState = {
+export default class ImagesScroll extends Component<ImagesScrollProps, ImagesScrollState> {
+    state: ImagesScrollState = {
         imagesWidth: 0,
         imagesHeight: 0,
     };
 
     render(): JSX.Element {
-        const { imagesWidth, imagesHeight }: Partial<IImagesScrollState> = this.state;
-        const { images, style, imagesStyle, scrollViewStyle, onImageClick }: Partial<IImagesScrollProps> = this.props;
+        const { imagesWidth, imagesHeight }: Partial<ImagesScrollState> = this.state;
+        const { images, style, imagesStyle, scrollViewStyle, onImageClick }: Partial<ImagesScrollProps> = this.props;
 
         return (
             <View style={[{ height: 200 }, style]} onLayout={e => this.setState({ imagesWidth: e.nativeEvent.layout.width, imagesHeight: e.nativeEvent.layout.height })}>

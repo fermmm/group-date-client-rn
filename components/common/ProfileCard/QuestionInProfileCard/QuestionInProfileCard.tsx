@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { withTheme, Caption, Text, Surface } from "react-native-paper";
-import { IThemed, ITheme } from "../../../../common-tools/ts-tools/Themed";
+import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
 import color from "color";
 
-export interface IQuestionProfileProps extends IThemed {
+export interface IQuestionProfileProps extends Themed {
     questionText: string;
     responseText: string;
     answerMatches?: boolean;
@@ -18,7 +18,7 @@ class QuestionInProfileCard extends Component<IQuestionProfileProps, IQuestionPr
     };
 
     render(): JSX.Element {
-        const { colors }: ITheme = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme;
         const { answerMatches }: IQuestionProfileProps = this.props;
 
         return (

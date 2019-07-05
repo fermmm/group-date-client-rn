@@ -5,34 +5,34 @@ import { Card, Paragraph, withTheme, Caption, Headline, Subheading, Title, Text,
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { IThemed, ITheme } from "../../../common-tools/ts-tools/Themed";
+import { Themed, ThemeExt } from "../../../common-tools/ts-tools/Themed";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
 import QuestionInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
 
-export interface IProfileCardProps extends IThemed {
+export interface ProfileCardProps extends Themed {
     images: string[];
     showLikeDislikeButtons?: boolean;
     onLikeClick?: () => void;
     onDislikeClick?: () => void;
 }
 
-export interface IProfileCardState {
+export interface ProfileCardState {
     renderImageModal: boolean;
     imageSelected: number;
 }
 
-class ProfileCard extends Component<IProfileCardProps, IProfileCardState> {
-    state: IProfileCardState = {
+class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
+    state: ProfileCardState = {
         renderImageModal: false,
         imageSelected: 0,
 
     };
 
     render(): JSX.Element {
-        const { images, showLikeDislikeButtons, onLikeClick, onDislikeClick }: Partial<IProfileCardProps> = this.props;
-        const { renderImageModal, imageSelected }: Partial<IProfileCardState> = this.state;
-        const { colors, backgroundImage }: ITheme = this.props.theme;
+        const { images, showLikeDislikeButtons, onLikeClick, onDislikeClick }: Partial<ProfileCardProps> = this.props;
+        const { renderImageModal, imageSelected }: Partial<ProfileCardState> = this.state;
+        const { colors, backgroundImage }: ThemeExt = this.props.theme;
 
         StatusBar.setHidden(renderImageModal, "slide");
 

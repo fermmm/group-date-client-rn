@@ -2,16 +2,15 @@ import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { withTheme } from "react-native-paper";
-import { IThemed } from "../../../../common-tools/ts-tools/Themed";
-import { Theme } from "react-native-paper/typings";
+import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
 
-export interface IGroupsPageProps extends IThemed {}
-export interface IGroupsPageState {}
+export interface GroupsPageProps extends Themed {}
+export interface GroupsPageState {}
 
-class GroupsPage extends Component<IGroupsPageProps, IGroupsPageState> {
+class GroupsPage extends Component<GroupsPageProps, GroupsPageState> {
     
     render(): JSX.Element {
-        const { colors }: Theme = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme;
 
         return (
             <>

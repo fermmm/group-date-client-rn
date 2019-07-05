@@ -2,18 +2,18 @@ import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { withTheme } from "react-native-paper";
-import { IThemed, ITheme } from "../../../../common-tools/ts-tools/Themed";
+import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
 
-export interface IProps extends IThemed {}
-export interface IState {}
+export interface Props extends Themed {}
+export interface State {}
 
-class SimpleComponent extends Component<IProps, IState> {
-    static defaultProps: Partial<IProps> = {
+class SimpleComponent extends Component<Props, State> {
+    static defaultProps: Partial<Props> = {
         
     };
 
     render(): JSX.Element {
-        const { colors }: ITheme = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme;
         
         return (
             <>
