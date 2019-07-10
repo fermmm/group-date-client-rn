@@ -22,7 +22,8 @@
     "@types/react-native-vector-icons": "^6.4.1",
     "babel-preset-expo": "^5.0.0",
     "tslint": "^5.17.0",
-    "tslint-react": "^4.0.0"
+    "tslint-react": "^4.0.0",
+    "typescript": "^3.5.3"
   },
   "private": true
 }
