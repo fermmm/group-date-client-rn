@@ -20,16 +20,16 @@ class LoginPage extends Component<LoginProps, LoginState> {
                 colors={[colors.background, colors.background2]}
                 style={styles.mainContainer}
                 start={[0, 0.5]}
-                end={[0, 1]}
+                end={[0, 1.3]}
             >
-                <LogoSvg color={colors.accent2} style={styles.logo}/>
+                <LogoSvg style={styles.logo} color={colors.accent2}/>
                 <Text style={[styles.textBlock, {color: colors.text2}]}>
                     ¡Bienvenide!, Poly Dates es una app que genera citas grupales para poliamoroses que se gusten.
                 </Text>
                 <Text style={[styles.textBlock, {color: colors.text2}]}>
                     Proyecto sin fines de lucro y de código abierto.
                 </Text>
-                <Button mode="outlined" color={colors.text2} style={styles.button} onPress={() => console.log('Comenzar pressed')}>
+                <Button mode="outlined" color={colors.text} style={styles.button} onPress={() => console.log('Comenzar pressed')}>
                     Comenzar
                 </Button>
             </LinearGradient>

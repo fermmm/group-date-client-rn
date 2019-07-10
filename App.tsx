@@ -30,8 +30,8 @@ export default class App extends Component<void, AppState> {
 
         return (
             <PaperProvider theme={LightTheme /*DarkTheme*/}>
-                {/* <MainPage /> */}
-                <LoginPage />
+                <MainPage />
+                {/* <LoginPage /> */}
             </PaperProvider>
         );
     }
