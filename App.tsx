@@ -1,17 +1,29 @@
+import MainPage from "./components/pages/MainPage/MainPage";
+import LoginPage from "./components/pages/LoginPage/LoginPage";
+import { createStackNavigator, createAppContainer, NavigationContainer } from "react-navigation";
 import React, { Component } from "react";
 import { AppLoading } from "expo";
-import { Provider as PaperProvider } from "react-native-paper";
-import MainPage from "./components/pages/MainPage/MainPage";
+import { Provider as PaperProvider, Text } from "react-native-paper";
 import LightTheme from "./common-tools/themes/LightTheme";
 import DarkTheme from "./common-tools/themes/DarkTheme";
-import LoginPage from "./components/pages/LoginPage/LoginPage";
 
-interface AppState {
+const Navigator: NavigationContainer = createAppContainer(
+    createStackNavigator(
+    {
+        Login: { screen: LoginPage },
+        Main: { screen: MainPage },
+    }, 
+    { 
+        headerMode: "none",
+    },
+));
+
+interface PageBasicWrapperState {
     resourcesLoaded: boolean;
 }
 
-export default class App extends Component<void, AppState> {
-    state: AppState = {
+export default class App extends Component<{}, PageBasicWrapperState> {
+    state: PageBasicWrapperState = {
         resourcesLoaded: true,
     };
 
@@ -21,6 +33,7 @@ export default class App extends Component<void, AppState> {
     }*/
     
     componentDidMount(): void {
+        
     }
 
     render(): JSX.Element {
@@ -29,9 +42,8 @@ export default class App extends Component<void, AppState> {
         }
 
         return (
-            <PaperProvider theme={LightTheme /*DarkTheme*/}>
-                <MainPage />
-                {/* <LoginPage /> */}
+            <PaperProvider theme={LightTheme /*DarkTheme*/}>                
+                <Navigator />
             </PaperProvider>
         );
     }

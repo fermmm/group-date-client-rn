@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, ScrollView, ScrollViewProps, NativeScrollEvent, NativeSyntheticEvent, Animated, LayoutChangeEvent, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { LinearGradient } from "expo";
+import { LinearGradient } from "expo-linear-gradient";
 import color from "color";
 
 export interface ScrollViewExtendedProps extends ScrollViewProps {
