@@ -30,7 +30,7 @@ class LoginPage extends Component<LoginProps, LoginState> {
                         ¡Bienvenide!. Poly Dates es una app que organiza citas grupales para poliamoroses que se gusten.
                     </Text>
                     <Text style={[styles.textBlock, { color: colors.text2 }]}>
-                        Proyecto sin fines de lucro y de código abierto.
+                        Aplicación sin fines de lucro y de código abierto.
                     </Text>
                     <Button mode="outlined" uppercase={false} color={colors.text} style={styles.button} contentStyle={styles.buttonContent} onPress={() => navigate("Main")}>
                         Comenzar

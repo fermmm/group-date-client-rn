@@ -29,7 +29,7 @@ class LikeDislikeButtons extends Component<LikeDislikeProps> {
                 </View>
                 <View style={styles.button} >
                     <FAB
-                        style={{ backgroundColor: color(colors.primary).darken(0.1).desaturate(0.1).string() }}
+                        style={{ backgroundColor: colors.accent2 }}
                         color={color(colors.accent).darken(0.04).string()}
                         icon={
                             ({ color: c }) => <LogoSvg color={c} style={styles.logo} />
