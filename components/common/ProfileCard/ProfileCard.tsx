@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import color from "color";
 import { ImageProps, Image, StatusBar, StyleSheet, ImageBackground, View, Dimensions } from "react-native";
-import { Card, Paragraph, withTheme, Caption, Headline, Subheading, Title, Text, Surface } from "react-native-paper";
+import { Card, Paragraph, withTheme, Text } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";

@@ -13,7 +13,7 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
 
         return (
             <>
-                <View style={[styles.scene, { backgroundColor: colors.background }]} />
+                <View style={[styles.scene, { backgroundColor: colors.background2 }]} />
             </>
         );
     }
