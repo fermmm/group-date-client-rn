@@ -15,9 +15,9 @@ class GroupsPage extends Component<GroupsPageProps, GroupsPageState> {
 
         return (
                 <View style={[styles.scene, { backgroundColor: colors.background2 }]} >
-                    <ScrollView>                
+                    <ScrollView>       
                         <List.Section>
-                            <List.Subheader>Cita confirmada</List.Subheader>
+                            <List.Subheader>Citas confirmadas</List.Subheader>
                             <List.Item
                                 title="maria, raul, julia, tincho, mili, ayelen, romina, chen"
                                 description="Cita dentro de 2 días"
@@ -32,13 +32,25 @@ class GroupsPage extends Component<GroupsPageProps, GroupsPageState> {
                             />
                         </List.Section>
                         <List.Section>
-                            <List.Subheader>Todavía votando</List.Subheader>
+                            <List.Subheader>Se necesita tu voto</List.Subheader>     
+                            <List.Item
+                                title="paola6556, gerardo, juliana, lauta, diego, barbie, ana"
+                                description="¡Se necesita tu voto.! | Votaron: 12 / 20"
+                                left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg color={c} style={styles.logo} />} />}
+                                onPress={() => console.log("hola")}
+                            /> 
+                        </List.Section>
+                        <List.Section>
+                            <List.Subheader>Propuestas no vistas</List.Subheader>
                             <List.Item
                                 title="matias666, paoli, toti, anibal, maria, fabian, lucia, raul"
-                                description="Votaron: 8 / 10"
+                                description="¡Nueva propuesta de lugar no vista! | Votaron: 8 / 10"
                                 left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg color={c} style={styles.logo} />} />}
                                 onPress={() => console.log("hola")}
                             />
+                        </List.Section>
+                        <List.Section>
+                            <List.Subheader>Los demas grupos</List.Subheader>
                             <List.Item
                                 title="amanda, nicolas, rocio, hector, cristian, ivana, florencia"
                                 description="Votaron: 3 / 6"
