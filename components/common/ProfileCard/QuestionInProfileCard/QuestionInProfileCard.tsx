@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { withTheme, Caption, Text, Surface } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
+import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import color from "color";
 
 export interface IQuestionProfileProps extends Themed {
@@ -25,13 +25,13 @@ class QuestionInProfileCard extends Component<IQuestionProfileProps, IQuestionPr
             <View style={[
                 styles.mainContainer, 
                 {
-                    backgroundColor: color(colors.background2).lighten(0.15).string(),
+                    backgroundColor: color(colors.backgroundForText).lighten(0.15).string(),
                     borderColor: !answerMatches && color(colors.statusBad).alpha(0.6).string(),
                 },
                 !answerMatches && styles.border,
              ]}>
-                <Text>{this.props.questionText}</Text>
-                <Caption >{this.props.responseText}</Caption>
+                <Text style={{color: colors.text}}>{this.props.questionText}</Text>
+                <Caption style={{color: colors.text}}>{this.props.responseText}</Caption>
             </View>
         );
     }

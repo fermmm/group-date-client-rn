@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View, ViewStyle, StyleProp } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
-import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
+import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import { withTheme, FAB } from "react-native-paper";
 import color from "color";
 import { LogoSvg } from "../../../../assets/LogoSvg";

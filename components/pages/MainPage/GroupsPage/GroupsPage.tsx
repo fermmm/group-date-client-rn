@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { withTheme, List } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
 import GraphSvg from "../../../../assets/GraphSvg";
+import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
 
 export interface GroupsPageProps extends Themed {}
 export interface GroupsPageState {}
@@ -14,7 +14,7 @@ class GroupsPage extends Component<GroupsPageProps, GroupsPageState> {
         const { colors }: ThemeExt = this.props.theme;
 
         return (
-                <View style={[styles.scene, { backgroundColor: colors.background2 }]} >
+                <View style={[styles.scene, { backgroundColor: colors.backgroundForText }]} >
                     <ScrollView>       
                         <List.Section>
                             <List.Subheader>Citas confirmadas</List.Subheader>

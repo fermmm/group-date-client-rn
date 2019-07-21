@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import ProfileCard from "../../../common/ProfileCard/ProfileCard";
-import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
 import { withTheme } from "react-native-paper";
+import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
 
 export interface CardsPageProps extends Themed { }
 export interface CardsPageState { }
@@ -21,8 +21,8 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
         const { colors }: ThemeExt = this.props.theme;
 
         return (
-            // <ImageBackground source={require("../../../../assets/backgroundLight3.png")} style={{width: "100%", height: "100%"}}>
-            <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
+            // <ImageBackground source={this.props.theme.backgroundImage} style={{width: "100%", height: "100%"}}>
+            <View style={[styles.mainContainer, { backgroundColor: colors.surface }]}>
                 <ProfileCard 
                     images={this.images}
                     showLikeDislikeButtons={true} 
@@ -38,7 +38,7 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
 const styles: Styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        padding: 5,
+        padding: 0,
     },
 });
 

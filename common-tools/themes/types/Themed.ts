@@ -9,12 +9,14 @@ export interface ThemeExt extends Theme {
         primary: string;
         background: string;
         background2: string;
+        backgroundForText: string;
         surface: string;
         accent: string;
         accent2: string;
         error: string;
         text: string;
         text2: string;
+        logoColor: string;
         disabled: string;
         placeholder: string;
         backdrop: string;

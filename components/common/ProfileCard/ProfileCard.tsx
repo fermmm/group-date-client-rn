@@ -5,7 +5,7 @@ import { Card, Paragraph, withTheme, Text } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { Themed, ThemeExt } from "../../../common-tools/ts-tools/Themed";
+import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
 import QuestionInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
@@ -40,13 +40,13 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
         <>
             <View style={[styles.mainContainer, { paddingBottom: showLikeDislikeButtons ? styles.mainContainer.paddingBottom : 0 }]}>
                 <View>
-                    <ScrollViewExtended style={[styles.scrollView]} showBottomGradient={true} bottomGradientColor={colors.background2} indicatorStyle={"white"}>
-                        <Card style={[styles.card, { backgroundColor: colors.background2 }]}>
+                    <ScrollViewExtended style={[styles.scrollView]} showBottomGradient={true} bottomGradientColor={colors.backgroundForText} indicatorStyle={"white"}>
+                        <Card style={[styles.card, { backgroundColor: colors.backgroundForText }]}>
                             <ImageBackground source={backgroundImage} style={styles.galleryBackground}>
                                 <ImagesScroll
                                     images={images}
                                     style={styles.galleryScroll}
-                                    imagesStyle={{ backgroundColor: color("black").alpha(0.25).string() }}
+                                    imagesStyle={{ backgroundColor: color("black").alpha(0.55).string() }}
                                     onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
                                     renderImage={(image: string, imageProps: ImageProps) =>
                                         <Image
@@ -63,19 +63,19 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                                     title="martukrasinsky"
                                     subtitle="28 · Caballito"
                                     style={{flex: 1}}
-                                    titleStyle={{ color: colors.text2 }}
-                                    subtitleStyle={{ color: colors.text2 }}
+                                    titleStyle={{ color: colors.text }}
+                                    subtitleStyle={{ color: colors.text }}
                                 />
                                 <Text style={[styles.compatibilityPercentage, {
-                                    borderColor: color(colors.statusOk).alpha(0.3).string(),
-                                    backgroundColor: color(colors.statusOk).alpha(0.3).string(),
+                                    borderColor: color(colors.statusOk).alpha(0.2).string(),
+                                    backgroundColor: color(colors.statusOk).alpha(0.2).string(),
                                 }]}>
                                     99%
                                 </Text>
                             </View>
                             
                             <Card.Content>
-                                <Paragraph style={[styles.descriptionParagraph, { color: colors.text2 }]}>
+                                <Paragraph style={[styles.descriptionParagraph, { color: colors.text }]}>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 
                                 </Paragraph>
                                 <View style={styles.questionsContainer}>

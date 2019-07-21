@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
-import { withTheme } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../../common-tools/ts-tools/Themed";
+import { withTheme, Button } from "react-native-paper";
+import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
 
 export interface SettingsPageProps extends Themed {}
 export interface SettingsPageState {}
@@ -13,7 +13,11 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
 
         return (
             <>
-                <View style={[styles.scene, { backgroundColor: colors.background2 }]} />
+                <View style={[styles.scene, { backgroundColor: colors.backgroundForText }]} >
+                    <Button icon="add-a-photo" mode="contained" onPress={() => console.log('Pressed')}>
+                        Press me
+                    </Button>
+                </View>
             </>
         );
     }

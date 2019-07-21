@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { withTheme, Button } from "react-native-paper";
-import { ThemeExt, Themed } from "../../../common-tools/ts-tools/Themed";
+import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { LogoSvg } from "../../../assets/LogoSvg";
@@ -25,14 +25,14 @@ class LoginPage extends Component<LoginProps, LoginState> {
                 end={[0, 1.3]}
             >
                 <View style={styles.mainContainer}>
-                    <LogoSvg style={styles.logo} color={colors.accent2} />
+                    <LogoSvg style={styles.logo} color={colors.logoColor} />
                     <Text style={[styles.textBlock, { color: colors.text2 }]}>
-                        ¡Bienvenide! Poly Dates es una app que organiza citas grupales para los poliamoroses que se gusten y quieran conocerse de a varios.
+                        ¡Bienvenide! Poly Dates es una app que organiza citas grupales para los poliamoroses que se gusten y quieran conocerse.
                     </Text>
                     <Text style={[styles.textBlock, { color: colors.text2 }]}>
                         Aplicación sin fines de lucro y de código abierto.
                     </Text>
-                    <Button mode="outlined" uppercase={false} color={colors.text} style={styles.button} contentStyle={styles.buttonContent} onPress={() => navigate("Main")}>
+                    <Button mode="outlined" uppercase={false} color={colors.text2} style={[styles.button, {borderColor: colors.text2}]} contentStyle={styles.buttonContent} onPress={() => navigate("Main")}>
                         Comenzar
                     </Button>
                 </View>
