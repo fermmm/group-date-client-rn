@@ -16,6 +16,7 @@ export interface ThemeExt extends Theme {
         error: string;
         text: string;
         text2: string;
+        textLogin: string;
         logoColor: string;
         disabled: string;
         placeholder: string;

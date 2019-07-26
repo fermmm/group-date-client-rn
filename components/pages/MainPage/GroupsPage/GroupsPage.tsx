@@ -32,24 +32,6 @@ class GroupsPage extends Component<GroupsPageProps, GroupsPageState> {
                             />
                         </List.Section>
                         <List.Section>
-                            <List.Subheader>Se necesita tu voto</List.Subheader>     
-                            <List.Item
-                                title="paola6556, gerardo, juliana, lauta, diego, barbie, ana"
-                                description="¡Se necesita tu voto.! | Votaron: 12 / 20"
-                                left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg color={c} style={styles.logo} />} />}
-                                onPress={() => console.log("hola")}
-                            /> 
-                        </List.Section>
-                        <List.Section>
-                            <List.Subheader>Propuestas no vistas</List.Subheader>
-                            <List.Item
-                                title="matias666, paoli, toti, anibal, maria, fabian, lucia, raul"
-                                description="¡Nueva propuesta de lugar no vista! | Votaron: 8 / 10"
-                                left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg color={c} style={styles.logo} />} />}
-                                onPress={() => console.log("hola")}
-                            />
-                        </List.Section>
-                        <List.Section>
                             <List.Subheader>Los demas grupos</List.Subheader>
                             <List.Item
                                 title="amanda, nicolas, rocio, hector, cristian, ivana, florencia"

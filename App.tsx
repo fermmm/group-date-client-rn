@@ -6,6 +6,7 @@ import { AppLoading } from "expo";
 import { Provider as PaperProvider, Text } from "react-native-paper";
 import LightTheme from "./common-tools/themes/LightTheme";
 import DarkTheme from "./common-tools/themes/DarkTheme";
+import WhiteTheme from "./common-tools/themes/WhiteTheme";
 import ThemeFemaleColors from "./common-tools/themes/ThemeFemaleColors";
 
 const Navigator: NavigationContainer = createAppContainer(
@@ -43,7 +44,7 @@ export default class App extends Component<{}, PageBasicWrapperState> {
         }
 
         return (
-            <PaperProvider theme={ThemeFemaleColors /* LightTheme */  /*DarkTheme*/}>                
+            <PaperProvider theme={WhiteTheme /*ThemeFemaleColors*/ /* LightTheme */  /*DarkTheme*/}>                
                 <Navigator />
             </PaperProvider>
         );
