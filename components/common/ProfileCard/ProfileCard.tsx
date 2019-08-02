@@ -38,15 +38,24 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
 
         return (
         <>
-            <View style={[styles.mainContainer, { paddingBottom: showLikeDislikeButtons ? styles.mainContainer.paddingBottom : 0 }]}>
+            <View 
+                style={[
+                    styles.mainContainer, 
+                    { paddingBottom: showLikeDislikeButtons ? styles.mainContainer.paddingBottom : 0 },
+                ]}
+            >
                 <View>
-                    <ScrollViewExtended style={[styles.scrollView]} showBottomGradient={true} bottomGradientColor={colors.backgroundForText} indicatorStyle={"white"}>
+                    <ScrollViewExtended 
+                        style={[styles.scrollView]} 
+                        showBottomGradient={true} 
+                        bottomGradientColor={colors.backgroundForText} 
+                        indicatorStyle={"white"}
+                    >
                         <Card style={[styles.card, { backgroundColor: colors.backgroundForText }]}>
                             <ImageBackground source={backgroundImage} style={styles.galleryBackground}>
                                 <ImagesScroll
                                     images={images}
                                     style={styles.galleryScroll}
-                                    imagesStyle={{ backgroundColor: color("black").alpha(0.55).string() }}
                                     onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
                                     renderImage={(image: string, imageProps: ImageProps) =>
                                         <Image
@@ -67,8 +76,8 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                                     subtitleStyle={{ color: colors.text }}
                                 />
                                 <Text style={[styles.compatibilityPercentage, {
-                                    borderColor: color(colors.statusOk).alpha(0.2).string(),
-                                    backgroundColor: color(colors.statusOk).alpha(0.2).string(),
+                                    borderColor: color(colors.statusOk).alpha(0.5).string(),
+                                    backgroundColor: color(colors.statusOk).alpha(0.5).string(),
                                 }]}>
                                     99%
                                 </Text>
@@ -120,13 +129,13 @@ const styles: Styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        paddingBottom: 35,          // The bottom padding under the like-dislike buttons (only applied when buttons are present). 
+        paddingBottom: 47,          // The bottom padding under the like-dislike buttons (only applied when buttons are present). 
     },
     scrollView: {
         flexGrow: 0,
     },
     card: {
-        paddingBottom: 30,          // Bottom padding to prevent like-dislike buttons from covering text when scrolled all the way down. (Only applied if the like-dislike buttons are visible).
+        paddingBottom: 30,          // Padding in the content when scrolled to bottom to prevent like-dislike buttons from covering text. (Only applied if the like-dislike buttons are visible).
     },
     galleryScroll: {
         height: Dimensions.get("window").height * 0.5,  // This controls the height of the images area.

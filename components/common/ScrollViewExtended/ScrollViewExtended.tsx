@@ -56,10 +56,10 @@ class ScrollViewExtended extends Component<ScrollViewExtendedProps, ScrollViewEx
                     showBottomGradient &&
                     <Animated.View style={{ opacity: bottomFadeOpacity }}>
                         <LinearGradient
-                            locations={[0, 1.0]}
+                            locations={[0, 0.7]}
                             colors={[
                                 color(bottomGradientColor).alpha(0).string(),
-                                color(bottomGradientColor).alpha(0.85).darken(0.5).string(),
+                                color(bottomGradientColor).alpha(1).string(),
                             ]}
                             style={styles.bottomGradient}
                         />
@@ -134,7 +134,7 @@ const styles: Styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         width: "100%",
-        height: 55,                 // This controls the height of the bottom "fade gradient"
+        height: 110,                 // This controls the height of the bottom "fade gradient"
     },
 });
 
