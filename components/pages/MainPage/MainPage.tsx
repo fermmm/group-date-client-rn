@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import NavigationBar from "../../common/NavigationBar/NavigationBar";
 import CardsPage from "./CardsPage/CardsPage";
-import GroupsPage from "./GroupsPage/GroupsPage";
+import GroupsListPage from "./GroupsListPage/GroupsListPage";
 import SettingsPage from "./SettingsPage/SettingsPage";
 
 export default class MainPage extends Component {
@@ -10,7 +10,7 @@ export default class MainPage extends Component {
             <NavigationBar
                 sections={{
                     cards: () => <CardsPage />,
-                    groups: () => <GroupsPage />,
+                    groups: () => <GroupsListPage />,
                     settings: () => <SettingsPage />,
                 }}
                 routes={[

@@ -4,14 +4,16 @@ import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { withTheme, List } from "react-native-paper";
 import GraphSvg2 from "../../../../assets/GraphSvg2";
 import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
+import { NavigationContainerProps, NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
 
-export interface GroupsPageProps extends Themed {}
-export interface GroupsPageState {}
+export interface GroupsListPageProps extends Themed, NavigationInjectedProps {}
+export interface GroupsListPageState {}
 
-class GroupsPage extends Component<GroupsPageProps, GroupsPageState> {
+class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState> {
     
     render(): JSX.Element {
         const { colors }: ThemeExt = this.props.theme;
+        const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
 
         return (
             <View style={[styles.scene, { backgroundColor: colors.backgroundForText }]} >
@@ -22,13 +24,13 @@ class GroupsPage extends Component<GroupsPageProps, GroupsPageState> {
                             title="maria, raul, julia, tincho, mili, ayelen, romina, chen"
                             description="Cita dentro de 2 días"
                             left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.background} lineColor={c} style={styles.logo} />} />}
-                            onPress={() => console.log("hola")}
+                            onPress={() => navigate("Group")}
                         />
                         <List.Item
                             title="ofelia26, malum, clau, matias, rocio, alberto, cristina"
                             description="Cita dentro de 3 semanas"
                             left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.background} lineColor={c} style={styles.logo} />} />}
-                            onPress={() => console.log("hola")}
+                            onPress={() => navigate("Group")}
                         />
                     </List.Section>
                     <List.Section>
@@ -37,13 +39,13 @@ class GroupsPage extends Component<GroupsPageProps, GroupsPageState> {
                             title="amanda, nicolas, rocio, hector, cristian, ivana, florencia"
                             description="Votaron: 3 / 6"
                             left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} style={styles.logo} />} />}
-                            onPress={() => console.log("hola")}
+                            onPress={() => navigate("Group")}
                         />
                         <List.Item
                             title="paola6556, gerardo, juliana, lauta, diego, barbie, ana"
                             description="Votaron: 12 / 20"
                             left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} style={styles.logo} />} />}
-                            onPress={() => console.log("hola")}
+                            onPress={() => navigate("Group")}
                         />
                     </List.Section>
                 </ScrollView>
@@ -58,4 +60,4 @@ const styles: Styles = StyleSheet.create({
     },
 });
 
-export default withTheme(GroupsPage);
+export default withTheme(withNavigation(GroupsListPage));

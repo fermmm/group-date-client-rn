@@ -1,5 +1,6 @@
 import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
+import GroupPage from "./components/pages/GroupPage/GroupPage";
 import { createStackNavigator, createAppContainer, NavigationContainer } from "react-navigation";
 import React, { Component } from "react";
 import { AppLoading } from "expo";
@@ -14,6 +15,7 @@ const Navigator: NavigationContainer = createAppContainer(
     {
         Login: { screen: LoginPage },
         Main: { screen: MainPage },
+        Group: { screen: GroupPage },
     }, 
     { 
         headerMode: "none",
