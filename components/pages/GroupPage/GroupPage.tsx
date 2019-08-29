@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import { withTheme, List } from "react-native-paper";
-import { NavigationContainerProps } from "react-navigation";
+import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import AvatarTouchable from "../../common/AvatarTouchable/AvatarTouchable";
+import { Group } from "../../../server-api/typings/Group";
 
 export interface GroupPageProps extends Themed, NavigationContainerProps { }
 export interface GroupPageState { }
@@ -15,7 +16,9 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
 
     render(): JSX.Element {
         const { colors }: ThemeExt = this.props.theme;
-
+        const { getParam }: NavigationScreenProp<{}> = this.props.navigation;
+        const group: Group = getParam("group");
+        
         return (
             <>
                 <AppBarHeader />

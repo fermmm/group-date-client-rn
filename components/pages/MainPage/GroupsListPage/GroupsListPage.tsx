@@ -5,6 +5,7 @@ import { withTheme, List } from "react-native-paper";
 import GraphSvg2 from "../../../../assets/GraphSvg2";
 import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
 import { NavigationContainerProps, NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
+import { getGroups } from "../../../../server-api/groups"; 
 
 export interface GroupsListPageProps extends Themed, NavigationInjectedProps {}
 export interface GroupsListPageState {}
@@ -20,30 +21,23 @@ class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState>
                 <ScrollView>       
                     <List.Section>
                         <List.Subheader>Citas confirmadas</List.Subheader>
-                        <List.Item
-                            title="maria, raul, julia, tincho, mili, ayelen, romina, chen"
-                            description="Cita dentro de 2 días"
-                            left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.background} lineColor={c} style={styles.logo} />} />}
-                            onPress={() => navigate("Group")}
-                        />
-                        <List.Item
-                            title="ofelia26, malum, clau, matias, rocio, alberto, cristina"
-                            description="Cita dentro de 3 semanas"
-                            left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.background} lineColor={c} style={styles.logo} />} />}
-                            onPress={() => navigate("Group")}
-                        />
+                        {
+                            getGroups().map((group, i) =>
+                                <List.Item
+                                    title={group.users.map((user, u) => (u > 0 ? ", " : "") + user.name)}
+                                    description="Cita dentro de 2 días"
+                                    left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.background} lineColor={c} style={styles.logo} />} />}
+                                    onPress={() => navigate("Group", {group})}
+                                    key={i}
+                                />,
+                            )
+                        }
                     </List.Section>
                     <List.Section>
                         <List.Subheader>Invitaciones pendientes</List.Subheader>
                         <List.Item
                             title="amanda, nicolas, rocio, hector, cristian, ivana, florencia"
                             description="Votaron: 3 / 6"
-                            left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} style={styles.logo} />} />}
-                            onPress={() => navigate("Group")}
-                        />
-                        <List.Item
-                            title="paola6556, gerardo, juliana, lauta, diego, barbie, ana"
-                            description="Votaron: 12 / 20"
                             left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} style={styles.logo} />} />}
                             onPress={() => navigate("Group")}
                         />

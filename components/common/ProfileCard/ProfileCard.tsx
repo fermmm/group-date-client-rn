@@ -9,9 +9,11 @@ import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
 import QuestionInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
+import { User } from "../../../server-api/typings/User";
+import { getAge } from "../../../server-api/tools/date-tools";
 
 export interface ProfileCardProps extends Themed {
-    images: string[];
+    user: User;
     showLikeDislikeButtons?: boolean;
     onLikeClick?: () => void;
     onDislikeClick?: () => void;
@@ -30,7 +32,8 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
     };
 
     render(): JSX.Element {
-        const { images, showLikeDislikeButtons, onLikeClick, onDislikeClick }: Partial<ProfileCardProps> = this.props;
+        const { showLikeDislikeButtons, onLikeClick, onDislikeClick }: Partial<ProfileCardProps> = this.props;
+        const { name, photos, birthdate, area }: Partial<User> = this.props.user;
         const { renderImageModal, imageSelected }: Partial<ProfileCardState> = this.state;
         const { colors, backgroundImage }: ThemeExt = this.props.theme;
 
@@ -54,7 +57,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                         <Card style={[styles.card, { backgroundColor: colors.backgroundForText }]}>
                             <ImageBackground source={backgroundImage} style={styles.galleryBackground}>
                                 <ImagesScroll
-                                    images={images}
+                                    images={photos}
                                     style={styles.galleryScroll}
                                     onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
                                     renderImage={(image: string, imageProps: ImageProps) =>
@@ -69,8 +72,8 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                             </ImageBackground>
                             <View style={styles.titleAreaContainer}>
                                 <Card.Title
-                                    title="martukrasinsky"
-                                    subtitle="28 · Caballito"
+                                    title={name}
+                                    subtitle={`${getAge(birthdate)} · ${area}`}
                                     style={{flex: 1}}
                                     titleStyle={{ color: colors.text }}
                                     subtitleStyle={{ color: colors.text }}
