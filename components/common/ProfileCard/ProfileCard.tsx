@@ -57,7 +57,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                         <Card style={[styles.card, { backgroundColor: colors.backgroundForText }]}>
                             <ImageBackground source={backgroundImage} style={styles.galleryBackground}>
                                 <ImagesScroll
-                                    images={photos}
+                                    photos={photos}
                                     style={styles.galleryScroll}
                                     onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
                                     renderImage={(image: string, imageProps: ImageProps) =>
@@ -116,7 +116,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                 renderImageModal === true &&
                 <ImagesModal
                     visible={renderImageModal}
-                    images={images}
+                    photos={photos}
                     initialPage={imageSelected}
                     onClose={() => this.setState({ renderImageModal: false })}
                 />

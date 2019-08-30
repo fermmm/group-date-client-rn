@@ -5,7 +5,7 @@ import Gallery from "./Gallery/Gallery";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 
 export interface ImagesModalProps {
-    images: string[];
+    photos: string[];
     visible: boolean;
     initialPage?: number;
     onClose?: () => void;
@@ -14,7 +14,7 @@ export interface ImagesModalProps {
 
 export default class ImagesModal extends Component<ImagesModalProps> {
     render(): JSX.Element {
-        const imagesGalleryFormat: ImageData = this.props.images.map((uri: string, i: number) => ({source: {uri}}));
+        const imagesGalleryFormat: ImageData = this.props.photos.map((uri: string, i: number) => ({source: {uri}}));
         return (
             <Modal
                 visible={this.props.visible}

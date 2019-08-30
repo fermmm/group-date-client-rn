@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import { withTheme, List } from "react-native-paper";
-import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
+import { NavigationContainerProps, NavigationScreenProp, ScrollView } from "react-navigation";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import AvatarTouchable from "../../common/AvatarTouchable/AvatarTouchable";
 import { Group } from "../../../server-api/typings/Group";
+import { User } from "../../../server-api/typings/User";
 
 export interface GroupPageProps extends Themed, NavigationContainerProps { }
 export interface GroupPageState { }
@@ -22,35 +23,60 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
         return (
             <>
                 <AppBarHeader />
-                <List.Section title="Accordions">
-                    <List.Accordion
-                        title="Uncontrolled Accordion"
-                        left={props =>
-                            <AvatarTouchable
-                                {...props}
-                                onPress={() => console.log("AVATAR PRESS")}
-                                size={40}
-                                source={{ uri: "https://i.postimg.cc/jdKQrj0X/61409457-172211943787907-7676116613910237160-n.jpg" }}
-                            />
-                        }
-                    >
-                        <List.Item
-                            title="First item"
-                            left={props =>
-                                <AvatarTouchable
-                                    {...props}
-                                    onPress={() => console.log("AVATAR PRESS")}
-                                    size={40}
-                                    source={{ uri: "https://i.postimg.cc/jSSHLkjn/46051978-200921290817965-13954598237702697-n.jpg" }}
-                                />
-                            }
-                            style={styles.subItem}
-                        />
-                        <List.Item title="Second item" />
-                    </List.Accordion>
-                </List.Section>
+                <ScrollView>
+                    <List.Section title="Miembros del grupo">
+                    {
+                        group.users.map((user, i) => 
+                            <List.Accordion
+                                title={user.name}
+                                key={i}
+                                left={props =>
+                                    <AvatarTouchable
+                                        {...props}
+                                        onPress={() => console.log("AVATAR PRESS")}
+                                        size={50}
+                                        source={{ uri: user.photos[0] }}
+                                    />
+                                }
+                            >
+                                <List.Section title="Se gusta con:" style={styles.subItemTitle}>
+                                {
+                                    this.convertIdListInUsersList(group.matches[user.id], group.users).map((matchedUser, u) => 
+                                        <List.Item
+                                            title={matchedUser.name}
+                                            style={styles.subItem}                                     
+                                            key={u}
+                                            left={props =>
+                                                <AvatarTouchable
+                                                    {...props}
+                                                    onPress={() => console.log("AVATAR PRESS")}
+                                                    size={50}
+                                                    source={{ uri: matchedUser.photos[0] }}
+                                                />
+                                            }
+                                        />,
+                                    )
+                                }
+                                </List.Section>
+                            </List.Accordion>,
+                        )
+                    }
+                    </List.Section>
+                </ScrollView>
             </>
         );
+    }
+
+    convertIdListInUsersList(idList: string[], allUsersList: User[]): User[] {
+        const result: User[] = [];
+        
+        for (const user of allUsersList) {
+            if (idList.indexOf(user.id) !== -1) {
+                result.push(user);
+            }
+        }
+
+        return result;
     }
 }
 
@@ -58,8 +84,11 @@ const styles: Styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
     },
+    subItemTitle: {
+        paddingLeft: 10,
+    },
     subItem: {
-        paddingLeft: 40,
+        paddingLeft: 36,
     },
 });
 
