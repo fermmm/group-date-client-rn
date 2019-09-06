@@ -4,7 +4,7 @@ import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { withTheme, List } from "react-native-paper";
 import GraphSvg2 from "../../../../assets/GraphSvg2";
 import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
-import { NavigationContainerProps, NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
+import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
 import { getGroups } from "../../../../server-api/groups"; 
 
 export interface GroupsListPageProps extends Themed, NavigationInjectedProps {}

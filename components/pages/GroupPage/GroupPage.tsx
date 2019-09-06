@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet } from "react-native";
-import { withTheme, List } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { withTheme, List, Button, Text } from "react-native-paper";
 import { NavigationContainerProps, NavigationScreenProp, ScrollView } from "react-navigation";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -10,7 +10,9 @@ import { Group } from "../../../server-api/typings/Group";
 import { User } from "../../../server-api/typings/User";
 
 export interface GroupPageProps extends Themed, NavigationContainerProps { }
-export interface GroupPageState { }
+export interface GroupPageState { 
+    invitationAccepted: boolean;
+}
 
 class GroupPage extends Component<GroupPageProps, GroupPageState> {
     static defaultProps: Partial<GroupPageProps> = {};
@@ -23,6 +25,19 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
         return (
             <>
                 <AppBarHeader />
+                {
+                    !this.state.invitationAccepted &&
+                        <View>
+                            <Text>
+                                ¡Felicitaciones! formas parte de este grupo y podrian ir todes a una cita.
+                                Mas abajo podes explorar a los demas miembros del grupo.
+                                Antes de continuar pensá bien si realmente tenés las ganas y podes ir a una cita. Si es así presiona el boton de aceptar invitación para continuar.
+                            </Text>
+                            <Button mode="outlined" uppercase={false} onPress={() => console.log("clicked")}>
+                                Aceptar invitación
+                            </Button>
+                        </View>
+                }
                 <ScrollView>
                     <List.Section title="Miembros del grupo">
                     {
