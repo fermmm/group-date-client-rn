@@ -7,6 +7,7 @@ export default {
   roundness: 4,
   colors: {
     primary: "#9BD6FE",
+    primary2: "#9BD6FE",
     accent: "#E6FBFF",
     accent2: "#244A7A",
     background: "#9B63F8",

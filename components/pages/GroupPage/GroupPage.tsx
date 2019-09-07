@@ -15,7 +15,9 @@ export interface GroupPageState {
 }
 
 class GroupPage extends Component<GroupPageProps, GroupPageState> {
-    static defaultProps: Partial<GroupPageProps> = {};
+    state: GroupPageState = {
+        invitationAccepted: false,
+    };
 
     render(): JSX.Element {
         const { colors }: ThemeExt = this.props.theme;
@@ -24,60 +26,64 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
         
         return (
             <>
-                <AppBarHeader />
+            <AppBarHeader />
+            <ScrollView style={styles.mainContainer}>
                 {
                     !this.state.invitationAccepted &&
                         <View>
-                            <Text>
-                                ¡Felicitaciones! formas parte de este grupo y podrian ir todes a una cita.
-                                Mas abajo podes explorar a los demas miembros del grupo.
-                                Antes de continuar pensá bien si realmente tenés las ganas y podes ir a una cita. Si es así presiona el boton de aceptar invitación para continuar.
+                            <Text style={styles.textBlock}>
+                                ¡Felicitaciones! Te gustas con 4 miembros de este grupo, el proximo paso es organizar una cita grupal entre todes.
                             </Text>
-                            <Button mode="outlined" uppercase={false} onPress={() => console.log("clicked")}>
+                            <Text style={styles.textBlock}>
+                                Mas abajo podes explorar a los demas miembros del grupo.
+                            </Text>
+                            <Text style={styles.textBlock}>
+                                Si estas en la app por que realmente tenés las ganas y podes ir a una cita presiona el boton de aceptar invitación para continuar.
+                            </Text>
+                            <Button mode="outlined" uppercase={false} style={[styles.button, {borderColor: colors.primary}]} contentStyle={styles.buttonContent} onPress={() => console.log("continue press")}>
                                 Aceptar invitación
                             </Button>
                         </View>
                 }
-                <ScrollView>
-                    <List.Section title="Miembros del grupo">
-                    {
-                        group.users.map((user, i) => 
-                            <List.Accordion
-                                title={user.name}
-                                key={i}
-                                left={props =>
-                                    <AvatarTouchable
-                                        {...props}
-                                        onPress={() => console.log("AVATAR PRESS")}
-                                        size={50}
-                                        source={{ uri: user.photos[0] }}
-                                    />
-                                }
-                            >
-                                <List.Section title="Se gusta con:" style={styles.subItemTitle}>
-                                {
-                                    this.convertIdListInUsersList(group.matches[user.id], group.users).map((matchedUser, u) => 
-                                        <List.Item
-                                            title={matchedUser.name}
-                                            style={styles.subItem}                                     
-                                            key={u}
-                                            left={props =>
-                                                <AvatarTouchable
-                                                    {...props}
-                                                    onPress={() => console.log("AVATAR PRESS")}
-                                                    size={50}
-                                                    source={{ uri: matchedUser.photos[0] }}
-                                                />
-                                            }
-                                        />,
-                                    )
-                                }
-                                </List.Section>
-                            </List.Accordion>,
-                        )
-                    }
-                    </List.Section>
-                </ScrollView>
+                <List.Section title="Miembros del grupo">
+                {
+                    group.users.map((user, i) => 
+                        <List.Accordion
+                            title={user.name}
+                            key={i}
+                            left={props =>
+                                <AvatarTouchable
+                                    {...props}
+                                    onPress={() => console.log("AVATAR PRESS")}
+                                    size={50}
+                                    source={{ uri: user.photos[0] }}
+                                />
+                            }
+                        >
+                            <List.Section title="Se gusta con:" style={styles.subItemTitle}>
+                            {
+                                this.convertIdListInUsersList(group.matches[user.id], group.users).map((matchedUser, u) => 
+                                    <List.Item
+                                        title={matchedUser.name}
+                                        style={styles.subItem}                                     
+                                        key={u}
+                                        left={props =>
+                                            <AvatarTouchable
+                                                {...props}
+                                                onPress={() => console.log("AVATAR PRESS")}
+                                                size={50}
+                                                source={{ uri: matchedUser.photos[0] }}
+                                            />
+                                        }
+                                    />,
+                                )
+                            }
+                            </List.Section>
+                        </List.Accordion>,
+                    )
+                }
+                </List.Section>
+            </ScrollView>
             </>
         );
     }
@@ -98,12 +104,26 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
 const styles: Styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
+        padding: 10,
     },
     subItemTitle: {
         paddingLeft: 10,
     },
     subItem: {
         paddingLeft: 36,
+    },
+    textBlock: {
+        marginBottom: 15,
+        textAlign: "center",
+    },
+    button: {
+        width: "100%",
+        marginBottom: 15,
+        borderRadius: 25,
+    },
+    buttonContent: {
+        width: "100%",
+        height: 45,
     },
 });
 

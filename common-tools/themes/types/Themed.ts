@@ -7,6 +7,7 @@ export interface ThemeExt extends Theme {
 
     colors: {
         primary: string;
+        primary2: string;
         background: string;
         background2: string;
         backgroundForText: string;

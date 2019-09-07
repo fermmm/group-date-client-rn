@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions, StatusBar } from "react-native";
 import { TabView, SceneMap, TabBar, Route } from "react-native-tab-view";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { ThemeExt, Themed } from "../../../common-tools/ts-tools/Themed";
+import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { withTheme } from "react-native-paper";
 import { Theme } from "react-native-paper/typings";
 
@@ -36,12 +36,12 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
                 renderTabBar={props =>
                     <TabBar
                         {...props}
-                        indicatorStyle={{ backgroundColor: colors.primary }}
+                        indicatorStyle={{ backgroundColor: colors.primary2 }}
                         style={[styles.tabBar, {backgroundColor: colors.surface}]}
                         renderIcon={({ route, focused }) =>
                             <Icon
                                 name={route.icon}
-                                color={focused ? colors.accent : colors.primary}
+                                color={focused ? colors.accent : colors.primary2}
                                 size={22}
                             />
                         }
