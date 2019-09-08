@@ -32,16 +32,16 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                     !this.state.invitationAccepted &&
                         <View>
                             <Text style={styles.textBlock}>
-                                ¡Felicitaciones! Te gustas con 4 miembros de este grupo, el proximo paso es organizar una cita grupal entre todes.
+                                ¡Felicitaciones! te gustas con 3 miembros de este grupo, en el proximo paso vamos organizar una cita grupal entre todes.
                             </Text>
                             <Text style={styles.textBlock}>
                                 Mas abajo podes explorar a los demas miembros del grupo.
                             </Text>
                             <Text style={styles.textBlock}>
-                                Si estas en la app por que realmente tenés las ganas y podes ir a una cita presiona el boton de aceptar invitación para continuar.
+                                Si tenés las ganas y podes ir a una cita presiona el boton de continuar.
                             </Text>
                             <Button mode="outlined" uppercase={false} style={[styles.button, {borderColor: colors.primary}]} contentStyle={styles.buttonContent} onPress={() => console.log("continue press")}>
-                                Aceptar invitación
+                                Quiero una cita, ¡continuar!
                             </Button>
                         </View>
                 }
