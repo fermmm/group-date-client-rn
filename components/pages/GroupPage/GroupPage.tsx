@@ -10,14 +10,10 @@ import { Group } from "../../../server-api/typings/Group";
 import { User } from "../../../server-api/typings/User";
 
 export interface GroupPageProps extends Themed, NavigationContainerProps { }
-export interface GroupPageState { 
-    invitationAccepted: boolean;
-}
+export interface GroupPageState {}
 
 class GroupPage extends Component<GroupPageProps, GroupPageState> {
-    state: GroupPageState = {
-        invitationAccepted: false,
-    };
+    state: GroupPageState = {};
 
     render(): JSX.Element {
         const { colors }: ThemeExt = this.props.theme;
@@ -29,7 +25,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
             <AppBarHeader />
             <ScrollView style={styles.mainContainer}>
                 {
-                    !this.state.invitationAccepted &&
+                    !group.invitationAccepted &&
                         <View>
                             <Text style={styles.textBlock}>
                                 ¡Felicitaciones! te gustas con 3 miembros de este grupo, en el proximo paso vamos organizar una cita grupal entre todes.
@@ -38,7 +34,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                                 Mas abajo podes explorar a los demas miembros del grupo.
                             </Text>
                             <Text style={styles.textBlock}>
-                                Si tenés las ganas y podes ir a una cita presiona el boton de continuar.
+                                Si realmente tenés las ganas y podes ir a una cita presiona el boton de continuar.
                             </Text>
                             <Button mode="outlined" uppercase={false} style={[styles.button, {borderColor: colors.primary}]} contentStyle={styles.buttonContent} onPress={() => console.log("continue press")}>
                                 Quiero una cita, ¡continuar!

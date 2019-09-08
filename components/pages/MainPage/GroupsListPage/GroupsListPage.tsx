@@ -23,24 +23,31 @@ class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState>
                         <List.Subheader>Citas confirmadas</List.Subheader>
                         {
                             getGroups().map((group, i) =>
-                                <List.Item
-                                    title={group.users.map((user, u) => (u > 0 ? ", " : "") + user.name)}
-                                    description="Cita dentro de 2 días"
-                                    left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.background} lineColor={c} style={styles.logo} />} />}
-                                    onPress={() => navigate("Group", {group})}
-                                    key={i}
-                                />,
+                                group.invitationAccepted &&
+                                    <List.Item
+                                        title={group.users.map((user, u) => (u > 0 ? ", " : "") + user.name)}
+                                        description="Cita dentro de 2 días"
+                                        left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.background} lineColor={c} style={styles.logo} />} />}
+                                        onPress={() => navigate("Group", {group})}
+                                        key={i}
+                                    />,
                             )
                         }
                     </List.Section>
                     <List.Section>
                         <List.Subheader>Invitaciones pendientes</List.Subheader>
-                        <List.Item
-                            title="amanda, nicolas, rocio, hector, cristian, ivana, florencia"
-                            description="Votaron: 3 / 6"
-                            left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} style={styles.logo} />} />}
-                            onPress={() => navigate("Group")}
-                        />
+                        {
+                            getGroups().map((group, i) =>
+                                !group.invitationAccepted &&
+                                    <List.Item
+                                        title={group.users.map((user, u) => (u > 0 ? ", " : "") + user.name)}
+                                        description="En espera de que aceptes invitacion"
+                                        left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} style={styles.logo} />} />}
+                                        onPress={() => navigate("Group", {group})}
+                                        key={i}
+                                    />,
+                            )
+                        }
                     </List.Section>
                 </ScrollView>
             </View>
