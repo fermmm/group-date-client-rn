@@ -9,6 +9,7 @@ import LightTheme from "./common-tools/themes/LightTheme";
 import DarkTheme from "./common-tools/themes/DarkTheme";
 import WhiteTheme from "./common-tools/themes/WhiteTheme";
 import ThemeFemaleColors from "./common-tools/themes/ThemeFemaleColors";
+import { loadFontMontserrat } from "./common-tools/fontLoaders/loadFontMontserrat";
 
 const Navigator: NavigationContainer = createAppContainer(
     createStackNavigator(
@@ -28,16 +29,12 @@ interface PageBasicWrapperState {
 
 export default class App extends Component<{}, PageBasicWrapperState> {
     state: PageBasicWrapperState = {
-        resourcesLoaded: true,
+        resourcesLoaded: false,
     };
 
-    /*async componentDidMount(): Promise<void> {
-        await loadFonts();
+    async componentDidMount(): Promise<void> {
+        await loadFontMontserrat();
         this.setState({ resourcesLoaded: true });
-    }*/
-    
-    componentDidMount(): void {
-        
     }
 
     render(): JSX.Element {

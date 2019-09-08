@@ -14,7 +14,7 @@ class LoginPage extends Component<LoginProps, LoginState> {
     static defaultProps: Partial<LoginProps> = {};
 
     render(): JSX.Element {
-        const { colors }: ThemeExt = this.props.theme;
+        const { colors, fonts }: ThemeExt = this.props.theme;
         const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
 
         return (
@@ -26,14 +26,14 @@ class LoginPage extends Component<LoginProps, LoginState> {
             >
                 <View style={styles.mainContainer}>
                     <LogoSvg style={styles.logo} color={colors.logoColor} />
-                    <Text style={[styles.textBlock, { color: colors.textLogin}]}>
-                        <Text style={{fontWeight: "bold"}}> ¡Bienvenide! </Text> Poly Dates es una app de citas grupales para conocer poliamoroses. Similar a OkCupid o Tinder, pero las citas no son de a dos, son en grupos que se forman cuando se gustan varios entre todes en la mayor medida posible.
+                    <Text style={[styles.textBlock, { color: colors.textLogin, fontFamily: fonts.light}]}>
+                        <Text style={{fontWeight: "bold"}}> ¡Bienvenide! </Text> Poly Dates es una app de citas grupales de poliamor. Las citas son en grupos que se forman cuando se gustan varios entre todes en la mayor medida posible.
                     </Text>
-                    <Text style={[styles.textBlock, { color: colors.textLogin}]}>
-                        Aplicación sin fines de lucro y de código abierto, perfeccionada por la comunidad.
+                    <Text style={[styles.textBlock, { color: colors.textLogin, fontFamily: fonts.light}]}>
+                        Aplicación sin fines de lucro y de código abierto, perfeccionada con la comunidad.
                     </Text>
                     <Button mode="outlined" uppercase={false} color={colors.textLogin} style={[styles.button, {borderColor: colors.textLogin}]} contentStyle={styles.buttonContent} onPress={() => navigate("Main")}>
-                        Ok entendido, ¡comenzar!
+                        OK entendido, ¡comenzar!
                     </Button>
                 </View>
             </LinearGradient>

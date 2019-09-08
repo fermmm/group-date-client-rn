@@ -1,6 +1,7 @@
 import color from "color";
 import { pinkA400 } from "react-native-paper/src/styles/colors";
 import fonts from "react-native-paper/src/styles/fonts";
+import montserrat from "./fonts/montserrat";
 
 export default {
   dark: true,
@@ -35,7 +36,7 @@ export default {
       .string(),
     notification: pinkA400,
   },
-  fonts,
+  fonts: montserrat,
   backgroundImage: require("../../assets/backgroundLight.png"),
   animation: {
     scale: 1.0,
