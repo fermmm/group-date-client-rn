@@ -8,6 +8,7 @@ import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import AvatarTouchable from "../../common/AvatarTouchable/AvatarTouchable";
 import { Group } from "../../../server-api/typings/Group";
 import { User } from "../../../server-api/typings/User";
+import VotingPoll from "../../common/VotingPoll/VotingPoll";
 
 export interface GroupPageProps extends Themed, NavigationContainerProps { }
 export interface GroupPageState {}
@@ -79,6 +80,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                     )
                 }
                 </List.Section>
+                <VotingPoll />
             </ScrollView>
             </>
         );
