@@ -27,7 +27,7 @@ class LoginPage extends Component<LoginProps, LoginState> {
                 <View style={styles.mainContainer}>
                     <LogoSvg style={styles.logo} color={colors.logoColor} />
                     <Text style={[styles.textBlock, { color: colors.textLogin, fontFamily: fonts.light}]}>
-                        <Text style={{fontWeight: "bold"}}> ¡Bienvenide! </Text> Poly Dates es una app de citas grupales de poliamor. Las citas son en grupos que se forman cuando se gustan varios entre todes en la mayor medida posible.
+                        <Text style={{fontWeight: "bold"}}> ¡Bienvenide! </Text> Poly Dates es una app de citas grupales para conocer poliamoroses. Las citas son en grupos que se forman cuando se gustan varios entre todes en la mayor medida posible.
                     </Text>
                     <Text style={[styles.textBlock, { color: colors.textLogin, fontFamily: fonts.light}]}>
                         Aplicación sin fines de lucro y de código abierto, perfeccionada con la comunidad.
