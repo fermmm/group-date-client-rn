@@ -4,7 +4,7 @@ import fonts from "react-native-paper/src/styles/fonts";
 import montserrat from "./fonts/montserrat";
 
 export default {
-  dark: true,
+  dark: false,
   roundness: 4,
   colors: {
     primary: "#D08686",
@@ -14,7 +14,8 @@ export default {
     background: "#634865",
     background2: "#363E44",
     backgroundForText: "#363E44",
-    surface: "#835A74",
+    surface: "#363E44",
+    topBar: "#835A74",
     error: "#FF7A8F",
     text: "#F6EFF1",
     text2: "#C7BBC9",

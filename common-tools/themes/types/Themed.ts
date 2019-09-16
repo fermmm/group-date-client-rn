@@ -12,6 +12,7 @@ export interface ThemeExt extends Theme {
         background2: string;
         backgroundForText: string;
         surface: string;
+        topBar: string;
         accent: string;
         accent2: string;
         error: string;

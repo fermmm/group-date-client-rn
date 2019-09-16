@@ -37,7 +37,7 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
                     <TabBar
                         {...props}
                         indicatorStyle={{ backgroundColor: colors.primary2 }}
-                        style={[styles.tabBar, {backgroundColor: colors.surface}]}
+                        style={[styles.tabBar, {backgroundColor: colors.topBar}]}
                         renderIcon={({ route, focused }) =>
                             <Icon
                                 name={route.icon}
