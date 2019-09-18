@@ -2,6 +2,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "inspector": "react-devtools",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject"
@@ -26,6 +27,7 @@
     "@types/react-native": "^0.57.60",
     "@types/react-native-vector-icons": "^6.4.1",
     "babel-preset-expo": "^5.2.0",
+    "react-devtools": "^3.6.3",
     "tslint": "^5.17.0",
     "tslint-react": "^4.0.0",
     "typescript": "^3.5.3"
