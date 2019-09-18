@@ -20,6 +20,7 @@ const styles: Styles = StyleSheet.create({
         marginLeft: 8,
         marginRight: 8,
         marginBottom: 20,
+        padding: 7,
         elevation: 6,
     },
 });

@@ -10,6 +10,8 @@ import DarkTheme from "./common-tools/themes/DarkTheme";
 import WhiteTheme from "./common-tools/themes/WhiteTheme";
 import ThemeFemaleColors from "./common-tools/themes/ThemeFemaleColors";
 import { loadFontMontserrat } from "./common-tools/fontLoaders/loadFontMontserrat";
+import { ThemeExt } from "./common-tools/themes/types/Themed";
+import { currentTheme } from "./config";
 
 const Navigator: NavigationContainer = createAppContainer(
     createStackNavigator(
@@ -43,7 +45,7 @@ export default class App extends Component<{}, PageBasicWrapperState> {
         }
 
         return (
-            <PaperProvider theme={WhiteTheme /*ThemeFemaleColors*/ /* LightTheme */  /*DarkTheme*/}>                
+            <PaperProvider theme={currentTheme}>                
                 <Navigator />
             </PaperProvider>
         );
