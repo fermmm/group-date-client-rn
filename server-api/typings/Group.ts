@@ -1,7 +1,7 @@
 import { User } from "./User";
 
 export interface Group {
-    users: User[];
+    members: User[];
     matches: {[userId: string]: string[]};
     invitationAccepted: boolean;
 }

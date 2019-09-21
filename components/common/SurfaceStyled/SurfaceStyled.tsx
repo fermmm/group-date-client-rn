@@ -19,9 +19,11 @@ const styles: Styles = StyleSheet.create({
     surface: {
         marginLeft: 8,
         marginRight: 8,
-        marginBottom: 20,
-        padding: 7,
-        elevation: 6,
+        marginBottom: 10,
+        padding: 12,
+        elevation: 9,
+        borderRadius: 10,
+        shadowRadius: 100,
     },
 });
 

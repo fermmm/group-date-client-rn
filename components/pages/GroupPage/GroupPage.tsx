@@ -9,6 +9,8 @@ import AvatarTouchable from "../../common/AvatarTouchable/AvatarTouchable";
 import { Group } from "../../../server-api/typings/Group";
 import { User } from "../../../server-api/typings/User";
 import VotingPoll from "../../common/VotingPoll/VotingPoll";
+import { testingVotingData } from "../../../server-api/testingFakeData";
+import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
 
 export interface GroupPageProps extends Themed, NavigationContainerProps { }
 export interface GroupPageState {}
@@ -24,7 +26,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
         return (
             <>
             <AppBarHeader />
-            <ScrollView style={styles.mainContainer}>
+            <ScrollView style={styles.mainContainer} contentContainerStyle={styles.scrollViewContainer}>
                 {
                     !group.invitationAccepted &&
                         <View>
@@ -42,45 +44,50 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                             </Button>
                         </View>
                 }
-                <List.Section title="Miembros del grupo">
-                {
-                    group.users.map((user, i) => 
-                        <List.Accordion
-                            title={user.name}
-                            key={i}
-                            left={props =>
-                                <AvatarTouchable
-                                    {...props}
-                                    onPress={() => console.log("AVATAR PRESS")}
-                                    size={50}
-                                    source={{ uri: user.photos[0] }}
-                                />
-                            }
-                        >
-                            <List.Section title="Se gusta con:" style={styles.subItemTitle}>
-                            {
-                                this.convertIdListInUsersList(group.matches[user.id], group.users).map((matchedUser, u) => 
-                                    <List.Item
-                                        title={matchedUser.name}
-                                        style={styles.subItem}                                     
-                                        key={u}
-                                        left={props =>
-                                            <AvatarTouchable
-                                                {...props}
-                                                onPress={() => console.log("AVATAR PRESS")}
-                                                size={50}
-                                                source={{ uri: matchedUser.photos[0] }}
-                                            />
-                                        }
-                                    />,
-                                )
-                            }
-                            </List.Section>
-                        </List.Accordion>,
-                    )
-                }
-                </List.Section>
-                <VotingPoll />
+                <SurfaceStyled>
+                    <List.Section title="Miembros del grupo">
+                    {
+                        group.members.map((user, i) => 
+                            <List.Accordion
+                                title={user.name}
+                                key={i}
+                                left={props =>
+                                    <AvatarTouchable
+                                        {...props}
+                                        onPress={() => console.log("AVATAR PRESS")}
+                                        size={50}
+                                        source={{ uri: user.photos[0] }}
+                                    />
+                                }
+                            >
+                                <List.Section title="Se gusta con:" style={styles.subItemTitle}>
+                                {
+                                    this.convertIdListInUsersList(group.matches[user.id], group.members).map((matchedUser, u) => 
+                                        <List.Item
+                                            title={matchedUser.name}
+                                            style={styles.subItem}                                     
+                                            key={u}
+                                            left={props =>
+                                                <AvatarTouchable
+                                                    {...props}
+                                                    onPress={() => console.log("AVATAR PRESS")}
+                                                    size={50}
+                                                    source={{ uri: matchedUser.photos[0] }}
+                                                />
+                                            }
+                                        />,
+                                    )
+                                }
+                                </List.Section>
+                            </List.Accordion>,
+                        )
+                    }
+                    </List.Section>
+                </SurfaceStyled>
+                <VotingPoll 
+                    group={group}
+                    votingOptions={testingVotingData}
+                />
             </ScrollView>
             </>
         );
@@ -103,6 +110,7 @@ const styles: Styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         padding: 10,
+        paddingBottom: 60,
     },
     subItemTitle: {
         paddingLeft: 10,
@@ -122,6 +130,10 @@ const styles: Styles = StyleSheet.create({
     buttonContent: {
         width: "100%",
         height: 45,
+    },
+    scrollViewContainer: {
+        paddingTop: 5,
+        paddingBottom: 60,
     },
 });
 

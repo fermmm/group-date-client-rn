@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableNativeFeedback } from "react-native";
 import { withTheme, Button } from "react-native-paper";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -67,7 +67,8 @@ const styles: Styles = StyleSheet.create({
     buttonContent: {
         width: "100%",
         height: 45,
-    },
+        borderRadius: 25,
+    }
 });
 
 export default withTheme(LoginPage);

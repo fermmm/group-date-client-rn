@@ -4,7 +4,7 @@ import { Group } from "../../typings/Group";
 export const fakeTestingGroups: Group[] = [
     {
         invitationAccepted: true,
-        users: [
+        members: [
             fakeTestingUsers[2],
             fakeTestingUsers[3],
             fakeTestingUsers[4],
@@ -35,7 +35,7 @@ export const fakeTestingGroups: Group[] = [
     },
     {
         invitationAccepted: true,
-        users: [
+        members: [
             fakeTestingUsers[0],
             fakeTestingUsers[1],
             fakeTestingUsers[2],
@@ -62,7 +62,7 @@ export const fakeTestingGroups: Group[] = [
     },
     {
         invitationAccepted: false,
-        users: [
+        members: [
             fakeTestingUsers[0],
             fakeTestingUsers[1],
             fakeTestingUsers[2],

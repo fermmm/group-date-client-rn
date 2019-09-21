@@ -25,7 +25,7 @@ class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState>
                             getGroups().map((group, i) =>
                                 group.invitationAccepted &&
                                     <List.Item
-                                        title={group.users.map((user, u) => (u > 0 ? ", " : "") + user.name)}
+                                        title={group.members.map((user, u) => (u > 0 ? ", " : "") + user.name)}
                                         description="Cita dentro de 2 días"
                                         left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.background} lineColor={c} style={styles.logo} />} />}
                                         onPress={() => navigate("Group", {group})}
@@ -40,7 +40,7 @@ class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState>
                             getGroups().map((group, i) =>
                                 !group.invitationAccepted &&
                                     <List.Item
-                                        title={group.users.map((user, u) => (u > 0 ? ", " : "") + user.name)}
+                                        title={group.members.map((user, u) => (u > 0 ? ", " : "") + user.name)}
                                         description="En espera de que aceptes invitacion"
                                         left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} style={styles.logo} />} />}
                                         onPress={() => navigate("Group", {group})}
