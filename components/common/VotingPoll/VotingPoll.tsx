@@ -6,8 +6,10 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import SurfaceStyled from "../SurfaceStyled/SurfaceStyled";
 import { currentTheme } from "../../../config";
 import ProgressBar from "../ProgressBar/ProgressBar";
-import { VotingOption, testingVotingData } from "../../../server-api/testingFakeData";
+import { VotingOption } from "../../../server-api/testingFakeData";
 import { Group } from "../../../server-api/typings/Group";
+import TitleText from "../TitleText/TitleText";
+import TitleSmallText from "../TitleSmallText/TitleSmallText";
 
 export interface VotingPollProps extends Themed {
     group: Group;
@@ -24,42 +26,48 @@ class VotingPoll extends Component<VotingPollProps, VotingPollState> {
         
         return (
             <View> 
-            {
-            votingOptions.map((votingOption, i) => 
-                <SurfaceStyled key={i}>
-                    <Text style={styles.optionNameText}>
-                        {votingOption.textLine1}
-                    </Text>
-                    <Text style={styles.optionAddressText}>
-                        {votingOption.textLine2} 
-                    </Text>
-                    <View style={styles.rowContainer}>
-                        <ProgressBar progress={votingOption.votersAmmount / group.members.length} fillColor={colors.primary}/>
-                        <Button compact onPress={() => console.log('Pressed')} uppercase={false} icon={"add"}>
-                            Votar
-                        </Button>
-                    </View>
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.votesAmmountText}>Opcion votada por {votingOption.votersAmmount}: </Text>
-                        <Text style={styles.votersText}>
-                            {votingOption.votersNames.join(", ")}
+                <TitleText>
+                    Sarasa
+                </TitleText>
+                <TitleSmallText>
+                    Sarasasaa
+                </TitleSmallText>
+                {
+                votingOptions.map((votingOption, i) => 
+                    <SurfaceStyled key={i}>
+                        <Text style={styles.optionNameText}>
+                            {votingOption.textLine1}
                         </Text>
-                    </View>
-                </SurfaceStyled>,
-            )
-            }
+                        <Text style={styles.optionAddressText}>
+                            {votingOption.textLine2} 
+                        </Text>
+                        <View style={styles.rowContainer}>
+                            <ProgressBar progress={votingOption.votersAmmount / group.members.length} fillColor={colors.primary}/>
+                            <Button compact onPress={() => console.log('Pressed')} uppercase={false} icon={"add"}>
+                                Votar
+                            </Button>
+                        </View>
+                        <View style={styles.rowContainer}>
+                            <Text style={styles.votesAmmountText}>Opcion votada por {votingOption.votersAmmount}: </Text>
+                            <Text style={styles.votersText}>
+                                {votingOption.votersNames.join(", ")}
+                            </Text>
+                        </View>
+                    </SurfaceStyled>,
+                )
+                }
             </View>
         );
     }
 }
 
 const styles: Styles = StyleSheet.create({
-    optionNameText: {
+    textLine1: {
         fontFamily: currentTheme.fonts.regular,
         fontSize: 15,
         marginBottom: 5,
     },
-    optionAddressText: {
+    textLine2: {
         fontFamily: currentTheme.fonts.light,
         fontSize: 12,
     },
