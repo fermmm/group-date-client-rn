@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View, StyleProp, ViewStyle } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
+import { currentTheme } from "../../../config";
 
 export interface Props {
     progress: number;
@@ -37,12 +38,12 @@ const styles: Styles = StyleSheet.create({
     containerStyle: {
         flex: 1,
         height: 13,
-        borderRadius: 100,
+        borderRadius: currentTheme.roundness,
         backgroundColor: "#EAEAEA",
     },
     fillStyle: {
         flex: 1,
-        borderRadius: 100,
+        borderRadius: currentTheme.roundness,
         backgroundColor: "#879DE1",
     },
 });

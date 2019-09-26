@@ -11,7 +11,7 @@ export interface CardsPageState { }
 
 class CardsPage extends Component<CardsPageProps, CardsPageState> {
     render(): JSX.Element {
-        const { colors }: ThemeExt = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
 
         return (
             // <ImageBackground source={this.props.theme.backgroundImage} style={{width: "100%", height: "100%"}}>

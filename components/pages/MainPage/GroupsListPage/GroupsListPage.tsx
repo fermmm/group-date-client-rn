@@ -13,7 +13,7 @@ export interface GroupsListPageState {}
 class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState> {
     
     render(): JSX.Element {
-        const { colors }: ThemeExt = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
         const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
 
         return (
@@ -61,4 +61,4 @@ const styles: Styles = StyleSheet.create({
     },
 });
 
-export default withTheme(withNavigation(GroupsListPage));
+export default withNavigation(withTheme(GroupsListPage));

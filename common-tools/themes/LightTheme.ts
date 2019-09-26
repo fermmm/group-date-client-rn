@@ -1,6 +1,4 @@
 import color from "color";
-import { pinkA400 } from "react-native-paper/src/styles/colors";
-import fonts from "react-native-paper/src/styles/fonts";
 import montserrat from "./fonts/montserrat";
 
 export default {
@@ -35,7 +33,7 @@ export default {
       .alpha(0.5)
       .rgb()
       .string(),
-    notification: pinkA400,
+    notification: "#FF4040",
   },
   fonts: montserrat,
   backgroundImage: require("../../assets/backgroundLight3.png"),

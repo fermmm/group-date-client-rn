@@ -16,9 +16,10 @@ class TitleText extends Component<TypographyProps> {
 
 const styles: Styles = StyleSheet.create({
     titleStyle: {
-        fontFamily: currentTheme.fonts.regular,
-        fontSize: 15,
-        marginBottom: 5,
+        fontFamily: currentTheme.fonts.light,
+        fontSize: 20,
+        marginBottom: 12,
+        paddingLeft: 4,
     },
 });
 

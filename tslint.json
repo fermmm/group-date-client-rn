@@ -68,7 +68,9 @@
     "member-access": false,
     "arrow-parens": false,
     "no-unused-expression": false,
-    "interface-name": false
+    "interface-name": false,
+    "trailing-comma": false,
+    "eofline": false
   },
   "jsRules": {},
   "rulesDirectory": "./tslint/custom-rules/"

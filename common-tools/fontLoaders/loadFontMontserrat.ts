@@ -1,4 +1,4 @@
-import { Font } from "expo";
+import * as Font from "expo-font";
 
 export async function loadFontMontserrat(): Promise<void> {
     return Font.loadAsync({

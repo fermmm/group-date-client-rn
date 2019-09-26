@@ -18,7 +18,7 @@ class QuestionInProfileCard extends Component<IQuestionProfileProps, IQuestionPr
     };
 
     render(): JSX.Element {
-        const { colors }: ThemeExt = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
         const { answerMatches }: IQuestionProfileProps = this.props;
 
         return (

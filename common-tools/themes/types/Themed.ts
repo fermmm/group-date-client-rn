@@ -1,6 +1,7 @@
-import { Theme, Colors } from "react-native-paper/typings";
+import { Merge } from "./../../ts-tools/common-ts-tools";
+import { Theme, Colors } from "react-native-paper";
 
-export interface ThemeExt extends Theme {
+export type ThemeExt = Merge<Theme, {
     dark: boolean;
     roundness: number;
     backgroundImage?: {};
@@ -27,14 +28,18 @@ export interface ThemeExt extends Theme {
         statusWarning: string;
         statusBad: string;
     };
-    fonts: {
-        regular: string;
-        medium: string;
-        light: string;
-        thin: string;
-    };
-}
+    fonts: FontExt;
+}>;
 
 export interface Themed {
-    theme: ThemeExt;
+    theme: Theme;
+}
+
+export interface FontExt {
+   semiBold: string;
+   regular: string;
+   medium: string;
+   light: string;
+   extraLight: string;
+   thin: string;
 }

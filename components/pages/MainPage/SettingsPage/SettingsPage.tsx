@@ -9,12 +9,12 @@ export interface SettingsPageState {}
 
 class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
     render(): JSX.Element {
-        const { colors }: ThemeExt = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
 
         return (
             <>
                 <View style={[styles.scene, { backgroundColor: colors.backgroundForText }]} >
-                    <Button icon="add-a-photo" mode="contained" onPress={() => console.log('Pressed')}>
+                    <Button icon="add-a-photo" mode="contained" onPress={() => console.log("Pressed")}>
                         Press me
                     </Button>
                 </View>

@@ -20,7 +20,7 @@ class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
     };
 
     render(): JSX.Element {
-        const { colors }: ThemeExt = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
         const { goBack }: NavigationScreenProp<{}> = this.props.navigation;
 
         return (
@@ -47,4 +47,4 @@ const styles: Styles = StyleSheet.create({
     },
 });
 
-export default withTheme(withNavigation(AppBarHeader));
+export default withNavigation(withTheme(AppBarHeader));

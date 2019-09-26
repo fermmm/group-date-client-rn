@@ -1,15 +1,7 @@
 import { Platform } from "react-native";
+import { FontExt } from "../types/Themed";
 
-interface Font {
-    semiBold: string;
-    regular: string;
-    medium: string;
-    light: string;
-    extraLight: string;
-    thin: string;
-}
-
-const montserrat: Font = Platform.select({
+const montserrat: FontExt = Platform.select({
     web: {
         semiBold: "Montserrat-SemiBold",
         regular: "Montserrat-Regular",

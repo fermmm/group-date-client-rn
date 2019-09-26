@@ -15,7 +15,7 @@ export interface LikeDislikeProps extends Themed {
 class LikeDislikeButtons extends Component<LikeDislikeProps> {
 
     render(): JSX.Element {
-        const { colors }: ThemeExt = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
 
         return (
             <View style={[styles.container, this.props.style]}>

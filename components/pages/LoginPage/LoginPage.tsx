@@ -14,7 +14,7 @@ class LoginPage extends Component<LoginProps, LoginState> {
     static defaultProps: Partial<LoginProps> = {};
 
     render(): JSX.Element {
-        const { colors, fonts }: ThemeExt = this.props.theme;
+        const { colors, fonts }: ThemeExt = this.props.theme as unknown as ThemeExt;
         const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
 
         return (
@@ -62,12 +62,10 @@ const styles: Styles = StyleSheet.create({
         width: "100%",
         marginTop: 50,
         marginBottom: 15,
-        borderRadius: 25,
     },
     buttonContent: {
         width: "100%",
         height: 45,
-        borderRadius: 25,
     }
 });
 

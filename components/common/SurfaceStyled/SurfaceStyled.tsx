@@ -17,8 +17,6 @@ class SurfaceStyled extends Component<SurfaceProps> {
 
 const styles: Styles = StyleSheet.create({
     surface: {
-        marginLeft: 8,
-        marginRight: 8,
         marginBottom: 10,
         padding: 12,
         elevation: 9,

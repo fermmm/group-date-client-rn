@@ -5,7 +5,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { withTheme } from "react-native-paper";
-import { Theme } from "react-native-paper/typings";
 
 interface NavBarProps extends Themed {
     sections: { [key: string]: () => JSX.Element };
@@ -23,7 +22,7 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
 
     render(): JSX.Element {
         const { routes }: NavBarProps = this.props;
-        const { colors }: ThemeExt = this.props.theme;
+        const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
         const { index }: NavBarState = this.state;
 
         return (
