@@ -34,6 +34,8 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
             <AppBarHeader />
             <ScreensStepper
                currentScreen={this.state.currentStep}
+               swipeEnabled={false}
+               onScreenChange={(newStep) => this.setState({currentStep: newStep})}
             >
                <BasicScreenContainer 
                   showBottomGradient={true}
