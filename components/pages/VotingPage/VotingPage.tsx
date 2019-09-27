@@ -79,9 +79,6 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
 }
 
 const styles: Styles = StyleSheet.create({
-   mainContainer: {
-      flex: 1,
-   },
 });
 
 export default withTheme(VotingPage);

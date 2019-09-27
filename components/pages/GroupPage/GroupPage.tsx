@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { withTheme, List, Button, Text } from "react-native-paper";
-import { NavigationContainerProps, NavigationScreenProp, ScrollView } from "react-navigation";
+import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
