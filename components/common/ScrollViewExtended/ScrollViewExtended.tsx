@@ -42,7 +42,7 @@ class ScrollViewExtended extends Component<ScrollViewExtendedProps, ScrollViewEx
       const { showBottomGradient, bottomGradientColor }: Partial<ScrollViewExtendedProps> = this.props;
 
       return (
-         <View>
+         <View style={{flex: 1}}>
             <ScrollView
                {...this.props}
                onScroll={(e) => this.onScroll(e)}
@@ -137,7 +137,7 @@ const styles: Styles = StyleSheet.create({
       position: "absolute",
       bottom: 0,
       width: "100%",
-      height: 110,                 // This controls the height of the bottom "fade gradient"
+      height: 90,                 // This controls the height of the bottom "fade gradient"
    },
 });
 

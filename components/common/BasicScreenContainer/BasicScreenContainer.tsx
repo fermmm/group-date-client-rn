@@ -17,19 +17,11 @@ export default class BasicScreenContainer extends Component<BasicScreenProps> {
    };
    render(): JSX.Element {
       const {showBackButton, showContinueButton}: Partial<BasicScreenProps> = this.props;
-      /**
-       * TODO: Se esta comiendo un pedazo abajo cuando tiene que scrollear y flex: 1 hace
-       * que supuestamente lo arreglaria invisible el contenido, probablemente por que
-       * los parents no tienen tamaño
-       */
+
       return (
          <>
          <ScrollViewExtended 
-            {...this.props} 
-            style={[
-               (showBackButton || showContinueButton) ?
-                  {height: Dimensions.get("window").height - 120} : {flex: 0}
-            ]}
+            {...this.props}
             contentContainerStyle={styles.scrollViewContainer} 
          >
             {this.props.children}
@@ -66,11 +58,10 @@ const styles: Styles = StyleSheet.create({
    scrollViewContainer: {
       padding: 5,
       paddingTop: 25,
-      paddingBottom: 60,
+      paddingBottom: 20,
    },
    buttonsContainer: {
-      height: 40,
-      paddingTop: 3,
+      marginBottom: 20,
       flexDirection: "row", 
       justifyContent: "space-around"
    }
