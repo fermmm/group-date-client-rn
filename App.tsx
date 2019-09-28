@@ -2,17 +2,13 @@ import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
 import VotingPage from "./components/pages/VotingPage/VotingPage";
-import { createStackNavigator, createAppContainer, NavigationContainer } from "react-navigation";
 import React, { Component } from "react";
 import { AppLoading } from "expo";
-import { Provider as PaperProvider, Text } from "react-native-paper";
-import LightTheme from "./common-tools/themes/LightTheme";
-import DarkTheme from "./common-tools/themes/DarkTheme";
-import WhiteTheme from "./common-tools/themes/WhiteTheme";
-import ThemeFemaleColors from "./common-tools/themes/ThemeFemaleColors";
+import { Provider as PaperProvider } from "react-native-paper";
 import { loadFontMontserrat } from "./common-tools/fontLoaders/loadFontMontserrat";
-import { ThemeExt } from "./common-tools/themes/types/Themed";
 import { currentTheme } from "./config";
+import { NavigationContainer, createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 
 const Navigator: NavigationContainer = createAppContainer(
     createStackNavigator(
