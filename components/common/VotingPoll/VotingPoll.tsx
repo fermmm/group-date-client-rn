@@ -6,10 +6,8 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import SurfaceStyled from "../SurfaceStyled/SurfaceStyled";
 import { currentTheme } from "../../../config";
 import ProgressBar from "../ProgressBar/ProgressBar";
-import { VotingOption } from "../../../server-api/testingFakeData";
 import { Group } from "../../../server-api/typings/Group";
-import TitleText from "../TitleText/TitleText";
-import TitleSmallText from "../TitleSmallText/TitleSmallText";
+import { VotingOption } from "../../../server-api/tools/debug-tools/testingFakeData";
 
 export interface VotingPollProps extends Themed {
    group: Group;
@@ -29,17 +27,17 @@ class VotingPoll extends Component<VotingPollProps, VotingPollState> {
             {
                votingOptions.map((votingOption, i) =>
                   <SurfaceStyled key={i}>
-                     <Text style={styles.optionNameText}>
+                     <Text style={styles.textLine1}>
                         {votingOption.textLine1}
                      </Text>
-                     <Text style={styles.optionAddressText}>
+                     <Text style={styles.textLine2}>
                         {votingOption.textLine2}
                      </Text>
                      <View style={styles.rowContainer}>
                         <ProgressBar progress={votingOption.votersAmmount / group.members.length} fillColor={colors.primary} />
                         <Button compact onPress={() => console.log("vote pressed")} uppercase={false} icon={"add"}>
                            Votar
-                            </Button>
+                        </Button>
                      </View>
                      <View style={styles.rowContainer}>
                         <Text style={styles.votesAmmountText}>Opcion votada por {votingOption.votersAmmount}: </Text>
@@ -47,7 +45,7 @@ class VotingPoll extends Component<VotingPollProps, VotingPollState> {
                            {votingOption.votersNames.join(", ")}
                         </Text>
                      </View>
-                  </SurfaceStyled>,
+                  </SurfaceStyled>
                )
             }
          </View>

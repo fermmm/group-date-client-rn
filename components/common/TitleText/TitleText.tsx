@@ -4,10 +4,23 @@ import { Text, TypographyProps } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 
-class TitleText extends Component<TypographyProps> {
+export interface TitleTextProps extends TypographyProps {
+   extraSize?: boolean;
+   extraMarginLeft?: boolean;
+}
+
+class TitleText extends Component<TitleTextProps> {
     render(): JSX.Element {
         return (
-            <Text {...this.props} style={[styles.titleStyle, this.props.style]}>
+            <Text 
+               {...this.props} 
+               style={[
+                  styles.titleStyle, 
+                  this.props.extraMarginLeft && {marginLeft: 10}, 
+                  this.props.extraSize && {fontSize: 20}, 
+                  this.props.style
+               ]}
+            >
               {this.props.children}
             </Text>
         );
@@ -17,9 +30,10 @@ class TitleText extends Component<TypographyProps> {
 const styles: Styles = StyleSheet.create({
     titleStyle: {
         fontFamily: currentTheme.fonts.light,
-        fontSize: 20,
-        marginBottom: 12,
-        paddingLeft: 4,
+        fontSize: 17,
+        marginTop: 10,
+        marginBottom: 10,
+        marginRight: 10
     },
 });
 

@@ -4,7 +4,7 @@ import { Text, TypographyProps } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 
-class TitleSmallText extends Component<TypographyProps> {
+class TitleMediumText extends Component<TypographyProps> {
     render(): JSX.Element {
         return (
             <Text {...this.props} style={[styles.titleStyle, this.props.style]}>
@@ -17,11 +17,10 @@ class TitleSmallText extends Component<TypographyProps> {
 const styles: Styles = StyleSheet.create({
     titleStyle: {
         fontFamily: currentTheme.fonts.regular,
-        fontSize: 12,
+        fontSize: 14,
         marginBottom: 25,
-        paddingLeft: 10,
-        paddingRight: 10
+        paddingLeft: 4,
     },
 });
 
-export default TitleSmallText;
+export default TitleMediumText;

@@ -7,11 +7,11 @@ import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import VotingPoll from "../../common/VotingPoll/VotingPoll";
 import { Group } from "../../../server-api/typings/Group";
 import { NavigationScreenProp, NavigationContainerProps } from "react-navigation";
-import { testingLocationVotingData, testingDayVotingData } from "../../../server-api/testingFakeData";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
+import { testingDayVotingData, testingLocationVotingData } from "../../../server-api/tools/debug-tools/testingFakeData";
 
 export interface VotingPageProps extends Themed, NavigationContainerProps { }
 export interface VotingPageState { 
@@ -43,7 +43,7 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
                   onContinuePress={() => this.setState({currentStep: 1})}
                   showContinueButton
                >
-                  <TitleText>
+                  <TitleText extraMarginLeft extraSize>
                      Votá el dia y la hora de la cita, despues toca "continuar"
                   </TitleText>
                   <TitleSmallText>
@@ -61,7 +61,7 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
                   showBackButton
                   showContinueButton
                >
-                  <TitleText>
+                  <TitleText extraMarginLeft extraSize>
                      Votá el lugar de la cita
                   </TitleText>
                   <TitleSmallText>
