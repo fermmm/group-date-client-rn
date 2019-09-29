@@ -2,6 +2,7 @@ import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
 import VotingPage from "./components/pages/VotingPage/VotingPage";
+import ProfilePage from "./components/pages/ProfilePage/ProfilePage";
 import React, { Component } from "react";
 import { AppLoading } from "expo";
 import { Provider as PaperProvider } from "react-native-paper";
@@ -17,6 +18,7 @@ const Navigator: NavigationContainer = createAppContainer(
         Main: { screen: MainPage },
         Group: { screen: GroupPage },
         Voting: { screen: VotingPage },
+        Profile: { screen: ProfilePage },
     }, 
     { 
         headerMode: "none",

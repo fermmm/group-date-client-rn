@@ -17,6 +17,7 @@ export interface ProfileCardProps extends Themed {
    showLikeDislikeButtons?: boolean;
    onLikeClick?: () => void;
    onDislikeClick?: () => void;
+   statusBarPadding?: boolean;
 }
 
 export interface ProfileCardState {
@@ -28,11 +29,10 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
    state: ProfileCardState = {
       renderImageModal: false,
       imageSelected: 0,
-
    };
 
    render(): JSX.Element {
-      const { showLikeDislikeButtons, onLikeClick, onDislikeClick }: Partial<ProfileCardProps> = this.props;
+      const { showLikeDislikeButtons, onLikeClick, onDislikeClick, statusBarPadding }: Partial<ProfileCardProps> = this.props;
       const { name, photos, birthdate, area }: Partial<User> = this.props.user;
       const { renderImageModal, imageSelected }: Partial<ProfileCardState> = this.state;
       const { colors, backgroundImage }: ThemeExt = this.props.theme as unknown as ThemeExt;
@@ -58,7 +58,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                         <ImageBackground source={backgroundImage} style={styles.galleryBackground}>
                            <ImagesScroll
                               photos={photos}
-                              style={styles.galleryScroll}
+                              style={[styles.galleryScroll, statusBarPadding && {marginTop: StatusBar.currentHeight}]}
                               onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
                               renderImage={(image: string, imageProps: ImageProps) =>
                                  <Image
@@ -128,7 +128,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
-      height: "auto",
+      flex: 1,
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
@@ -145,7 +145,6 @@ const styles: Styles = StyleSheet.create({
    },
    galleryBackground: {
       width: "100%",
-      height: "auto",
    },
    titleAreaContainer: {
       flexDirection: "row",

@@ -22,9 +22,6 @@ class AvatarTouchable extends Component<AvatarTouchableProps, AvatarTouchableSta
 }
 
 const styles: Styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-    },
 });
 
 export default AvatarTouchable;

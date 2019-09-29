@@ -71,10 +71,9 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                               titleStyle={styles.itemTitle}
                               left={props =>
                                  <AvatarTouchable
-                                 {...props}
-                                 onPress={() => console.log("AVATAR PRESS")}
-                                 size={50}
-                                 source={{ uri: user.photos[0] }}
+                                    {...props}
+                                    size={50}
+                                    source={{ uri: user.photos[0] }}
                                  />
                               }
                               key={i}
@@ -86,10 +85,11 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                                           title={matchedUser.name}
                                           style={styles.subItem}
                                           key={u}
+                                          onPress={() => navigate("Profile", { user: matchedUser })}
                                           left={props =>
                                              <AvatarTouchable
                                                 {...props}
-                                                onPress={() => console.log("AVATAR PRESS")}
+                                                onPress={() => navigate("Profile", { user: matchedUser })}
                                                 size={50}
                                                 source={{ uri: matchedUser.photos[0] }}
                                              />

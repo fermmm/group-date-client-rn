@@ -10,6 +10,7 @@ export interface AppBarHeaderProps extends Themed, NavigationInjectedProps {
    title?: string;
    subtitle?: string;
    showMenuIcon?: boolean;
+   showBackButton?: boolean;
 }
 export interface AppBarHeaderState { }
 
@@ -18,6 +19,7 @@ class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
       title: "",
       subtitle: "",
       showMenuIcon: false,
+      showBackButton: true,
    };
 
    render(): JSX.Element {
@@ -25,10 +27,13 @@ class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
       const { goBack }: NavigationScreenProp<{}> = this.props.navigation;
 
       return (
-         <Appbar.Header style={styles.mainContainer} dark={true}>
-            <Appbar.BackAction
-               onPress={() => goBack()}
-            />
+         <Appbar.Header dark={true} style={styles.mainContainer}>
+            {
+               this.props.showBackButton &&
+                  <Appbar.BackAction
+                     onPress={() => goBack()}
+                  />
+            }
             <Appbar.Content
                title={this.props.title}
                subtitle={this.props.subtitle}
@@ -46,8 +51,9 @@ class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       paddingRight: 15,
+      paddingLeft: 15,
       backgroundColor: currentTheme.colors.primary
-   },
+   }
 });
 
 export default withNavigation(withTheme(AppBarHeader));

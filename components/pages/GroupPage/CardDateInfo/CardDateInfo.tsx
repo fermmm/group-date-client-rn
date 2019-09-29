@@ -23,7 +23,7 @@ class CardDateInfo extends Component<DateInfoProps, DateInfoState> {
             </TitleText>
             <View style={styles.row}>
                <Text style={styles.textHighlighted}>Fecha:</Text>
-               <Text style={styles.textNormal}>Este Sábado 20 de Sep. a las 21hs asdadasd asdads</Text> 
+               <Text style={styles.textNormal}>Este Sábado 20 de Sep. a las 21hs</Text> 
             </View>
             <View style={styles.row}>
                <Text style={styles.textHighlighted}>Lugar:</Text>
