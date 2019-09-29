@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
-import { withTheme, List, Button, Text } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { withTheme, List } from "react-native-paper";
 import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -11,8 +11,10 @@ import { User } from "../../../server-api/typings/User";
 import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
-import TitleMediumText from "../../common/TitleMediumText/TitleMediumText";
 import { currentTheme } from "../../../config";
+import CardDateInfo from "./CardDateInfo/CardDateInfo";
+import ButtonForAppBar from "../../common/ButtonForAppBar/ButtonForAppBar";
+import CardAcceptInvitation from "./CardAcceptInvitation/CardAcceptInvitation";
 
 export interface GroupPageProps extends Themed, NavigationContainerProps { }
 export interface GroupPageState {
@@ -35,64 +37,25 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
             <AppBarHeader title={group.invitationAccepted ? "Grupo" : "Invitación a una cita"}>
                {
                   group.invitationAccepted &&
-                     <Button 
-                        icon="chat-bubble-outline" 
-                        mode="outlined"
-                        uppercase={false}
-                        style={styles.buttonChat}
-                        color={colors.text2}
-                        onPress={() => console.log('Pressed')}
+                     <ButtonForAppBar 
+                        icon="chat-bubble-outline"
+                        onPress={() => console.log("Pressed")}
                      >
-                        Chat 
-                     </Button>
+                        Chat
+                     </ButtonForAppBar>
                }
             </AppBarHeader>
             <BasicScreenContainer>   
                {
                   !group.invitationAccepted &&
-                     <SurfaceStyled>
-                        <TitleMediumText>
-                           ¡Felicitaciones! te gustas con 3 miembros de este grupo, en el próximo paso vamos organizar una cita grupal entre todes.
-                        </TitleMediumText>
-                        <TitleMediumText>
-                           Mas abajo podes explorar a los demas miembros del grupo y ver quienes se gustan con quienes.
-                        </TitleMediumText>
-                        <TitleMediumText>
-                           Si realmente tenés las ganas y pensas que podes ir a una cita presiona el boton de continuar.
-                        </TitleMediumText>
-                        <Button
-                           mode="outlined"
-                           uppercase={false}
-                           style={[styles.button, { borderColor: colors.primary }]}
-                           contentStyle={styles.buttonContent}
-                           onPress={() => navigate("Voting", { group })}
-                        >
-                           Quiero una cita, ¡continuar!
-                        </Button>
-                     </SurfaceStyled>
+                     <CardAcceptInvitation 
+                        matchAmmount={3}
+                        onAcceptPress={() => navigate("Voting", { group })}
+                     />
                }
                {
                   group.invitationAccepted &&
-                     <SurfaceStyled>
-                        <TitleText>
-                           Datos de la cita:
-                        </TitleText>
-                        <Text style={styles.votingResulttextLine1}>
-                           Lugar: Mate + porro en Parque Centenario
-                        </Text>
-                        <Text style={styles.votingResulttextLine2}>
-                           Dirección: Av. Angel Gallardo 400
-                        </Text>
-                        <Text style={styles.votingResulttextLine2}>
-                           Fecha: Este Sábado 20 de Septiembre a las 21
-                        </Text>
-                        <Button
-                           uppercase={false}
-                           onPress={() => console.log("Pressed")}
-                        >
-                           Modificar voto
-                        </Button>
-                     </SurfaceStyled>
+                     <CardDateInfo />
                }
                <SurfaceStyled>
                   <TitleText>
@@ -171,37 +134,7 @@ const styles: Styles = StyleSheet.create({
    },
    subItem: {
       paddingLeft: 26,
-   },
-   button: {
-      width: "100%",
-      marginBottom: 15
-   },
-   buttonContent: {
-      width: "100%",
-      height: 45,
-   },
-   buttonChat: {
-      borderColor: currentTheme.colors.text2
-   },
-   votingResulttextLine1: {
-      fontFamily: currentTheme.fonts.regular,
-      fontSize: 15,
-      marginBottom: 5,
-   },
-   votingResulttextLine2: {
-      fontFamily: currentTheme.fonts.light,
-      fontSize: 12,
-   },
-   votesAmmountText: {
-      fontFamily: currentTheme.fonts.regular,
-      fontSize: 12,
-      marginRight: 7,
-   },
-   votersText: {
-      flex: 1,
-      fontFamily: currentTheme.fonts.thin,
-      fontSize: 12,
-   },
+   }
 });
 
 export default withTheme(GroupPage);

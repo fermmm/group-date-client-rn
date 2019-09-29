@@ -23,32 +23,47 @@ class VotingPoll extends Component<VotingPollProps, VotingPollState> {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
 
       return (
-         <View>
+         <>
             {
                votingOptions.map((votingOption, i) =>
                   <SurfaceStyled key={i}>
                      <Text style={styles.textLine1}>
                         {votingOption.textLine1}
                      </Text>
-                     <Text style={styles.textLine2}>
-                        {votingOption.textLine2}
-                     </Text>
+                     {
+                        votingOption.textLine2 &&
+                           <Text style={styles.textLine2}>
+                              {votingOption.textLine2}
+                           </Text>
+                     }
                      <View style={styles.rowContainer}>
                         <ProgressBar progress={votingOption.votersAmmount / group.members.length} fillColor={colors.primary} />
                         <Button compact onPress={() => console.log("vote pressed")} uppercase={false} icon={"add"}>
                            Votar
                         </Button>
                      </View>
-                     <View style={styles.rowContainer}>
-                        <Text style={styles.votesAmmountText}>Opcion votada por {votingOption.votersAmmount}: </Text>
-                        <Text style={styles.votersText}>
-                           {votingOption.votersNames.join(", ")}
-                        </Text>
-                     </View>
+                     {
+                        votingOption.votersAmmount > 0 &&
+                           <View style={styles.rowContainer}>
+                              <Text style={styles.votesAmmountText}>
+                                 {votingOption.votersAmmount} {" "}
+                                 {
+                                    votingOption.votersAmmount > 1 ?
+                                       "votos" 
+                                    :
+                                       "voto"
+                                 }
+                                 {":"}
+                              </Text>
+                              <Text style={styles.votersText}>
+                                 {votingOption.votersNames.join(", ")}
+                              </Text>
+                           </View>
+                     }
                   </SurfaceStyled>
                )
             }
-         </View>
+         </>
       );
    }
 }

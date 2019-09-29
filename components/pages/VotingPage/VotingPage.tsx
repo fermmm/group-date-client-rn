@@ -47,7 +47,8 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
                      Votá el dia y la hora de la cita, despues toca "continuar"
                   </TitleText>
                   <TitleSmallText>
-                     Estos son los dias y horas en los que todos pueden (o la mayoría)
+                     Estos son los dias y horas en los que todos pueden, o la mayoría. 
+                     Podes votar por mas de una opcion.
                   </TitleSmallText>
                   <VotingPoll
                      group={group}
@@ -65,7 +66,8 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
                      Votá el lugar de la cita
                   </TitleText>
                   <TitleSmallText>
-                     Estas son todas las opciones recomendadas de todos los miembros del grupo
+                     Estas son todas las opciones recomendadas de todos los miembros del grupo.
+                     Podes votar por mas de una opcion.
                   </TitleSmallText>
                   <VotingPoll
                      group={group}

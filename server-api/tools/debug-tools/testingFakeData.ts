@@ -34,32 +34,27 @@ export const testingLocationVotingData: VotingOption[] = [
 
 export const testingDayVotingData: VotingOption[] = [
    {
-      textLine1: "Este Sábado (28 de Septiembre)",
-      textLine2: "A las 18:00",
+      textLine1: "Este Sábado 28 a las 18hs",
       votersAmmount: 3,
       votersNames: ["johnny", "maluma", "alberto666"],
    },
    {
-      textLine1: "Este Sábado (28 de Septiembre)",
-      textLine2: "A las 23:00",
+      textLine1: "Este Sábado 28 a las 23hs",
       votersAmmount: 2,
       votersNames: ["johnny", "alberto666"],
    },
    {
-      textLine1: "Este Viernes (27 de Septiembre)",
-      textLine2: "A las 18:00",
+      textLine1: "Este Viernes 27 a las 18hs",
       votersAmmount: 2,
       votersNames: ["maluma", "alberto666"],
    },
    {
-      textLine1: "Este Domingo (28 de Septiembre)",
-      textLine2: "A las 17:00",
+      textLine1: "Este Domingo 28 a las 17hs",
       votersAmmount: 1,
       votersNames: ["alberto666"],
    },
    {
-      textLine1: "Este Domingo (28 de Septiembre)",
-      textLine2: "A las 22:00",
+      textLine1: "Este Domingo 28 a las 22hs",
       votersAmmount: 0,
       votersNames: [],
    },
