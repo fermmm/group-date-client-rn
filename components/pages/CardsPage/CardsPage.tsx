@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
-import { Styles } from "../../../../common-tools/ts-tools/Styles";
-import ProfileCard from "../../../common/ProfileCard/ProfileCard";
+import { Styles } from "../../../common-tools/ts-tools/Styles";
+import ProfileCard from "../../common/ProfileCard/ProfileCard";
 import { withTheme } from "react-native-paper";
-import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
-import { getAvaiableCards } from "../../../../server-api/cards-game";
+import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
+import { getAvaiableCards } from "../../../server-api/cards-game";
 
 export interface CardsPageProps extends Themed { }
 export interface CardsPageState { }

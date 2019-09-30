@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
-import { Styles } from "../../../../common-tools/ts-tools/Styles";
+import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withTheme, List } from "react-native-paper";
-import GraphSvg2 from "../../../../assets/GraphSvg2";
-import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
+import GraphSvg2 from "../../../assets/GraphSvg2";
+import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
-import { getGroups } from "../../../../server-api/groups"; 
+import { getGroups } from "../../../server-api/groups"; 
 
 export interface GroupsListPageProps extends Themed, NavigationInjectedProps {}
 export interface GroupsListPageState {}

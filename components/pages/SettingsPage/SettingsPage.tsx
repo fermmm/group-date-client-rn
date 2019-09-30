@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
-import { Styles } from "../../../../common-tools/ts-tools/Styles";
+import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withTheme, Button } from "react-native-paper";
-import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
+import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 
 export interface SettingsPageProps extends Themed {}
 export interface SettingsPageState {}
