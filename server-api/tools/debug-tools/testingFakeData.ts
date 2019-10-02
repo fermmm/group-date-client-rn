@@ -7,6 +7,11 @@ export interface VotingOption {
 
 export const testingLocationVotingData: VotingOption[] = [
    {
+      textLine1: "Me da igual",
+      votersAmmount: 3,
+      votersNames: ["johnny", "maluma", "alberto666"],
+   },
+   {
       textLine1: "Mate + porro en Parque Centenario",
       textLine2: "Dirección: Av. Angel Gallardo 400",
       votersAmmount: 3,
@@ -33,6 +38,11 @@ export const testingLocationVotingData: VotingOption[] = [
 ];
 
 export const testingDayVotingData: VotingOption[] = [
+   {
+      textLine1: "Me da igual",
+      votersAmmount: 3,
+      votersNames: ["johnny", "maluma", "alberto666"],
+   },
    {
       textLine1: "Este Sábado 28 a las 18hs",
       votersAmmount: 3,
