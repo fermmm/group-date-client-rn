@@ -14,7 +14,7 @@ import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import { testingDayVotingData, testingLocationVotingData } from "../../../server-api/tools/debug-tools/testingFakeData";
 
 export interface VotingPageProps extends Themed, NavigationContainerProps { }
-export interface VotingPageState { 
+export interface VotingPageState {
    currentStep: number;
 }
 
@@ -35,19 +35,19 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
             <ScreensStepper
                currentScreen={this.state.currentStep}
                swipeEnabled={false}
-               onScreenChange={(newStep) => this.setState({currentStep: newStep})}
+               onScreenChange={(newStep) => this.setState({ currentStep: newStep })}
             >
-               <BasicScreenContainer 
+               <BasicScreenContainer
                   showBottomGradient={true}
                   bottomGradientColor={colors.backgroundForText}
-                  onContinuePress={() => this.setState({currentStep: 1})}
+                  onContinuePress={() => this.setState({ currentStep: 1 })}
                   showContinueButton
                >
                   <TitleText extraMarginLeft extraSize>
                      Votá el dia y la hora de la cita, despues toca "continuar"
                   </TitleText>
                   <TitleSmallText>
-                     Estos son los dias y horas en los que todos pueden, o la mayoría. 
+                     Estos son los dias y horas en los que todos pueden, o la mayoría.
                      Podes votar por mas de una opcion.
                   </TitleSmallText>
                   <VotingPoll
@@ -58,7 +58,7 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
                <BasicScreenContainer
                   showBottomGradient={true}
                   bottomGradientColor={colors.backgroundForText}
-                  onBackPress={() => this.setState({currentStep: 0})}
+                  onBackPress={() => this.setState({ currentStep: 0 })}
                   showBackButton
                   showContinueButton
                >
