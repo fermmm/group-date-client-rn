@@ -18,7 +18,6 @@ const styles: Styles = StyleSheet.create({
     titleStyle: {
         fontFamily: currentTheme.fonts.regular,
         fontSize: 12,
-        marginBottom: 25,
         paddingLeft: 10,
         paddingRight: 10
     },

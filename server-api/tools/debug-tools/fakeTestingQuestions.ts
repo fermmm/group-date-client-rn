@@ -3,7 +3,6 @@ export interface QuestionData {
    extraText?: string;
    multipleAnswersAllowed: boolean;
    selectedAnswers?: string[];
-   itsImportantEnabled?: boolean;
    itsImportantSelectedByDefault?: boolean;
    answers: QuestionAnswerData[];
    incompatibilitiesBetweenAnswers?: { [key: string]: string[] };
@@ -17,14 +16,14 @@ export interface QuestionAnswerData {
 
 export const fakeTestingQuestions: QuestionData[] = [
    {
-      text: "Tu dieta",
+      text: "¿Cuál es tu dieta?",
       multipleAnswersAllowed: false,
       itsImportantSelectedByDefault: false,
       answers: [
          {
             id: "0",
             text: "Omnívore",
-            extraText: "(como de todo)"
+            extraText: "(como carne)"
          },
          {
             id: "1",
@@ -40,6 +39,7 @@ export const fakeTestingQuestions: QuestionData[] = [
          },
       ],
       incompatibilitiesBetweenAnswers: {
+         "0": ["1", "2", "3"],
          "1": ["0"],
          "2": ["0"],
          "3": ["0"]
@@ -61,7 +61,7 @@ export const fakeTestingQuestions: QuestionData[] = [
          },
          {
             id: "2",
-            text: "No estoy informade sobre el tema",
+            text: "No estoy informade",
          },
       ],
       incompatibilitiesBetweenAnswers: {
@@ -72,11 +72,11 @@ export const fakeTestingQuestions: QuestionData[] = [
    {
       text: "¿Que tipo de cuerpo tenés?",
       multipleAnswersAllowed: false,
-      itsImportantEnabled: false,
       answers: [
          {
             id: "0",
-            text: "Delgade / mas o menos delgade",
+            text: "Delgade",
+            extraText: "o mas o menos delgade"
          },
          {
             id: "1",
@@ -97,13 +97,13 @@ export const fakeTestingQuestions: QuestionData[] = [
       ]
    },
    {
-      text: "¿Que tipos de cuerpos te atraen?",
+      text: "¿Que tipo de cuerpos te atraen?",
       multipleAnswersAllowed: true,
-      itsImportantEnabled: false,
       answers: [
          {
             id: "0",
-            text: "Delgade / mas o menos delgade",
+            text: "Delgade",
+            extraText: "o mas o menos delgade"
          },
          {
             id: "1",
@@ -159,7 +159,7 @@ export const fakeTestingQuestions: QuestionData[] = [
          },
          {
             id: "1",
-            text: "Si no hay demasiado de eso si",
+            text: "Un poco",
          },
          {
             id: "2",
@@ -197,13 +197,11 @@ export const fakeTestingQuestions: QuestionData[] = [
       answers: [
          {
             id: "0",
-            text: "El mundo mejoraría si se distribuye dinero de las grandes fortunas",
-            extraText: "/ Izquierda / Centro-izquierda"
+            text: "El mundo mejoraría si se distribuye dinero de les que tienen grandes fortunas",
          },
          {
             id: "1",
-            text: "No se le debe quitar dinero a nadie ni regalárselo a quienes no hacen nada para ganarlo",
-            extraText: "/ Derecha / Centro-derecha"
+            text: "No se le debe quitar dinero a nadie. No se le debe regalar dinero a quienes no hacen nada para ganarlo",
          }
       ],
       incompatibilitiesBetweenAnswers: {
@@ -250,7 +248,7 @@ export const fakeTestingQuestions: QuestionData[] = [
          },
          {
             id: "2",
-            text: "No muy sexual",
+            text: "Poco sexual",
          },
          {
             id: "3",

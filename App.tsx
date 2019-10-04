@@ -3,6 +3,7 @@ import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
 import VotingPage from "./components/pages/VotingPage/VotingPage";
 import ProfilePage from "./components/pages/ProfilePage/ProfilePage";
+import QuestionsPage from "./components/pages/QuestionsPage/QuestionsPage";
 import React, { Component } from "react";
 import { AppLoading } from "expo";
 import { Provider as PaperProvider } from "react-native-paper";
@@ -19,6 +20,7 @@ const Navigator: NavigationContainer = createAppContainer(
         Group: { screen: GroupPage },
         Voting: { screen: VotingPage },
         Profile: { screen: ProfilePage },
+        Questions: { screen: QuestionsPage },
     }, 
     { 
         headerMode: "none",

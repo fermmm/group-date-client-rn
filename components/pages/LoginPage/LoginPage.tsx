@@ -6,6 +6,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
+import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 
 export interface LoginProps extends Themed, NavigationContainerProps { }
 export interface LoginState { }
@@ -32,20 +33,24 @@ class LoginPage extends Component<LoginProps, LoginState> {
                   Las citas son en grupos que se forman cuando se gustan varios
                   entre todes en la mayor medida posible.
                </Text>
-               <Text style={[styles.textBlock, { color: colors.textLogin, fontFamily: fonts.light }]}>
+               <Text style={[styles.secondTextBlock, { color: colors.textLogin, fontFamily: fonts.light }]}>
                   Con esta herramienta <Text style={{ fontWeight: "bold" }}> no </Text> se busca el lucro y es de código abierto, perfeccionada
                   con la comunidad.
                </Text>
-               <Button
-                  mode="outlined"
-                  uppercase={false}
+               <ButtonStyled
                   color={colors.textLogin}
-                  style={[styles.button, { borderColor: colors.textLogin }]}
-                  contentStyle={styles.buttonContent}
+                  style={{ borderColor: colors.textLogin }}
                   onPress={() => navigate("Main")}
                >
                   OK entendido, ¡comenzar!
-               </Button>
+               </ButtonStyled>
+               <ButtonStyled
+                  color={colors.textLogin}
+                  style={{ borderColor: colors.textLogin }}
+                  onPress={() => navigate("Questions")}
+               >
+                  Test
+               </ButtonStyled>
             </View>
          </LinearGradient>
       );
@@ -69,14 +74,9 @@ const styles: Styles = StyleSheet.create({
       marginBottom: 15,
       textAlign: "center",
    },
-   button: {
-      width: "100%",
-      marginTop: 50,
-      marginBottom: 15,
-   },
-   buttonContent: {
-      width: "100%",
-      height: 45,
+   secondTextBlock: {
+      marginBottom: 65,
+      textAlign: "center",
    }
 });
 
