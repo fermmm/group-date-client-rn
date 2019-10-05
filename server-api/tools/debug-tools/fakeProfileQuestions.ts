@@ -2,17 +2,16 @@ import { QuestionData } from "./interfaces/questions";
 
 const genderQuestion: QuestionData = {
    text: "¿Cual es tu categoría de género?",
+   extraText: 'Cis singnifica: "no transexual"',
    multipleAnswersAllowed: false,
    answers: [
       {
          id: "0",
          text: "Mujer cis",
-         extraText: 'Cis singnifica "no transexual"'
       },
       {
          id: "1",
          text: "Varon cis",
-         extraText: 'Cis singnifica "no transexual"'
       },
       {
          id: "2",
@@ -91,7 +90,7 @@ const dateWeekendQuestion: QuestionData = {
 };
 
 const dateWeekQuestion: QuestionData = {
-   text: "¿Los dias de semana es probable que puedas ir a una cita?",
+   text: "¿Los días de semana es probable que puedas ir a una cita?",
    multipleAnswersAllowed: false,
    answers: [
       {
@@ -117,7 +116,7 @@ const dateWeekQuestion: QuestionData = {
 };
 
 const bodyQuestion: QuestionData = {
-   text: "¿Que tipo de cuerpo tenés?",
+   text: "¿Cuál es tu tipo de cuerpo?",
    multipleAnswersAllowed: false,
    answers: [
       {

@@ -10,6 +10,7 @@ import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import QuestionForm from "../../common/QuestionForm/QuestionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import { QuestionData } from "../../../server-api/tools/debug-tools/interfaces/questions";
+import { fakeProfileQuestionsPart1, fakeProfileQuestionsPart2 } from "../../../server-api/tools/debug-tools/fakeProfileQuestions";
  
 export interface QuestionsPageProps extends Themed { }
 export interface QuestionsPageState { 
@@ -26,7 +27,12 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
       const { currentStep }: Partial<QuestionsPageState> = this.state;
-      const questions: QuestionData[] = fakeFilterQuestions;
+
+      const questions: QuestionData[] = [
+         ...fakeProfileQuestionsPart1, 
+         ...fakeFilterQuestions, 
+         ...fakeProfileQuestionsPart2
+      ];
       
       return (
          <>
