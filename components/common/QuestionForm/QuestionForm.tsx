@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { withTheme, Text, Checkbox, List } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { QuestionData } from "../../../server-api/tools/debug-tools/fakeTestingQuestions";
+import { QuestionData } from "../../../server-api/tools/debug-tools/interfaces/questions";
 import TitleText from "../TitleText/TitleText";
 import RaddioButtonImproved from "../RadioButtonImproved/RadioButtonImproved";
 import { currentTheme } from "../../../config";
@@ -23,7 +23,7 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
    static defaultProps: Partial<QuestionProps> = {};
 
    state: QuestionState = {
-      selectedAnswers: this.props.questionData.selectedAnswers || [],
+      selectedAnswers: this.props.questionData.defaultSelectedAnswers || [],
       itsImportantChecked: this.props.questionData.itsImportantSelectedByDefault || false,
    };
    
@@ -138,7 +138,7 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
 
    getIncompatibleResponsesIds(): string[] {
       const { incompatibilitiesBetweenAnswers }: Partial<QuestionData> = this.props.questionData;
-      const { selectedAnswers }: Partial<QuestionData> = this.state;
+      const { selectedAnswers }: Partial<QuestionState> = this.state;
       let result: string[] = [];
 
       if (incompatibilitiesBetweenAnswers == null) {
