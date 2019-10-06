@@ -39,7 +39,7 @@ const genderQuestion: QuestionData = {
 };
 
 const genderLikeQuestion: QuestionData = {
-   text: "¿Qué géneros te atraen sexualmente?",
+   text: "¿Qué géneros te atraen y te gustaría ver en la aplicación?",
    multipleAnswersAllowed: true,
    answers: [
       {
