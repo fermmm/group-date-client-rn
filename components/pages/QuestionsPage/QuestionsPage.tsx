@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet } from "react-native";
-import { withTheme, Portal, Dialog, Paragraph, Button } from "react-native-paper";
+import { withTheme } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
@@ -39,7 +39,7 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
 
       return (
          <>
-            <AppBarHeader title={"Tus preferencias"} />
+            <AppBarHeader title={"Nueva cuenta"} />
             <ScreensStepper
                currentScreen={currentStep}
                swipeEnabled={false}
@@ -53,7 +53,7 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
                         onContinuePress={() =>
                            this.answeredQuestions[i] ?
                               this.setState({ currentStep: currentStep + 1 })
-                              :
+                           :
                               this.setState({ showCompleteAnswerError: true })
                         }
                         onBackPress={() => this.setState({ currentStep: currentStep - 1 })}
