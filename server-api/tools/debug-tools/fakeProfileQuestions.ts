@@ -1,17 +1,19 @@
 import { QuestionData } from "./interfaces/questions";
 
 const genderQuestion: QuestionData = {
-   text: "¿Cual es tu categoría de género?",
+   text: "¿Cual es tu género?",
    extraText: 'Cis singnifica: "no transexual"',
    multipleAnswersAllowed: false,
    answers: [
       {
          id: "0",
-         text: "Mujer cis",
+         text: "Mujer",
+         extraText: "(cis)"
       },
       {
          id: "1",
-         text: "Varon cis",
+         text: "Varon",
+         extraText: "(cis)"
       },
       {
          id: "2",
@@ -31,22 +33,24 @@ const genderQuestion: QuestionData = {
       },
       {
          id: "6",
-         text: "Otra",
+         text: "Otro",
       },
    ]
 };
 
 const genderLikeQuestion: QuestionData = {
-   text: "¿Qué categorías de género te atraen sexualmente?",
+   text: "¿Qué géneros te atraen sexualmente?",
    multipleAnswersAllowed: true,
    answers: [
       {
          id: "0",
-         text: "Mujer cis",
+         text: "Mujer",
+         extraText: "(cis)"
       },
       {
          id: "1",
-         text: "Varon cis",
+         text: "Varon",
+         extraText: "(cis)"
       },
       {
          id: "2",
@@ -58,7 +62,7 @@ const genderLikeQuestion: QuestionData = {
       },
       {
          id: "4",
-         text: "Otra",
+         text: "Otro",
       },
    ]
 };
@@ -83,9 +87,6 @@ const dateWeekendQuestion: QuestionData = {
          id: "3",
          text: "Si, a la noche",
       }
-   ],
-   defaultSelectedAnswers: [
-      "2"
    ]
 };
 
@@ -109,9 +110,6 @@ const dateWeekQuestion: QuestionData = {
          id: "3",
          text: "Si, a la noche",
       }
-   ],
-   defaultSelectedAnswers: [
-      "2"
    ]
 };
 

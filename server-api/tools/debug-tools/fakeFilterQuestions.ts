@@ -147,27 +147,49 @@ const politicsQuestion: QuestionData = {
 };
 
 const polyamoryQuestion: QuestionData = {
-   text: "Te gustas con alguien, esa persona tambien se gusta con otre, ¿que crees que pensarías en esa situación?",
+   text: "¿Tendrías una relación sexo-afectiva con mas de una persona a la vez?",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [
       {
          id: "0",
-         text: "Tiene que elegir a une",
+         text: "No",
       },
       {
          id: "1",
-         text: "Por mi que se relacione con les 2",
+         text: "Si",
       },
       {
          id: "2",
-         text: "Por mi que se relacione con les 2, pero en dias distintos",
+         text: "Si, pero no al mismo tiempo",
+         extraText: "(un día con cada une)",
       }
    ],
    incompatibilitiesBetweenAnswers: {
       "0": ["1", "2"],
       "1": ["0"],
       "2": ["0"]
+   },
+};
+
+const unicornQuestion: QuestionData = {
+   text: "¿Estás en la app en busca de una persona para sumar a tu pareja y hacer un trio?",
+   extraText: "¿O sos alguien que busca una pareja con ese fin?",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: true,
+   answers: [
+      {
+         id: "0",
+         text: "Si",
+      },
+      {
+         id: "1",
+         text: "No",
+      }
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["1"],
+      "1": ["0"],
    },
 };
 
@@ -208,6 +230,7 @@ export const fakeFilterQuestions: QuestionData[] = [
    dietQuestion,
    musicQuestion,
    politicsQuestion,
+   unicornQuestion,
    sexDesireQuestion,
    polyamoryQuestion,
 ];
