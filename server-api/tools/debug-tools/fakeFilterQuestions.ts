@@ -1,5 +1,30 @@
 import { QuestionData } from "./interfaces/questions";
 
+const conversationsQuestion: QuestionData = {
+   text: "¿Te gustan las conversaciones intelectuales?",
+   extraText: "(Ricas en reflexiones y/o información)",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: false,
+   answers: [
+      {
+         id: "0",
+         text: "No",
+      },
+      {
+         id: "1",
+         text: "Un poco",
+      },
+      {
+         id: "2",
+         text: "Si, me gustan mucho",
+      },
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["2"],
+      "2": ["0"],
+   },
+};
+
 const dietQuestion: QuestionData = {
    text: "¿Cuál es tu dieta?",
    multipleAnswersAllowed: false,
@@ -56,55 +81,7 @@ const feminismQuestion: QuestionData = {
    },
 };
 
-const musicQuestion: QuestionData = {
-   text: "¿Te gusta escuchar la musica mas difundida?",
-   extraText: "(Reggaeton y canciones románticas conocidas)",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: false,
-   answers: [
-      {
-         id: "0",
-         text: "Si",
-      },
-      {
-         id: "1",
-         text: "No, pero no me molesta",
-      },
-      {
-         id: "2",
-         text: "Me molesta",
-      },
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["2"],
-      "2": ["0"]
-   },
-};
 
-const conversationsQuestion: QuestionData = {
-   text: "¿Te gustan las conversaciones intelectuales?",
-   extraText: "(Ricas en reflexiones y/o información)",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: false,
-   answers: [
-      {
-         id: "0",
-         text: "No",
-      },
-      {
-         id: "1",
-         text: "Un poco",
-      },
-      {
-         id: "2",
-         text: "Si, me gustan mucho",
-      },
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["2"],
-      "2": ["0"],
-   },
-};
 
 const religionQuestion: QuestionData = {
    text: "¿Crees en dios?",
@@ -204,7 +181,7 @@ const sexDesireQuestion: QuestionData = {
       },
       {
          id: "1",
-         text: "Como el promedio",
+         text: "Ni mucho ni poco sexual",
       },
       {
          id: "2",
@@ -228,7 +205,6 @@ export const fakeFilterQuestions: QuestionData[] = [
    religionQuestion,
    feminismQuestion,
    dietQuestion,
-   musicQuestion,
    politicsQuestion,
    unicornQuestion,
    sexDesireQuestion,

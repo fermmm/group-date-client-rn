@@ -47,7 +47,7 @@ class LoginPage extends Component<LoginProps, LoginState> {
                <ButtonStyled
                   color={colors.textLogin}
                   style={{ borderColor: colors.textLogin }}
-                  onPress={() => navigate("RegistrationForms")}
+                  onPress={() => navigate("Questions")}
                >
                   Test
                </ButtonStyled>

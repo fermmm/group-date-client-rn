@@ -1,5 +1,25 @@
 import { QuestionData } from "./interfaces/questions";
 
+const intentionsQuestion: QuestionData = {
+   text: "¿Qué te gustaría hacer en las citas grupales que organiza esta app?",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: true,
+   answers: [
+      {
+         id: "1",
+         text: "Conocer gente con posibilidad de situaciones sexuales o vinculos afectivos",
+      },
+      {
+         id: "0",
+         text: "Conocer gente sin intenciones sexuales, solo amistad",
+      }
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["1"],
+      "1": ["0"]
+   },
+};
+
 const genderQuestion: QuestionData = {
    text: "¿Cual es tu género?",
    extraText: 'Cis singnifica: "no transexual"',
@@ -67,52 +87,6 @@ const genderLikeQuestion: QuestionData = {
    ]
 };
 
-const dateWeekendQuestion: QuestionData = {
-   text: "¿Los fines de semana es probable que puedas ir a una cita?",
-   multipleAnswersAllowed: false,
-   answers: [
-      {
-         id: "0",
-         text: "No",
-      },
-      {
-         id: "1",
-         text: "Si, a cualquier hora",
-      },
-      {
-         id: "2",
-         text: "Si, de la tarde en adelante",
-      },
-      {
-         id: "3",
-         text: "Si, a la noche",
-      }
-   ]
-};
-
-const dateWeekQuestion: QuestionData = {
-   text: "¿Los días de semana es probable que puedas ir a una cita?",
-   multipleAnswersAllowed: false,
-   answers: [
-      {
-         id: "0",
-         text: "No",
-      },
-      {
-         id: "1",
-         text: "Si, a cualquier hora",
-      },
-      {
-         id: "2",
-         text: "Si, de las 19 en adelante",
-      },
-      {
-         id: "3",
-         text: "Si, a la noche",
-      }
-   ]
-};
-
 const bodyQuestion: QuestionData = {
    text: "¿Cuál es tu tipo de cuerpo?",
    multipleAnswersAllowed: false,
@@ -142,7 +116,7 @@ const bodyQuestion: QuestionData = {
 };
 
 const bodyLikeQuestion: QuestionData = {
-   text: "¿Que tipo de cuerpos te atraen?",
+   text: "¿Qué tipos de cuerpos te atraen?",
    multipleAnswersAllowed: true,
    answers: [
       {
@@ -169,14 +143,10 @@ const bodyLikeQuestion: QuestionData = {
    ]
 };
 
-export const fakeProfileQuestionsPart1: QuestionData[] = [
+export const fakeProfileQuestionsPart: QuestionData[] = [
+   intentionsQuestion,
    genderQuestion,
    genderLikeQuestion,
-   dateWeekendQuestion,
-   dateWeekQuestion
-];
-
-export const fakeProfileQuestionsPart2: QuestionData[] = [
+   bodyLikeQuestion,
    bodyQuestion,
-   bodyLikeQuestion
 ];

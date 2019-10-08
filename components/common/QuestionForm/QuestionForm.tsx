@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
-import { withTheme, Text, Checkbox, List } from "react-native-paper";
+import { withTheme, Text, Checkbox, List, IconButton } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { QuestionData } from "../../../server-api/tools/debug-tools/interfaces/questions";
@@ -47,9 +47,17 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
             }
             {
                multipleAnswersAllowed &&
+               <View style={styles.helpTextContainer}>
+                  <IconButton
+                     icon="live-help"
+                     size={28}
+                     color={colors.statusOk}
+                     style={{opacity: 0.4}}
+                  />
                   <TitleText style={styles.helpText}>
-                     Podés seleccionar más de una respuesta
+                     Se puede tocar más de una opción
                   </TitleText>
+               </View>
             }
             <View style={styles.responsesContainer}>
                {
@@ -126,12 +134,19 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
          );
       }
 
-      const incompatibleResponsesText: string = this.getQuestionNamesFromIds(incompatibleIds).join(" ni ");
+      const incompatibleResponsesText: string[] = this.getQuestionNamesFromIds(incompatibleIds);
 
       return (
          <Text style={styles.importantDescriptionText}>
             Activando esta opción no vearás usuarios que hayan respondido: 
-            <Text style={styles.importantDescriptionTextBold}> {incompatibleResponsesText}</Text>
+            {
+               incompatibleResponsesText.map((response, i) => 
+                  <Text style={styles.importantDescriptionTextBold} key={i}>
+                     {i !== 0 && " ni"}{" "}"{response}"
+                  </Text>
+               )
+            }
+            
          </Text>
       );
    }
@@ -181,7 +196,7 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
 
 const styles: Styles = StyleSheet.create({
    question: {
-      fontSize: 23,
+      fontSize: 21,
       paddingLeft: 10,
       marginBottom: 0,
    },
@@ -189,13 +204,22 @@ const styles: Styles = StyleSheet.create({
       fontFamily: currentTheme.fonts.extraLight,
       fontSize: 17,
       paddingLeft: 10,
+      paddingRight: 10,
       marginBottom: 0,
       marginTop: 0,
    },
+   helpTextContainer: {
+      flexDirection: "row",
+      marginTop: 8,
+      paddingLeft: 5,
+      paddingRight: 5,
+      alignItems: "center",
+   },
    helpText: {
+      flex: 1,
+      flexWrap: "wrap",
       fontFamily: currentTheme.fonts.extraLight,
-      fontSize: 17,
-      paddingLeft: 10,
+      fontSize: 16,
       marginBottom: 0,
       marginTop: 0,
    },

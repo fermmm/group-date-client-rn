@@ -10,7 +10,7 @@ import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import QuestionForm from "../../common/QuestionForm/QuestionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import { QuestionData } from "../../../server-api/tools/debug-tools/interfaces/questions";
-import { fakeProfileQuestionsPart1, fakeProfileQuestionsPart2 } from "../../../server-api/tools/debug-tools/fakeProfileQuestions";
+import { fakeProfileQuestionsPart } from "../../../server-api/tools/debug-tools/fakeProfileQuestions";
 import DialogError from "../../common/DialogError/DialogError";
 
 export interface QuestionsPageProps extends Themed { }
@@ -19,6 +19,9 @@ export interface QuestionsPageState {
    showCompleteAnswerError: boolean;
 }
 
+/**
+ * TODO: Back button of the top bat should go to the previous questions instead of going back to login
+ */
 class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
    static defaultProps: Partial<QuestionsPageProps> = {};
    answeredQuestions: boolean[] = [];
@@ -32,9 +35,8 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
       const { currentStep }: Partial<QuestionsPageState> = this.state;
 
       const questions: QuestionData[] = [
-         ...fakeProfileQuestionsPart1,
+         ...fakeProfileQuestionsPart,
          ...fakeFilterQuestions,
-         ...fakeProfileQuestionsPart2
       ];
 
       return (
