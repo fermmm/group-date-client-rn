@@ -11,6 +11,7 @@ export interface AppBarHeaderProps extends Themed, NavigationInjectedProps {
    subtitle?: string;
    showMenuIcon?: boolean;
    showBackButton?: boolean;
+   onBackPress?(): void;
 }
 export interface AppBarHeaderState { }
 
@@ -31,7 +32,7 @@ class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
             {
                this.props.showBackButton &&
                   <Appbar.BackAction
-                     onPress={() => goBack()}
+                     onPress={this.props.onBackPress != null ? () => this.props.onBackPress() : () => goBack()}
                   />
             }
             <Appbar.Content

@@ -19,9 +19,6 @@ export interface QuestionsPageState {
    showCompleteAnswerError: boolean;
 }
 
-/**
- * TODO: Back button of the top bat should go to the previous questions instead of going back to login
- */
 class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
    static defaultProps: Partial<QuestionsPageProps> = {};
    answeredQuestions: boolean[] = [];
@@ -41,7 +38,10 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
 
       return (
          <>
-            <AppBarHeader title={"Nueva cuenta"} />
+            <AppBarHeader 
+               title={"Nueva cuenta"}
+               onBackPress={currentStep > 0 ? (() => this.setState({ currentStep: currentStep - 1 })) : null} 
+            />
             <ScreensStepper
                currentScreen={currentStep}
                swipeEnabled={false}
