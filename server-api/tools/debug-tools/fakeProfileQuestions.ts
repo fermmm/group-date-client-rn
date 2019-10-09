@@ -7,11 +7,11 @@ const intentionsQuestion: QuestionData = {
    answers: [
       {
          id: "1",
-         text: "Conocer gente con posibilidad de situaciones sexuales o vinculos afectivos",
+         text: "Conocer gente con posibilidades de vincularse sexualmente",
       },
       {
          id: "0",
-         text: "Conocer gente sin intenciones sexuales, solo amistad",
+         text: "Conocer gente pero sin intenciones sexuales, solo amistad",
       }
    ],
    incompatibilitiesBetweenAnswers: {
@@ -147,6 +147,6 @@ export const fakeProfileQuestionsPart: QuestionData[] = [
    intentionsQuestion,
    genderQuestion,
    genderLikeQuestion,
-   bodyLikeQuestion,
    bodyQuestion,
+   bodyLikeQuestion,
 ];
