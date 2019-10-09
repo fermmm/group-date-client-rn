@@ -23,6 +23,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "com.polydates.polydates"
+    },
     "ios": {
       "supportsTablet": true
     }

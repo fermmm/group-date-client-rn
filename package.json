@@ -5,6 +5,7 @@
     "inspector": "react-devtools",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "build": "expo build:android",
     "eject": "expo eject"
   },
   "dependencies": {
