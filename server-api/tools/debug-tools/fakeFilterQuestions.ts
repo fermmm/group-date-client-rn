@@ -104,7 +104,7 @@ const religionQuestion: QuestionData = {
 };
 
 const politicsQuestion: QuestionData = {
-   text: "¿Con que pensamiento coincidís más?",
+   text: "¿Con cuál de estos pensamientos ideológicos estás mas de acuerdo?",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [
@@ -114,7 +114,7 @@ const politicsQuestion: QuestionData = {
       },
       {
          id: "1",
-         text: "No se le debe quitar su dinero a nadie. No se le debe regalar dinero a quienes no hacen nada para ganarlo",
+         text: "No se le debe quitar su dinero a las fortunas ni a nadie. Tampoco esta bien regalarle dinero a quienes no hacen nada para ganarlo",
       }
    ],
    incompatibilitiesBetweenAnswers: {
