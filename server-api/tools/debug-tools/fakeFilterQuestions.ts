@@ -33,7 +33,7 @@ const dietQuestion: QuestionData = {
       {
          id: "0",
          text: "Omnívore",
-         extraText: "(como carne)"
+         extraText: "(Como carne y también de origen vegetal)"
       },
       {
          id: "1",
@@ -42,23 +42,42 @@ const dietQuestion: QuestionData = {
       {
          id: "2",
          text: "Vegane",
+      }
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["1", "2"],
+      "1": ["0"],
+      "2": ["0"]
+   },
+};
+
+const politicsConversationQuestion: QuestionData = {
+   text: "¿Te gusta hablar de política?",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: false,
+   answers: [
+      {
+         id: "0",
+         text: "No",
       },
       {
-         id: "3",
-         text: "Crudi-vegane",
+         id: "1",
+         text: "Un poco",
+      },
+      {
+         id: "2",
+         text: "Si",
       },
    ],
    incompatibilitiesBetweenAnswers: {
-      "0": ["1", "2", "3"],
-      "1": ["0"],
-      "2": ["0"],
-      "3": ["0"]
+      "0": ["1", "2"],
+      "2": ["0"]
    },
 };
 
 const feminismQuestion: QuestionData = {
    text: "¿Estas de acuerdo con el feminismo?",
-   extraText: "(con cualquier rama del mismo)",
+   extraText: "(Con cualquier rama del mismo)",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [
@@ -72,7 +91,7 @@ const feminismQuestion: QuestionData = {
       },
       {
          id: "2",
-         text: "No estoy informade",
+         text: "No estoy informade / No estoy interesade",
       },
    ],
    incompatibilitiesBetweenAnswers: {
@@ -81,10 +100,8 @@ const feminismQuestion: QuestionData = {
    },
 };
 
-
-
 const religionQuestion: QuestionData = {
-   text: "¿Crees en dios?",
+   text: "¿Crees en el dios de la biblia?",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [
@@ -104,22 +121,49 @@ const religionQuestion: QuestionData = {
 };
 
 const politicsQuestion: QuestionData = {
-   text: "¿Con cuál de estos pensamientos ideológicos estás mas de acuerdo?",
+   text: "¿Qué pensas de la economía en la que vivimos?",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [
       {
          id: "0",
-         text: "El mundo mejoraría si se distribuye dinero de les que tienen grandes fortunas",
+         text: "Es un sistema que nos oprime"
       },
       {
          id: "1",
-         text: "No se le debe quitar su dinero a las fortunas ni a nadie. Tampoco esta bien regalarle dinero a quienes no hacen nada para ganarlo",
+         text: "Se debería distribuir mejor la riqueza",
+      },
+      {
+         id: "2",
+         text: "El éxito depende de lo que uno hace mas que del sistema económico",
+      },
+      {
+         id: "3",
+         text: "El estado lo arruina",
+      },
+      {
+         id: "4",
+         text: "El gobierno no debería regalar dinero a algunos, fomenta la vagancia",
+      },
+      {
+         id: "5",
+         text: "No lo se"
+      },
+      {
+         id: "6",
+         text: "No me importa"
+      },
+      {
+         id: "7",
+         text: "Otra"
       }
    ],
    incompatibilitiesBetweenAnswers: {
-      "0": ["1"],
-      "1": ["0"]
+      "0": ["2", "3", "4"],
+      "1": ["2", "3", "4"],
+      "2": ["0", "1"],
+      "3": ["0", "1"],
+      "4": ["0", "1"],
    },
 };
 
@@ -151,7 +195,7 @@ const polyamoryQuestion: QuestionData = {
 
 const unicornQuestion: QuestionData = {
    text: "¿Estás en la app en busca de una persona para sumar a tu pareja y hacer un trio?",
-   extraText: "¿O sos alguien que busca una pareja con ese fin?",
+   extraText: "¿O buscas una pareja para eso?",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [
@@ -200,13 +244,44 @@ const sexDesireQuestion: QuestionData = {
    },
 };
 
+const groupSexQuestion: QuestionData = {
+   text: "¿Qué pensas del sexo grupal?",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: false,
+   answers: [
+      {
+         id: "0",
+         text: "Me gustaría probar",
+      },
+      {
+         id: "1",
+         text: "Me gustó, lo haría de nuevo",
+      },
+      {
+         id: "2",
+         text: "No lo se / Prefiero no opinar",
+      },
+      {
+         id: "3",
+         text: "No me interesa",
+      }
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["3"],
+      "1": ["3"],
+      "3": ["0", "1"],
+   },
+};
+
 export const fakeFilterQuestions: QuestionData[] = [
    conversationsQuestion,
    religionQuestion,
    feminismQuestion,
    dietQuestion,
+   politicsConversationQuestion,
    politicsQuestion,
    unicornQuestion,
    sexDesireQuestion,
    polyamoryQuestion,
+   groupSexQuestion,
 ];

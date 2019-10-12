@@ -50,12 +50,12 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
                <View style={styles.helpTextContainer}>
                   <IconButton
                      icon="live-help"
-                     size={28}
+                     size={25}
                      color={colors.statusOk}
                      style={{opacity: 0.4}}
                   />
                   <TitleText style={styles.helpText}>
-                     Se puede tocar más de una opción
+                     Se puede seleccionar más de una opción
                   </TitleText>
                </View>
             }

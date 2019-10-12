@@ -11,20 +11,31 @@ export interface RadioButtonImprovedProps {
 }
 
 interface RaddioButtonImprovedState {
-   marginBottom: number;
+   margin: number;
 }
 
 class RaddioButtonImproved extends Component<RadioButtonImprovedProps, RaddioButtonImprovedState> {
    state: RaddioButtonImprovedState = {
-      marginBottom: null
+      margin: null
    };
 
    render(): JSX.Element {
-      const { marginBottom }: Partial<RaddioButtonImprovedState> = this.state;
+      const { margin }: Partial<RaddioButtonImprovedState> = this.state;
 
       return (
          <TouchableRipple onPress={() => this.props.onPress()}>
-            <View pointerEvents={"none"} style={[this.props.style, styles.mainContainer, marginBottom != null && {marginBottom}]}>
+            <View 
+               pointerEvents={"none"} 
+               style={[
+                  this.props.style, 
+                  styles.mainContainer, 
+                  margin != null 
+                     && {
+                           marginBottom: margin, 
+                           marginTop: margin
+                        }
+                     ]}
+            >
                <View>
                   {
                      this.props.iconElement != null ?
@@ -43,8 +54,8 @@ class RaddioButtonImproved extends Component<RadioButtonImprovedProps, RaddioBut
 
    measureView(event: LayoutChangeEvent): void {
       const responseHeight: number = event.nativeEvent.layout.height;
-      if (this.state.marginBottom == null) {
-         this.setState({marginBottom: this.translateBetweenRanges(responseHeight, 20, 64, 0, 30)});
+      if (this.state.margin == null) {
+         this.setState({margin: this.translateBetweenRanges(responseHeight, 20, 64, 0, 9)});
       }
    }
 
