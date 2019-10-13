@@ -1,8 +1,27 @@
 import { QuestionData } from "./interfaces/questions";
 
+const polyamoryQuestion: QuestionData = {
+   text: "¿Tendrías una relación sexo-afectiva compuesta por 3 o mas personas donde se juntan todes a la vez?",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: true,
+   answers: [
+      {
+         id: "0",
+         text: "No, de a 2 únicamente",
+      },
+      {
+         id: "1",
+         text: "Si",
+      }
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["1"],
+      "1": ["0"],
+   },
+};
+
 const conversationsQuestion: QuestionData = {
    text: "¿Te gustan las conversaciones intelectuales?",
-   extraText: "(Ricas en reflexiones y/o información)",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: false,
    answers: [
@@ -33,7 +52,6 @@ const dietQuestion: QuestionData = {
       {
          id: "0",
          text: "Omnívore",
-         extraText: "(Como carne y también de origen vegetal)"
       },
       {
          id: "1",
@@ -68,10 +86,53 @@ const politicsConversationQuestion: QuestionData = {
          id: "2",
          text: "Si",
       },
+   ]
+};
+
+const politicsQuestion: QuestionData = {
+   text: "¿Qué pensas sobre el sistema economico en el que vivimos?",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: true,
+   answers: [
+      {
+         id: "0",
+         text: "El éxito depende de lo que uno hace, poco importa el sistema económico",
+      },
+      {
+         id: "1",
+         text: "El estado gasta demasiado",
+      },
+      {
+         id: "2",
+         text: "Las ayudas economicas hacen que algunos no trabajen",
+      },
+      {
+         id: "3",
+         text: "Estamos oprimidos por el sistema"
+      },
+      {
+         id: "4",
+         text: "Se debería distribuir mejor la riqueza",
+      },
+      {
+         id: "5",
+         text: "No lo se"
+      },
+      {
+         id: "6",
+         text: "No me importa"
+      },
+      {
+         id: "7",
+         text: "Otra"
+      }
    ],
    incompatibilitiesBetweenAnswers: {
-      "0": ["1", "2"],
-      "2": ["0"]
+      "0": ["3", "4"],
+      "1": ["3", "4"],
+      "2": ["3", "4"],
+      "3": ["0", "1", "2"],
+      "4": ["0", "1", "2"],
    },
 };
 
@@ -100,10 +161,10 @@ const feminismQuestion: QuestionData = {
    },
 };
 
-const religionQuestion: QuestionData = {
-   text: "¿Crees en el dios de la biblia?",
+const bodyQuestion: QuestionData = {
+   text: "¿Tenés un tamaño mas o menos aceptado por el ideal hegemónico impuesto? (Un cuerpo mas o menos delgado)",
    multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: true,
+   itsImportantSelectedByDefault: false,
    answers: [
       {
          id: "0",
@@ -113,109 +174,15 @@ const religionQuestion: QuestionData = {
          id: "1",
          text: "No",
       },
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "1": ["0"],
-      "0": ["1"],
-   },
-};
-
-const politicsQuestion: QuestionData = {
-   text: "¿Qué pensas de la economía en la que vivimos?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: true,
-   answers: [
-      {
-         id: "0",
-         text: "Es un sistema que nos oprime"
-      },
-      {
-         id: "1",
-         text: "Se debería distribuir mejor la riqueza",
-      },
-      {
-         id: "2",
-         text: "El éxito depende de lo que uno hace mas que del sistema económico",
-      },
-      {
-         id: "3",
-         text: "El estado lo arruina",
-      },
-      {
-         id: "4",
-         text: "El gobierno no debería regalar dinero a algunos, fomenta la vagancia",
-      },
-      {
-         id: "5",
-         text: "No lo se"
-      },
-      {
-         id: "6",
-         text: "No me importa"
-      },
-      {
-         id: "7",
-         text: "Otra"
-      }
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["2", "3", "4"],
-      "1": ["2", "3", "4"],
-      "2": ["0", "1"],
-      "3": ["0", "1"],
-      "4": ["0", "1"],
-   },
-};
-
-const polyamoryQuestion: QuestionData = {
-   text: "¿Tendrías una relación sexo-afectiva con mas de una persona a la vez?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: true,
-   answers: [
-      {
-         id: "0",
-         text: "No",
-      },
-      {
-         id: "1",
-         text: "Si",
-      },
-      {
-         id: "2",
-         text: "Si, pero no al mismo tiempo",
-         extraText: "(un día con cada une)",
-      }
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["1", "2"],
-      "1": ["0"],
-      "2": ["0"]
-   },
-};
-
-const unicornQuestion: QuestionData = {
-   text: "¿Estás en la app en busca de una persona para sumar a tu pareja y hacer un trio?",
-   extraText: "¿O buscas una pareja para eso?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: true,
-   answers: [
-      {
-         id: "0",
-         text: "Si",
-      },
-      {
-         id: "1",
-         text: "No",
-      }
    ],
    incompatibilitiesBetweenAnswers: {
       "0": ["1"],
-      "1": ["0"],
+      "1": ["0"]
    },
 };
 
 const sexDesireQuestion: QuestionData = {
-   text: "¿Qué tan sexual te consideras?",
+   text: "¿Qué tan sexual te considerás?",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [
@@ -274,14 +241,13 @@ const groupSexQuestion: QuestionData = {
 };
 
 export const fakeFilterQuestions: QuestionData[] = [
+   polyamoryQuestion,
    conversationsQuestion,
-   religionQuestion,
    feminismQuestion,
+   bodyQuestion,
    dietQuestion,
    politicsConversationQuestion,
    politicsQuestion,
-   unicornQuestion,
    sexDesireQuestion,
-   polyamoryQuestion,
    groupSexQuestion,
 ];

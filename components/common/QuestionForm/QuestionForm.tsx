@@ -102,7 +102,7 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
                }
             </View>
             {
-               (selectedAnswers.length > 0 && incompatibilitiesPresent) &&
+               (selectedAnswers.length > 0 && incompatibilitiesPresent && incompatibleResponsesAmmount > 0) &&
                   <ListItemImproved
                      title="Es importante para mi"
                      description={() => this.getIsImportantDescriptionText()}
@@ -138,7 +138,7 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
 
       return (
          <Text style={styles.importantDescriptionText}>
-            Activando esta opción no vearás usuarios que hayan respondido: 
+            Activando esta opción no verás usuaries que hayan respondido: 
             {
                incompatibleResponsesText.map((response, i) => 
                   <Text style={styles.importantDescriptionTextBold} key={i}>

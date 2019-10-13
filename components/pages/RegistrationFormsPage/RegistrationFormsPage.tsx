@@ -8,6 +8,7 @@ import ProfileDescriptionForm from "./ProfileDescriptionForm/ProfileDescriptionF
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
+import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 
 export interface RegistrationFormsProps extends Themed { }
 export interface RegistrationFormsState {
@@ -43,6 +44,16 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
                   showContinueButton
                >
                   <ProfileDescriptionForm />
+               </BasicScreenContainer>
+               <BasicScreenContainer
+                  showBottomGradient={true}
+                  bottomGradientColor={colors.backgroundForText}
+                  onContinuePress={() => this.setState({ currentStep: currentStep + 1 })}
+                  onBackPress={() => this.setState({ currentStep: currentStep - 1 })}
+                  showBackButton
+                  showContinueButton
+               >
+                  <BasicInfoForm />
                </BasicScreenContainer>
             </ScreensStepper>
             <DialogError

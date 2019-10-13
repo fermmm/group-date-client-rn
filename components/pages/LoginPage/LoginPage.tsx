@@ -29,12 +29,12 @@ class LoginPage extends Component<LoginProps, LoginState> {
                <LogoSvg style={styles.logo} color={colors.logoColor} />
                <Text style={[styles.textBlock, { color: colors.textLogin, fontFamily: fonts.light }]}>
                   <Text style={{ fontWeight: "bold" }}> ¡Bienvenide! </Text>
-                  Poly Dates es una app de citas grupales para conocer poliamoroses.
-                  Las citas son en grupos que se forman cuando se gustan varios
-                  entre todes en la mayor medida posible.
+                  Poly Dates es una app de citas gruaples, se forma una cita cuando se gustan varies
+                  entre todes. La idea es pasarla genial conociendo poliamoroses y que les que quieran
+                  tengan la posibilidad de experimentar en grupo relaciones sexuales y/o afectivas.
                </Text>
                <Text style={[styles.secondTextBlock, { color: colors.textLogin, fontFamily: fonts.light }]}>
-                  Con esta herramienta <Text style={{ fontWeight: "bold" }}> no </Text> se busca el lucro y es de código abierto, perfeccionada
+                  Con esta herramienta no se busca el lucro y es de código abierto, perfeccionada
                   con la comunidad.
                </Text>
                <ButtonStyled
@@ -42,14 +42,15 @@ class LoginPage extends Component<LoginProps, LoginState> {
                   style={{ borderColor: colors.textLogin }}
                   onPress={() => navigate("Main")}
                >
-                  OK entendido, ¡comenzar!
+                  Entrar
                </ButtonStyled>
                <ButtonStyled
                   color={colors.textLogin}
                   style={{ borderColor: colors.textLogin }}
                   onPress={() => navigate("Questions")}
+                  // onPress={() => navigate("RegistrationForms")}
                >
-                  Test
+                  Nueva cuenta
                </ButtonStyled>
             </View>
          </LinearGradient>

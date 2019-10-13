@@ -46,7 +46,7 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
                   <TitleText extraMarginLeft extraSize>
                      Votá el dia y la hora de la cita, despues toca "continuar"
                   </TitleText>
-                  <TitleSmallText>
+                  <TitleSmallText style={styles.titleSmall}>
                      Estos son los dias y horas en los que todos pueden, o la mayoría.
                      Podes votar por mas de una opcion.
                   </TitleSmallText>
@@ -65,7 +65,7 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
                   <TitleText extraMarginLeft extraSize>
                      Votá el lugar de la cita
                   </TitleText>
-                  <TitleSmallText>
+                  <TitleSmallText style={styles.titleSmall}>
                      Estas son todas las opciones recomendadas de todos los miembros del grupo.
                      Podes votar por mas de una opcion.
                   </TitleSmallText>
@@ -81,6 +81,9 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
 }
 
 const styles: Styles = StyleSheet.create({
+   titleSmall: {
+      marginBottom: 20
+   }
 });
 
 export default withTheme(VotingPage);

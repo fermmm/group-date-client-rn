@@ -23,12 +23,13 @@ class ProfileDescriptionForm extends Component<DescriptionFormProps, Description
       return (
          <View style={styles.mainContainer}>
             <TitleText>
-               Texto libre opcional.
+               Texto libre (opcional)
             </TitleText>
             <TitleMediumText>
-               Se va a ver en tu perfil, no es obligatorio completarlo.
+               Se va a ver abajo de tu foto, lo podes dejar en blanco.
             </TitleMediumText>
             <TextInput
+               autoFocus={true}
                mode="outlined"
                multiline={true}
                value={this.state.text}
