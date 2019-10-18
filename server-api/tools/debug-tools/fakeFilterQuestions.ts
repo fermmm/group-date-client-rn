@@ -90,49 +90,34 @@ const politicsConversationQuestion: QuestionData = {
 };
 
 const politicsQuestion: QuestionData = {
-   text: "¿Qué pensas sobre el sistema economico en el que vivimos?",
+   text: "¿Cuál es tu postura política?",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [
       {
          id: "0",
-         text: "El éxito depende de lo que uno hace, poco importa el sistema económico",
+         text: "Liberal / Centro-derecha / Derecha",
       },
       {
          id: "1",
-         text: "El estado gasta demasiado",
+         text: "Socialista / Centro-izquierda / Izquierda",
       },
       {
          id: "2",
-         text: "Las ayudas economicas hacen que algunos no trabajen",
-      },
-      {
-         id: "3",
-         text: "Estamos oprimidos por el sistema"
-      },
-      {
-         id: "4",
-         text: "Se debería distribuir mejor la riqueza",
-      },
-      {
-         id: "5",
          text: "No lo se"
       },
       {
-         id: "6",
+         id: "3",
          text: "No me importa"
       },
       {
-         id: "7",
+         id: "4",
          text: "Otra"
       }
    ],
    incompatibilitiesBetweenAnswers: {
-      "0": ["3", "4"],
-      "1": ["3", "4"],
-      "2": ["3", "4"],
-      "3": ["0", "1", "2"],
-      "4": ["0", "1", "2"],
+      "0": ["1"],
+      "1": ["0"]
    },
 };
 
