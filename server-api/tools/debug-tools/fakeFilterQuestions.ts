@@ -1,7 +1,7 @@
 import { QuestionData } from "./interfaces/questions";
 
 const polyamoryQuestion: QuestionData = {
-   text: "¿Tendrías una relación sexo-afectiva compuesta por 3 o mas personas donde se juntan todes a la vez?",
+   text: "¿Tendrías una relación sexo-afectiva compuesta por 3 o mas personas que se juntan todes a la vez?",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [
@@ -161,26 +161,6 @@ const feminismQuestion: QuestionData = {
    },
 };
 
-const bodyQuestion: QuestionData = {
-   text: "¿Tenés un tamaño mas o menos aceptado por el ideal hegemónico impuesto? (Un cuerpo mas o menos delgado)",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: false,
-   answers: [
-      {
-         id: "0",
-         text: "Si",
-      },
-      {
-         id: "1",
-         text: "No",
-      },
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["1"],
-      "1": ["0"]
-   },
-};
-
 const sexDesireQuestion: QuestionData = {
    text: "¿Qué tan sexual te considerás?",
    multipleAnswersAllowed: false,
@@ -244,7 +224,6 @@ export const fakeFilterQuestions: QuestionData[] = [
    polyamoryQuestion,
    conversationsQuestion,
    feminismQuestion,
-   bodyQuestion,
    dietQuestion,
    politicsConversationQuestion,
    politicsQuestion,
