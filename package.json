@@ -9,7 +9,6 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@ptomasroos/react-native-multi-slider": "^1.0.0",
     "expo": "^35.0.0",
     "expo-font": "^7.0.0",
     "expo-linear-gradient": "^7.0.0",

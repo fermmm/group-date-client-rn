@@ -5,8 +5,7 @@ import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
-// @ts-ignore
-import MultiSlider from "@ptomasroos/react-native-multi-slider";
+import AgeSelector from "../../../common/AgeSelector/AgeSelector";
 
 export interface BasicInfoProps extends Themed { }
 export interface BasicInfoState {
@@ -47,7 +46,7 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
             />
             <TitleMediumText style={styles.label}>
                Tu altura en centímetros (es opcional) ej: 160
-               Este dato para algunes es muy importante y a otres no les importa para nada
+               Este dato para algunes es muy importante y a otres no les importa
             </TitleMediumText>
             <TextInput
                label="Altura (opcional)"
@@ -59,18 +58,7 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
             <TitleMediumText style={styles.label}>
                Rango de edades visible
             </TitleMediumText>
-            <MultiSlider
-               min={0}
-               max={10}
-               values={[0, 5]}
-               onValuesChange={(v: number[]) => console.log(v)}
-               touchDimensions={{
-                  height: 100,
-                  width: 100,
-               }}
-            // onValuesChangeStart={this.disableScroll}
-            // onValuesChangeFinish={this.enableScroll}
-            />
+            <AgeSelector />
          </View>
       );
    }
