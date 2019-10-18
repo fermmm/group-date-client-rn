@@ -11,6 +11,7 @@
   "dependencies": {
     "expo": "^35.0.0",
     "expo-font": "^7.0.0",
+    "expo-intent-launcher": "^7.0.0",
     "expo-linear-gradient": "^7.0.0",
     "react": "16.8.3",
     "react-dom": "^16.9.0",
