@@ -6,25 +6,32 @@ import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import AgeSelector from "../../../common/AgeSelector/AgeSelector";
+import { formValidators } from "../../../../common-tools/formValidators/formValidators";
 
 export interface BasicInfoProps extends Themed { }
 export interface BasicInfoState {
    nameText: string;
-   ageText: string;
-   bodyHeight: string;
+   age: number;
+   bodyHeight: number;
+   targetAgeMin: number;
+   targetAgeMax: number;
+   targetAgeModified: boolean;
 }
 
 class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
    static defaultProps: Partial<BasicInfoProps> = {};
    state: BasicInfoState = {
       nameText: "",
-      ageText: "",
-      bodyHeight: "",
+      age: null,
+      bodyHeight: null,
+      targetAgeMin: 18,
+      targetAgeMax: 28,
+      targetAgeModified: false,
    };
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { nameText, ageText, bodyHeight }: Partial<BasicInfoState> = this.state;
+      const { nameText, age, bodyHeight, targetAgeModified, targetAgeMin, targetAgeMax }: Partial<BasicInfoState> = this.state;
 
       return (
          <View style={styles.mainContainer}>
@@ -34,15 +41,15 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
             <TextInput
                label="Tu nombre o apodo"
                mode="outlined"
-               value={this.state.nameText}
-               onChangeText={text => this.setState({ nameText: text })}
+               value={nameText}
+               onChangeText={t => this.setState({ nameText: formValidators.name(t).result.text })}
             />
             <TextInput
                label="Edad"
                mode="outlined"
                keyboardType="number-pad"
-               value={this.state.ageText}
-               onChangeText={text => this.setState({ ageText: text })}
+               value={age ? age.toString() : ""}
+               onChangeText={t => this.setState({ age: Number(formValidators.age(t).result.text) })}
             />
             <TitleMediumText style={styles.label}>
                Tu altura en centímetros (es opcional) ej: 160
@@ -52,13 +59,23 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
                label="Altura (opcional)"
                mode="outlined"
                keyboardType="number-pad"
-               value={this.state.bodyHeight}
-               onChangeText={text => this.setState({ bodyHeight: text })}
+               value={bodyHeight ? bodyHeight.toString() : ""}
+               onChangeText={t => this.setState({ bodyHeight: Number(formValidators.bodyHeight(t).result.text) || 0 })}
             />
             <TitleMediumText style={styles.label}>
-               Rango de edades visible
+               ¿Qué edades queres ver en la app?
             </TitleMediumText>
-            <AgeSelector />
+            <AgeSelector
+               min={targetAgeModified ? targetAgeMin : age - 6}
+               max={targetAgeModified ? targetAgeMax : age + 6}
+               onChange={({ min, max }) =>
+                  this.setState({
+                     targetAgeMin: min,
+                     targetAgeMax: max,
+                     targetAgeModified: true
+                  })
+               }
+            />
          </View>
       );
    }

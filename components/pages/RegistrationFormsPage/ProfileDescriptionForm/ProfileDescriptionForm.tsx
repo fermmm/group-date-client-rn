@@ -26,7 +26,7 @@ class ProfileDescriptionForm extends Component<DescriptionFormProps, Description
                Texto libre (opcional)
             </TitleText>
             <TitleMediumText>
-               Se va a ver abajo de tu foto, lo podes dejar en blanco.
+               Es recomendable escribir algo que ayude a conocerte
             </TitleMediumText>
             <TextInput
                autoFocus={true}

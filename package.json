@@ -13,6 +13,7 @@
     "expo-font": "^7.0.0",
     "expo-intent-launcher": "^7.0.0",
     "expo-linear-gradient": "^7.0.0",
+    "fast-deep-equal": "^3.0.0-beta.2",
     "react": "16.8.3",
     "react-dom": "^16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
@@ -24,7 +25,8 @@
     "react-native-web": "^0.11.5",
     "react-navigation": "^4.0.6",
     "react-navigation-stack": "^1.9.1",
-    "react-timer-mixin": "^0.13.4"
+    "react-timer-mixin": "^0.13.4",
+    "simple-validator-js": "^1.8.0"
   },
   "devDependencies": {
     "@types/color": "^3.0.0",
