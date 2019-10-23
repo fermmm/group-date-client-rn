@@ -4,7 +4,6 @@
     "no-console": {
         "severity": "warning",
         "options": [
-            "debug",
             "info",
             "log",
             "time",
