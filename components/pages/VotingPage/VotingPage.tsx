@@ -39,7 +39,7 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
             >
                <BasicScreenContainer
                   showBottomGradient={true}
-                  bottomGradientColor={colors.backgroundForText}
+                  bottomGradientColor={colors.background}
                   onContinuePress={() => this.setState({ currentStep: 1 })}
                   showContinueButton
                >
@@ -57,7 +57,7 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
                </BasicScreenContainer>
                <BasicScreenContainer
                   showBottomGradient={true}
-                  bottomGradientColor={colors.backgroundForText}
+                  bottomGradientColor={colors.background}
                   onBackPress={() => this.setState({ currentStep: 0 })}
                   showBackButton
                   showContinueButton

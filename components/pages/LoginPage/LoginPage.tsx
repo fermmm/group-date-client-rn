@@ -20,7 +20,7 @@ class LoginPage extends Component<LoginProps, LoginState> {
 
       return (
          <LinearGradient
-            colors={[colors.background, colors.background2]}
+            colors={[colors.specialBackground1, colors.specialBackground2]}
             style={styles.mainContainer}
             start={[0, 0.5]}
             end={[0, 1.3]}

@@ -25,7 +25,7 @@ class QuestionInProfileCard extends Component<IQuestionProfileProps, IQuestionPr
             <View style={[
                 styles.mainContainer, 
                 {
-                    backgroundColor: color(colors.backgroundForText).darken(0.05).string(),
+                    backgroundColor: color(colors.background).darken(0.05).string(),
                     borderColor: !answerMatches && color(colors.statusBad).alpha(0.6).string(),
                 },
                 !answerMatches && styles.border,

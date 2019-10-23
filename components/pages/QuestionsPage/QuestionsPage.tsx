@@ -53,7 +53,7 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
                   questions.map((question, i) =>
                      <BasicScreenContainer
                         showBottomGradient={true}
-                        bottomGradientColor={colors.backgroundForText}
+                        bottomGradientColor={colors.background}
                         onBackPress={() => this.setState({ currentStep: currentStep - 1 })}
                         onContinuePress={() =>
                            this.answeredQuestions[i] ?

@@ -15,7 +15,7 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
 
         return (
             // <ImageBackground source={this.props.theme.backgroundImage} style={{width: "100%", height: "100%"}}>
-            <View style={[styles.mainContainer, { backgroundColor: colors.backgroundForText }]}>
+            <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
                 <ProfileCard 
                     user={getAvaiableCards()[0]}
                     showLikeDislikeButtons={true} 

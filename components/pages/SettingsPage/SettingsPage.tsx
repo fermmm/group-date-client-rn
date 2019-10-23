@@ -13,7 +13,7 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
 
         return (
             <>
-                <View style={[styles.scene, { backgroundColor: colors.backgroundForText }]} >
+                <View style={[styles.scene, { backgroundColor: colors.background }]} >
                     <Button icon="add-a-photo" mode="contained" onPress={() => console.log("Pressed")}>
                         Press me
                     </Button>

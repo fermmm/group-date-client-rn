@@ -51,10 +51,10 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                   <ScrollViewExtended
                      style={[styles.scrollView]}
                      showBottomGradient={true}
-                     bottomGradientColor={colors.backgroundForText}
+                     bottomGradientColor={colors.background}
                      indicatorStyle={"white"}
                   >
-                     <Card style={[styles.card, { backgroundColor: colors.backgroundForText }]}>
+                     <Card style={[styles.card, { backgroundColor: colors.background }]}>
                         <ImageBackground source={backgroundImage} style={styles.galleryBackground}>
                            <ImagesScroll
                               photos={photos}

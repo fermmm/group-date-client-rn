@@ -47,7 +47,7 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
             >
                <BasicScreenContainer
                   showBottomGradient={true}
-                  bottomGradientColor={colors.backgroundForText}
+                  bottomGradientColor={colors.background}
                   onContinuePress={() => this.setState({ currentStep: currentStep + 1 })}
                   showContinueButton
                >
@@ -58,7 +58,7 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
                </BasicScreenContainer>
                <BasicScreenContainer
                   showBottomGradient={true}
-                  bottomGradientColor={colors.backgroundForText}
+                  bottomGradientColor={colors.background}
                   onBackPress={() => this.setState({ currentStep: currentStep - 1 })}
                   onContinuePress={() => errorToShow == null ? navigate("Questions") : this.setState({showIncompleteError: true})}
                   showBackButton
