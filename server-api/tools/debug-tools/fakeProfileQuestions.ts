@@ -7,7 +7,7 @@ const intentionsQuestion: QuestionData = {
    answers: [
       {
          id: "1",
-         text: "Conocer gente con posibilidades de vincularse sexualmente",
+         text: "Conocer gente con posibilidad de vincularnos sexualmente",
       },
       {
          id: "0",
@@ -53,23 +53,23 @@ const genderLikeQuestion: QuestionData = {
    answers: [
       {
          id: "0",
-         text: "Mujer",
+         text: "Mujeres",
       },
       {
          id: "1",
-         text: "Varon",
+         text: "Varones",
       },
       {
          id: "2",
-         text: "Mujer transexual",
+         text: "Mujeres transexuales",
       },
       {
          id: "3",
-         text: "Varon transexual",
+         text: "Varones transexuales",
       },
       {
          id: "4",
-         text: "No binarie",
+         text: "No binaries",
       },
    ]
 };
