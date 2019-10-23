@@ -114,7 +114,7 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
-      padding: 20
+      padding: 20,
    },
    label: {
       marginTop: 30,

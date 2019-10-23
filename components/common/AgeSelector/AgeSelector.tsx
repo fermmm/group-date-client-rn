@@ -30,7 +30,7 @@ class AgeSelector extends Component<AgeSelectorProps, AgeSelectorState> {
 
       return (
          <View style={styles.mainContainer}>
-            <Text style={styles.text}>De</Text>
+            <Text style={styles.text}>De:</Text>
             <PickerThemed
                selectedValue={min}
                style={{ height: 50, width: 90 }}
@@ -43,7 +43,7 @@ class AgeSelector extends Component<AgeSelectorProps, AgeSelectorState> {
                   )
                }
             </PickerThemed>
-            <Text style={styles.text}>a</Text>
+            <Text style={styles.text}>a:</Text>
             <PickerThemed
                selectedValue={max}
                style={{ height: 50, width: 90 }}
@@ -84,7 +84,8 @@ const styles: Styles = StyleSheet.create({
    mainContainer: {
       flex: 1,
       flexDirection: "row",
-      alignItems: "center"
+      alignItems: "center",
+      justifyContent: "center"
    },
    text: {
       marginRight: 20,
