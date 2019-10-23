@@ -12,8 +12,9 @@ import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import { QuestionData } from "../../../server-api/tools/debug-tools/interfaces/questions";
 import { fakeProfileQuestionsPart } from "../../../server-api/tools/debug-tools/fakeProfileQuestions";
 import DialogError from "../../common/DialogError/DialogError";
+import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
 
-export interface QuestionsPageProps extends Themed { }
+export interface QuestionsPageProps extends Themed, NavigationContainerProps { }
 export interface QuestionsPageState {
    currentStep: number;
    showCompleteAnswerError: boolean;
@@ -29,6 +30,7 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
       const { currentStep }: Partial<QuestionsPageState> = this.state;
 
       const questions: QuestionData[] = [
@@ -52,13 +54,16 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
                      <BasicScreenContainer
                         showBottomGradient={true}
                         bottomGradientColor={colors.backgroundForText}
+                        onBackPress={() => this.setState({ currentStep: currentStep - 1 })}
                         onContinuePress={() =>
                            this.answeredQuestions[i] ?
-                              this.setState({ currentStep: currentStep + 1 })
+                              currentStep < questions.length - 1 ? 
+                                 this.setState({ currentStep: currentStep + 1 })
+                              :
+                                 navigate("Main")
                            :
                               this.setState({ showCompleteAnswerError: true })
                         }
-                        onBackPress={() => this.setState({ currentStep: currentStep - 1 })}
                         showBackButton={i !== 0}
                         showContinueButton={true}
                         key={i}

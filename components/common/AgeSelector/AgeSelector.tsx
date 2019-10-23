@@ -18,6 +18,7 @@ export interface AgeSelectorState {
 
 class AgeSelector extends Component<AgeSelectorProps, AgeSelectorState> {
    static defaultProps: Partial<AgeSelectorProps> = {};
+   ageOptions: number[] = this.generateAgeArray();
    state: AgeSelectorState = {
       min: 18,
       max: 25
@@ -37,7 +38,7 @@ class AgeSelector extends Component<AgeSelectorProps, AgeSelectorState> {
                   this.setState({ min: itemValue <= max ? itemValue : max }, () => this.sendChanges())
                }>
                {
-                  this.generateAgeArray().map((age, i) =>
+                  this.ageOptions.map((age, i) =>
                      <Picker.Item label={age.toString()} value={age} key={i} />
                   )
                }
@@ -50,7 +51,7 @@ class AgeSelector extends Component<AgeSelectorProps, AgeSelectorState> {
                   this.setState({ max: itemValue >= min ? itemValue : min}, () => this.sendChanges())
                }>
                {
-                  this.generateAgeArray().map((age, i) =>
+                  this.ageOptions.map((age, i) =>
                      <Picker.Item label={age.toString()} value={age} key={i} />
                   )
                }

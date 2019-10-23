@@ -8,7 +8,9 @@ import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import AgeSelector from "../../../common/AgeSelector/AgeSelector";
 import { formValidators } from "../../../../common-tools/formValidators/formValidators";
 
-export interface BasicInfoProps extends Themed { }
+export interface BasicInfoProps extends Themed {
+   onChange(formData: BasicInfoState, error: string | null): void;
+}
 export interface BasicInfoState {
    nameText: string;
    age: number;
@@ -42,14 +44,14 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
                label="Tu nombre o apodo"
                mode="outlined"
                value={nameText}
-               onChangeText={t => this.setState({ nameText: formValidators.name(t).result.text })}
+               onChangeText={t => this.setState({ nameText: formValidators.name(t).result.text }, () => this.sendChanges())}
             />
             <TextInput
                label="Edad"
                mode="outlined"
                keyboardType="number-pad"
                value={age ? age.toString() : ""}
-               onChangeText={t => this.setState({ age: Number(formValidators.age(t).result.text) })}
+               onChangeText={t => this.setState({ age: Number(formValidators.age(t).result.text) }, () => this.sendChanges())}
             />
             <TitleMediumText style={styles.label}>
                Tu altura en centímetros (es opcional) ej: 160
@@ -60,7 +62,7 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
                mode="outlined"
                keyboardType="number-pad"
                value={bodyHeight ? bodyHeight.toString() : ""}
-               onChangeText={t => this.setState({ bodyHeight: Number(formValidators.bodyHeight(t).result.text) || 0 })}
+               onChangeText={t => this.setState({ bodyHeight: Number(formValidators.bodyHeight(t).result.text) || 0 }, () => this.sendChanges())}
             />
             <TitleMediumText style={styles.label}>
                ¿Qué edades queres ver en la app?
@@ -73,11 +75,40 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
                      targetAgeMin: min,
                      targetAgeMax: max,
                      targetAgeModified: true
-                  })
+                  }, () => this.sendChanges())
                }
             />
          </View>
       );
+   }
+
+   sendChanges(): void {
+      const { nameText, age }: Partial<BasicInfoState> = this.state;
+      const error: string = this.getError();
+
+      this.props.onChange(this.state, error);
+   }
+
+   getError(): string {
+      const { nameText, age }: Partial<BasicInfoState> = this.state;
+
+      if (nameText.length === 0) {
+         return "Tenes que escribir un nombre o apodo";
+      }
+
+      if (nameText.length < 2) {
+         return "El nombre o apodo es demasiado corto";
+      }
+
+      if (age == null) {
+         return "El campo de edad esta vacío";
+      }
+
+      if (age < 12) {
+         return "Edad demasiado baja";
+      }
+
+      return null;
    }
 }
 

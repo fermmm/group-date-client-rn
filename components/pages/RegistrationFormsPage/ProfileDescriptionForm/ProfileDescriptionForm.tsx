@@ -6,16 +6,13 @@ import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 
-export interface DescriptionFormProps extends Themed { }
-export interface DescriptionFormState { 
+export interface DescriptionFormProps extends Themed {
    text: string;
+   onChange(newText: string): void;
 }
 
-class ProfileDescriptionForm extends Component<DescriptionFormProps, DescriptionFormState> {
+class ProfileDescriptionForm extends Component<DescriptionFormProps> {
    static defaultProps: Partial<DescriptionFormProps> = {};
-   state: DescriptionFormState = {
-      text: ""
-   };
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
@@ -32,8 +29,8 @@ class ProfileDescriptionForm extends Component<DescriptionFormProps, Description
                autoFocus={true}
                mode="outlined"
                multiline={true}
-               value={this.state.text}
-               onChangeText={text => this.setState({ text })}
+               value={this.props.text}
+               onChangeText={text => this.props.onChange(text)}
                style={styles.input}
             />
          </View>

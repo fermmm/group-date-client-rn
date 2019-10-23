@@ -8,12 +8,16 @@ import ProfileDescriptionForm from "./ProfileDescriptionForm/ProfileDescriptionF
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
-import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
+import BasicInfoForm, { BasicInfoState } from "./BasicInfoForm/BasicInfoForm";
+import { NavigationScreenProp, NavigationContainerProps } from "react-navigation";
 
-export interface RegistrationFormsProps extends Themed { }
+export interface RegistrationFormsProps extends Themed, NavigationContainerProps { }
 export interface RegistrationFormsState {
    currentStep: number;
    showIncompleteError: boolean;
+   profileDescription: string;
+   basicInfoFormData: BasicInfoState;
+   errorToShow: string;
 }
 
 class RegistrationFormsPage extends Component<RegistrationFormsProps, RegistrationFormsState> {
@@ -23,11 +27,15 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
    state: RegistrationFormsState = {
       currentStep: 0,
       showIncompleteError: false,
+      profileDescription: null,
+      basicInfoFormData: null,
+      errorToShow: "Tenés que completar el formulario",
    };
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { currentStep, showIncompleteError }: Partial<RegistrationFormsState> = this.state;
+      const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
+      const { currentStep, showIncompleteError, profileDescription, errorToShow }: Partial<RegistrationFormsState> = this.state;
 
       return (
          <>
@@ -43,24 +51,29 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
                   onContinuePress={() => this.setState({ currentStep: currentStep + 1 })}
                   showContinueButton
                >
-                  <ProfileDescriptionForm />
+                  <ProfileDescriptionForm
+                     text={profileDescription}
+                     onChange={t => this.setState({profileDescription: t})}
+                  />
                </BasicScreenContainer>
                <BasicScreenContainer
                   showBottomGradient={true}
                   bottomGradientColor={colors.backgroundForText}
-                  onContinuePress={() => this.setState({ currentStep: currentStep + 1 })}
                   onBackPress={() => this.setState({ currentStep: currentStep - 1 })}
+                  onContinuePress={() => errorToShow == null ? navigate("Questions") : this.setState({showIncompleteError: true})}
                   showBackButton
                   showContinueButton
                >
-                  <BasicInfoForm />
+                  <BasicInfoForm 
+                     onChange={(formData, error) => this.setState({basicInfoFormData: formData, errorToShow: error})}
+                  />
                </BasicScreenContainer>
             </ScreensStepper>
             <DialogError
                visible={showIncompleteError}
                onDismiss={() => this.setState({ showIncompleteError: false })}
             >
-               Tenés que completar todos los campos para continuar
+               {errorToShow}
             </DialogError>
          </>
 
