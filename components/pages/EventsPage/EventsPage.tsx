@@ -19,12 +19,17 @@ class EventsPage extends Component<EventsPageProps, EventsPageState> {
 
       return (
          <BasicScreenContainer>
-            <TitleText extraMarginLeft extraSize>
-               Eventos
-            </TitleText>
-            <TitleSmallText style={styles.titleSmall}>
-               Eventos organizados por agrupaciones de poliamor cercanas a tu zona
-            </TitleSmallText>
+            <View style={styles.topContainer}>
+               <TitleText extraMarginLeft extraSize>
+                  Eventos
+               </TitleText>
+               <TitleSmallText style={styles.titleSmall}>
+                  Eventos organizados por agrupaciones de poliamor cercanas a tu zona
+               </TitleSmallText>
+               <Button onPress={() => console.log("clicked")} style={styles.addButton}>
+                  Agregar mis eventos
+               </Button>
+            </View>
             {
                fakeTestingEvents.map((event, i) =>
                   <Card style={styles.card} key={i}>
@@ -68,11 +73,11 @@ class EventsPage extends Component<EventsPageProps, EventsPageState> {
 }
 
 const styles: Styles = StyleSheet.create({
-   mainContainer: {
-      flex: 1,
+   topContainer: {
+      marginBottom: 10
    },
-   titleSmall: {
-      marginBottom: 40
+   addButton: {
+      width: 230
    },
    card: {
       borderRadius: 16,
