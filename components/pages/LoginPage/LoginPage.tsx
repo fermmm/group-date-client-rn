@@ -33,10 +33,10 @@ class LoginPage extends Component<LoginProps, LoginState> {
                   entre todes. La vas a pasar bien conociendo poliamoroses y les que quieran
                   tienen una herramienta para relacionarse en grupo sexualmente y/o afectivamente.
                </Text>
-               <Text style={[styles.secondTextBlock, { color: colors.textLogin, fontFamily: fonts.light }]}>
+               {/* <Text style={[styles.secondTextBlock, { color: colors.textLogin, fontFamily: fonts.light }]}>
                   Con esta herramienta no se busca el lucro y es de código abierto, perfeccionada
                   con la comunidad.
-               </Text>
+               </Text> */}
                <ButtonStyled
                   color={colors.textLogin}
                   style={{ borderColor: colors.textLogin }}
@@ -72,7 +72,7 @@ const styles: Styles = StyleSheet.create({
       width: "35%",
    },
    textBlock: {
-      marginBottom: 15,
+      marginBottom: 100,
       textAlign: "center",
    },
    secondTextBlock: {
