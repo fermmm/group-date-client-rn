@@ -102,9 +102,9 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
                }
             </View>
             {
-               (selectedAnswers.length > 0 && incompatibilitiesPresent && incompatibleResponsesAmmount > 0) &&
+               (selectedAnswers.length > 0 && incompatibilitiesPresent && incompatibleResponsesAmmount > 0) ?
                   <ListItemImproved
-                     title="Es importante para mi"
+                     title="Usar de filtro"
                      description={() => this.getIsImportantDescriptionText()}
                      left={props => 
                         <Checkbox 
@@ -118,6 +118,11 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
                      disabled={incompatibleResponsesAmmount === 0}
                      style={styles.importantCheck}
                   />
+               :
+                  selectedAnswers.length > 0 && incompatibilitiesPresent && incompatibleResponsesAmmount === 0 &&             
+                     <Text style={styles.noFiltersText}>
+                        No hay filtros con tu respuesta
+                     </Text>
             }
          </>
       );
@@ -125,23 +130,14 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
 
    getIsImportantDescriptionText(): JSX.Element {
       const incompatibleIds: string[] = this.getIncompatibleResponsesIds();
-
-      if (incompatibleIds.length === 0) {
-         return (
-            <Text style={styles.importantDescriptionText}>
-               "Tu respuesta no tiene ninguna opuesta"
-            </Text>
-         );
-      }
-
       const incompatibleResponsesText: string[] = this.getQuestionNamesFromIds(incompatibleIds);
 
       return (
-         <Text style={styles.importantDescriptionText}>
-            Activando esta opción no verás usuaries que hayan respondido: 
+         <Text style={styles.importantDescriptionTextBold}>
+            No mostrarme a quienes responden lo opuesto: 
             {
                incompatibleResponsesText.map((response, i) => 
-                  <Text style={styles.importantDescriptionTextBold} key={i}>
+                  <Text style={styles.importantDescriptionText} key={i}>
                      {i !== 0 && " ni"}{" "}"{response}"
                   </Text>
                )
@@ -238,6 +234,12 @@ const styles: Styles = StyleSheet.create({
    importantCheck: {
       marginTop: 50,
       padding: 25
+   },
+   noFiltersText: {
+      marginTop: 50,
+      padding: 25,
+      fontFamily: currentTheme.fonts.light,
+      fontSize: 13,
    },
    importantDescriptionText: {
       fontFamily: currentTheme.fonts.light,
