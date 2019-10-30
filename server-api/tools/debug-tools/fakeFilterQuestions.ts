@@ -1,181 +1,5 @@
 import { QuestionData } from "./interfaces/questions";
 
-const polyamoryQuestion: QuestionData = {
-   text: "¿Tendrías una relación sexo-afectiva compuesta por 3 o mas personas que se juntan todes a la vez?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: true,
-   answers: [
-      {
-         id: "0",
-         text: "No, de a 2 únicamente",
-      },
-      {
-         id: "1",
-         text: "Si",
-      }
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["1"],
-      "1": ["0"],
-   },
-};
-
-const conversationsQuestion: QuestionData = {
-   text: "¿Te gustan las conversaciones intelectuales?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: false,
-   answers: [
-      {
-         id: "0",
-         text: "No",
-      },
-      {
-         id: "1",
-         text: "Un poco",
-      },
-      {
-         id: "2",
-         text: "Si, me gustan mucho",
-      },
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["2"],
-      "2": ["0"],
-   },
-};
-
-const dietQuestion: QuestionData = {
-   text: "¿Cuál es tu dieta?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: false,
-   answers: [
-      {
-         id: "0",
-         text: "Omnívore",
-      },
-      {
-         id: "1",
-         text: "Vegetariane",
-      },
-      {
-         id: "2",
-         text: "Vegane",
-      }
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["1", "2"],
-      "1": ["0"],
-      "2": ["0"]
-   },
-};
-
-const politicsConversationQuestion: QuestionData = {
-   text: "¿Te gusta hablar de política?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: false,
-   answers: [
-      {
-         id: "0",
-         text: "No",
-      },
-      {
-         id: "1",
-         text: "Un poco",
-      },
-      {
-         id: "2",
-         text: "Si",
-      },
-   ]
-};
-
-const politicsQuestion: QuestionData = {
-   text: "¿Cuál es tu postura política?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: true,
-   answers: [
-      {
-         id: "0",
-         text: "Liberal / Centro-derecha / Derecha",
-      },
-      {
-         id: "1",
-         text: "Socialista / Centro-izquierda / Izquierda",
-      },
-      {
-         id: "2",
-         text: "No lo se"
-      },
-      {
-         id: "3",
-         text: "No me importa"
-      },
-      {
-         id: "4",
-         text: "Otra"
-      }
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["1"],
-      "1": ["0"]
-   },
-};
-
-const feminismQuestion: QuestionData = {
-   text: "¿Estas de acuerdo con el feminismo?",
-   extraText: "(Con cualquier rama del mismo)",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: true,
-   answers: [
-      {
-         id: "0",
-         text: "Si",
-      },
-      {
-         id: "1",
-         text: "No",
-      },
-      {
-         id: "2",
-         text: "No estoy informade / No estoy interesade",
-      },
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["1"],
-      "1": ["0"]
-   },
-};
-
-const sexDesireQuestion: QuestionData = {
-   text: "¿Qué tan sexual te considerás?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: true,
-   answers: [
-      {
-         id: "0",
-         text: "Bastante sexual",
-      },
-      {
-         id: "1",
-         text: "Ni mucho ni poco sexual",
-      },
-      {
-         id: "2",
-         text: "Poco sexual",
-      },
-      {
-         id: "3",
-         text: "Asexual",
-      }
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["2", "3"],
-      "1": ["2", "3"],
-      "2": ["0", "1"],
-      "3": ["0", "1"]
-   },
-};
-
 const groupSexQuestion: QuestionData = {
    text: "¿Qué pensas del sexo grupal?",
    multipleAnswersAllowed: false,
@@ -205,13 +29,90 @@ const groupSexQuestion: QuestionData = {
    },
 };
 
+const smokeQuestion: QuestionData = {
+   text: "¿Fumas? (tabaco)",
+   multipleAnswersAllowed: false,
+   answers: [
+      {
+         id: "0",
+         text: "No",
+      },
+      {
+         id: "1",
+         text: "Muy poco",
+      },
+      {
+         id: "2",
+         text: "Si",
+      }
+   ]
+};
+
+const politicsQuestion: QuestionData = {
+   text: "¿Cuál es tu postura política?",
+   extraText: "Puede que surga este tema de conversación en una cita grupal",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: true,
+   answers: [
+      {
+         id: "0",
+         text: "Libre mercado / Centro-derecha / Derecha",
+      },
+      {
+         id: "1",
+         text: "Socialismo / Centro-izquierda / Izquierda",
+      },
+      {
+         id: "2",
+         text: "Otra"
+      },
+      {
+         id: "3",
+         text: "Prefiero no responder"
+      },
+      {
+         id: "4",
+         text: "En esta app no me parece importante decirlo"
+      },
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["1"],
+      "1": ["0"]
+   },
+};
+
+const politicsQuestion2: QuestionData = {
+   text: "¿Consideras que la mayoría de los pobres son pobres por que no se esfuerzan de la mejor manera?",
+   extraText: "Este es un tema de conversación delicado que puede surgir",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: true,
+   answers: [
+      {
+         id: "0",
+         text: "Si",
+      },
+      {
+         id: "1",
+         text: "No",
+      },
+      {
+         id: "2",
+         text: "Prefiero no opinar del tema"
+      },
+      {
+         id: "3",
+         text: "En esta app no me parece importante opinar de esto"
+      },
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["1"],
+      "1": ["0"]
+   },
+};
+
 export const fakeFilterQuestions: QuestionData[] = [
-   polyamoryQuestion,
-   conversationsQuestion,
-   feminismQuestion,
-   dietQuestion,
-   politicsConversationQuestion,
-   politicsQuestion,
-   sexDesireQuestion,
    groupSexQuestion,
+   smokeQuestion,
+   politicsQuestion,
+   politicsQuestion2,
 ];

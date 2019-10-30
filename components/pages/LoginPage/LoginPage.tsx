@@ -7,6 +7,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
+import { currentTheme } from "../../../config";
 
 export interface LoginProps extends Themed, NavigationContainerProps { }
 export interface LoginState { }
@@ -27,11 +28,14 @@ class LoginPage extends Component<LoginProps, LoginState> {
          >
             <View style={styles.mainContainer}>
                <LogoSvg style={styles.logo} color={colors.logoColor} />
-               <Text style={[styles.textBlock, { color: colors.textLogin, fontFamily: fonts.light }]}>
+               <Text style={[styles.textBlock, { marginBottom: 15 }]}>
                   <Text style={{ fontWeight: "bold" }}> ¡Bienvenide! </Text>
-                  Poly Dates es una app de citas gruaples, se forma una cita cuando se gustan varies
-                  entre todes. La vas a pasar bien conociendo poliamoroses y les que quieran
-                  tienen una herramienta para relacionarse en grupo sexualmente y/o afectivamente.
+                  Poly Dates es una app de citas grupales y eventos de poliamor. Las citas se forman 
+                  cuando se gustan varias personas formando un grupo.
+               </Text>
+               <Text style={[styles.textBlock, { marginBottom: 100 }]}>
+                  La vas a pasar bien conociendo poliamoroses y les que quieran
+                  tienen una herramienta para relacionarse en grupo sexual o afectivamente.
                </Text>
                {/* <Text style={[styles.secondTextBlock, { color: colors.textLogin, fontFamily: fonts.light }]}>
                   Con esta herramienta no se busca el lucro y es de código abierto, perfeccionada
@@ -72,8 +76,9 @@ const styles: Styles = StyleSheet.create({
       width: "35%",
    },
    textBlock: {
-      marginBottom: 100,
       textAlign: "center",
+      fontFamily: currentTheme.fonts.light,
+      color: currentTheme.colors.textLogin
    },
    secondTextBlock: {
       marginBottom: 65,

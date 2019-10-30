@@ -48,7 +48,7 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
                   </TitleText>
                   <TitleSmallText style={styles.titleSmall}>
                      Estos son los dias y horas en los que todos pueden, o la mayoría.
-                     Podes votar por mas de una opcion.
+                     Podes votar por más de una opción.
                   </TitleSmallText>
                   <VotingPoll
                      group={group}
@@ -67,7 +67,7 @@ class VotingPage extends Component<VotingPageProps, VotingPageState> {
                   </TitleText>
                   <TitleSmallText style={styles.titleSmall}>
                      Estas son todas las opciones recomendadas de todos los miembros del grupo.
-                     Podes votar por mas de una opcion.
+                     Podés votar por más de una opción.
                   </TitleSmallText>
                   <VotingPoll
                      group={group}

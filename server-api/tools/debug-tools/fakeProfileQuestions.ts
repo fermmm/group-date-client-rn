@@ -1,17 +1,17 @@
 import { QuestionData } from "./interfaces/questions";
 
 const intentionsQuestion: QuestionData = {
-   text: "¿Qué te gustaría hacer en las citas grupales que organiza esta app?",
+   text: "¿Qué te gustaría encontrar en las citas grupales que organiza esta app?",
    multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: true,
+   itsImportantSelectedByDefault: false,
    answers: [
       {
-         id: "1",
-         text: "Conocer gente con posibilidad de vincularnos sexualmente",
+         id: "0",
+         text: "Vinculos sexuales y de otros tipos",
       },
       {
-         id: "0",
-         text: "Conocer gente pero sin intenciones sexuales, solo amistad",
+         id: "1",
+         text: "Vinculos sin intenciones sexuales",
       }
    ],
    incompatibilitiesBetweenAnswers: {
@@ -42,13 +42,13 @@ const genderQuestion: QuestionData = {
       },
       {
          id: "4",
-         text: "No binarie",
+         text: "Otro / No binarie",
       },
    ]
 };
 
 const genderLikeQuestion: QuestionData = {
-   text: "¿Qué géneros te atraen y/o te gustaría ver en la aplicación?",
+   text: "¿Qué géneros te atraen?",
    multipleAnswersAllowed: true,
    answers: [
       {
@@ -69,7 +69,7 @@ const genderLikeQuestion: QuestionData = {
       },
       {
          id: "4",
-         text: "No binaries",
+         text: "Otros / No binaries",
       },
    ]
 };
