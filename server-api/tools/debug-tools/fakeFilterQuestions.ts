@@ -50,63 +50,30 @@ const smokeQuestion: QuestionData = {
 
 const politicsQuestion: QuestionData = {
    text: "¿Cuál es tu postura política?",
-   extraText: "Puede que surga este tema de conversación en una cita grupal",
+   extraText: "No es agradable preguntarlo pero es clave para la mayoría de personas consultadas",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [
       {
          id: "0",
+         text: "No es un tema para hablar en una cita"
+      },
+      {
+         id: "1",
          text: "Libre mercado / Centro-derecha / Derecha",
       },
       {
-         id: "1",
-         text: "Socialismo / Centro-izquierda / Izquierda",
+         id: "2",
+         text: "Socialismo / Centro-izquierda / Izquierda / Anarquismo",
       },
       {
-         id: "2",
+         id: "3",
          text: "Otra"
       },
-      {
-         id: "3",
-         text: "Prefiero no responder"
-      },
-      {
-         id: "4",
-         text: "En esta app no me parece importante decirlo"
-      },
    ],
    incompatibilitiesBetweenAnswers: {
-      "0": ["1"],
-      "1": ["0"]
-   },
-};
-
-const politicsQuestion2: QuestionData = {
-   text: "¿Consideras que la mayoría de los pobres son pobres por que no se esfuerzan de la mejor manera?",
-   extraText: "Este es un tema de conversación delicado que puede surgir",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: true,
-   answers: [
-      {
-         id: "0",
-         text: "Si",
-      },
-      {
-         id: "1",
-         text: "No",
-      },
-      {
-         id: "2",
-         text: "Prefiero no opinar del tema"
-      },
-      {
-         id: "3",
-         text: "En esta app no me parece importante opinar de esto"
-      },
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["1"],
-      "1": ["0"]
+      "1": ["2"],
+      "2": ["1"]
    },
 };
 
@@ -114,5 +81,4 @@ export const fakeFilterQuestions: QuestionData[] = [
    groupSexQuestion,
    smokeQuestion,
    politicsQuestion,
-   politicsQuestion2,
 ];

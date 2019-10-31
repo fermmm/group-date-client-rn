@@ -121,7 +121,7 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
                :
                   selectedAnswers.length > 0 && incompatibilitiesPresent && incompatibleResponsesAmmount === 0 &&             
                      <Text style={styles.noFiltersText}>
-                        No hay filtros con tu respuesta
+                        Con esa respuesta nadie te va a filtrar ni tampoco podes filtrar
                      </Text>
             }
          </>
