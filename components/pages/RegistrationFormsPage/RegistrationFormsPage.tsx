@@ -10,6 +10,7 @@ import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import BasicInfoForm, { BasicInfoState } from "./BasicInfoForm/BasicInfoForm";
 import { NavigationScreenProp, NavigationContainerProps } from "react-navigation";
+import ProfilePicturesForm from "./ProfilePicturesForm/ProfilePicturesForm";
 
 export interface RegistrationFormsProps extends Themed, NavigationContainerProps { }
 export interface RegistrationFormsState {
@@ -17,7 +18,9 @@ export interface RegistrationFormsState {
    showIncompleteError: boolean;
    profileDescription: string;
    basicInfoFormData: BasicInfoState;
-   errorToShow: string;
+   pictures: string[];
+   errorsBasicInfo: string;
+   errorsProfilePictures: string;
 }
 
 class RegistrationFormsPage extends Component<RegistrationFormsProps, RegistrationFormsState> {
@@ -29,13 +32,21 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
       showIncompleteError: false,
       profileDescription: null,
       basicInfoFormData: null,
-      errorToShow: "Tenés que completar el formulario",
+      pictures: null,
+      errorsBasicInfo: "Tenés que completar el formulario",
+      errorsProfilePictures: null,
    };
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
       const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
-      const { currentStep, showIncompleteError, profileDescription, errorToShow }: Partial<RegistrationFormsState> = this.state;
+      const { 
+         currentStep, 
+         showIncompleteError, 
+         profileDescription, 
+         errorsBasicInfo, 
+         errorsProfilePictures 
+      }: Partial<RegistrationFormsState> = this.state;
 
       return (
          <>
@@ -48,7 +59,31 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
                <BasicScreenContainer
                   showBottomGradient={true}
                   bottomGradientColor={colors.background}
-                  onContinuePress={() => this.setState({ currentStep: currentStep + 1 })}
+                  onContinuePress={() => errorsBasicInfo == null ? this.setState({ currentStep: 1 }) : this.setState({showIncompleteError: true})}
+                  showContinueButton
+               >
+                  <BasicInfoForm 
+                     onChange={(formData, error) => this.setState({basicInfoFormData: formData, errorsBasicInfo: error})}
+                  />
+               </BasicScreenContainer>
+               <BasicScreenContainer
+                  showBottomGradient={true}
+                  bottomGradientColor={colors.background}
+                  onBackPress={() => this.setState({ currentStep: 0 })}
+                  onContinuePress={() => errorsProfilePictures == null ? this.setState({ currentStep: 2 }) : this.setState({showIncompleteError: true})}
+                  showBackButton
+                  showContinueButton
+               >
+                  <ProfilePicturesForm 
+                     onChange={(pictures, error) => this.setState({pictures, errorsProfilePictures: error})}
+                  />
+               </BasicScreenContainer>
+               <BasicScreenContainer
+                  showBottomGradient={true}
+                  bottomGradientColor={colors.background}
+                  onBackPress={() => this.setState({ currentStep: 1 })}
+                  onContinuePress={() => navigate("Questions")}
+                  showBackButton
                   showContinueButton
                >
                   <ProfileDescriptionForm
@@ -56,24 +91,12 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
                      onChange={t => this.setState({profileDescription: t})}
                   />
                </BasicScreenContainer>
-               <BasicScreenContainer
-                  showBottomGradient={true}
-                  bottomGradientColor={colors.background}
-                  onBackPress={() => this.setState({ currentStep: currentStep - 1 })}
-                  onContinuePress={() => errorToShow == null ? navigate("Questions") : this.setState({showIncompleteError: true})}
-                  showBackButton
-                  showContinueButton
-               >
-                  <BasicInfoForm 
-                     onChange={(formData, error) => this.setState({basicInfoFormData: formData, errorToShow: error})}
-                  />
-               </BasicScreenContainer>
             </ScreensStepper>
             <DialogError
                visible={showIncompleteError}
                onDismiss={() => this.setState({ showIncompleteError: false })}
             >
-               {errorToShow}
+               {errorsBasicInfo || errorsProfilePictures}
             </DialogError>
          </>
 

@@ -16,6 +16,7 @@ class ProfileDescriptionForm extends Component<DescriptionFormProps> {
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const {text, onChange}: DescriptionFormProps = this.props;
 
       return (
          <View style={styles.mainContainer}>
@@ -26,11 +27,11 @@ class ProfileDescriptionForm extends Component<DescriptionFormProps> {
                Es recomendable escribir algo que ayude a conocerte
             </TitleMediumText>
             <TextInput
-               autoFocus={true}
                mode="outlined"
+               label="Texto libre"
                multiline={true}
-               value={this.props.text}
-               onChangeText={text => this.props.onChange(text)}
+               value={text}
+               onChangeText={t => onChange(t)}
                style={styles.input}
             />
          </View>

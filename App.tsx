@@ -5,6 +5,7 @@ import VotingPage from "./components/pages/VotingPage/VotingPage";
 import ProfilePage from "./components/pages/ProfilePage/ProfilePage";
 import QuestionsPage from "./components/pages/QuestionsPage/QuestionsPage";
 import RegistrationFormsPage from "./components/pages/RegistrationFormsPage/RegistrationFormsPage";
+import ProfilePicturePage from "./components/pages/ProfilePicturesPage/ProfilePicturesPage";
 import React, { Component } from "react";
 import { AppLoading } from "expo";
 import { Provider as PaperProvider } from "react-native-paper";

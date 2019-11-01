@@ -1,25 +1,5 @@
 import { QuestionData } from "./interfaces/questions";
 
-const intentionsQuestion: QuestionData = {
-   text: "¿Qué te gustaría encontrar en las citas grupales que organiza esta app?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: false,
-   answers: [
-      {
-         id: "0",
-         text: "Vinculos sexuales y de otros tipos",
-      },
-      {
-         id: "1",
-         text: "Vinculos sin intenciones sexuales",
-      }
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["1"],
-      "1": ["0"]
-   },
-};
-
 const genderQuestion: QuestionData = {
    text: "¿Cual es tu género?",
    multipleAnswersAllowed: false,
@@ -74,8 +54,28 @@ const genderLikeQuestion: QuestionData = {
    ]
 };
 
+const intentionsQuestion: QuestionData = {
+   text: "¿Qué te gustaría encontrar en las citas grupales que organiza esta app?",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: false,
+   answers: [
+      {
+         id: "0",
+         text: "Vinculos sexuales y de otros tipos",
+      },
+      {
+         id: "1",
+         text: "Vinculos sin intenciones sexuales",
+      }
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["1"],
+      "1": ["0"]
+   },
+};
+
 export const fakeProfileQuestionsPart: QuestionData[] = [
-   intentionsQuestion,
    genderQuestion,
    genderLikeQuestion,
+   intentionsQuestion,
 ];
