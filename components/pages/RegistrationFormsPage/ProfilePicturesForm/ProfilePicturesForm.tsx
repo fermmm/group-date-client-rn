@@ -66,11 +66,15 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                         ref={c => this.placeholdersRefs[i] = c}
                         key={i}
                      >
-                        <SurfaceStyled style={styles.pictureSurface}>
+                        <SurfaceStyled style={[styles.pictureSurface, url != null && {backgroundColor: "black"}]}>
                            {
                               url != null ?
-                                 <Image source={{ uri: url }} style={styles.pictureImage as ImageStyle} />
-                                 :
+                                 <Image 
+                                    source={{ uri: url }} 
+                                    style={styles.pictureImage as ImageStyle} 
+                                    resizeMode={"contain"}
+                                 />
+                              :
                                  <Icon
                                     name={"plus-circle-outline"}
                                     color={currentTheme.colors.background}
