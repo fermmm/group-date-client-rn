@@ -71,8 +71,8 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                               url != null ?
                                  <Image 
                                     source={{ uri: url }} 
-                                    style={styles.pictureImage as ImageStyle} 
                                     resizeMode={"contain"}
+                                    style={styles.pictureImage as ImageStyle} 
                                  />
                               :
                                  <Icon
@@ -258,7 +258,6 @@ const styles: Styles = StyleSheet.create({
    pictureImage: {
       width: "100%",
       height: "100%",
-      borderRadius: 10,
    },
    menuItem: {
       flex: 1,
