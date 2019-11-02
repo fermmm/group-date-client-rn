@@ -52,7 +52,7 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                   Tus fotos
                </TitleText>
                <TitleSmallText style={styles.titleSmall}>
-                  Podes poner hasta {pictures.length} fotos.
+                  Podes agregar hasta {pictures.length} fotos.
                </TitleSmallText>
             </View>
             <View style={styles.picturesContainer}>
@@ -102,7 +102,7 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                   style={styles.menuItem}
                />
                {
-                  (placeholderClicked != null && pictures[placeholderClicked]) &&
+                  (placeholderClicked != null && placeholderClicked !== 0 && pictures[placeholderClicked]) &&
                   <PaperMenu.Item
                      title="Mover al principio"
                      icon="arrow-upward"
@@ -190,7 +190,7 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
       await askForPermissions(Permissions.CAMERA_ROLL, {
          rejectedDialogTexts: {
             dialogTitle: "Error",
-            dialogText: "La app necesita acceder a tus fotos para que puedas elegirlas",
+            dialogText: "Tenes que aceptar permisos para continuar. Cualquier app necesita acceder a tu almacenamiento para que puedas elegir una foto",
             openSettingsButtonText: "Modificar permisos",
             exitAppButtonText: "Salir de la app",
             instructionsToastText: `Toca "Permisos" y activa "Almacenamiento"`,
@@ -199,6 +199,7 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
 
       const result: ImageInfo = await ImagePicker.launchImageLibraryAsync({
          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+         allowsEditing: true,
          quality: 0.8
       }) as unknown as ImageInfo;
 
@@ -209,10 +210,10 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
       await askForPermissions(Permissions.CAMERA, {
          rejectedDialogTexts: {
             dialogTitle: "Error",
-            dialogText: "La app necesita acceder a la camara para que puedas sacar una foto",
+            dialogText: "Tenes que aceptar permisos para continuar. Cualquier app necesita acceder a la cámara para que puedas sacar una foto",
             openSettingsButtonText: "Modificar permisos",
             exitAppButtonText: "Salir de la app",
-            instructionsToastText: `Toca "Permisos" y activa "Camara"`,
+            instructionsToastText: `Toca "Permisos" y activa "Cámara"`,
          }
       });
 
