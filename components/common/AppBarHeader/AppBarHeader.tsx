@@ -94,7 +94,6 @@ const styles: Styles = StyleSheet.create({
       color: currentTheme.colors.text2,
       fontSize: 16,
       fontFamily: currentTheme.fonts.medium,
-      textTransform: "capitalize"
    }
 });
 

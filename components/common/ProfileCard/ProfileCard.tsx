@@ -54,7 +54,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                      bottomGradientColor={colors.background}
                      indicatorStyle={"white"}
                   >
-                     <Card style={[styles.card, { backgroundColor: colors.background }]}>
+                     <Card style={[styles.card, { backgroundColor: colors.backgroundBottomGradient }]}>
                         <View style={{backgroundColor: colors.background}}>
                            <ImagesScroll
                               photos={photos}
