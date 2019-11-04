@@ -7,7 +7,9 @@ import SurfaceStyled from "../../../common/SurfaceStyled/SurfaceStyled";
 import TitleText from "../../../common/TitleText/TitleText";
 import { currentTheme } from "../../../../config";
 
-export interface DateInfoProps extends Themed { }
+export interface DateInfoProps extends Themed { 
+   onModifyVotePress(): void;
+}
 export interface DateInfoState { }
 
 class CardDateInfo extends Component<DateInfoProps, DateInfoState> {
@@ -35,7 +37,7 @@ class CardDateInfo extends Component<DateInfoProps, DateInfoState> {
             </View>
             <Button
                uppercase={false}
-               onPress={() => console.log("Pressed")}
+               onPress={() => this.props.onModifyVotePress()}
             >
                Modificar voto
             </Button>

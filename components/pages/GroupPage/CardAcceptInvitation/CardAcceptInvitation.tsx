@@ -30,7 +30,7 @@ class CardAcceptInvitation extends Component<AcceptInvitationProps> {
             </TitleMediumText>
             <TitleMediumText style={styles.text}>
                Si realmente tenés las ganas y pensas que podes ir a una cita 
-               presiona el boton de continuar.
+               presiona el boton de abajo.
             </TitleMediumText>
             <Button
                mode="outlined"
@@ -39,7 +39,7 @@ class CardAcceptInvitation extends Component<AcceptInvitationProps> {
                contentStyle={styles.buttonContent}
                onPress={() => this.props.onAcceptPress()}
             >
-               Quiero ir a la cita, ¡continuar!
+               ¡Quiero ir a una cita con elles!
             </Button>
          </SurfaceStyled>
       );

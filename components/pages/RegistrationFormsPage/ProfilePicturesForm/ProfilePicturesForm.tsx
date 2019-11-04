@@ -77,7 +77,7 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                               :
                                  <Icon
                                     name={"plus-circle-outline"}
-                                    color={currentTheme.colors.background}
+                                    color={currentTheme.colors.primary}
                                     style={{ fontSize: 60 }}
                                  />
                            }
@@ -250,7 +250,7 @@ const styles: Styles = StyleSheet.create({
       flex: 1,
       width: "100%",
       height: "100%",
-      backgroundColor: currentTheme.colors.topBar,
+      backgroundColor: currentTheme.colors.surface,
       alignItems: "center",
       justifyContent: "center",
       padding: 0

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import color from "color";
-import { ImageProps, Image, StatusBar, StyleSheet, ImageBackground, View, Dimensions } from "react-native";
+import { ImageProps, Image, StatusBar, StyleSheet, View, Dimensions } from "react-native";
 import { Card, Paragraph, withTheme, Text } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
@@ -35,7 +35,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
       const { showLikeDislikeButtons, onLikeClick, onDislikeClick, statusBarPadding }: Partial<ProfileCardProps> = this.props;
       const { name, photos, birthdate, area }: Partial<User> = this.props.user;
       const { renderImageModal, imageSelected }: Partial<ProfileCardState> = this.state;
-      const { colors, backgroundImage }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
 
       StatusBar.setHidden(renderImageModal, "slide");
 
@@ -55,7 +55,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                      indicatorStyle={"white"}
                   >
                      <Card style={[styles.card, { backgroundColor: colors.background }]}>
-                        <ImageBackground source={backgroundImage} style={styles.galleryBackground}>
+                        <View style={{backgroundColor: colors.background}}>
                            <ImagesScroll
                               photos={photos}
                               style={[styles.galleryScroll, statusBarPadding && {marginTop: StatusBar.currentHeight}]}
@@ -69,7 +69,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                                  />
                               }
                            />
-                        </ImageBackground>
+                        </View>
                         <View style={styles.titleAreaContainer}>
                            <Card.Title
                               title={name}
@@ -142,9 +142,6 @@ const styles: Styles = StyleSheet.create({
    },
    galleryScroll: {
       height: Dimensions.get("window").height * 0.5,  // This controls the height of the images area.
-   },
-   galleryBackground: {
-      width: "100%",
    },
    titleAreaContainer: {
       flexDirection: "row",

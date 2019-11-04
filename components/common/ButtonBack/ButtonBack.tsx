@@ -4,6 +4,7 @@ import { FAB, FABProps } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { NavigationScreenProp, NavigationInjectedProps, withNavigation } from "react-navigation";
 import { currentTheme } from "../../../config";
+import color from "color";
 
 export interface Props extends NavigationInjectedProps, Partial<FABProps> { }
 
@@ -17,6 +18,8 @@ class ButtonBack extends Component<Props> {
          <TouchableHighlight 
             style={styles.container} 
             onPress={() => goBack()}
+            underlayColor={color("white").alpha(0).string()}
+            activeOpacity={1}
          >
             <FAB
                style={styles.fab}

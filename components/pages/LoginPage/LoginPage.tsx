@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ImageBackground } from "react-native";
 import { withTheme } from "react-native-paper";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -8,6 +8,7 @@ import { LogoSvg } from "../../../assets/LogoSvg";
 import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 import { currentTheme } from "../../../config";
+import { thistle } from "color-name";
 
 export interface LoginProps extends Themed, NavigationContainerProps { }
 export interface LoginState { }
@@ -20,12 +21,7 @@ class LoginPage extends Component<LoginProps, LoginState> {
       const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
 
       return (
-         <LinearGradient
-            colors={[colors.specialBackground1, colors.specialBackground2]}
-            style={styles.mainContainer}
-            start={[0, 0.5]}
-            end={[0, 1.3]}
-         >
+         <this.Background useImageBackground={true}>
             <View style={styles.mainContainer}>
                <LogoSvg style={styles.logo} color={colors.logoColor} />
                <Text style={[styles.textBlock, { marginBottom: 15 }]}>
@@ -57,8 +53,32 @@ class LoginPage extends Component<LoginProps, LoginState> {
                   Nueva cuenta
                </ButtonStyled>
             </View>
-         </LinearGradient>
+         </this.Background>
       );
+   }
+
+   Background(props: { children?: JSX.Element, useImageBackground: boolean }): JSX.Element {
+      if (props.useImageBackground) {
+         return (
+            <ImageBackground 
+               source={currentTheme.backgroundImage} 
+               style={styles.background}
+            >
+               {props.children}
+            </ImageBackground>
+         );
+      } else {
+         return (
+            <LinearGradient
+               colors={[currentTheme.colors.specialBackground1, currentTheme.colors.specialBackground2]}
+               style={styles.background}
+               start={[0, 0.5]}
+               end={[0, 1.3]}
+            >
+               {props.children}
+            </LinearGradient>
+         );
+      }
    }
 }
 
@@ -68,7 +88,13 @@ const styles: Styles = StyleSheet.create({
       width: "100%",
       alignItems: "center",
       justifyContent: "flex-end",
-      padding: 18,
+      padding: 36,
+   },
+   background: {
+      flex: 1,
+      width: "100%",
+      alignItems: "center",
+      justifyContent: "flex-end",
    },
    logo: {
       position: "absolute",

@@ -7,6 +7,7 @@ import TitleText from "../../../common/TitleText/TitleText";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import AgeSelector from "../../../common/AgeSelector/AgeSelector";
 import { formValidators } from "../../../../common-tools/formValidators/formValidators";
+import { currentTheme } from '../../../../config';
 
 export interface BasicInfoProps extends Themed {
    onChange(formData: BasicInfoState, error: string | null): void;
@@ -22,6 +23,7 @@ export interface BasicInfoState {
 
 class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
    static defaultProps: Partial<BasicInfoProps> = {};
+   defaultAgeDifference: number = 9;
    state: BasicInfoState = {
       nameText: "",
       age: null,
@@ -54,30 +56,36 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
                onChangeText={t => this.setState({ age: Number(formValidators.age(t).result.text) }, () => this.sendChanges())}
             />
             <TitleMediumText style={styles.label}>
-               Tu altura en centímetros (es opcional) ej: 160
+               Tu altura en centímetros (opcional) ej: 160
+            </TitleMediumText>
+            <TitleMediumText style={styles.labelLine2}>
                Este dato para algunes es muy importante y a otres no les importa
             </TitleMediumText>
             <TextInput
-               label="Altura (opcional)"
+               label="Tu altura (opcional)"
                mode="outlined"
                keyboardType="number-pad"
                value={bodyHeight ? bodyHeight.toString() : ""}
                onChangeText={t => this.setState({ bodyHeight: Number(formValidators.bodyHeight(t).result.text) || 0 }, () => this.sendChanges())}
             />
             <TitleMediumText style={styles.label}>
-               ¿Qué edades queres ver en la app?
+               ¿Qué edades te interesan más?
             </TitleMediumText>
-            <AgeSelector
-               min={targetAgeModified ? targetAgeMin : age - 6}
-               max={targetAgeModified ? targetAgeMax : age + 6}
-               onChange={({ min, max }) =>
-                  this.setState({
-                     targetAgeMin: min,
-                     targetAgeMax: max,
-                     targetAgeModified: true
-                  }, () => this.sendChanges())
-               }
-            />
+            <TitleMediumText style={styles.labelLine2}>
+               Esta funcionalidad no actúa de forma totalmente estricta
+            </TitleMediumText>
+               <AgeSelector
+                  min={targetAgeModified ? targetAgeMin : age - this.defaultAgeDifference}
+                  max={targetAgeModified ? targetAgeMax : age + this.defaultAgeDifference}
+                  style={styles.ageSelector}
+                  onChange={({ min, max }) =>
+                     this.setState({
+                        targetAgeMin: min,
+                        targetAgeMax: max,
+                        targetAgeModified: true
+                     }, () => this.sendChanges())
+                  }
+               />
          </View>
       );
    }
@@ -121,7 +129,11 @@ const styles: Styles = StyleSheet.create({
       marginBottom: 0
    },
    labelLine2: {
-      marginBottom: 0
+      marginBottom: 0,
+      fontFamily: currentTheme.fonts.extraLight
+   },
+   ageSelector: {
+      marginLeft: 5
    }
 });
 

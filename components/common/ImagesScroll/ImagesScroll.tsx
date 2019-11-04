@@ -37,7 +37,12 @@ export default class ImagesScroll extends Component<ImagesScrollProps, ImagesScr
                                         source: { uri: value },
                                     })
                                 :
-                                    <TouchableHighlight onPress={() => onImageClick && onImageClick(i)} key={i}>
+                                    <TouchableHighlight 
+                                       onPress={() => onImageClick && onImageClick(i)}
+                                       underlayColor="#4D4D4D"
+                                       activeOpacity={0.5} 
+                                       key={i}
+                                    >
                                         {
                                             this.renderImage(value, {
                                                 style: [{ width: imagesWidth, height: imagesHeight }, imagesStyle],

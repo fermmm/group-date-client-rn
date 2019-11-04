@@ -55,7 +55,9 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                }
                {
                   group.invitationAccepted &&
-                     <CardDateInfo />
+                     <CardDateInfo 
+                        onModifyVotePress={() => navigate("Voting", { group })}
+                     />
                }
                <SurfaceStyled>
                   <TitleText>

@@ -5,17 +5,20 @@ export type ThemeExt = Merge<Theme, {
    dark: boolean;
    roundness: number;
    backgroundImage?: {};
+   backgroundImage2?: {};
+   backgroundPictures?: {};
 
    colors: {
       primary: string;
       primary2: string;
       background: string;
+      backgroundBottomGradient: string;
       specialBackground1: string;
       specialBackground2: string;
       surface: string;
-      topBar: string;
       accent: string;
       accent2: string;
+      accent3: string;
       error: string;
       text: string;
       text2: string;

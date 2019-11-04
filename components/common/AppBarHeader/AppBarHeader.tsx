@@ -1,15 +1,14 @@
-import React, { Component } from "react";
-import { StyleSheet } from "react-native";
+import React, { Component, FunctionComponent } from "react";
+import { StyleSheet, ImageBackground, View, StatusBar, Text } from "react-native";
 import { withTheme, Appbar } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withNavigation, NavigationInjectedProps, NavigationScreenProp } from "react-navigation";
 import { currentTheme } from "../../../config";
+import color from "color";
 
 export interface AppBarHeaderProps extends Themed, NavigationInjectedProps {
    title?: string;
-   subtitle?: string;
-   showMenuIcon?: boolean;
    showBackButton?: boolean;
    onBackPress?(): void;
 }
@@ -18,42 +17,84 @@ export interface AppBarHeaderState { }
 class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
    static defaultProps: Partial<AppBarHeaderProps> = {
       title: "",
-      subtitle: "",
-      showMenuIcon: false,
       showBackButton: true,
    };
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
       const { goBack }: NavigationScreenProp<{}> = this.props.navigation;
 
       return (
-         <Appbar.Header dark={true} style={styles.mainContainer}>
-            {
-               this.props.showBackButton &&
-                  <Appbar.BackAction
-                     onPress={this.props.onBackPress != null ? () => this.props.onBackPress() : () => goBack()}
-                  />
-            }
-            <Appbar.Content
-               title={this.props.title}
-               subtitle={this.props.subtitle}
-            />
-            {this.props.children}
-            {
-               this.props.showMenuIcon &&
-               <Appbar.Action icon="more-vert" />
-            }
-         </Appbar.Header>
+         <View style={styles.mainContainer}>
+            <this.Background useImageBackground={true}>
+               <View style={styles.contentContainer}>
+                  {
+                     this.props.showBackButton &&
+                     <Appbar.BackAction
+                        color={currentTheme.colors.text2}
+                        onPress={() => this.props.onBackPress != null ? this.props.onBackPress() : goBack()}
+                        style={{marginRight: 25}}
+                     />
+                  }
+                  <View style={{ flex: 1 }}>
+                     <Text style={styles.titleText}>
+                        {this.props.title}
+                     </Text>
+                  </View>
+                  {this.props.children}
+               </View>
+            </this.Background>
+         </View>
       );
+   }
+
+   Background(props: { children?: JSX.Element, useImageBackground: boolean }): JSX.Element {
+      if (props.useImageBackground) {
+         return (
+            <ImageBackground source={currentTheme.backgroundImage} style={styles.imageBackground}>
+               {props.children}
+            </ImageBackground>
+         );
+      } else {
+         return (
+            <View style={styles.colorBackground}>
+               {props.children}
+            </View>
+         );
+      }
    }
 }
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
-      paddingRight: 15,
-      paddingLeft: 15,
-      backgroundColor: currentTheme.colors.primary
+      position: "relative",
+      width: "100%",
+      height: 85
+   },
+   imageBackground: {
+      flex: 1,
+      width: "100%",
+      justifyContent: "center",
+      paddingTop: StatusBar.currentHeight,
+   },
+   colorBackground: {
+      flex: 1,
+      width: "100%",
+      justifyContent: "center",
+      backgroundColor: currentTheme.colors.primary,
+      paddingTop: StatusBar.currentHeight,
+   },
+   contentContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingRight: 10,
+      paddingLeft: 0,
+   },
+   titleText: {
+      color: currentTheme.colors.text2,
+      fontSize: 16,
+      fontFamily: currentTheme.fonts.medium,
+      textTransform: "capitalize"
    }
 });
 

@@ -11,6 +11,7 @@ export const fakeTestingUsers: User[] = [
         id: "0",
         photos: [
             "http://blog.grainedephotographe.com/wp-content/uploads/2014/07/Photographe-Ben-Hopper6.png",
+            "https://i.imgur.com/EIcUFYn.jpg"
         ],
     },
     {

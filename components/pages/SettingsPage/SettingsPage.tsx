@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withTheme, Button } from "react-native-paper";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
+import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 
 export interface SettingsPageProps extends Themed {}
 export interface SettingsPageState {}
@@ -13,11 +14,11 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
 
         return (
             <>
-                <View style={[styles.scene, { backgroundColor: colors.background }]} >
-                    <Button icon="add-a-photo" mode="contained" onPress={() => console.log("Pressed")}>
-                        Press me
+                <BasicScreenContainer>  
+                    <Button icon="settings" mode="contained" onPress={() => console.log("Pressed")}>
+                        Settings
                     </Button>
-                </View>
+                </BasicScreenContainer>
             </>
         );
     }

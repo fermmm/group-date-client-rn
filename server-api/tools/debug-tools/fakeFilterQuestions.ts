@@ -50,7 +50,7 @@ const smokeQuestion: QuestionData = {
 
 const politicsQuestion: QuestionData = {
    text: "¿Cuál es tu postura política?",
-   extraText: "No es agradable preguntarlo pero es clave para la mayoría de personas consultadas",
+   extraText: "Puede ser incómoda la pregunta pero es clave para la mayoría de personas consultadas",
    multipleAnswersAllowed: false,
    itsImportantSelectedByDefault: true,
    answers: [

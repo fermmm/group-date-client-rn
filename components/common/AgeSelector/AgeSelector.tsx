@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Picker, Text } from "react-native";
+import { StyleSheet, View, Picker, Text, StyleProp, ViewStyle } from "react-native";
 import { withTheme } from "react-native-paper";
 import equal from "fast-deep-equal";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
@@ -9,6 +9,7 @@ import PickerThemed from "../PickerThemed/PickerThemed";
 export interface AgeSelectorProps extends Themed {
    min?: number;
    max?: number;
+   style?: StyleProp<ViewStyle>;
    onChange(newValues: AgeSelectorState): void;
 }
 export interface AgeSelectorState {
@@ -29,7 +30,7 @@ class AgeSelector extends Component<AgeSelectorProps, AgeSelectorState> {
       const {min, max}: Partial<AgeSelectorState> = this.state;
 
       return (
-         <View style={styles.mainContainer}>
+         <View style={[styles.mainContainer, this.props.style]}>
             <Text style={styles.text}>De:</Text>
             <PickerThemed
                selectedValue={min}
@@ -85,7 +86,7 @@ const styles: Styles = StyleSheet.create({
       flex: 1,
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "flex-start"
    },
    text: {
       marginRight: 20,
