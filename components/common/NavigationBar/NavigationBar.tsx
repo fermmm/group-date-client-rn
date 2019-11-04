@@ -43,7 +43,7 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
                      renderIcon={({ route, focused }) =>
                      <Icon
                         name={route.icon}
-                        color={focused ? colors.accent : colors.accent}
+                        color={focused ? colors.textLogin : colors.text2}
                         size={22}
                      />
                   }
