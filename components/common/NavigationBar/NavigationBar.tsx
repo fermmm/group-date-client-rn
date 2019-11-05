@@ -5,8 +5,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { withTheme } from "react-native-paper";
-import { currentTheme } from '../../../config';
-import color from 'color';
+import { currentTheme } from "../../../config";
+import color from "color";
+import ShadowBottom from "../ShadowBottom/ShadowBottom";
 
 interface NavBarProps extends Themed {
    sections: { [key: string]: () => JSX.Element };
@@ -36,6 +37,7 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
             initialLayout={{ width: Dimensions.get("window").width }}
             renderTabBar={props =>
                <this.Background useImageBackground={true}>
+                  <ShadowBottom imageSource={currentTheme.shadowBottom} />
                   <TabBar
                      {...props}
                      indicatorStyle={{ backgroundColor: colors.primary2 }}
@@ -54,7 +56,7 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
       );
    }
 
-   Background(props: { children?: JSX.Element, useImageBackground: boolean }): JSX.Element {
+   Background(props: { children?: React.ReactNode, useImageBackground: boolean }): JSX.Element {
       if (props.useImageBackground) {
          return (
             <ImageBackground source={currentTheme.backgroundImage} style={styles.backgroundImage}>
@@ -74,10 +76,11 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
 const styles: Styles = StyleSheet.create({
    tabBar: {
       paddingTop: StatusBar.currentHeight,
-      backgroundColor: color("black").alpha(0).string()
+      backgroundColor: color("black").alpha(0).string(),
+      zIndex: 1,
    },
    backgroundSolidColor: {
-      backgroundColor: currentTheme.colors.topBar
+      backgroundColor: currentTheme.colors.backgroundBottomGradient
    },
    backgroundImage: {
    }

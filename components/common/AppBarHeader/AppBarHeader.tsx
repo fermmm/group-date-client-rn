@@ -1,11 +1,11 @@
-import React, { Component, FunctionComponent } from "react";
+import React, { Component } from "react";
 import { StyleSheet, ImageBackground, View, StatusBar, Text } from "react-native";
 import { withTheme, Appbar } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
+import { Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withNavigation, NavigationInjectedProps, NavigationScreenProp } from "react-navigation";
 import { currentTheme } from "../../../config";
-import color from "color";
+import ShadowBottom from "../ShadowBottom/ShadowBottom";
 
 export interface AppBarHeaderProps extends Themed, NavigationInjectedProps {
    title?: string;
@@ -22,9 +22,9 @@ class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
 
    render(): JSX.Element {
       const { goBack }: NavigationScreenProp<{}> = this.props.navigation;
-
       return (
          <View style={styles.mainContainer}>
+            <ShadowBottom imageSource={currentTheme.shadowBottom} />
             <this.Background useImageBackground={true}>
                <View style={styles.contentContainer}>
                   {

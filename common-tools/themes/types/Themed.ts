@@ -6,7 +6,9 @@ export type ThemeExt = Merge<Theme, {
    roundness: number;
    backgroundImage?: {};
    backgroundImage2?: {};
-   backgroundPictures?: {};
+   backgroundForPictures?: {};
+   backgroundForText?: {};
+   shadowBottom?: {};
 
    colors: {
       primary: string;
