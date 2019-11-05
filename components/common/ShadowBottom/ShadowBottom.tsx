@@ -35,10 +35,10 @@ class ShadowBottom extends Component<PropsShadowBottom, State> {
                   bottom: 0,
                   zIndex: 1,
                   width: "100%",
-                  opacity: (aspectRatio && height) ? 0.6 : 0,
                   transform: [{ translateY: height }]
                }, 
-               style
+               style,
+               (!aspectRatio || !height) && {opacity: 0}
             ]}
          >
             <Image
