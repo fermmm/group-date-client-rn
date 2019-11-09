@@ -71,7 +71,7 @@ export default class BasicScreenContainer extends Component<BasicScreenProps> {
 const styles: Styles = StyleSheet.create({
    scrollViewContainer: {
       padding: 5,
-      paddingTop: 10,
+      paddingTop: 16,
       paddingBottom: 20,
    },
    buttonsContainer: {
