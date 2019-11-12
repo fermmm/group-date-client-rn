@@ -37,7 +37,7 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
             initialLayout={{ width: Dimensions.get("window").width }}
             renderTabBar={props =>
                <this.Background useImageBackground={true}>
-                  <ShadowBottom imageSource={currentTheme.shadowBottom} />
+                  <ShadowBottom imageSource={currentTheme.shadowBottom} style={{opacity: index === 0 ? 0.35 : 1}}/>
                   <TabBar
                      {...props}
                      indicatorStyle={{ backgroundColor: colors.primary2 }}

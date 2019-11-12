@@ -27,7 +27,7 @@ class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState>
                      <List.Item
                         title={group.members.map((user, u) => (u > 0 ? ", " : "") + user.name)}
                         description="Cita dentro de 2 días"
-                        left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.primary} lineColor={c} style={styles.logo} />} />}
+                        left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.accent2} lineColor={c} style={styles.logo} />} />}
                         onPress={() => navigate("Group", { group })}
                         key={i}
                      />,
