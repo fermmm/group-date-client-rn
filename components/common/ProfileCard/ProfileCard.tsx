@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import color from "color";
-import { ImageProps, Image, StatusBar, StyleSheet, View, Dimensions } from "react-native";
+import { ImageProps, Image, StatusBar, StyleSheet, View, Dimensions, Platform, ImageBackground } from "react-native";
 import { Card, Paragraph, withTheme, Text } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
@@ -54,22 +54,26 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                      bottomGradientColor={colors.background}
                      indicatorStyle={"white"}
                   >
-                     <Card style={[styles.card, { backgroundColor: colors.backgroundBottomGradient }]}>
-                        <View style={{backgroundColor: colors.background}}>
-                           <ImagesScroll
-                              photos={photos}
-                              style={[styles.galleryScroll, statusBarPadding && {marginTop: StatusBar.currentHeight}]}
-                              onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
-                              renderImage={(image: string, imageProps: ImageProps) =>
+                     <Card style={[styles.card, { backgroundColor: colors.background }]}>
+                        <ImagesScroll
+                           photos={photos}
+                           style={[styles.galleryScroll, statusBarPadding && { marginTop: StatusBar.currentHeight }]}
+                           onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
+                           renderImage={(uri: string, imageProps: ImageProps) =>
+                              <ImageBackground
+                                 style={{width: "100%", height: "100%" }}
+                                 source={{uri}}
+                                 blurRadius={Platform.OS === "ios" ? 120 : 60}
+                              >
                                  <Image
                                     {...imageProps}
                                     resizeMethod={"resize"}
                                     resizeMode={"contain"}
-                                    key={image}
+                                    key={uri}
                                  />
-                              }
-                           />
-                        </View>
+                              </ImageBackground>
+                           }
+                        />
                         <View style={styles.titleAreaContainer}>
                            <Card.Title
                               title={name}

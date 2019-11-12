@@ -40,8 +40,8 @@ export default {
    fonts: montserrat,
    backgroundImage: require("../../assets/backgroundLight4.png"),
    backgroundImage2: require("../../assets/backgroundLight4_vertical.png"),
-   backgroundForPictures: require("../../assets/backgroundLight3.png"),
-   backgroundForText: require("../../assets/backgroundLight3.png"),
+   backgroundForPictures: require("../../assets/backgroundSuperLight.png"),
+   backgroundForText: require("../../assets/pattern2.png"),
    shadowBottom: require("../../assets/navBarShadow.png"),
    animation: {
       scale: 1.0,

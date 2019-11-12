@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, TouchableHighlight, Image, ImageStyle } from "react-native";
+import { StyleSheet, View, TouchableHighlight, Image, ImageStyle, ImageBackground, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import { askForPermissions } from "../../../../common-tools/device-native-api/permissions/askForPermissions";
@@ -57,7 +57,7 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
             </View>
             <View style={styles.picturesContainer}>
                {
-                  this.state.pictures.map((url, i) =>
+                  this.state.pictures.map((uri, i) =>
                      <TouchableHighlight
                         onPress={() => this.setState({ placeholderClicked: i }, () => this.showMenu())}
                         style={styles.pictureContainer}
@@ -66,15 +66,21 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                         ref={c => this.placeholdersRefs[i] = c}
                         key={i}
                      >
-                        <SurfaceStyled style={[styles.pictureSurface, url != null && {backgroundColor: "black"}]}>
+                        <SurfaceStyled style={[styles.pictureSurface, uri != null && {backgroundColor: "black"}]}>
                            {
-                              url != null ?
-                                 <Image 
-                                    source={{ uri: url }} 
-                                    resizeMode={"contain"}
-                                    style={styles.pictureImage as ImageStyle} 
-                                 />
-                              :
+                              uri != null ?
+                                 <ImageBackground
+                                    style={{width: "100%", height: "100%" }}
+                                    source={{uri}}
+                                    blurRadius={Platform.OS === "ios" ? 120 : 60}
+                                 >
+                                    <Image 
+                                       source={{uri}} 
+                                       resizeMode={"contain"}
+                                       style={styles.pictureImage as ImageStyle} 
+                                    />
+                                 </ImageBackground>
+                                 :
                                  <Icon
                                     name={"plus-circle-outline"}
                                     color={currentTheme.colors.primary}
