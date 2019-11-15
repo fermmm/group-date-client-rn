@@ -32,41 +32,16 @@ class DateIdeaForm extends Component<DateIdeaProps, DateIdeaState> {
                ¿Dónde harías una cita grupal?
             </TitleText>
             <TitleSmallText>
-               Para que funcione la aplicación es muy importante que completes esta información de forma válida, más adelante vas a ver por qué.
-               Todos conocemos algún lugar tranquilo para conocernos sin molestias.
+               Todes conocemos algún lugar tranquilo para conocernos sin molestias.
             </TitleSmallText>
             <TitleSmallText>
-               Test
-            </TitleSmallText>
-            <TitleSmallText>
-               Test
-            </TitleSmallText>
-            <TitleSmallText>
-               Test
-            </TitleSmallText>
-            <TitleSmallText>
-               Test
-            </TitleSmallText>
-            <TitleSmallText>
-               Test
-            </TitleSmallText>
-            <TitleSmallText>
-               Test
-            </TitleSmallText>
-            <TitleSmallText>
-               Test
-            </TitleSmallText>
-            <TitleSmallText>
-               Test
-            </TitleSmallText>
-            <TitleSmallText>
-               Test
+               Esto es muy importante para que funcione la app.
             </TitleSmallText>
             <TitleMediumText style={styles.label}>
-               Nombre del lugar
+               Nombre del lugar y/o actividad
             </TitleMediumText>
             <TitleMediumText style={styles.labelLine2}>
-               Podes incluir algún otro dato. Ejemplo: "Hagamos una cena en el parque del lago"
+               Ejemplo: "Hagamos una merienda en el parque del lago"
             </TitleMediumText>
             <TextInput
                // label="Nombre y descrpción"
@@ -75,7 +50,7 @@ class DateIdeaForm extends Component<DateIdeaProps, DateIdeaState> {
                onChangeText={t => this.setState({ placeName: t }, () => this.sendChanges())}
             />
             <TitleMediumText style={styles.label}>
-               Dirección completa (con detalle suficiente)
+               Dirección
             </TitleMediumText>
             <TextInput
                // label="Dirección"
