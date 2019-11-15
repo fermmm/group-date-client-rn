@@ -7,7 +7,7 @@ import TitleText from "../../../common/TitleText/TitleText";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import AgeSelector from "../../../common/AgeSelector/AgeSelector";
 import { formValidators } from "../../../../common-tools/formValidators/formValidators";
-import { currentTheme } from '../../../../config';
+import { currentTheme } from "../../../../config";
 
 export interface BasicInfoProps extends Themed {
    onChange(formData: BasicInfoState, error: string | null): void;

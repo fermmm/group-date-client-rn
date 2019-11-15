@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import ScrollViewExtended, { ScrollViewExtendedProps } from "../ScrollViewExtended/ScrollViewExtended";
 import { Button } from "react-native-paper";

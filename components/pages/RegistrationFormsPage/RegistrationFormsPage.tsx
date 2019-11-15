@@ -11,6 +11,8 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import BasicInfoForm, { BasicInfoState } from "./BasicInfoForm/BasicInfoForm";
 import { NavigationScreenProp, NavigationContainerProps } from "react-navigation";
 import ProfilePicturesForm from "./ProfilePicturesForm/ProfilePicturesForm";
+import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
+import { DateIdeaState } from "./DateIdeaForm/DateIdeaForm";
 
 export interface RegistrationFormsProps extends Themed, NavigationContainerProps { }
 export interface RegistrationFormsState {
@@ -19,8 +21,10 @@ export interface RegistrationFormsState {
    profileDescription: string;
    basicInfoFormData: BasicInfoState;
    pictures: string[];
+   dateIdeaFormData: DateIdeaState;
    errorsBasicInfo: string;
    errorsProfilePictures: string;
+   errorsDateIdea: string;
 }
 
 class RegistrationFormsPage extends Component<RegistrationFormsProps, RegistrationFormsState> {
@@ -32,9 +36,11 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
       showIncompleteError: false,
       profileDescription: null,
       basicInfoFormData: null,
+      dateIdeaFormData: null,
       pictures: null,
       errorsBasicInfo: "Tenés que completar el formulario",
       errorsProfilePictures: null,
+      errorsDateIdea: null,
    };
 
    render(): JSX.Element {
@@ -45,7 +51,8 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
          showIncompleteError, 
          profileDescription, 
          errorsBasicInfo, 
-         errorsProfilePictures 
+         errorsProfilePictures,
+         errorsDateIdea
       }: Partial<RegistrationFormsState> = this.state;
 
       return (
@@ -82,6 +89,18 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
                   showBottomGradient={true}
                   bottomGradientColor={colors.background}
                   onBackPress={() => this.setState({ currentStep: 1 })}
+                  onContinuePress={() => errorsDateIdea == null ? this.setState({ currentStep: 3 }) : this.setState({showIncompleteError: true})}
+                  showBackButton
+                  showContinueButton
+               >
+                  <DateIdeaForm 
+                     onChange={(data, error) => this.setState({dateIdeaFormData: data, errorsDateIdea: error})}
+                  />
+               </BasicScreenContainer>
+               <BasicScreenContainer
+                  showBottomGradient={true}
+                  bottomGradientColor={colors.background}
+                  onBackPress={() => this.setState({ currentStep: 2 })}
                   onContinuePress={() => navigate("Questions")}
                   showBackButton
                   showContinueButton
@@ -96,7 +115,7 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
                visible={showIncompleteError}
                onDismiss={() => this.setState({ showIncompleteError: false })}
             >
-               {errorsBasicInfo || errorsProfilePictures}
+               {errorsBasicInfo || errorsProfilePictures || errorsDateIdea}
             </DialogError>
          </>
 
