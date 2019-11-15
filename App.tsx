@@ -15,44 +15,46 @@ import { NavigationContainer, createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 
 const Navigator: NavigationContainer = createAppContainer(
-    createStackNavigator(
-    {
-        Login: { screen: LoginPage },
-        Main: { screen: MainPage },
-        Group: { screen: GroupPage },
-        Voting: { screen: VotingPage },
-        Profile: { screen: ProfilePage },
-        Questions: { screen: QuestionsPage },
-        RegistrationForms: { screen: RegistrationFormsPage },
-    }, 
-    { 
-        headerMode: "none",
-    },
-));
+   createStackNavigator(
+      {
+         Login: { screen: LoginPage },
+         Main: { screen: MainPage },
+         Group: { screen: GroupPage },
+         Voting: { screen: VotingPage },
+         Profile: { screen: ProfilePage },
+         Questions: { screen: QuestionsPage },
+         RegistrationForms: { screen: RegistrationFormsPage },
+      },
+      {
+         initialRouteName: "Login",
+         headerMode: "none",
+      },
+   )
+);
 
 interface PageBasicWrapperState {
-    resourcesLoaded: boolean;
+   resourcesLoaded: boolean;
 }
 
 export default class App extends Component<{}, PageBasicWrapperState> {
-    state: PageBasicWrapperState = {
-        resourcesLoaded: false,
-    };
+   state: PageBasicWrapperState = {
+      resourcesLoaded: false,
+   };
 
-    async componentDidMount(): Promise<void> {
-        await loadFontMontserrat();
-        this.setState({ resourcesLoaded: true });
-    }
+   async componentDidMount(): Promise<void> {
+      await loadFontMontserrat();
+      this.setState({ resourcesLoaded: true });
+   }
 
-    render(): JSX.Element {
-        if (!this.state.resourcesLoaded) {
-            return <AppLoading />;
-        }
+   render(): JSX.Element {
+      if (!this.state.resourcesLoaded) {
+         return <AppLoading />;
+      }
 
-        return (
-            <PaperProvider theme={currentTheme}>                
-                <Navigator />
-            </PaperProvider>
-        );
-    }
+      return (
+         <PaperProvider theme={currentTheme}>
+            <Navigator />
+         </PaperProvider>
+      );
+   }
 }

@@ -8,6 +8,7 @@ import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import AgeSelector from "../../../common/AgeSelector/AgeSelector";
 import { formValidators } from "../../../../common-tools/formValidators/formValidators";
 import { currentTheme } from "../../../../config";
+import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 
 export interface BasicInfoProps extends Themed {
    onChange(formData: BasicInfoState, error: string | null): void;
@@ -39,30 +40,25 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
 
       return (
          <View style={styles.mainContainer}>
-            <TitleText>
+            <TitleText style={styles.title}>
                Datos básicos
             </TitleText>
-            <TextInput
-               label="Tu nombre o apodo"
+            <TextInputExtended
+               title="Tu nombre o apodo"
                mode="outlined"
                value={nameText}
                onChangeText={t => this.setState({ nameText: formValidators.name(t).result.text }, () => this.sendChanges())}
             />
-            <TextInput
-               label="Edad"
+            <TextInputExtended
+               title="Edad"
                mode="outlined"
                keyboardType="number-pad"
                value={age ? age.toString() : ""}
                onChangeText={t => this.setState({ age: Number(formValidators.age(t).result.text) }, () => this.sendChanges())}
             />
-            <TitleMediumText style={styles.label}>
-               Tu altura en centímetros (opcional) ej: 160
-            </TitleMediumText>
-            <TitleMediumText style={styles.labelLine2}>
-               Este dato para algunes es muy importante y a otres no les importa
-            </TitleMediumText>
-            <TextInput
-               label="Tu altura (opcional)"
+            <TextInputExtended
+               title="Tu altura en centímetros (opcional) ej: 160"
+               titleLine2="Este dato para algunes es muy importante y a otres no les importa"
                mode="outlined"
                keyboardType="number-pad"
                value={bodyHeight ? bodyHeight.toString() : ""}
@@ -91,10 +87,7 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
    }
 
    sendChanges(): void {
-      const { nameText, age }: Partial<BasicInfoState> = this.state;
-      const error: string = this.getError();
-
-      this.props.onChange(this.state, error);
+      this.props.onChange(this.state, this.getError());
    }
 
    getError(): string {
@@ -123,6 +116,11 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       padding: 20,
+      paddingTop: 10,
+   },
+   title: {
+      fontSize: 19,
+      marginBottom: 7,
    },
    label: {
       marginTop: 30,
