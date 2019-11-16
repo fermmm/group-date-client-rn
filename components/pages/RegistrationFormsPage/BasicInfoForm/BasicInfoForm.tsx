@@ -50,7 +50,7 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
                onChangeText={t => this.setState({ nameText: formValidators.name(t).result.text }, () => this.sendChanges())}
             />
             <TextInputExtended
-               title="Edad"
+               title="Tu edad"
                mode="outlined"
                keyboardType="number-pad"
                value={age ? age.toString() : ""}
@@ -120,7 +120,7 @@ const styles: Styles = StyleSheet.create({
    },
    title: {
       fontSize: 19,
-      marginBottom: 7,
+      marginBottom: 20,
    },
    label: {
       marginTop: 30,

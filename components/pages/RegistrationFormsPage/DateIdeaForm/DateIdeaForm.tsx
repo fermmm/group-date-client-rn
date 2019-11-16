@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { StyleSheet, View, KeyboardAvoidingView, Platform } from "react-native";
-import { withTheme, TextInput } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { withTheme } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
-import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import { currentTheme } from "../../../../config";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
+import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
+import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 
 export interface DateIdeaProps extends Themed {
    onChange(formData: DateIdeaState, error: string | null): void;
@@ -37,23 +38,16 @@ class DateIdeaForm extends Component<DateIdeaProps, DateIdeaState> {
             <TitleSmallText>
                Esto es muy importante para que funcione la app.
             </TitleSmallText>
-            <TitleMediumText style={styles.label}>
-               Nombre del lugar y/o actividad
-            </TitleMediumText>
-            <TitleMediumText style={styles.labelLine2}>
-               Ejemplo: "Hagamos una merienda en el parque del lago"
-            </TitleMediumText>
-            <TextInput
-               // label="Nombre y descrpción"
+            <EmptySpace />
+            <TextInputExtended
+               title="Nombre del lugar y/o actividad"
+               titleLine2='Ejemplo: "Hagamos una merienda en el parque del lago"'
                mode="outlined"
                value={placeName}
                onChangeText={t => this.setState({ placeName: t }, () => this.sendChanges())}
             />
-            <TitleMediumText style={styles.label}>
-               Dirección
-            </TitleMediumText>
-            <TextInput
-               // label="Dirección"
+            <TextInputExtended
+               title="Dirección"
                mode="outlined"
                value={address}
                onChangeText={t => this.setState({ address: t }, () => this.sendChanges())}

@@ -23,10 +23,7 @@ export default {
       statusOk: "#00C781",
       statusWarning: "#FFAA15",
       statusBad: "#FF4040",
-      disabled: color("#DCC4CA")
-         .alpha(0.26)
-         .rgb()
-         .string(),
+      disabled: "#FFBF9C",
       placeholder: color("#DCC4CA")
          .alpha(0.54)
          .rgb()

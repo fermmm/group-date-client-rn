@@ -6,6 +6,7 @@ import ButtonStyled from "../ButtonStyled/ButtonStyled";
 import color from "color";
 import { currentTheme } from "../../../config";
 import TitleMediumText from "../TitleMediumText/TitleMediumText";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 
 export interface TextInputExtendedProps extends TextInputProps {
    title?: string;
@@ -14,13 +15,7 @@ export interface TextInputExtendedProps extends TextInputProps {
 export interface TextInputExtendedState {
    fullScreenMode: boolean;
 }
-/**
- * TODO:
- * 1) Mejorar los estilos del modal
- * 3) Mejorar los colores del input original
- * 4) Ponerle un background y mejores colores al boton de guardar
- * 5) Cambiar todos los inputs por esta clase
- */
+
 class TextInputExtended extends Component<TextInputExtendedProps, TextInputExtendedState> {
    state: TextInputExtendedState = {
       fullScreenMode: false
@@ -32,7 +27,7 @@ class TextInputExtended extends Component<TextInputExtendedProps, TextInputExten
    }
 
    render(): JSX.Element {
-      const { title, titleLine2 }: TextInputExtendedProps = this.props;
+      const { title, titleLine2, multiline }: TextInputExtendedProps = this.props;
 
       return (
          <>
@@ -79,15 +74,18 @@ class TextInputExtended extends Component<TextInputExtendedProps, TextInputExten
                         <TextInput
                            {...this.props}
                            autoFocus
+                           style={[this.props.style, {flex: multiline ? 1 : 0}]}
                            ref={component => this.modalInput = component}
                            onBlur={() => this.setState({ fullScreenMode: false })}
                         />
                         <ButtonStyled
                            onPress={() => this.setState({ fullScreenMode: false })}
                            style={styles.buttonSave}
+                           color={currentTheme.colors.text2}
                         >
                            Guardar
-                           </ButtonStyled>
+                        </ButtonStyled>
+                        <KeyboardSpacer />
                      </View>
                   </Portal>
             }
@@ -108,7 +106,7 @@ class TextInputExtended extends Component<TextInputExtendedProps, TextInputExten
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
-      marginTop: 18
+      marginBottom: 18
    },
    title: {
       marginBottom: 0
@@ -119,8 +117,9 @@ const styles: Styles = StyleSheet.create({
    },
    modal: {
       position: "absolute",
-      backgroundColor: "white",
+      backgroundColor: currentTheme.colors.background,
       padding: 10,
+      paddingBottom: 30,
       paddingTop: StatusBar.currentHeight + 15,
       zIndex: 100,
       top: 0,
@@ -129,7 +128,8 @@ const styles: Styles = StyleSheet.create({
       left: 0
    },
    buttonSave: {
-      marginTop: 15
+      marginTop: 15,
+      backgroundColor: currentTheme.colors.primary,
    }
 });
 
