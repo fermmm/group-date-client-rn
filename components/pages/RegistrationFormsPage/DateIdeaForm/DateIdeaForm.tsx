@@ -32,10 +32,10 @@ class DateIdeaForm extends Component<DateIdeaProps, DateIdeaState> {
             <TitleText>
                ¿Dónde harías una cita grupal?
             </TitleText>
-            <TitleSmallText>
-               Todes conocemos algún lugar tranquilo para conocernos sin molestias.
+            <TitleSmallText style={styles.titleSmall}>
+               Todes conocemos algún lugar público agradable.
             </TitleSmallText>
-            <TitleSmallText>
+            <TitleSmallText style={styles.titleSmall}>
                Esto es muy importante para que funcione la app.
             </TitleSmallText>
             <EmptySpace />
@@ -80,6 +80,9 @@ const styles: Styles = StyleSheet.create({
    mainContainer: {
       padding: 20,
       justifyContent: "flex-end",
+   },
+   titleSmall: {
+      paddingLeft: 0
    },
    label: {
       marginTop: 30,
