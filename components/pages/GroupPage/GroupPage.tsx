@@ -50,13 +50,13 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                   !group.invitationAccepted &&
                      <CardAcceptInvitation 
                         matchAmmount={3}
-                        onAcceptPress={() => navigate("Voting", { group })}
+                        onAcceptPress={() => navigate("DateVoting", { group })}
                      />
                }
                {
                   group.invitationAccepted &&
                      <CardDateInfo 
-                        onModifyVotePress={() => navigate("Voting", { group })}
+                        onModifyVotePress={() => navigate("DateVoting", { group })}
                      />
                }
                <SurfaceStyled>

@@ -13,14 +13,14 @@ import TitleText from "../../common/TitleText/TitleText";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import { testingDayVotingData, testingLocationVotingData } from "../../../server-api/tools/debug-tools/testingFakeData";
 
-export interface VotingPageProps extends Themed, NavigationContainerProps { }
-export interface VotingPageState {
+export interface GroupEnterProps extends Themed, NavigationContainerProps { }
+export interface GroupEnterState {
    currentStep: number;
 }
 
-class VotingPage extends Component<VotingPageProps, VotingPageState> {
-   static defaultProps: Partial<VotingPageProps> = {};
-   state: VotingPageState = {
+class GroupEnterForm extends Component<GroupEnterProps, GroupEnterState> {
+   static defaultProps: Partial<GroupEnterProps> = {};
+   state: GroupEnterState = {
       currentStep: 0
    };
 
@@ -86,4 +86,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(VotingPage);
+export default withTheme(GroupEnterForm);

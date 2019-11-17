@@ -1,11 +1,9 @@
 import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
-import VotingPage from "./components/pages/VotingPage/VotingPage";
 import ProfilePage from "./components/pages/ProfilePage/ProfilePage";
 import QuestionsPage from "./components/pages/QuestionsPage/QuestionsPage";
 import RegistrationFormsPage from "./components/pages/RegistrationFormsPage/RegistrationFormsPage";
-import ProfilePicturePage from "./components/pages/ProfilePicturesPage/ProfilePicturesPage";
 import React, { Component } from "react";
 import { AppLoading } from "expo";
 import { Provider as PaperProvider } from "react-native-paper";
@@ -13,6 +11,7 @@ import { loadFontMontserrat } from "./common-tools/fontLoaders/loadFontMontserra
 import { currentTheme } from "./config";
 import { NavigationContainer, createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
+import DateVotingPage from "./components/pages/DateVotingPage/DateVotingPage";
 
 const Navigator: NavigationContainer = createAppContainer(
    createStackNavigator(
@@ -20,7 +19,7 @@ const Navigator: NavigationContainer = createAppContainer(
          Login: { screen: LoginPage },
          Main: { screen: MainPage },
          Group: { screen: GroupPage },
-         Voting: { screen: VotingPage },
+         DateVoting: { screen: DateVotingPage },
          Profile: { screen: ProfilePage },
          Questions: { screen: QuestionsPage },
          RegistrationForms: { screen: RegistrationFormsPage },
