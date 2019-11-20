@@ -18,11 +18,12 @@ class ProfilePage extends Component<Props, State> {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
       const { getParam }: NavigationScreenProp<{}> = this.props.navigation;
       const user: User = getParam("user");
+      const editMode: boolean = getParam("editMode");
 
       return (
          <>
             <ButtonBack />
-            <ProfileCard user={user} statusBarPadding/>
+            <ProfileCard user={user} editMode={editMode} statusBarPadding/>
          </>
       );
    }

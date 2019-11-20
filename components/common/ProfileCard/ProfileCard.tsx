@@ -15,9 +15,10 @@ import { getAge } from "../../../server-api/tools/date-tools";
 export interface ProfileCardProps extends Themed {
    user: User;
    showLikeDislikeButtons?: boolean;
+   editMode?: boolean;
+   statusBarPadding?: boolean;
    onLikeClick?: () => void;
    onDislikeClick?: () => void;
-   statusBarPadding?: boolean;
 }
 
 export interface ProfileCardState {

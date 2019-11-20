@@ -38,10 +38,10 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                {
                   group.invitationAccepted &&
                      <ButtonForAppBar 
-                        icon="chat-bubble-outline"
+                        icon="forum"
                         onPress={() => console.log("Pressed")}
                      >
-                        Chat
+                        Chat grupal
                      </ButtonForAppBar>
                }
             </AppBarHeader>
