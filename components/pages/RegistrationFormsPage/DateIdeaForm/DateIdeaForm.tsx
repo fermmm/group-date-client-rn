@@ -41,7 +41,7 @@ class DateIdeaForm extends Component<DateIdeaProps, DateIdeaState> {
             <EmptySpace />
             <TextInputExtended
                title="Nombre del lugar y/o actividad"
-               titleLine2='Ejemplo: "Hagamos una merienda en el parque del lago"'
+               titleLine2='Ejemplo: "Merienda en la playa"'
                mode="outlined"
                value={placeName}
                onChangeText={t => this.setState({ placeName: t }, () => this.sendChanges())}
