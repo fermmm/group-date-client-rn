@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import color from "color";
 import { ImageProps, Image, StatusBar, StyleSheet, View, Dimensions, Platform, ImageBackground } from "react-native";
-import { Card, Paragraph, withTheme, Text } from "react-native-paper";
+import { Card, Paragraph, withTheme, Text, FAB } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -11,6 +11,7 @@ import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
 import QuestionInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
 import { User } from "../../../server-api/typings/User";
 import { getAge } from "../../../server-api/tools/date-tools";
+import EditButton from "./EditButton/EditButton";
 
 export interface ProfileCardProps extends Themed {
    user: User;
@@ -33,12 +34,24 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
    };
 
    render(): JSX.Element {
-      const { showLikeDislikeButtons, onLikeClick, onDislikeClick, statusBarPadding }: Partial<ProfileCardProps> = this.props;
-      const { name, photos, birthdate, area }: Partial<User> = this.props.user;
-      const { renderImageModal, imageSelected }: Partial<ProfileCardState> = this.state;
+      const { 
+         showLikeDislikeButtons, 
+         onLikeClick, 
+         onDislikeClick, 
+         statusBarPadding, 
+         editMode 
+      }: Partial<ProfileCardProps> = this.props;
+      const { 
+         name, 
+         photos, 
+         birthdate, 
+         area 
+      }: Partial<User> = this.props.user;
+      const { 
+         renderImageModal, 
+         imageSelected 
+      }: Partial<ProfileCardState> = this.state;
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-
-      StatusBar.setHidden(renderImageModal, "slide");
 
       return (
          <>
@@ -56,25 +69,35 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                      indicatorStyle={"white"}
                   >
                      <Card style={[styles.card, { backgroundColor: colors.background }]}>
-                        <ImagesScroll
-                           photos={photos}
-                           style={[styles.galleryScroll, statusBarPadding && { marginTop: StatusBar.currentHeight }]}
-                           onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
-                           renderImage={(uri: string, imageProps: ImageProps) =>
-                              <ImageBackground
-                                 style={{width: "100%", height: "100%" }}
-                                 source={{uri}}
-                                 blurRadius={Platform.OS === "ios" ? 120 : 60}
-                              >
-                                 <Image
-                                    {...imageProps}
-                                    resizeMethod={"resize"}
-                                    resizeMode={"contain"}
-                                    key={uri}
+                        <View>
+                           <ImagesScroll
+                              photos={photos}
+                              style={[styles.galleryScroll, statusBarPadding && { marginTop: StatusBar.currentHeight }]}
+                              onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
+                              renderImage={(uri: string, imageProps: ImageProps) =>
+                                 <ImageBackground
+                                    style={{width: "100%", height: "100%" }}
+                                    source={{uri}}
+                                    blurRadius={Platform.OS === "ios" ? 120 : 60}
+                                 >
+                                    <Image
+                                       {...imageProps}
+                                       resizeMethod={"resize"}
+                                       resizeMode={"contain"}
+                                       key={uri}
+                                    />
+                                 </ImageBackground>
+                              }
+                           />
+                           {
+                              editMode && 
+                                 <EditButton 
+                                    showAtBottom
+                                    label={"Cambiar Fotos"}
+                                    onPress={() => console.log("pressed")}
                                  />
-                              </ImageBackground>
                            }
-                        />
+                        </View>
                         <View style={styles.titleAreaContainer}>
                            <Card.Title
                               title={name}
@@ -83,27 +106,75 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                               titleStyle={{ color: colors.text }}
                               subtitleStyle={{ color: colors.text }}
                            />
-                           <Text style={[styles.compatibilityPercentage, {
-                              borderColor: color(colors.statusOk).alpha(0.5).string(),
-                              backgroundColor: color(colors.statusOk).alpha(0.5).string(),
-                           }]}>
-                              99%
-                           </Text>
+                           {
+                              !editMode ?
+                                 <Text style={[styles.compatibilityPercentage, {
+                                    borderColor: color(colors.statusOk).alpha(0.5).string(),
+                                    backgroundColor: color(colors.statusOk).alpha(0.5).string(),
+                                 }]}>
+                                    99%
+                                 </Text>
+                              :
+                                 <EditButton 
+                                    onPress={() => console.log("pressed")}
+                                 />
+                           }
                         </View>
-
                         <Card.Content>
                            <Paragraph style={[styles.descriptionParagraph, { color: colors.text }]}>
                               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                            </Paragraph>
+                           {
+                              editMode && 
+                                 <EditButton 
+                                    showAtBottom
+                                    absolutePosition={false}
+                                    label={"Modificar texto"}
+                                    onPress={() => console.log("pressed")}
+                                 />
+                           }
                            <View style={styles.questionsContainer}>
-                              <QuestionInProfileCard answerMatches={false} questionText="Lorem ipsum" responseText="amet" />
-                              <QuestionInProfileCard answerMatches={false} questionText="Lorem ipsum dolor sit amet" responseText="sed do eiusmod tempor" />
-                              <QuestionInProfileCard answerMatches={false} questionText="Lorem" responseText="sit" />
-                              <QuestionInProfileCard questionText="Lorem ipsum" responseText="amet" />
-                              <QuestionInProfileCard questionText="Lorem" responseText="sit" />
-                              <QuestionInProfileCard questionText="Lorem ipsum dolor sit amet" responseText="sed do eiusmod tempor" />
-                              <QuestionInProfileCard questionText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" responseText="Sed do eiusmod tempor." />
+                              <QuestionInProfileCard 
+                                 questionText="Lorem ipsum" 
+                                 responseText="amet" 
+                                 answerMatches={false} 
+                              />
+                              <QuestionInProfileCard 
+                                 answerMatches={false} 
+                                 questionText="Lorem ipsum dolor sit amet" 
+                                 responseText="sed do eiusmod tempor" 
+                              />
+                              <QuestionInProfileCard 
+                                 answerMatches={false} 
+                                 questionText="Lorem" 
+                                 responseText="sit"
+                              />
+                              <QuestionInProfileCard 
+                                 questionText="Lorem ipsum" 
+                                 responseText="amet"
+                              />
+                              <QuestionInProfileCard 
+                                 questionText="Lorem" 
+                                 responseText="sit"
+                              />
+                              <QuestionInProfileCard 
+                                 questionText="Lorem ipsum dolor sit amet" 
+                                 responseText="sed do eiusmod tempor"
+                              />
+                              <QuestionInProfileCard 
+                                 questionText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" 
+                                 responseText="Sed do eiusmod tempor."
+                              />
                            </View>
+                           {
+                              editMode && 
+                                 <EditButton 
+                                    showAtBottom
+                                    absolutePosition={false}
+                                    label={"Modificar preguntas"}
+                                    onPress={() => console.log("pressed")}
+                                 />
+                           }
                         </Card.Content>
                      </Card>
                   </ScrollViewExtended>
@@ -119,12 +190,12 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
             </View>
             {
                renderImageModal === true &&
-               <ImagesModal
-                  visible={renderImageModal}
-                  photos={photos}
-                  initialPage={imageSelected}
-                  onClose={() => this.setState({ renderImageModal: false })}
-               />
+                  <ImagesModal
+                     visible={renderImageModal}
+                     photos={photos}
+                     initialPage={imageSelected}
+                     onClose={() => this.setState({ renderImageModal: false })}
+                  />
             }
          </>
       );
@@ -162,9 +233,10 @@ const styles: Styles = StyleSheet.create({
       textAlignVertical: "center",
    },
    descriptionParagraph: {
-      marginBottom: 15,
+      marginBottom: 5,
    },
    questionsContainer: {
+      paddingTop: 10,
       flexDirection: "row",
       flexWrap: "wrap",
    },
