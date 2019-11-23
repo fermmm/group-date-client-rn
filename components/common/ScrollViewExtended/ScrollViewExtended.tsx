@@ -28,7 +28,7 @@ export interface ScrollViewExtendedState {
 
 class ScrollViewExtended extends Component<ScrollViewExtendedProps, ScrollViewExtendedState> {
    static defaultProps: Partial<ScrollViewExtendedProps> = {
-      bottomGradientColor: "black",
+      bottomGradientColor: "white",
    };
    scrolledToBottom: boolean;
    state: ScrollViewExtendedState = {

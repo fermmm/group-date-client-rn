@@ -11,8 +11,7 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import BasicInfoForm, { BasicInfoState } from "./BasicInfoForm/BasicInfoForm";
 import { NavigationScreenProp, NavigationContainerProps } from "react-navigation";
 import ProfilePicturesForm from "./ProfilePicturesForm/ProfilePicturesForm";
-import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
-import { DateIdeaState } from "./DateIdeaForm/DateIdeaForm";
+import DateIdeaForm, { DateIdeaState } from "./DateIdeaForm/DateIdeaForm";
 
 export interface RegistrationFormsProps extends Themed, NavigationContainerProps { }
 export interface RegistrationFormsState {

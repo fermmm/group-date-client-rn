@@ -31,6 +31,8 @@ export default class BasicScreenContainer extends Component<BasicScreenProps> {
             ]}
          >
             <ScrollViewExtended 
+               showBottomGradient
+               bottomGradientColor={currentTheme.colors.background}
                {...this.props}
                contentContainerStyle={[styles.scrollViewContainer, (showBackButton || showContinueButton) && {paddingBottom: 70}]} 
             >

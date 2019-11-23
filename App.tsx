@@ -12,6 +12,7 @@ import { currentTheme } from "./config";
 import { NavigationContainer, createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import DateVotingPage from "./components/pages/DateVotingPage/DateVotingPage";
+import ChangePicturesPage from "./components/pages/SettingsPage/ChangePicturesPage/ChangePicturesPage";
 
 const Navigator: NavigationContainer = createAppContainer(
    createStackNavigator(
@@ -23,6 +24,7 @@ const Navigator: NavigationContainer = createAppContainer(
          Profile: { screen: ProfilePage },
          Questions: { screen: QuestionsPage },
          RegistrationForms: { screen: RegistrationFormsPage },
+         ChangePictures: { screen: ChangePicturesPage },
       },
       {
          initialRouteName: "Login",

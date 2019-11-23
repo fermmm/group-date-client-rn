@@ -12,8 +12,9 @@ import QuestionInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard
 import { User } from "../../../server-api/typings/User";
 import { getAge } from "../../../server-api/tools/date-tools";
 import EditButton from "./EditButton/EditButton";
+import { withNavigation, NavigationInjectedProps, NavigationScreenProp } from "react-navigation";
 
-export interface ProfileCardProps extends Themed {
+export interface ProfileCardProps extends Themed, NavigationInjectedProps {
    user: User;
    showLikeDislikeButtons?: boolean;
    editMode?: boolean;
@@ -52,6 +53,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
          imageSelected 
       }: Partial<ProfileCardState> = this.state;
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
 
       return (
          <>
@@ -94,7 +96,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                                  <EditButton 
                                     showAtBottom
                                     label={"Cambiar Fotos"}
-                                    onPress={() => console.log("pressed")}
+                                    onPress={() => navigate("ChangePictures")}
                                  />
                            }
                         </View>
@@ -246,4 +248,4 @@ const styles: Styles = StyleSheet.create({
    },
 });
 
-export default withTheme(ProfileCard);
+export default withNavigation(withTheme(ProfileCard));
