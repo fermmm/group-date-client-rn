@@ -52,7 +52,7 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                   Tus fotos
                </TitleText>
                <TitleSmallText style={styles.titleSmall}>
-                  Podes agregar hasta {pictures.length} fotos.
+                  Si irías acompañade a las citas no te olvides de poner fotos de tus acompañantes.
                </TitleSmallText>
             </View>
             <View style={styles.picturesContainer}>
@@ -96,31 +96,31 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                <PaperMenu.Item
                   title="Elegir de tus fotos"
                   icon="photo-library"
+                  style={styles.menuItem}
                   onPress={async () => {
                      this.hideMenu();
                      this.addPicture(await this.callImagePicker(), placeholderClicked);
                   }}
-                  style={styles.menuItem}
                />
                <PaperMenu.Item
                   title="Cámara"
                   icon="camera-enhance"
+                  style={styles.menuItem}
                   onPress={async () => {
                      this.hideMenu();
                      this.addPicture(await this.callCameraPicture(), placeholderClicked);
                   }}
-                  style={styles.menuItem}
                />
                {
                   (placeholderClicked != null && placeholderClicked !== 0 && pictures[placeholderClicked]) &&
                   <PaperMenu.Item
                      title="Mover al principio"
                      icon="arrow-upward"
+                     style={styles.menuItem}
                      onPress={() => {
                         this.hideMenu();
                         this.movePictureToFirstPosition(placeholderClicked);
                      }}
-                     style={styles.menuItem}
                   />
                }
                {
@@ -128,11 +128,11 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                   <PaperMenu.Item
                      title="Eliminar"
                      icon="delete"
+                     style={styles.menuItem}
                      onPress={() => {
                         this.hideMenu();
                         this.deletePicture(placeholderClicked);
                      }}
-                     style={styles.menuItem}
                   />
                }
             </Menu>
@@ -186,16 +186,6 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
       this.setState({ pictures: result }, () => this.props.onChange(pictures, this.getErrors()));
    }
 
-   getErrors(): string | null {
-      const { pictures }: ProfilePictureFormState = this.state;
-
-      if (pictures[0] == null) {
-         return "Tenés que subir al menos una foto para continuar";
-      }
-
-      return null;
-   }
-
    async callImagePicker(): Promise<string | null> {
       await askForPermissions(Permissions.CAMERA_ROLL, {
          rejectedDialogTexts: {
@@ -233,6 +223,16 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
       }) as unknown as ImageInfo;
 
       return Promise.resolve(result.uri || null);
+   }
+
+   getErrors(): string | null {
+      const { pictures }: ProfilePictureFormState = this.state;
+
+      if (pictures[0] == null) {
+         return "Tenés que subir al menos una foto para continuar";
+      }
+
+      return null;
    }
 }
 

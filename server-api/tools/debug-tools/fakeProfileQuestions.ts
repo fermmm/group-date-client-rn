@@ -61,11 +61,11 @@ const intentionsQuestion: QuestionData = {
    answers: [
       {
          id: "0",
-         text: "Vinculos sexuales y de otros tipos",
+         text: "Vinculos de cualquier tipo incluido sexuales",
       },
       {
          id: "1",
-         text: "Vinculos sin intenciones sexuales",
+         text: "Vinculos no sexuales",
       }
    ],
    incompatibilitiesBetweenAnswers: {
@@ -74,8 +74,33 @@ const intentionsQuestion: QuestionData = {
    },
 };
 
+const companyQuestion: QuestionData = {
+   text: "¿Iriías acompañade a las citas grupales de esta app?",
+   multipleAnswersAllowed: false,
+   itsImportantSelectedByDefault: false,
+   answers: [
+      {
+         id: "0",
+         text: "No, yo sole",
+      },
+      {
+         id: "1",
+         text: "Con mi pareja",
+      },
+      {
+         id: "2",
+         text: "Con un amige",
+      },
+      {
+         id: "3",
+         text: "Con 2 o más personas",
+      }
+   ]
+};
+
 export const fakeProfileQuestionsPart: QuestionData[] = [
    genderQuestion,
    genderLikeQuestion,
    intentionsQuestion,
+   companyQuestion,
 ];

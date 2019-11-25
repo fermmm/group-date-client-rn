@@ -64,7 +64,7 @@ const politicsQuestion: QuestionData = {
       },
       {
          id: "2",
-         text: "Socialismo / Centro-izquierda / Izquierda / Anarquismo",
+         text: "Socialismo / Centro-izquierda / Izquierda / Anarquismo / Otra cercana",
       },
       {
          id: "3",
