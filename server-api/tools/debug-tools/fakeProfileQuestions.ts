@@ -2,7 +2,6 @@ import { QuestionData } from "./interfaces/questions";
 
 const genderQuestion: QuestionData = {
    text: "¿Cual es tu género?",
-   multipleAnswersAllowed: false,
    answers: [
       {
          id: "0",
@@ -56,8 +55,6 @@ const genderLikeQuestion: QuestionData = {
 
 const intentionsQuestion: QuestionData = {
    text: "¿Qué te gustaría encontrar en las citas grupales que organiza esta app?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: false,
    answers: [
       {
          id: "0",
@@ -76,8 +73,6 @@ const intentionsQuestion: QuestionData = {
 
 const companyQuestion: QuestionData = {
    text: "¿Iriías acompañade a las citas grupales de esta app?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: false,
    answers: [
       {
          id: "0",

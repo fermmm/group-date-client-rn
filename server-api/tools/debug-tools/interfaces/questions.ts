@@ -1,7 +1,7 @@
 export interface QuestionData {
    text: string;
    extraText?: string;
-   multipleAnswersAllowed: boolean;
+   multipleAnswersAllowed?: boolean;
    defaultSelectedAnswers?: string[];
    itsImportantSelectedByDefault?: boolean;
    answers: QuestionAnswerData[];

@@ -2,8 +2,6 @@ import { QuestionData } from "./interfaces/questions";
 
 const groupSexQuestion: QuestionData = {
    text: "¿Qué pensas del sexo grupal?",
-   multipleAnswersAllowed: false,
-   itsImportantSelectedByDefault: false,
    answers: [
       {
          id: "0",
@@ -31,7 +29,6 @@ const groupSexQuestion: QuestionData = {
 
 const smokeQuestion: QuestionData = {
    text: "¿Fumas? (tabaco)",
-   multipleAnswersAllowed: false,
    answers: [
       {
          id: "0",
@@ -50,8 +47,7 @@ const smokeQuestion: QuestionData = {
 
 const politicsQuestion: QuestionData = {
    text: "¿Cuál es tu postura política?",
-   extraText: "Puede ser incómoda la pregunta pero es clave para la mayoría de personas consultadas",
-   multipleAnswersAllowed: false,
+   extraText: "Puede ser incómoda la pregunta pero es importante para la mayoría de personas consultadas",
    itsImportantSelectedByDefault: true,
    answers: [
       {

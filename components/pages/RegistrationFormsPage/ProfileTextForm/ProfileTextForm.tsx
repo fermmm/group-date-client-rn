@@ -12,7 +12,7 @@ export interface DescriptionFormProps extends Themed {
    onChange(newText: string): void;
 }
 
-class ProfileDescriptionForm extends Component<DescriptionFormProps> {
+class ProfileTextForm extends Component<DescriptionFormProps> {
    static defaultProps: Partial<DescriptionFormProps> = {};
 
    render(): JSX.Element {
@@ -49,4 +49,4 @@ const styles: Styles = StyleSheet.create({
    },
 });
 
-export default withTheme(ProfileDescriptionForm);
+export default withTheme(ProfileTextForm);

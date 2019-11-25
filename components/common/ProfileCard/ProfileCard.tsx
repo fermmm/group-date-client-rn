@@ -132,7 +132,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                                     showAtBottom
                                     absolutePosition={false}
                                     label={"Modificar texto"}
-                                    onPress={() => console.log("pressed")}
+                                    onPress={() => navigate("ChangeProfileText")}
                                  />
                            }
                            <View style={styles.questionsContainer}>

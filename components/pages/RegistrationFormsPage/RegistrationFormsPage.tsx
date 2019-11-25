@@ -4,7 +4,7 @@ import { withTheme } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
-import ProfileDescriptionForm from "./ProfileDescriptionForm/ProfileDescriptionForm";
+import ProfileTextForm from "./ProfileTextForm/ProfileTextForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
@@ -104,7 +104,7 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
                   showBackButton
                   showContinueButton
                >
-                  <ProfileDescriptionForm
+                  <ProfileTextForm
                      text={profileDescription}
                      onChange={t => this.setState({profileDescription: t})}
                   />
