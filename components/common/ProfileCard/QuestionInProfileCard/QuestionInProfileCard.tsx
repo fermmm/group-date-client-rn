@@ -3,24 +3,18 @@ import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { withTheme, Caption, Text } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
+import { QuestionData } from "../../../../server-api/tools/debug-tools/interfaces/questions";
 import color from "color";
-import EditButton from "../EditButton/EditButton";
 
 export interface IQuestionProfileProps extends Themed {
-   questionText: string;
-   responseText: string;
-   answerMatches?: boolean;
+   questionData: QuestionData;
 }
-export interface IQuestionProfileState { }
 
-class QuestionInProfileCard extends Component<IQuestionProfileProps, IQuestionProfileState> {
-   static defaultProps: Partial<IQuestionProfileProps> = {
-      answerMatches: true,
-   };
-
+class QuestionInProfileCard extends Component<IQuestionProfileProps> {
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { answerMatches, questionText, responseText }: IQuestionProfileProps = this.props;
+      const { questionData }: IQuestionProfileProps = this.props;
+      const answerMatches: boolean = true; // Implement compare logic here
 
       return (
          <View style={[
@@ -31,8 +25,25 @@ class QuestionInProfileCard extends Component<IQuestionProfileProps, IQuestionPr
             },
             !answerMatches && styles.border,
          ]}>
-            <Text style={{ color: colors.text }}>{questionText}</Text>
-            <Caption style={{ color: colors.text }}>{responseText}</Caption>
+            <Text style={{ color: colors.text }}>
+               {
+                  questionData.shortVersion ? 
+                     questionData.shortVersion 
+                  : 
+                     questionData.text
+               }
+            </Text>
+            <Caption style={{ color: colors.text }}>
+               {
+                  !questionData.multipleAnswersAllowed ?
+                     questionData.answers[0].shortVersion ? 
+                        questionData.answers[0].shortVersion 
+                     : 
+                        questionData.answers[0].text
+                  :
+                     `${questionData.answers[0].text}, ${questionData.answers[1].text}` // Implemet multiple questions separated by comma here
+               }
+            </Caption>
          </View>
       );
    }

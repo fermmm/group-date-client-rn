@@ -1,6 +1,7 @@
 export interface QuestionData {
    text: string;
    extraText?: string;
+   shortVersion?: string;
    multipleAnswersAllowed?: boolean;
    defaultSelectedAnswers?: string[];
    itsImportantSelectedByDefault?: boolean;
@@ -12,4 +13,5 @@ export interface QuestionAnswerData {
    id: string;
    text: string;
    extraText?: string;
+   shortVersion?: string;
 }

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import color from "color";
 import { ImageProps, Image, StatusBar, StyleSheet, View, Dimensions, Platform, ImageBackground } from "react-native";
-import { Card, Paragraph, withTheme, Text, FAB } from "react-native-paper";
+import { Card, Paragraph, withTheme, Text } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -13,6 +13,9 @@ import { User } from "../../../server-api/typings/User";
 import { getAge } from "../../../server-api/tools/date-tools";
 import EditButton from "./EditButton/EditButton";
 import { withNavigation, NavigationInjectedProps, NavigationScreenProp } from "react-navigation";
+import { QuestionData } from "../../../server-api/tools/debug-tools/interfaces/questions";
+import { fakeProfileQuestionsPart } from "../../../server-api/tools/debug-tools/fakeProfileQuestions";
+import { fakeFilterQuestions } from "../../../server-api/tools/debug-tools/fakeFilterQuestions";
 
 export interface ProfileCardProps extends Themed, NavigationInjectedProps {
    user: User;
@@ -54,6 +57,10 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
       }: Partial<ProfileCardState> = this.state;
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
       const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
+      const questions: QuestionData[] = [
+         ...fakeProfileQuestionsPart,
+         ...fakeFilterQuestions,
+      ];
 
       return (
          <>
@@ -136,37 +143,12 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                                  />
                            }
                            <View style={styles.questionsContainer}>
-                              <QuestionInProfileCard 
-                                 questionText="Lorem ipsum" 
-                                 responseText="amet" 
-                                 answerMatches={false} 
-                              />
-                              <QuestionInProfileCard 
-                                 answerMatches={false} 
-                                 questionText="Lorem ipsum dolor sit amet" 
-                                 responseText="sed do eiusmod tempor" 
-                              />
-                              <QuestionInProfileCard 
-                                 answerMatches={false} 
-                                 questionText="Lorem" 
-                                 responseText="sit"
-                              />
-                              <QuestionInProfileCard 
-                                 questionText="Lorem ipsum" 
-                                 responseText="amet"
-                              />
-                              <QuestionInProfileCard 
-                                 questionText="Lorem" 
-                                 responseText="sit"
-                              />
-                              <QuestionInProfileCard 
-                                 questionText="Lorem ipsum dolor sit amet" 
-                                 responseText="sed do eiusmod tempor"
-                              />
-                              <QuestionInProfileCard 
-                                 questionText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" 
-                                 responseText="Sed do eiusmod tempor."
-                              />
+                              {questions.map((question, i) =>
+                                 <QuestionInProfileCard
+                                    questionData={question}
+                                    key={question.text}
+                                 />
+                              )}
                            </View>
                            {
                               editMode && 

@@ -2,6 +2,7 @@ import { QuestionData } from "./interfaces/questions";
 
 const groupSexQuestion: QuestionData = {
    text: "¿Qué pensas del sexo grupal?",
+   shortVersion: "Opinion sobre el sexo grupal",
    answers: [
       {
          id: "0",
@@ -29,6 +30,7 @@ const groupSexQuestion: QuestionData = {
 
 const smokeQuestion: QuestionData = {
    text: "¿Fumas? (tabaco)",
+   shortVersion: "Fuma tabaco",
    answers: [
       {
          id: "0",
@@ -48,19 +50,23 @@ const smokeQuestion: QuestionData = {
 const politicsQuestion: QuestionData = {
    text: "¿Cuál es tu postura política?",
    extraText: "Puede ser incómoda la pregunta pero es importante para la mayoría de personas consultadas",
+   shortVersion: "Postura política",
    itsImportantSelectedByDefault: true,
    answers: [
       {
          id: "0",
-         text: "No es un tema para hablar en una cita"
+         text: "No hablaría sobre eso en una cita",
+         shortVersion: "No hablaría de eso"
       },
       {
          id: "1",
-         text: "Libre mercado / Centro-derecha / Derecha",
+         text: "Libre mercado / Centro-derecha / Derecha / Otras cercanas",
+         shortVersion: "Derecha / Libre mercado"
       },
       {
          id: "2",
-         text: "Socialismo / Centro-izquierda / Izquierda / Anarquismo / Otra cercana",
+         text: "Socialismo / Centro-izquierda / Izquierda / Anarquismo / Otras cercanas",
+         shortVersion: "Izquierda / Otras cercanas"
       },
       {
          id: "3",
