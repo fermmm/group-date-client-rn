@@ -39,7 +39,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                   group.invitationAccepted &&
                      <ButtonForAppBar 
                         icon="forum"
-                        onPress={() => console.log("Pressed")}
+                        onPress={() => navigate("Chat")}
                      >
                         Chat grupal
                      </ButtonForAppBar>

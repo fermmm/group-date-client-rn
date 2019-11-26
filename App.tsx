@@ -17,6 +17,7 @@ import ChangeProfileTextPage from "./components/pages/SettingsPage/ChangeProfile
 import ChangeBasicInfoPage from "./components/pages/SettingsPage/ChangeBasicInfoPage/ChangeBasicInfoPage";
 import ChangeDateIdeaPage from "./components/pages/SettingsPage/ChangeDateIdeaPage/ChangeDateIdeaPage";
 import ChangeQuestionsPage from "./components/pages/SettingsPage/ChangeQuestionsPage/ChangeQuestionsPage";
+import ChatPage from "./components/pages/GroupPage/ChatPage/ChatPage";
 
 const Navigator: NavigationContainer = createAppContainer(
    createStackNavigator(
@@ -24,6 +25,7 @@ const Navigator: NavigationContainer = createAppContainer(
          Login: { screen: LoginPage },
          Main: { screen: MainPage },
          Group: { screen: GroupPage },
+         Chat: { screen: ChatPage },
          DateVoting: { screen: DateVotingPage },
          Profile: { screen: ProfilePage },
          Questions: { screen: QuestionsPage },
