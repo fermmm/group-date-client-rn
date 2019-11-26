@@ -12,26 +12,39 @@ import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import { QuestionData } from "../../../server-api/tools/debug-tools/interfaces/questions";
 import { fakeProfileQuestionsPart } from "../../../server-api/tools/debug-tools/fakeProfileQuestions";
 import DialogError from "../../common/DialogError/DialogError";
-import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
+import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
 
-export interface QuestionsPageProps extends Themed, NavigationContainerProps { }
+export interface QuestionsPageProps extends Themed, NavigationInjectedProps { 
+   appBarTitle?: string;
+   backButtonChangesPage?: boolean;
+   startingQuestion?: number;
+   showBottomButtons?: boolean;
+   onFinishGoBack?: boolean;
+}
 export interface QuestionsPageState {
    currentStep: number;
    showCompleteAnswerError: boolean;
 }
 
 class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
-   static defaultProps: Partial<QuestionsPageProps> = {};
+   static defaultProps: Partial<QuestionsPageProps> = {
+      appBarTitle: "Nueva cuenta",
+      backButtonChangesPage: false,
+      startingQuestion: 0,
+      showBottomButtons: true,
+      onFinishGoBack: false
+   };
    answeredQuestions: boolean[] = [];
    state: QuestionsPageState = {
-      currentStep: 0,
+      currentStep: this.props.startingQuestion,
       showCompleteAnswerError: false,
    };
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
+      const { navigate, goBack }: NavigationScreenProp<{}> = this.props.navigation;
       const { currentStep }: Partial<QuestionsPageState> = this.state;
+      const { appBarTitle, backButtonChangesPage, showBottomButtons, onFinishGoBack }: Partial<QuestionsPageProps> = this.props;
 
       const questions: QuestionData[] = [
          ...fakeProfileQuestionsPart,
@@ -41,8 +54,13 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
       return (
          <>
             <AppBarHeader 
-               title={"Nueva cuenta"}
-               onBackPress={currentStep > 0 ? (() => this.setState({ currentStep: currentStep - 1 })) : null} 
+               title={appBarTitle}
+               onBackPress={
+                  (currentStep > 0 && !backButtonChangesPage) ? 
+                     (() => this.setState({ currentStep: currentStep - 1 })) 
+                  : 
+                     null
+               } 
             />
             <ScreensStepper
                currentScreen={currentStep}
@@ -60,12 +78,12 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
                               currentStep < questions.length - 1 ? 
                                  this.setState({ currentStep: currentStep + 1 })
                               :
-                                 navigate("Main")
+                                 onFinishGoBack ? goBack() : navigate("Main")
                            :
                               this.setState({ showCompleteAnswerError: true })
                         }
-                        showBackButton={i !== 0}
-                        showContinueButton={true}
+                        showBackButton={i !== 0 && showBottomButtons}
+                        showContinueButton={showBottomButtons}
                         key={i}
                      >
                         <TitleSmallText style={styles.questionNumberIndicator}>
@@ -99,4 +117,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(QuestionsPage);
+export default withNavigation(withTheme(QuestionsPage));

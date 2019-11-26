@@ -37,7 +37,7 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
       basicInfoFormData: null,
       dateIdeaFormData: null,
       pictures: null,
-      errorsBasicInfo: "Tenés que completar el formulario",
+      errorsBasicInfo: null,
       errorsProfilePictures: null,
       errorsDateIdea: null,
    };

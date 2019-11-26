@@ -61,22 +61,7 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
             }
             <View style={styles.responsesContainer}>
                {
-                  multipleAnswersAllowed === false ? 
-                     answers.map((answer, i) =>
-                        <RaddioButtonImproved 
-                           checked={selectedAnswers[0] === answer.id}
-                           onPress={() => this.setState({selectedAnswers: [answer.id]}, () => this.sendChanges())}
-                           key={i}
-                        >
-                           <Text style={styles.responseText}>
-                              {answer.text} 
-                              <Text style={styles.responseExtraText}>
-                                 {"  "}{answer.extraText}
-                              </Text>
-                           </Text>
-                        </RaddioButtonImproved>
-                     )
-                  :
+                  multipleAnswersAllowed === true ? 
                      answers.map((answer, i) =>
                         <CheckboxButton 
                            checked={selectedAnswers.indexOf(answer.id) !== -1}
@@ -98,6 +83,21 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
                               </Text>
                            </Text>
                         </CheckboxButton>
+                     )
+                  :
+                     answers.map((answer, i) =>
+                        <RaddioButtonImproved 
+                           checked={selectedAnswers[0] === answer.id}
+                           onPress={() => this.setState({selectedAnswers: [answer.id]}, () => this.sendChanges())}
+                           key={i}
+                        >
+                           <Text style={styles.responseText}>
+                              {answer.text} 
+                              <Text style={styles.responseExtraText}>
+                                 {"  "}{answer.extraText}
+                              </Text>
+                           </Text>
+                        </RaddioButtonImproved>
                      )
                }
             </View>

@@ -118,7 +118,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                                  </Text>
                               :
                                  <EditButton 
-                                    onPress={() => console.log("pressed")}
+                                    onPress={() => navigate("ChangeBasicInfo")}
                                  />
                            }
                         </View>
@@ -173,8 +173,8 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                                  <EditButton 
                                     showAtBottom
                                     absolutePosition={false}
-                                    label={"Modificar preguntas"}
-                                    onPress={() => console.log("pressed")}
+                                    label={"Revisar todas las preguntas"}
+                                    onPress={() => navigate("ChangeQuestions")}
                                  />
                            }
                         </Card.Content>

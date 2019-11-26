@@ -21,7 +21,7 @@ const genderQuestion: QuestionData = {
       },
       {
          id: "4",
-         text: "Otro / No binarie",
+         text: "Otre / No binarie",
       },
    ]
 };
@@ -48,7 +48,7 @@ const genderLikeQuestion: QuestionData = {
       },
       {
          id: "4",
-         text: "Otros / No binaries",
+         text: "Otres / No binaries",
       },
    ]
 };
@@ -84,7 +84,7 @@ const companyQuestion: QuestionData = {
       },
       {
          id: "2",
-         text: "Con un amige",
+         text: "Con une amige",
       },
       {
          id: "3",

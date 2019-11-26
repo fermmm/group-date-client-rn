@@ -47,7 +47,7 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                         icon="search" 
                      />
                   }
-                  onPress={() => console.log("pressed")}
+                  onPress={() => navigate("ChangeQuestions")}
                />
                <List.Item
                   title="Tu lugar recomendado"
@@ -59,7 +59,7 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                         icon="terrain" 
                      />
                   }
-                  onPress={() => console.log("pressed")}
+                  onPress={() => navigate("ChangeDateIdea")}
                />
                <List.Item
                   title="Sobre la app"

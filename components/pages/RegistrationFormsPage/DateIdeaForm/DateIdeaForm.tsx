@@ -23,6 +23,10 @@ class DateIdeaForm extends Component<DateIdeaProps, DateIdeaState> {
       address: "",
    };
 
+   componentDidMount(): void {
+      this.sendChanges();
+   }
+
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
       const { placeName, address }: Partial<DateIdeaState> = this.state;

@@ -34,6 +34,10 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
       targetAgeModified: false,
    };
 
+   componentDidMount(): void {
+      this.sendChanges();
+   }
+
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
       const { nameText, age, bodyHeight, targetAgeModified, targetAgeMin, targetAgeMax }: Partial<BasicInfoState> = this.state;
@@ -87,7 +91,7 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
    }
 
    sendChanges(): void {
-      this.props.onChange(this.state, this.getError());
+      this.props.onChange({...this.state}, this.getError());
    }
 
    getError(): string {

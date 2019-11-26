@@ -14,6 +14,9 @@ import { createStackNavigator } from "react-navigation-stack";
 import DateVotingPage from "./components/pages/DateVotingPage/DateVotingPage";
 import ChangePicturesPage from "./components/pages/SettingsPage/ChangePicturesPage/ChangePicturesPage";
 import ChangeProfileTextPage from "./components/pages/SettingsPage/ChangeProfileTextPage/ChangeProfileTextPage";
+import ChangeBasicInfoPage from "./components/pages/SettingsPage/ChangeBasicInfoPage/ChangeBasicInfoPage";
+import ChangeDateIdeaPage from "./components/pages/SettingsPage/ChangeDateIdeaPage/ChangeDateIdeaPage";
+import ChangeQuestionsPage from "./components/pages/SettingsPage/ChangeQuestionsPage/ChangeQuestionsPage";
 
 const Navigator: NavigationContainer = createAppContainer(
    createStackNavigator(
@@ -27,6 +30,9 @@ const Navigator: NavigationContainer = createAppContainer(
          RegistrationForms: { screen: RegistrationFormsPage },
          ChangePictures: { screen: ChangePicturesPage },
          ChangeProfileText: { screen: ChangeProfileTextPage },
+         ChangeBasicInfo: { screen: ChangeBasicInfoPage },
+         ChangeDateIdea: { screen: ChangeDateIdeaPage },
+         ChangeQuestions: { screen: ChangeQuestionsPage }
       },
       {
          initialRouteName: "Login",
