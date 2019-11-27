@@ -8,10 +8,11 @@ import { withTheme } from "react-native-paper";
 import { currentTheme } from "../../../config";
 import color from "color";
 import ShadowBottom from "../ShadowBottom/ShadowBottom";
+import BadgeExtended from "../BadgeExtended/BadgeExtended";
 
 interface NavBarProps extends Themed {
    sections: { [key: string]: () => JSX.Element };
-   routes: Route[];
+   routes: RouteExtended[];
 }
 
 interface NavBarState {
@@ -37,18 +38,30 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
             initialLayout={{ width: Dimensions.get("window").width }}
             renderTabBar={props =>
                <this.Background useImageBackground={true}>
-                  <ShadowBottom imageSource={currentTheme.shadowBottom} style={{opacity: index === 0 ? 0.35 : 1}}/>
+                  <ShadowBottom imageSource={currentTheme.shadowBottom} style={{ opacity: index === 0 ? 0.35 : 1 }} />
                   <TabBar
                      {...props}
                      indicatorStyle={{ backgroundColor: colors.primary2 }}
                      style={[styles.tabBar]}
                      renderIcon={({ route, focused }) =>
-                     <Icon
-                        name={route.icon}
-                        color={focused ? colors.textLogin : colors.text2}
-                        size={22}
-                     />
-                  }
+                        <View>
+                           <Icon
+                              name={route.icon}
+                              color={focused ? colors.textLogin : colors.text2}
+                              size={22}
+                           />
+                           {
+                              route.badgeText && 
+                                 <BadgeExtended 
+                                    size={20} 
+                                    extraX={-8}
+                                    extraY={-6}
+                                 >
+                                    {route.badgeText}
+                                 </BadgeExtended>
+                           }
+                        </View>
+                     }
                   />
                </this.Background>
             }
@@ -85,5 +98,9 @@ const styles: Styles = StyleSheet.create({
    backgroundImage: {
    }
 });
+
+export interface RouteExtended extends Route {
+   badgeText?: string;
+}
 
 export default withTheme(NavigationBar);

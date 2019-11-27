@@ -18,7 +18,7 @@ export default class MainPage extends Component<NavigationContainerProps> {
             }}
             routes={[
                { key: "cards", icon: "cards" },
-               { key: "groups", icon: "infinity" },
+               { key: "groups", icon: "infinity", badgeText: "2" },
                { key: "events", icon: "calendar" },
                { key: "settings", icon: "account-settings" },
             ]}

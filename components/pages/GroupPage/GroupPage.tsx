@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet } from "react-native";
-import { withTheme, List } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { withTheme, List, Badge, Text } from "react-native-paper";
 import { NavigationScreenProp, NavigationInjectedProps, withNavigation } from "react-navigation";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -15,6 +15,7 @@ import { currentTheme } from "../../../config";
 import CardDateInfo from "./CardDateInfo/CardDateInfo";
 import ButtonForAppBar from "../../common/ButtonForAppBar/ButtonForAppBar";
 import CardAcceptInvitation from "./CardAcceptInvitation/CardAcceptInvitation";
+import BadgeExtended from '../../common/BadgeExtended/BadgeExtended';
 
 export interface GroupPageProps extends Themed, NavigationInjectedProps { }
 export interface GroupPageState {
@@ -37,12 +38,15 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
             <AppBarHeader title={group.invitationAccepted ? "Grupo" : "Invitación a una cita"}>
                {
                   group.invitationAccepted &&
-                     <ButtonForAppBar 
-                        icon="forum"
-                        onPress={() => navigate("Chat")}
-                     >
-                        Chat grupal
-                     </ButtonForAppBar>
+                     <View>
+                        <ButtonForAppBar 
+                           icon="forum"
+                           onPress={() => navigate("Chat")}
+                        >
+                           Chat grupal
+                        </ButtonForAppBar>
+                        <BadgeExtended showAtLeftSide>3</BadgeExtended>
+                     </View>
                }
             </AppBarHeader>
             <BasicScreenContainer>   

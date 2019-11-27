@@ -8,6 +8,7 @@ import { fakeTestingUsers } from "../../../server-api/tools/debug-tools/fakeTest
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
 import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
+import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
 
 export interface SettingsPageProps extends Themed, NavigationInjectedProps { }
 export interface SettingsPageState { }
@@ -89,11 +90,19 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                   title="Chatear con nosotros"
                   description="Escribinos lo que necesites: problemas, pedidos, quejas, etc."
                   left={props => 
-                     <List.Icon 
-                        {...props} 
-                        style={styles.optionIcon} 
-                        icon="forum" 
-                     />
+                     <View>
+                        <List.Icon 
+                           {...props} 
+                           style={styles.optionIcon} 
+                           icon="forum" 
+                        />
+                        <BadgeExtended 
+                           size={23} 
+                           extraX={7}
+                        >
+                           1
+                        </BadgeExtended>
+                     </View>
                   }
                   onPress={() => navigate("Chat", {contactChat: true})}
                />
