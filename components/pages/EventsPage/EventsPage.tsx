@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Image, Linking } from "react-native";
-import { withTheme, Card, Title, Paragraph, Button, Avatar } from "react-native-paper";
+import { withTheme, Card, Title, Paragraph, Button } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
@@ -76,7 +76,6 @@ class EventsPage extends Component<EventsPageProps, EventsPageState> {
                   </Card>
                )
             }
-
          </BasicScreenContainer>
       );
    }
