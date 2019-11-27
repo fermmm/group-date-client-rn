@@ -1,24 +1,34 @@
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { withTheme, Banner } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { GiftedChat, IMessage, Bubble, Send } from "react-native-gifted-chat";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import color from "color";
+import { NavigationInjectedProps, withNavigation, NavigationScreenProp } from "react-navigation";
+import DialogError from "../../../common/DialogError/DialogError";
 
-export interface ChatPageProps extends Themed { }
+export interface ChatPageProps extends Themed, NavigationInjectedProps { }
 export interface ChatPageState {
    messages: IMessage[];
    adviseBannerVisible: boolean;
+   isContactChat: boolean;
+   showIntroDialog: boolean;
+   introDialogText: string;
 }
 
 class ChatPage extends Component<ChatPageProps, ChatPageState> {
    static defaultProps: Partial<ChatPageProps> = {};
+   navigation: NavigationScreenProp<{}> = this.props.navigation;
+   
    state: ChatPageState = {
       messages: [],
-      adviseBannerVisible: true
+      adviseBannerVisible: true,
+      isContactChat: this.navigation.getParam("contactChat") || false,
+      showIntroDialog: this.navigation.getParam("introDialogText") || false,
+      introDialogText: this.navigation.getParam("introDialogText")
    };
 
    componentWillMount(): void {
@@ -26,7 +36,7 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
          messages: [
             {
                _id: 1,
-               text: "Olis",
+               text: "oooaaaaaa",
                createdAt: new Date(),
                user: {
                   _id: 2,
@@ -46,21 +56,26 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const { isContactChat, showIntroDialog, introDialogText }: Partial<ChatPageState> = this.state;
 
       return (
          <>
-            <AppBarHeader title={"Chat"} />
-            <Banner
-               visible={this.state.adviseBannerVisible}
-               actions={[
-                  {
-                     label: "Entendido",
-                     onPress: () => this.setState({ adviseBannerVisible: false }),
-                  },
-               ]}
-            >
-               No recomendamos que usen el chat para conocerse, es un medio limitado que distorsiona la vision de los demás de forma negativa.
-            </Banner>
+            <AppBarHeader title={!isContactChat ? "Chat" : "Contactanos"} />
+            {
+               !isContactChat && 
+                  <Banner
+                     visible={this.state.adviseBannerVisible}
+                     style={{backgroundColor: color(colors.background).darken(0.04).toString(), elevation: 12, marginBottom: 25}}
+                     actions={[
+                        {
+                           label: "Entendido",
+                           onPress: () => this.setState({ adviseBannerVisible: false }),
+                        },
+                     ]}
+                  >
+                     No recomendamos usar el chat para conocerse o evaluarse, es un medio limitado que distorsiona la percepción y además suele ser tedioso
+                  </Banner>
+            }
             <GiftedChat
                messages={this.state.messages}
                onSend={messages => this.onSend(messages)}
@@ -90,6 +105,12 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
                scrollToBottom
                alignTop
             />
+            <DialogError
+               visible={showIntroDialog}
+               onDismiss={() => this.setState({ showIntroDialog: false })}
+            >
+               {introDialogText}
+            </DialogError>
             <KeyboardSpacer topSpacing={30} />
          </>
       );
@@ -99,4 +120,4 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
 const styles: Styles = StyleSheet.create({
 });
 
-export default withTheme(ChatPage);
+export default withNavigation(withTheme(ChatPage));

@@ -8,15 +8,17 @@ import TitleText from "../../common/TitleText/TitleText";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { fakeTestingEvents } from "../../../server-api/tools/debug-tools/fakeTestingEvents";
+import { withNavigation, NavigationScreenProp, NavigationInjectedProps } from "react-navigation";
 
-export interface EventsPageProps extends Themed { }
+export interface EventsPageProps extends Themed, NavigationInjectedProps { }
 export interface EventsPageState { }
 
 class EventsPage extends Component<EventsPageProps, EventsPageState> {
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-
+      const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
+      
       return (
          <BasicScreenContainer>
             <View style={styles.topContainer}>
@@ -26,7 +28,15 @@ class EventsPage extends Component<EventsPageProps, EventsPageState> {
                <TitleSmallText style={styles.titleSmall}>
                   Eventos organizados por agrupaciones de poliamor cercanas a tu zona
                </TitleSmallText>
-               <Button onPress={() => console.log("clicked")} style={styles.addButton}>
+               <Button
+                  onPress={
+                     () => navigate("Chat", {
+                        contactChat: true, 
+                        introDialogText: "Envianos en este chat el link a tu evento de Facebook o página de Facebook que publica eventos."
+                     })
+                  } 
+                  style={styles.addButton}
+               >
                   Agregar mis eventos
                </Button>
             </View>
@@ -100,4 +110,4 @@ const styles: Styles = StyleSheet.create({
    },
 });
 
-export default withTheme(EventsPage);
+export default withNavigation(withTheme(EventsPage));

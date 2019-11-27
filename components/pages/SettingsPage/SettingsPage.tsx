@@ -87,7 +87,7 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                />
                <List.Item
                   title="Chatear con nosotros"
-                  description="Escribinos lo que necesites: problemas, pedidos, etc."
+                  description="Escribinos lo que necesites: problemas, pedidos, quejas, etc."
                   left={props => 
                      <List.Icon 
                         {...props} 
@@ -95,7 +95,7 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                         icon="forum" 
                      />
                   }
-                  onPress={() => console.log("pressed")}
+                  onPress={() => navigate("Chat", {contactChat: true})}
                />
             </BasicScreenContainer>
          </>

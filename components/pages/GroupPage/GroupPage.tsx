@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import { withTheme, List } from "react-native-paper";
-import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
+import { NavigationScreenProp, NavigationInjectedProps, withNavigation } from "react-navigation";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
@@ -16,7 +16,7 @@ import CardDateInfo from "./CardDateInfo/CardDateInfo";
 import ButtonForAppBar from "../../common/ButtonForAppBar/ButtonForAppBar";
 import CardAcceptInvitation from "./CardAcceptInvitation/CardAcceptInvitation";
 
-export interface GroupPageProps extends Themed, NavigationContainerProps { }
+export interface GroupPageProps extends Themed, NavigationInjectedProps { }
 export interface GroupPageState {
    expandedUser: number;
  }
@@ -139,4 +139,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(GroupPage);
+export default withNavigation(withTheme(GroupPage));
