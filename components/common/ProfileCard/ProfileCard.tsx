@@ -131,7 +131,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                         </View>
                         <Card.Content>
                            <Paragraph style={[styles.descriptionParagraph, { color: colors.text }]}>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                            </Paragraph>
                            {
                               editMode && 
@@ -164,11 +164,11 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                   </ScrollViewExtended>
                   {
                      showLikeDislikeButtons &&
-                     <LikeDislikeButtons
-                        style={styles.likeDislikeButtons}
-                        onLikeClick={() => onLikeClick()}
-                        onDislikeClick={() => onDislikeClick()}
-                     />
+                        <LikeDislikeButtons
+                           style={styles.likeDislikeButtons}
+                           onLikeClick={() => onLikeClick()}
+                           onDislikeClick={() => onDislikeClick()}
+                        />
                   }
                </View>
             </View>

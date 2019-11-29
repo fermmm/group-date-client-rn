@@ -2,7 +2,7 @@ import { QuestionData } from "./interfaces/questions";
 
 const genderQuestion: QuestionData = {
    text: "¿Cual es tu género?",
-   shortVersion: "Género",
+   shortVersion: "Su género",
    answers: [
       {
          id: "0",
@@ -57,11 +57,12 @@ const genderLikeQuestion: QuestionData = {
 
 const intentionsQuestion: QuestionData = {
    text: "¿Qué te gustaría encontrar en las citas grupales que organiza esta app?",
-   shortVersion: "Tipo de vinculos aceptados",
+   shortVersion: "Vinculos aceptados",
    answers: [
       {
          id: "0",
          text: "Vinculos de cualquier tipo incluido sexuales",
+         shortVersion: "De cualquier tipo incluido sexuales",
       },
       {
          id: "1",

@@ -41,13 +41,13 @@ class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState>
                {
                   groups.map((group, i) =>
                      !group.invitationAccepted &&
-                     <List.Item
-                        title={group.members.map((user, u) => (u > 0 ? ", " : "") + user.name)}
-                        description="En espera de que aceptes invitacion"
-                        left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} style={styles.logo} />} />}
-                        onPress={() => navigate("Group", { group })}
-                        key={i}
-                     />,
+                        <List.Item
+                           title={group.members.map((user, u) => (u > 0 ? ", " : "") + user.name)}
+                           description="En espera de que aceptes invitacion"
+                           left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} style={styles.logo} />} />}
+                           onPress={() => navigate("Group", { group })}
+                           key={i}
+                        />,
                   )
                }
             </List.Section>
@@ -56,13 +56,13 @@ class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState>
                {
                   groups.map((group, i) =>
                      group.invitationAccepted &&
-                     <List.Item
-                        title={group.members.map((user, u) => (u > 0 ? ", " : "") + user.name)}
-                        description="Cita dentro de 2 días"
-                        left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.accent2} lineColor={c} style={styles.logo} />} />}
-                        onPress={() => navigate("Group", { group })}
-                        key={i}
-                     />,
+                        <List.Item
+                           title={group.members.map((user, u) => (u > 0 ? ", " : "") + user.name)}
+                           description="Cita dentro de 2 días"
+                           left={props => <List.Icon {...props} icon={({ color: c }) => <GraphSvg2 circleColor={colors.accent2} lineColor={c} style={styles.logo} />} />}
+                           onPress={() => navigate("Group", { group })}
+                           key={i}
+                        />,
                   )
                }
             </List.Section>
