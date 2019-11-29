@@ -34,7 +34,7 @@ class AgeSelector extends Component<AgeSelectorProps, AgeSelectorState> {
             <Text style={styles.text}>De:</Text>
             <PickerThemed
                selectedValue={min}
-               style={{ height: 50, width: 90 }}
+               style={styles.picker}
                onValueChange={(itemValue) =>
                   this.setState({ min: itemValue <= max ? itemValue : max }, () => this.sendChanges())
                }>
@@ -47,7 +47,7 @@ class AgeSelector extends Component<AgeSelectorProps, AgeSelectorState> {
             <Text style={styles.text}>a:</Text>
             <PickerThemed
                selectedValue={max}
-               style={{ height: 50, width: 90 }}
+               style={styles.picker}
                onValueChange={(itemValue) =>
                   this.setState({ max: itemValue >= min ? itemValue : min}, () => this.sendChanges())
                }>
@@ -91,6 +91,10 @@ const styles: Styles = StyleSheet.create({
    text: {
       marginRight: 20,
       fontSize: 18
+   },
+   picker: {
+      width: 90,
+      height: 50 
    }
 });
 

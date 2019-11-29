@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withTheme, List } from "react-native-paper";
 import GraphSvg2 from "../../../assets/GraphSvg2";
@@ -8,16 +8,28 @@ import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "r
 import { getGroups } from "../../../server-api/groups";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
-import EmptySpace from "../../common/EmptySpace/EmptySpace";
+import { Group } from "../../../server-api/typings/Group";
+import EmptyPageMessage from "../../common/EmptyPageMessage/EmptyPageMessage";
 
 export interface GroupsListPageProps extends Themed, NavigationInjectedProps { }
-export interface GroupsListPageState { }
+export interface GroupsListPageState { 
+   groups: Group[];
+}
 
 class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState> {
+   state: GroupsListPageState = {
+      // groups: []        // Uncomment this line to test the "no groups" UI
+      groups: getGroups()
+   };
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
       const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
+      const { groups }: Partial<GroupsListPageState> = this.state;
+
+      if (groups.length === 0) {
+         return <EmptyPageMessage text={"Acá van a aparecer tus citas grupales. Las citas se forman cuando se gustan varias personas formando un grupo."} />;
+      } 
 
       return (
          <BasicScreenContainer>
@@ -27,7 +39,7 @@ class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState>
             <List.Section>
                <List.Subheader>Invitaciones pendientes</List.Subheader>
                {
-                  getGroups().map((group, i) =>
+                  groups.map((group, i) =>
                      !group.invitationAccepted &&
                      <List.Item
                         title={group.members.map((user, u) => (u > 0 ? ", " : "") + user.name)}
@@ -42,7 +54,7 @@ class GroupsListPage extends Component<GroupsListPageProps, GroupsListPageState>
             <List.Section>
                <List.Subheader>Citas confirmadas</List.Subheader>
                {
-                  getGroups().map((group, i) =>
+                  groups.map((group, i) =>
                      group.invitationAccepted &&
                      <List.Item
                         title={group.members.map((user, u) => (u > 0 ? ", " : "") + user.name)}

@@ -5,34 +5,47 @@ import ProfileCard from "../../common/ProfileCard/ProfileCard";
 import { withTheme } from "react-native-paper";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { getAvaiableCards } from "../../../server-api/cards-game";
+import { User } from "../../../server-api/typings/User";
+import NoMoreUsersMessage from "./NoMoreUsersMessage/NoMoreUsersMessage";
 
 export interface CardsPageProps extends Themed { }
-export interface CardsPageState { }
+export interface CardsPageState {
+   users: User[];
+}
 
 class CardsPage extends Component<CardsPageProps, CardsPageState> {
-    render(): JSX.Element {
-        const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+   state: CardsPageState = {
+      // users: []      // Uncomment this line to test the "no more users" UI
+      users: getAvaiableCards()
+   };
 
-        return (
-            // <ImageBackground source={this.props.theme.backgroundImage} style={{width: "100%", height: "100%"}}>
-            <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
-                <ProfileCard 
-                    user={getAvaiableCards()[0]}
-                    showLikeDislikeButtons={true} 
-                    onLikeClick={() => console.log("Like clicked")}
-                    onDislikeClick={() => console.log("Dislike clicked")}
-                />
-            </View>
-            // </ImageBackground>
-        );
-    }
+   render(): JSX.Element {
+      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const { users }: Partial<CardsPageState> = this.state;
+
+      return (
+         <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
+            {
+               users.length === 0 ?
+                  <NoMoreUsersMessage />
+               :
+                  <ProfileCard
+                     user={users[0]}
+                     showLikeDislikeButtons={true}
+                     onLikeClick={() => console.log("Like clicked")}
+                     onDislikeClick={() => console.log("Dislike clicked")}
+                  />
+            }
+         </View>
+      );
+   }
 }
 
 const styles: Styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-        padding: 0,
-    },
+   mainContainer: {
+      flex: 1,
+      padding: 0,
+   },
 });
 
 export default withTheme(CardsPage);
