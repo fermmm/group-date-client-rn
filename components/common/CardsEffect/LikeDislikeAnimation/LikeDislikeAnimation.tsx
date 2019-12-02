@@ -78,7 +78,7 @@ class LikeDislikeAnimation extends Component<LikeDislikeAnimationProps, LikeDisl
    triggerLikeAnimation(onAnimationFinish: Animated.EndCallback = null): void {
       Animated.timing(this.state.logoAnimValue, {
          toValue: 1,
-         duration: 800,
+         duration: 600,
          easing: Easing.out(Easing.exp),
          useNativeDriver: true
       }).start();
@@ -86,7 +86,7 @@ class LikeDislikeAnimation extends Component<LikeDislikeAnimationProps, LikeDisl
       Animated.timing(this.state.containerAnimValue, {
          toValue: 1,
          delay: 340,
-         duration: 600,
+         duration: 300,
          easing: Easing.in(Easing.sin),
          useNativeDriver: true
       }).start(onAnimationFinish);
