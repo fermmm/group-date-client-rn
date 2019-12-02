@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import color from "color";
 import { ImageProps, Image, StatusBar, StyleSheet, View, Dimensions, Platform, ImageBackground } from "react-native";
-import { Card, Paragraph, withTheme, Text } from "react-native-paper";
+import { Card, Paragraph, withTheme, Text, Caption } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -110,19 +110,20 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                         <View style={styles.titleAreaContainer}>
                            <Card.Title
                               title={name}
-                              subtitle={`${getAge(birthdate)} · ${area}`}
+                              subtitle={`${getAge(birthdate)} · ${area} · 195cm`}
                               style={{ flex: 1 }}
                               titleStyle={{ color: colors.text }}
                               subtitleStyle={{ color: colors.text }}
                            />
                            {
                               !editMode ?
-                                 <Text style={[styles.compatibilityPercentage, {
-                                    borderColor: color(colors.statusOk).alpha(0.5).string(),
-                                    backgroundColor: color(colors.statusOk).alpha(0.5).string(),
-                                 }]}>
-                                    99%
-                                 </Text>
+                                 <View />
+                                 // <Text style={[styles.compatibilityPercentage, {
+                                 //    borderColor: color(colors.statusOk).alpha(0.5).string(),
+                                 //    backgroundColor: color(colors.statusOk).alpha(0.5).string(),
+                                 // }]}>
+                                 //    99%
+                                 // </Text>
                               :
                                  <EditButton 
                                     onPress={() => navigate("ChangeBasicInfo")}
