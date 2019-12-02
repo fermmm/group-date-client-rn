@@ -6,7 +6,7 @@ const groupSexQuestion: QuestionData = {
    answers: [
       {
          id: "0",
-         text: "Me gustaría probar",
+         text: "No me molesta / Me gustaría probar",
       },
       {
          id: "1",
