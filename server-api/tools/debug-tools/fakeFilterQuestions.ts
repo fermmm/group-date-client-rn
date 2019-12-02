@@ -55,17 +55,17 @@ const politicsQuestion: QuestionData = {
    answers: [
       {
          id: "0",
-         text: "No hablaría sobre eso en una cita",
+         text: "No es un tema para hablar en una cita",
       },
       {
          id: "1",
          text: "Libre mercado / Centro-derecha / Derecha / Otras cercanas",
-         shortVersion: "Derecha / Libre mercado"
+         shortVersion: "Libre mercado / Derecha / Otras"
       },
       {
          id: "2",
          text: "Socialismo / Centro-izquierda / Izquierda / Anarquismo / Otras cercanas",
-         shortVersion: "Izquierda / Otras cercanas"
+         shortVersion: "Izquierda / Otras"
       },
       {
          id: "3",

@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import { withTheme, Banner } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
-import { Styles } from "../../../../common-tools/ts-tools/Styles";
+import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
+import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { GiftedChat, IMessage, Bubble, Send } from "react-native-gifted-chat";
 import KeyboardSpacer from "react-native-keyboard-spacer";
-import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
+import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import color from "color";
 import { NavigationInjectedProps, withNavigation, NavigationScreenProp } from "react-navigation";
-import DialogError from "../../../common/DialogError/DialogError";
+import DialogError from "../../common/DialogError/DialogError";
 
 export interface ChatPageProps extends Themed, NavigationInjectedProps { }
 export interface ChatPageState {
@@ -73,7 +73,7 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
                         },
                      ]}
                   >
-                     No recomendamos usar el chat para conocerse o evaluarse, es un medio limitado que distorsiona la percepción y además suele ser tedioso
+                     No es recomandable usar el chat para conocerse o evaluarse, es un medio limitado que ditorsiona
                   </Banner>
             }
             <GiftedChat

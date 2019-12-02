@@ -7,52 +7,52 @@ import color from "color";
 import { LogoSvg } from "../../../../assets/LogoSvg";
 
 export interface LikeDislikeProps extends Themed {
-    style?: StyleProp<ViewStyle>;
-    onLikeClick: () => void;
-    onDislikeClick: () => void;
+   style?: StyleProp<ViewStyle>;
+   onLikeClick: () => void;
+   onDislikeClick: () => void;
 }
 
 class LikeDislikeButtons extends Component<LikeDislikeProps> {
 
-    render(): JSX.Element {
-        const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+   render(): JSX.Element {
+      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
 
-        return (
-            <View style={[styles.container, this.props.style]}>
-                <View style={styles.button} >
-                    <FAB
-                        style={{ backgroundColor: color(colors.surface).darken(0.1).desaturate(0.2).string() }}
-                        color={color(colors.accent).darken(0.15).string()}
-                        icon="close"
-                        onPress={() => this.props.onDislikeClick()}
-                    />
-                </View>
-                <View style={styles.button} >
-                    <FAB
-                        style={{ backgroundColor: colors.accent2 }}
-                        color={color(colors.accent).darken(0.04).string()}
-                        icon={
-                            ({ color: c }) => <LogoSvg color={c} style={styles.logo} />
-                        }
-                        onPress={() => this.props.onLikeClick()}
-                    />
-                </View>
+      return (
+         <View style={[styles.container, this.props.style]}>
+            <View style={styles.button} >
+               <FAB
+                  style={{ backgroundColor: color(colors.surface).darken(0.1).desaturate(0.2).string() }}
+                  color={color(colors.accent).darken(0.15).string()}
+                  icon="close"
+                  onPress={() => this.props.onDislikeClick()}
+               />
             </View>
-        );
-    }
+            <View style={styles.button} >
+               <FAB
+                  style={{ backgroundColor: colors.accent2 }}
+                  color={color(colors.accent).darken(0.04).string()}
+                  icon={
+                     ({ color: c }) => <LogoSvg color={c} style={styles.logo} />
+                  }
+                  onPress={() => this.props.onLikeClick()}
+               />
+            </View>
+         </View>
+      );
+   }
 }
 
 const styles: Styles = StyleSheet.create({
-    container: {
-        width: 130,                         // This controls how close together the buttons are placed.
-        height: "auto",
-        flexDirection: "row",
-        position: "absolute",
-        justifyContent: "space-around",
-    },
-    button: {
-        width: "auto",
-    },
+   container: {
+      width: 130,                         // This controls how close together the buttons are placed.
+      height: "auto",
+      flexDirection: "row",
+      position: "absolute",
+      justifyContent: "space-around",
+   },
+   button: {
+      width: "auto",
+   },
 });
 
 export default withTheme(LikeDislikeButtons);
