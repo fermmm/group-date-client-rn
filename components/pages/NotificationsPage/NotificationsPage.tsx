@@ -55,6 +55,13 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
             text: "Contestaron a tu mensaje los desarrolladores de la app",
             date: new Date()
          },
+         {
+            uiTarget: UITarget.None,
+            seen: true,
+            title: "¡Bienvenide a la app!",
+            text: "Esto acaba de arrancar y sos de los primeros usuarios, ¡divertite!",
+            date: new Date()
+         },
       ]
    };
 
@@ -129,7 +136,7 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
          case UITarget.Group:
             return (color) => <GraphSvg2 circleColor={color} lineColor={color} style={styles.svgIcon} />;
          default:
-            return "bell";
+            return "notifications";
       }
    }
 }
