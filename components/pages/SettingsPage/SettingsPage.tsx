@@ -69,7 +69,7 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                      <List.Icon 
                         {...props} 
                         style={styles.optionIcon} 
-                        icon="local-library" 
+                        icon="all-inclusive" 
                      />
                   }
                   onPress={() => console.log("pressed")}

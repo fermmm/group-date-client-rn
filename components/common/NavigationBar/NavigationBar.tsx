@@ -9,6 +9,7 @@ import { currentTheme } from "../../../config";
 import color from "color";
 import ShadowBottom from "../ShadowBottom/ShadowBottom";
 import BadgeExtended from "../BadgeExtended/BadgeExtended";
+import { Merge } from "../../../common-tools/ts-tools/common-ts-tools";
 
 interface NavBarProps extends Themed {
    sections: { [key: string]: () => JSX.Element };
@@ -45,11 +46,16 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
                      style={[styles.tabBar]}
                      renderIcon={({ route, focused }) =>
                         <View>
-                           <Icon
-                              name={route.icon}
-                              color={focused ? colors.textLogin : colors.text2}
-                              size={22}
-                           />
+                           {
+                              typeof route.icon === "string" ?
+                                 <Icon
+                                    name={route.icon}
+                                    color={colors.text2}
+                                    size={22}
+                                 />
+                              :
+                                 route.icon
+                           }
                            {
                               route.badgeText && 
                                  <BadgeExtended 
@@ -99,8 +105,9 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export interface RouteExtended extends Route {
+export type RouteExtended = Merge<Route, {
    badgeText?: string;
-}
+   icon: string | React.ReactNode
+}>;
 
 export default withTheme(NavigationBar);

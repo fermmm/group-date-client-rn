@@ -5,9 +5,14 @@ import GroupsListPage from "../GroupsListPage/GroupsListPage";
 import SettingsPage from "../SettingsPage/SettingsPage";
 import { NavigationContainerProps } from "react-navigation";
 import NotificationsPage from "../NotificationsPage/NotificationsPage";
+import GraphSvg2 from "../../../assets/GraphSvg2";
+import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
+import { withTheme } from "react-native-paper";
 
-export default class MainPage extends Component<NavigationContainerProps> {
+class MainPage extends Component<NavigationContainerProps & Themed> {
    render(): JSX.Element { 
+      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      
       return (
          <NavigationBar
             sections={{
@@ -18,7 +23,7 @@ export default class MainPage extends Component<NavigationContainerProps> {
             }}
             routes={[
                { key: "cards", icon: "cards" },
-               { key: "groups", icon: "infinity", badgeText: "2" },
+               { key: "groups", icon: <GraphSvg2 circleColor={colors.text2} lineColor={colors.text2} style={{width: 20}} />, badgeText: "2" },
                { key: "notifications", icon: "bell", badgeText: "3" },
                { key: "settings", icon: "account-settings" },
             ]}
@@ -26,3 +31,5 @@ export default class MainPage extends Component<NavigationContainerProps> {
       );
    }
 }
+
+export default withTheme(MainPage);

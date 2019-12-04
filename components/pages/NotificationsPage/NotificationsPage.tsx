@@ -9,6 +9,7 @@ import TitleText from "../../common/TitleText/TitleText";
 import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
 import { currentTheme } from "../../../config";
 import { getGroups } from "../../../server-api/groups";
+import GraphSvg2 from "../../../assets/GraphSvg2";
 
 export interface NotificationsPageProps extends Themed, NavigationInjectedProps { }
 export interface NotificationsPageState {
@@ -69,24 +70,30 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
                </TitleText>
                <EmptySpace height={10} />
                {
-                  this.state.notifications.map((notification, i) =>
-                     <List.Item
-                        title={notification.title}
-                        description={notification.text}
-                        left={props =>
-                           <List.Icon
-                              {...props}
-                              style={styles.optionIcon}
-                              icon={this.getIcon(notification)}
-                           />
-                        }
-                        onPress={() => this.onNotificationPress(notification)}
-                        style={[styles.notification, !notification.seen && styles.unseenNotification]}
-                        key={i}
-                     />
-                  )
-               }
+                  this.state.notifications.map((notification, i) => {
+                     const icon: string | ((color: string) => React.ReactNode) = this.getIcon(notification);
 
+                     return (
+                        <List.Item
+                           title={notification.title}
+                           description={notification.text}
+                           left={props =>
+                              typeof icon === "string" ? 
+                                 <List.Icon
+                                    {...props}
+                                    style={styles.optionIcon}
+                                    icon={icon}
+                                 />
+                              :
+                                 icon(props.color)
+                           }
+                           onPress={() => this.onNotificationPress(notification)}
+                           style={[styles.notification, !notification.seen && styles.unseenNotification]}
+                           key={i}
+                        />
+                     );
+                  })
+               }
             </BasicScreenContainer>
          </>
       );
@@ -103,7 +110,7 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
             navigate("Chat");
             break;
          case UITarget.ContactChat:
-            navigate("Chat", {contactChat: true});
+            navigate("Chat", { contactChat: true });
             break;
          case UITarget.Group:
             navigate("Group", { group: getGroups()[0] });
@@ -111,7 +118,7 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
       }
    }
 
-   getIcon(notification: Notification): string {
+   getIcon(notification: Notification): string | ((color: string) => React.ReactNode) {      
       switch (notification.uiTarget) {
          case UITarget.FacebookEvent:
             return "event";
@@ -120,7 +127,7 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
          case UITarget.ContactChat:
             return "assistant";
          case UITarget.Group:
-            return "all-inclusive";
+            return (color) => <GraphSvg2 circleColor={color} lineColor={color} style={styles.svgIcon} />;
          default:
             return "bell";
       }
@@ -135,6 +142,12 @@ const styles: Styles = StyleSheet.create({
    optionIcon: {
       marginLeft: 5,
       marginRight: 8
+   },
+   svgIcon: {
+      marginLeft: 6,
+      marginRight: 23,
+      marginTop: 9,
+      width: 24
    },
    notification: {
       marginBottom: 8
