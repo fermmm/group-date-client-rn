@@ -17,14 +17,14 @@ class MainPage extends Component<NavigationContainerProps & Themed> {
          <NavigationBar
             sections={{
                cards: () => <CardsPage />,
-               groups: () => <GroupsListPage />,
                notifications: () => <NotificationsPage />,
+               groups: () => <GroupsListPage />,
                settings: () => <SettingsPage />,
             }}
             routes={[
                { key: "cards", icon: "cards" },
-               { key: "groups", icon: <GraphSvg2 circleColor={colors.text2} lineColor={colors.text2} style={{width: 20}} />, badgeText: "2" },
                { key: "notifications", icon: "bell", badgeText: "3" },
+               { key: "groups", icon: <GraphSvg2 circleColor={colors.text2} lineColor={colors.text2} style={{width: 20}} />, badgeText: "2" },
                { key: "settings", icon: "account-settings" },
             ]}
          />
