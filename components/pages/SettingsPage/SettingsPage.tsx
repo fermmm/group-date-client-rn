@@ -63,8 +63,8 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                   onPress={() => navigate("ChangeDateIdea")}
                />
                <List.Item
-                  title="Sobre la app"
-                  description="Te contamos sobre la app y la gente detras de su creación"
+                  title="Sobre la app y más"
+                  description="Te contamos sobre la app, la gente detras de su creación y más"
                   left={props => 
                      <List.Icon 
                         {...props} 
@@ -72,8 +72,10 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                         icon="all-inclusive" 
                      />
                   }
-                  onPress={() => console.log("pressed")}
+                  onPress={() => navigate("About")}
                />
+               {/* 
+               This must be enabled when having a lot of users:
                <List.Item
                   title="Doná para la causa"
                   description="Doná la cantidad que puedas para que podamos publicitar mejor la app."
@@ -85,7 +87,8 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                      />
                   }
                   onPress={() => console.log("pressed")}
-               />
+               /> 
+               */}
                <List.Item
                   title="Chatear con nosotros"
                   description="Escribinos lo que necesites: problemas, pedidos, quejas, etc."

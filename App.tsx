@@ -18,6 +18,7 @@ import ChangeBasicInfoPage from "./components/pages/SettingsPage/ChangeBasicInfo
 import ChangeDateIdeaPage from "./components/pages/SettingsPage/ChangeDateIdeaPage/ChangeDateIdeaPage";
 import ChangeQuestionsPage from "./components/pages/SettingsPage/ChangeQuestionsPage/ChangeQuestionsPage";
 import ChatPage from "./components/pages/ChatPage/ChatPage";
+import AboutPage from "./components/pages/AboutPage/AboutPage";
 
 const Navigator: NavigationContainer = createAppContainer(
    createStackNavigator(
@@ -30,6 +31,7 @@ const Navigator: NavigationContainer = createAppContainer(
          Profile: { screen: ProfilePage },
          Questions: { screen: QuestionsPage },
          RegistrationForms: { screen: RegistrationFormsPage },
+         About: { screen: AboutPage },
          ChangePictures: { screen: ChangePicturesPage },
          ChangeProfileText: { screen: ChangeProfileTextPage },
          ChangeBasicInfo: { screen: ChangeBasicInfoPage },

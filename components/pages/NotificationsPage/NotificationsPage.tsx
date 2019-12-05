@@ -52,14 +52,14 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
             uiTarget: UITarget.ContactChat,
             seen: true,
             title: "Nuevo mensaje de contacto",
-            text: "Contestaron a tu mensaje los desarrolladores de la app",
+            text: "Te escribieron los desarrolladores de la app. Toca para ver",
             date: new Date()
          },
          {
-            uiTarget: UITarget.None,
+            uiTarget: UITarget.About,
             seen: true,
             title: "¡Bienvenide a la app!",
-            text: "Esto acaba de arrancar y sos de los primeros usuarios, ¡divertite!",
+            text: "Acabamos de lanzar la app, toca si queres saber que hay detrás.",
             date: new Date()
          },
       ]
@@ -122,6 +122,9 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
          case UITarget.Group:
             navigate("Group", { group: getGroups()[0] });
             break;
+         case UITarget.About:
+            navigate("About");
+            break;
       }
    }
 
@@ -179,7 +182,8 @@ export enum UITarget {
    Group,
    Chat,
    ContactChat,
-   FacebookEvent
+   FacebookEvent,
+   About
 }
 
 export default withNavigation(withTheme(NotificationsPage));
