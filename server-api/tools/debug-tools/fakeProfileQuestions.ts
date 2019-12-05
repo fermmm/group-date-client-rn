@@ -56,17 +56,16 @@ const genderLikeQuestion: QuestionData = {
 };
 
 const intentionsQuestion: QuestionData = {
-   text: "¿Qué te gustaría encontrar en las citas grupales que organiza esta app?",
-   shortVersion: "Vinculos aceptados",
+   text: "¿Qué te gustaría hacer con esta aplicación?",
+   shortVersion: "Qué le gustaría hacer con la aplicación",
    answers: [
       {
          id: "0",
-         text: "Vinculos de cualquier tipo incluido sexuales",
-         shortVersion: "De cualquier tipo incluido sexuales",
+         text: "Conocer gente para lo que surja, inlcluido sexo",
       },
       {
          id: "1",
-         text: "Vinculos no sexuales",
+         text: "Conocer gente para lo que surja, pero no quiero relacionarme sexualmente",
       }
    ],
    incompatibilitiesBetweenAnswers: {
@@ -90,10 +89,6 @@ const companyQuestion: QuestionData = {
       {
          id: "2",
          text: "Con une amige",
-      },
-      {
-         id: "3",
-         text: "Con 2 o más personas",
       }
    ]
 };

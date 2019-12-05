@@ -37,7 +37,7 @@ class NoMoreUsersMessage extends Component<NoMoreUsersProps, NoMoreUsersState> {
          >
             <View style={styles.mainContainer}>
                <Text style={styles.text}>
-                  En poco tiempo vas a ver más gente acá, todos los días hay usuarios nuevos.
+                  En poco tiempo vas a ver más gente acá, todos los días hay usuaries nuevos.
                </Text>
                <EmptySpace />
                <NewUsersNotificationSelector
@@ -48,13 +48,13 @@ class NoMoreUsersMessage extends Component<NoMoreUsersProps, NoMoreUsersState> {
                />
                <EmptySpace />
                <Text style={styles.text}>
-                  Si te sirve podes repasar a los usuarios que dejaste de lado:
+                  Si te sirve podes repasar a les usuaries que dejaste de lado:
                </Text>
                <Button
                   mode="text"
                   onPress={() => console.log("press")}
                >
-                  Repasar usuarios
+                  Repasar usuaries
                </Button>
             </View>
          </LinearGradient>
