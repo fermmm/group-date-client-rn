@@ -8,11 +8,11 @@ import { getAvaiableCards } from "../../../server-api/cards-game";
 import { User } from "../../../server-api/typings/User";
 import NoMoreUsersMessage from "./NoMoreUsersMessage/NoMoreUsersMessage";
 import CardsOptimization from "../../common/CardsEffect/CardsOptimization";
-import LikeDislikeAnimation from "../../common/CardsEffect/LikeDislikeAnimation/LikeDislikeAnimation";
-import { LikeAnimation } from "../../common/CardsEffect/LikeDislikeAnimation/animations/LikeAnimation";
-import { DislikeAnimation } from "../../common/CardsEffect/LikeDislikeAnimation/animations/DislikeAnimation";
-import { BackCardSlowAnimation } from '../../common/CardsEffect/LikeDislikeAnimation/animations/BackCardSlow';
-import { BackCardFastAnimation } from '../../common/CardsEffect/LikeDislikeAnimation/animations/BackCardFast';
+import CardAnimator from "../../common/CardsEffect/CardAnimator/CardAnimator";
+import { LikeAnimation } from "../../common/CardsEffect/CardAnimator/animations/LikeAnimation";
+import { DislikeAnimation } from "../../common/CardsEffect/CardAnimator/animations/DislikeAnimation";
+import { BackCardSlowAnimation } from "../../common/CardsEffect/CardAnimator/animations/BackCardSlow";
+import { BackCardFastAnimation } from "../../common/CardsEffect/CardAnimator/animations/BackCardFast";
 
 export interface CardsPageProps extends Themed { }
 export interface CardsPageState {
@@ -51,7 +51,7 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
                   <CardsOptimization currentCard={currentUser}>
                      { 
                         users.map((user, i) =>
-                           <LikeDislikeAnimation
+                           <CardAnimator
                               ref={component => this.animRefs[i] = component}
                               key={user.id}
                            >
@@ -61,7 +61,7 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
                                  onLikeClick={() => this.onLikeOrDislike(true)}
                                  onDislikeClick={() => this.onLikeOrDislike(false)}
                               />
-                           </LikeDislikeAnimation>
+                           </CardAnimator>
                         )
                      }
                   </CardsOptimization>

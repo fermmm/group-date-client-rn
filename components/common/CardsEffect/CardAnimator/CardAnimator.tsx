@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Animated, View, Easing, Dimensions, StyleProp, ViewStyle } from "react-native";
+import { StyleSheet, Animated, View } from "react-native";
 import { withTheme } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
@@ -8,27 +8,30 @@ import color from "color";
 import { currentTheme } from "../../../../config";
 import { CardAnimation, CardAnimatedStyles } from "./animations/interface/CardAnimation";
 
-export interface LikeDislikeAnimationProps extends Themed {
+export interface CardAnimatorProps extends Themed {
    // tslint:disable-next-line: no-any
    ref?: any;
 }
-export interface LikeDislikeAnimationState {
+export interface CardAnimatorState {
    containerAnimValue: Animated.Value;
    logoAnimValue: Animated.Value;
    cardAnimation: CardAnimation;
 }
 
-class LikeDislikeAnimation extends Component<LikeDislikeAnimationProps, LikeDislikeAnimationState> {
-   static defaultProps: Partial<LikeDislikeAnimationProps> = {};
+/**
+ * This component performs the animations on the child
+ */
+class CardAnimator extends Component<CardAnimatorProps, CardAnimatorState> {
+   static defaultProps: Partial<CardAnimatorProps> = {};
 
-   state: LikeDislikeAnimationState = {
+   state: CardAnimatorState = {
       containerAnimValue: new Animated.Value(0),
       logoAnimValue: new Animated.Value(0),
       cardAnimation: null,
    };
 
    render(): React.ReactNode {
-      const { containerAnimValue, logoAnimValue, cardAnimation }: Partial<LikeDislikeAnimationState> = this.state;
+      const { containerAnimValue, logoAnimValue, cardAnimation }: Partial<CardAnimatorState> = this.state;
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
 
       let animStyles: CardAnimatedStyles = null;
@@ -96,4 +99,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(LikeDislikeAnimation);
+export default withTheme(CardAnimator);
