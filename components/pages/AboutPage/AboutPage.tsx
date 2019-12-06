@@ -78,7 +78,7 @@ class AboutPage extends Component<AboutPageProps> {
                <EmptySpace height={15} />
                <Text> 
                   Pensando en éstos y mas datos comprobables sobre nuestra
-                  sexualidad original, es bastate facil que surja la idea de crear esta o cualquier otra herramienta que nos ayude
+                  sexualidad original, es bastate facil que surja la idea de crear esta o cualquier otra herramienta que ayude, a los que quieran,
                   a poder elegir una sexualidad de acuerdo a nuestro instinto y no de acuerdo a nuestra cultura. En nuestra cultura cuando se impone
                   la monogamia, no sucede por que esta tenga alguna ventaja emocional en las relaciones afectivas o sexuales, se impone por cuestiones 
                   comerciales de herencias y por la abolición de lo colectivo en favor de la propiedad privada.
