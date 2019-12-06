@@ -2,20 +2,17 @@ import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withTheme, Text } from "react-native-paper";
-import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
+import { Themed } from "../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
-import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
+import { withNavigation, NavigationInjectedProps } from "react-navigation";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 
 export interface AboutPageProps extends Themed, NavigationInjectedProps { }
 
 class AboutPage extends Component<AboutPageProps> {
-   render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
-      
+   render(): JSX.Element {      
       return (
          <>
             <AppBarHeader title={"Sobre la app y más"}/>
@@ -60,18 +57,18 @@ class AboutPage extends Component<AboutPageProps> {
                   De esa época para atrás el ser humano vivia en tribus sexoafectivas donde se compartía la comida, 
                   la crianza de los hijos y el sexo. Los padres de los hijos eran todos. El sexo era variado y/o grupal,
                   la comida se obtenía principalmente de forma autosuficiente, no dependíamos de lo que pase con sistemas
-                  políticos y económicos para poder vivir dignamente.
+                  políticos y económicos para poder vivir.
                </Text> 
                <EmptySpace height={15} />
                <Text> 
-                  Somos así desde que éramos simios, igual que nuestros primos los Chimpances y los Bonobos. Cuando evolucionamos 
-                  hacia nuestra inteligencia actuál seguimos viviendo así durante más del el 92% de nuestra historia, la historia 
+                  Asi vivimos siempre, incluso desde que éramos simios, igual que nuestros primos los Chimpances y los Bonobos. Cuando evolucionamos 
+                  hacia nuestra inteligencia actuál continuamos así durante más del 92% de nuestra historia. La historia 
                   de las civilizaciones y los imperios que todos conocemos es solo el último 8% (aprox.) de los 350.000 años de 
                   historia del ser humano inteligente.
                </Text>
                <EmptySpace height={15} /> 
                <Text> 
-                  Que hayamos evolucionado así significa que nuestro cuerpo nos pide funcionar de esa manera, por ejemplo cuando 
+                  Que hayamos evolucionado de esta forma significa que nuestro cuerpo nos va a pedir una sexualidad acorde, por ejemplo cuando 
                   vemos porno: No vemos siempre a una persona preferida si no que buscamos contenido nuevo con personas nuevas, 
                   esto muestra que nuestro deseo sexual pide variedad. Los gemidos aparecen en nuestro instinto para llamar a los
                   que estan cerca a que se unan a nuestra experiencia sexual y se convierta en una experiencia grupal (por diferentes
@@ -80,17 +77,17 @@ class AboutPage extends Component<AboutPageProps> {
                </Text>
                <EmptySpace height={15} />
                <Text> 
-                  Después de entender éstos y mas datos comprobables sobre nuestra
+                  Pensando en éstos y mas datos comprobables sobre nuestra
                   sexualidad original, es bastate facil que surja la idea de crear esta o cualquier otra herramienta que nos ayude
-                  a tener una sexualidad de acuerdo a nuestro instinto y no de acuerdo a nuestra cultura. En nuestra cultura cuando se impone
-                  la monogamia, no sucede por que esta tenga alguna ventaja en las relaciones afectivas o sexuales, se impone por cuestiones 
-                  comerciales de herencias y de la abolición de lo colectivo en favor de la propiedad privada.
+                  a poder elegir una sexualidad de acuerdo a nuestro instinto y no de acuerdo a nuestra cultura. En nuestra cultura cuando se impone
+                  la monogamia, no sucede por que esta tenga alguna ventaja emocional en las relaciones afectivas o sexuales, se impone por cuestiones 
+                  comerciales de herencias y por la abolición de lo colectivo en favor de la propiedad privada.
                </Text>
                <EmptySpace height={15} />
                <Text>
                   Si te interesan estos datos son recomendables libros como "Sex at dawn" (En español: "En el principio era el sexo") o
                   "El origen de la familia, la propiedad privada y el estado" libro firmado por Engels pero escrito por ambos, Marx y Engels.
-                  También son recomendables muchas otras lecturas sobre antropología en general, específicamente sobre el cazador recolector.
+                  También son recomendables muchas otras lecturas sobre antropología en general, específicamente sobre la vida antes de la agricultura.
                </Text>
                <EmptySpace height={80} />
             </BasicScreenContainer>
