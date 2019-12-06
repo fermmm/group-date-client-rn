@@ -5,15 +5,15 @@ export class LikeAnimation implements CardAnimation {
    trigger(containerAnimValue: Animated.Value, logoAnimValue: Animated.Value, onAnimationFinish: Animated.EndCallback = null): void {
       Animated.timing(logoAnimValue, {
          toValue: 1,
-         duration: 600,
+         duration: 500,
          easing: Easing.out(Easing.exp),
          useNativeDriver: true
       }).start();
 
       Animated.timing(containerAnimValue, {
          toValue: 1,
-         delay: 450,
-         duration: 600,
+         delay: 350,
+         duration: 500,
          easing: Easing.inOut(Easing.ease),
          useNativeDriver: true
       }).start(onAnimationFinish);

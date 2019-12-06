@@ -90,7 +90,7 @@ const styles: Styles = StyleSheet.create({
    logoContainer: {
       width: "65%",
       marginBottom: 150,
-      backgroundColor: color(currentTheme.colors.primary2).alpha(0.05).toString(),
+      backgroundColor: color(currentTheme.colors.primary2).alpha(0.07).toString(),
       padding: 30,
       borderRadius: 9999
    },
