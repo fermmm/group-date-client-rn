@@ -30,7 +30,7 @@ class NewUsersNotificationSelector extends Component<NewUsersSelectorProps> {
                onPress={() => onCheckChange()}
             >
                <Text style={styles.text}>
-                  Mostrarme una notificación cuando haya usuarios nuevos 
+                  Mostrarme una notificación cuando haya usuaries nuevos 
                </Text>
             </CheckboxButton>
             {
@@ -48,7 +48,7 @@ class NewUsersNotificationSelector extends Component<NewUsersSelectorProps> {
                            )
                         }
                      </PickerThemed>
-                     <Text style={styles.text}>usuarios nuevos</Text>
+                     <Text style={styles.text}>usuaries nuevos</Text>
                   </View>
             }
             
