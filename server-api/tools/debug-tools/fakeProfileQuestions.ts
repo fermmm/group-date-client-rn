@@ -56,16 +56,16 @@ const genderLikeQuestion: QuestionData = {
 };
 
 const intentionsQuestion: QuestionData = {
-   text: "¿Qué te gustaría hacer con esta aplicación?",
-   shortVersion: "Qué le gustaría hacer con la aplicación",
+   text: "¿Estás abierte a relacionarte sexualmente?",
+   shortVersion: "Abierte a relacionarse sexualmente",
    answers: [
       {
          id: "0",
-         text: "Conocer gente para lo que surja, inlcluido sexo",
+         text: "Si",
       },
       {
          id: "1",
-         text: "Conocer gente para lo que surja, pero no quiero relacionarme sexualmente",
+         text: "No, no quiero relacionarme sexualmente",
       }
    ],
    incompatibilitiesBetweenAnswers: {
