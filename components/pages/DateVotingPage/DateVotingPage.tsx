@@ -6,14 +6,14 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import VotingPoll from "../../common/VotingPoll/VotingPoll";
 import { Group } from "../../../server-api/typings/Group";
-import { NavigationScreenProp, NavigationContainerProps } from "react-navigation";
+import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import { testingDayVotingData, testingLocationVotingData } from "../../../server-api/tools/debug-tools/testingFakeData";
 
-export interface GroupEnterProps extends Themed, NavigationContainerProps { }
+export interface GroupEnterProps extends Themed, NavigationInjectedProps { }
 export interface GroupEnterState {
    currentStep: number;
 }
@@ -26,7 +26,7 @@ class GroupEnterForm extends Component<GroupEnterProps, GroupEnterState> {
 
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { getParam }: NavigationScreenProp<{}> = this.props.navigation;
+      const { getParam, goBack }: NavigationScreenProp<{}> = this.props.navigation;
       const group: Group = getParam("group");
 
       return (
@@ -59,6 +59,7 @@ class GroupEnterForm extends Component<GroupEnterProps, GroupEnterState> {
                   showBottomGradient={true}
                   bottomGradientColor={colors.background}
                   onBackPress={() => this.setState({ currentStep: 0 })}
+                  onContinuePress={() => goBack()}
                   showBackButton
                   showContinueButton
                >
@@ -86,4 +87,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(GroupEnterForm);
+export default withNavigation(withTheme(GroupEnterForm));
