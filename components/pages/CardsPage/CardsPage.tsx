@@ -9,6 +9,10 @@ import { User } from "../../../server-api/typings/User";
 import NoMoreUsersMessage from "./NoMoreUsersMessage/NoMoreUsersMessage";
 import CardsOptimization from "../../common/CardsEffect/CardsOptimization";
 import LikeDislikeAnimation from "../../common/CardsEffect/LikeDislikeAnimation/LikeDislikeAnimation";
+import { LikeAnimation } from "../../common/CardsEffect/LikeDislikeAnimation/animations/LikeAnimation";
+import { DislikeAnimation } from "../../common/CardsEffect/LikeDislikeAnimation/animations/DislikeAnimation";
+import { BackCardSlowAnimation } from '../../common/CardsEffect/LikeDislikeAnimation/animations/BackCardSlow';
+import { BackCardFastAnimation } from '../../common/CardsEffect/LikeDislikeAnimation/animations/BackCardFast';
 
 export interface CardsPageProps extends Themed { }
 export interface CardsPageState {
@@ -74,7 +78,15 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
       }
 
       this.setState({animating: true});
-      this.animRefs[currentUser].animate(liked, () => this.onAnimationFinish());
+      this.animRefs[currentUser].animate(
+         liked ? new LikeAnimation() : new DislikeAnimation(), 
+         () => this.onAnimationFinish()
+      );
+      if (currentUser + 1 < users.length) {
+         this.animRefs[currentUser + 1].animate(
+            liked ? new BackCardSlowAnimation() : new BackCardFastAnimation()
+         );
+      }
    }
 
    onAnimationFinish(): void {
