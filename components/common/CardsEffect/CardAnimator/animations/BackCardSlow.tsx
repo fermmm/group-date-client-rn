@@ -15,7 +15,7 @@ export class BackCardSlowAnimation implements CardAnimation {
    interpolation(containerAnimValue: Animated.Value, logoAnimValue: Animated.Value): CardAnimatedStyles {
       const scaleValue: Animated.AnimatedInterpolation = containerAnimValue.interpolate({
          inputRange: [0, 1],
-         outputRange: [0.84, 1]
+         outputRange: [0.90, 1]
       });
 
       return { 

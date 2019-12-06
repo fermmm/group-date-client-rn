@@ -12,7 +12,7 @@ export class LikeAnimation implements CardAnimation {
 
       Animated.timing(containerAnimValue, {
          toValue: 1,
-         delay: 600,
+         delay: 450,
          duration: 600,
          easing: Easing.inOut(Easing.ease),
          useNativeDriver: true
@@ -22,15 +22,11 @@ export class LikeAnimation implements CardAnimation {
    interpolation(containerAnimValue: Animated.Value, logoAnimValue: Animated.Value): CardAnimatedStyles {
       const rotationValue: Animated.AnimatedInterpolation = containerAnimValue.interpolate({
          inputRange: [0, 1],
-         outputRange: ["0deg", "-80deg"]
+         outputRange: ["0deg", "-90deg"]
       });
       const moveValue: Animated.AnimatedInterpolation = containerAnimValue.interpolate({
          inputRange: [0, 1],
          outputRange: [0, -Dimensions.get("window").width * 0.55]
-      });
-      const opacityValue: Animated.AnimatedInterpolation = containerAnimValue.interpolate({
-         inputRange: [0, .65, 1],
-         outputRange: [1, 1, 0]
       });
       const logoMoveValue: Animated.AnimatedInterpolation = logoAnimValue.interpolate({
          inputRange: [0, 1],
@@ -43,7 +39,6 @@ export class LikeAnimation implements CardAnimation {
 
       return { 
          cardStyle: {
-            opacity: opacityValue,
             transform: [
                { translateX: moveValue },
                { rotateY: rotationValue },
