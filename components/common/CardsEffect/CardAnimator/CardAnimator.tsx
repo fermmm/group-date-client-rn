@@ -29,25 +29,26 @@ class CardAnimator extends Component<CardAnimatorProps, CardAnimatorState> {
       logoAnimValue: new Animated.Value(0),
       cardAnimation: null,
    };
+   animStyles: CardAnimatedStyles;
 
    render(): React.ReactNode {
       const { containerAnimValue, logoAnimValue, cardAnimation }: Partial<CardAnimatorState> = this.state;
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
 
-      let animStyles: CardAnimatedStyles = null;
+      if (cardAnimation != null) {
+         this.animStyles = cardAnimation.interpolation(containerAnimValue, logoAnimValue);
+      }
 
-      if (cardAnimation == null) {
-         animStyles = {cardStyle: null, logoStyle: null};
-      } else {
-         animStyles = cardAnimation.interpolation(containerAnimValue, logoAnimValue);
+      if (this.animStyles == null) {
+         this.animStyles = {cardStyle: null, logoStyle: null};
       }
 
       return (
-         <Animated.View style={[{ flex: 1 }, animStyles.cardStyle]}>
+         <Animated.View style={[{ flex: 1 }, this.animStyles.cardStyle]}>
             {this.props.children}
             {
-               animStyles.logoStyle != null &&
-                  <Animated.View style={[styles.logoAnimationContainer, animStyles.logoStyle]}>
+               this.animStyles.logoStyle != null &&
+                  <Animated.View style={[styles.logoAnimationContainer, this.animStyles.logoStyle]}>
                      <View style={styles.logoContainer}>
                         <LogoSvg color={colors.primary2} style={styles.logo}/>
                      </View>
@@ -57,7 +58,7 @@ class CardAnimator extends Component<CardAnimatorProps, CardAnimatorState> {
       );
    }
 
-   animate(cardAnimation: CardAnimation, onComplete: () => void): void {
+   animate(cardAnimation: CardAnimation, onComplete: () => void = null): void {
       this.setState({cardAnimation});
 
       cardAnimation.trigger(
@@ -65,8 +66,8 @@ class CardAnimator extends Component<CardAnimatorProps, CardAnimatorState> {
          this.state.logoAnimValue, 
          () => {      
             this.setState({
-               containerAnimValue: new Animated.Value(0),
-               logoAnimValue: new Animated.Value(0),
+               // containerAnimValue: new Animated.Value(0),
+               // logoAnimValue: new Animated.Value(0),
                cardAnimation: null
             });
             

@@ -78,14 +78,26 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
       }
 
       this.setState({animating: true});
+      let finishedAnimationsAmmount: number = 0;
+
       this.animRefs[currentUser].animate(
          liked ? new LikeAnimation() : new DislikeAnimation(), 
-         () => this.onAnimationFinish()
+         () => {
+            finishedAnimationsAmmount++;
+            if (finishedAnimationsAmmount === 2) {
+               this.onAnimationFinish();
+            }
+         }
       );
       if (currentUser + 1 < users.length) {
          this.animRefs[currentUser + 1].animate(
-            liked ? new BackCardSlowAnimation() : new BackCardFastAnimation()
-         );
+            liked ? new BackCardSlowAnimation() : new BackCardFastAnimation(),
+            () => {
+               finishedAnimationsAmmount++;
+               if (finishedAnimationsAmmount === 2) {
+                  this.onAnimationFinish();
+               }
+            });
       }
    }
 
