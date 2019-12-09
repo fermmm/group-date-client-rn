@@ -22,20 +22,27 @@ export interface CardsPageState {
    noMoreUsersOnServer: boolean;
 }
 
-// TODO: Test what happens with only 1 card
-// TODO: Test cards loaded on the fly with a setTimeout
+// TODO: Bug: Si carga nuevas cartas cuando estoy viendo la ultima despues rompe al dar like, parece que animRefs no se sincroniza
+// TODO: Bug: Si cuando estoy viendo el mensaje de no mas cartas carga mas se queda ahi
 class CardsPage extends Component<CardsPageProps, CardsPageState> {
+   // tslint:disable-next-line: no-any
+   animRefs: any[] = [];
    state: CardsPageState = {
-      users: getAvaiableCards(),
+      // users: getAvaiableCards(),
+      users: [getAvaiableCards()[0], getAvaiableCards()[1]],
       currentUser: 0,
       animating: false,
       noMoreUsersOnServer: false
       // noMoreUsersOnServer: true     // Uncomment this line to test the "no more users" UI
    };
 
-   // tslint:disable-next-line: no-any
-   animRefs: any[] = [];
-
+   componentDidMount(): void {
+      setTimeout(() => {
+         console.log("More loaded");
+         this.setState({users: [...this.state.users, getAvaiableCards()[2], getAvaiableCards()[3], getAvaiableCards()[4]]});
+      }, 6000);
+   }
+   
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
       const {
@@ -79,7 +86,7 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
          return;
       }
 
-      // This animation flips the current card and shows the one behind (if present)
+      // This animation flips the current card so the one behind is revealed (if present)
       await this.animateCards(liked);
 
       if (this.thereIsANextCard()) {
