@@ -42,7 +42,7 @@ const feminismQuestion: QuestionData = {
       },
       {
          id: "4",
-         text: "No estoy de acuerdo con lo que hacen les feministas",
+         text: "No estoy de acuerdo con lo que hacen les feministes",
       },
       {
          id: "5",
