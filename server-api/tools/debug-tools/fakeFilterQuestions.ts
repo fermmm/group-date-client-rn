@@ -42,20 +42,15 @@ const feminismQuestion: QuestionData = {
       },
       {
          id: "4",
-         text: "No estoy de acuerdo con lo que hacen les feministes",
-      },
-      {
-         id: "5",
          text: "No estoy de acuerdo con el feminismo para nada",
       }
    ],
    incompatibilitiesBetweenAnswers: {
-      "0": ["1", "2", "3", "4", "5"],
+      "0": ["1", "2", "3", "4"],
       "1": ["0"],
       "2": ["0"],
       "3": ["0"],
       "4": ["0"],
-      "5": ["0"],
    },
 };
 
