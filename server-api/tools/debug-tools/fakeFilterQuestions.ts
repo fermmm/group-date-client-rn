@@ -1,5 +1,40 @@
 import { QuestionData } from "./interfaces/questions";
 
+const feminismQuestion: QuestionData = {
+    text: "¿Estás de acuerdo con el feminismo en general?",
+    extraText: "O con cualquier movimiento feminista",
+    shortVersion: "Está de acuerdo con algún feminismo",
+    answers: [
+       {
+          id: "0",
+          text: "Si, muy de acuerdo",
+       },
+       {
+          id: "1",
+          text: "Podría ser en alguna cosa, pero en general no",
+       },
+       {
+          id: "2",
+          text: "No se nada sobre el tema",
+       },
+       {
+          id: "3",
+          text: "No me interesa / No me parece importante",
+       },
+       {
+          id: "4",
+          text: "No estoy de acuerdo con el feminismo para nada",
+       }
+    ],
+    incompatibilitiesBetweenAnswers: {
+       "0": ["1", "2", "3", "4"],
+       "1": ["0"],
+       "2": ["0"],
+       "3": ["0"],
+       "4": ["0"],
+    },
+ };
+
 const groupSexQuestion: QuestionData = {
    text: "¿Qué pensas del sexo grupal?",
    shortVersion: "Su opinión sobre el sexo grupal",
@@ -79,6 +114,7 @@ const politicsQuestion: QuestionData = {
 };
 
 export const fakeFilterQuestions: QuestionData[] = [
+   feminismQuestion,
    groupSexQuestion,
    smokeQuestion,
    politicsQuestion,
