@@ -1,39 +1,63 @@
 import { QuestionData } from "./interfaces/questions";
 
+const sexIntentionsQuestion: QuestionData = {
+   text: "¿Estás abierte a relacionarte sexualmente?",
+   shortVersion: "Abierte a relacionarse sexualmente",
+   answers: [
+      {
+         id: "0",
+         text: "Si",
+      },
+      {
+         id: "1",
+         text: "No, no quiero relacionarme sexualmente",
+      }
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["1"],
+      "1": ["0"]
+   },
+};
+
 const feminismQuestion: QuestionData = {
-    text: "¿Estás de acuerdo con el feminismo en general?",
-    extraText: "O con cualquier movimiento feminista",
-    shortVersion: "Está de acuerdo con algún feminismo",
-    answers: [
-       {
-          id: "0",
-          text: "Si, muy de acuerdo",
-       },
-       {
-          id: "1",
-          text: "Podría ser en alguna cosa, pero en general no",
-       },
-       {
-          id: "2",
-          text: "No se nada sobre el tema",
-       },
-       {
-          id: "3",
-          text: "No me interesa / No me parece importante",
-       },
-       {
-          id: "4",
-          text: "No estoy de acuerdo con el feminismo para nada",
-       }
-    ],
-    incompatibilitiesBetweenAnswers: {
-       "0": ["1", "2", "3", "4"],
-       "1": ["0"],
-       "2": ["0"],
-       "3": ["0"],
-       "4": ["0"],
-    },
- };
+   text: "¿Estás de acuerdo con el feminismo en general?",
+   extraText: "O con cualquier movimiento feminista",
+   shortVersion: "Está de acuerdo con algún feminismo",
+   answers: [
+      {
+         id: "0",
+         text: "Si, muy de acuerdo",
+      },
+      {
+         id: "1",
+         text: "Podría ser en alguna cosa, pero en general no",
+      },
+      {
+         id: "2",
+         text: "No sé nada sobre el tema",
+      },
+      {
+         id: "3",
+         text: "No me interesa / No me parece importante",
+      },
+      {
+         id: "4",
+         text: "No estoy de acuerdo con lo que hacen les feministas",
+      },
+      {
+         id: "5",
+         text: "No estoy de acuerdo con el feminismo para nada",
+      }
+   ],
+   incompatibilitiesBetweenAnswers: {
+      "0": ["1", "2", "3", "4", "5"],
+      "1": ["0"],
+      "2": ["0"],
+      "3": ["0"],
+      "4": ["0"],
+      "5": ["0"],
+   },
+};
 
 const groupSexQuestion: QuestionData = {
    text: "¿Qué pensas del sexo grupal?",
@@ -114,6 +138,7 @@ const politicsQuestion: QuestionData = {
 };
 
 export const fakeFilterQuestions: QuestionData[] = [
+   sexIntentionsQuestion,
    feminismQuestion,
    groupSexQuestion,
    smokeQuestion,

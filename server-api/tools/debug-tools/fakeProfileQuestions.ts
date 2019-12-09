@@ -55,27 +55,8 @@ const genderLikeQuestion: QuestionData = {
    ]
 };
 
-const intentionsQuestion: QuestionData = {
-   text: "¿Estás abierte a relacionarte sexualmente?",
-   shortVersion: "Abierte a relacionarse sexualmente",
-   answers: [
-      {
-         id: "0",
-         text: "Si",
-      },
-      {
-         id: "1",
-         text: "No, no quiero relacionarme sexualmente",
-      }
-   ],
-   incompatibilitiesBetweenAnswers: {
-      "0": ["1"],
-      "1": ["0"]
-   },
-};
-
 const companyQuestion: QuestionData = {
-   text: "¿Iriías acompañade a las citas grupales de esta app?",
+   text: "¿Irías acompañade a las citas grupales de esta app?",
    shortVersion: "Iria a la cita con",
    answers: [
       {
@@ -96,6 +77,5 @@ const companyQuestion: QuestionData = {
 export const fakeProfileQuestionsPart: QuestionData[] = [
    genderQuestion,
    genderLikeQuestion,
-   intentionsQuestion,
    companyQuestion,
 ];
