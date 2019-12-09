@@ -8,7 +8,7 @@ import { LogoSvg } from "../../../assets/LogoSvg";
 import { NavigationContainerProps, NavigationScreenProp } from "react-navigation";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 import { currentTheme } from "../../../config";
-import { thistle } from "color-name";
+import i18n from "i18n-js";
 
 export interface LoginProps extends Themed, NavigationContainerProps { }
 export interface LoginState { }
@@ -25,7 +25,7 @@ class LoginPage extends Component<LoginProps, LoginState> {
             <View style={styles.mainContainer}>
                <LogoSvg style={styles.logo} color={colors.logoColor} />
                <Text style={[styles.textBlock, { marginBottom: 15 }]}>
-                  <Text style={{ fontWeight: "bold" }}> ¡Bienvenide! </Text>
+                  <Text style={{ fontWeight: "bold" }}> {i18n.t("welcome")} </Text>
                   Poly Dates es una app de citas grupales. Las citas se forman 
                   cuando se gustan varias personas formando un grupo.
                </Text>

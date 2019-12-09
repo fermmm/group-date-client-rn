@@ -19,6 +19,11 @@ import ChangeDateIdeaPage from "./components/pages/SettingsPage/ChangeDateIdeaPa
 import ChangeQuestionsPage from "./components/pages/SettingsPage/ChangeQuestionsPage/ChangeQuestionsPage";
 import ChatPage from "./components/pages/ChatPage/ChatPage";
 import AboutPage from "./components/pages/AboutPage/AboutPage";
+import * as Localization from "expo-localization";
+import i18n from "i18n-js";
+import { esAr } from "./texts/esAr/esAr";
+import { en } from "./texts/en/en";
+import { es } from "./texts/es/es";
 
 const Navigator: NavigationContainer = createAppContainer(
    createStackNavigator(
@@ -44,6 +49,16 @@ const Navigator: NavigationContainer = createAppContainer(
       },
    )
 );
+
+i18n.fallbacks = true;
+i18n.translations = {
+   en, 
+   es,
+   "es-AR" : esAr, 
+};
+i18n.defaultLocale = "es";
+i18n.locale = Localization.locale;
+// i18n.locale = "en";    // Uncomment to try another language
 
 interface PageBasicWrapperState {
    resourcesLoaded: boolean;
