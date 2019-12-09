@@ -66,8 +66,8 @@ class CardAnimator extends Component<CardAnimatorProps, CardAnimatorState> {
          this.state.logoAnimValue, 
          () => {      
             this.setState({
-               // containerAnimValue: new Animated.Value(0),
-               // logoAnimValue: new Animated.Value(0),
+               containerAnimValue: new Animated.Value(0),
+               logoAnimValue: new Animated.Value(0),
                cardAnimation: null
             });
             

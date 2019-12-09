@@ -22,6 +22,8 @@ export interface CardsPageState {
    noMoreUsersOnServer: boolean;
 }
 
+// TODO: Test what happens with only 1 card
+// TODO: Test cards loaded on the fly with a setTimeout
 class CardsPage extends Component<CardsPageProps, CardsPageState> {
    state: CardsPageState = {
       users: getAvaiableCards(),
@@ -70,54 +72,60 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
       );
    }
 
-   onLikeOrDislike(liked: boolean): void {
-      const { users, currentUser, animating }: Partial<CardsPageState> = this.state;
-
+   async onLikeOrDislike(liked: boolean): Promise<void> {
+      const { currentUser, animating }: Partial<CardsPageState> = this.state;
+      
       if (animating) {
          return;
       }
 
-      this.setState({animating: true});
-      let finishedAnimationsAmmount: number = 0;
+      // This animation flips the current card and shows the one behind (if present)
+      await this.animateCards(liked);
 
-      this.animRefs[currentUser].animate(
-         liked ? new LikeAnimation() : new DislikeAnimation(), 
-         () => {
-            finishedAnimationsAmmount++;
-            if (finishedAnimationsAmmount === 2) {
-               this.onAnimationFinish();
-            }
-         }
-      );
-      if (currentUser + 1 < users.length) {
-         this.animRefs[currentUser + 1].animate(
-            liked ? new BackCardSlowAnimation() : new BackCardFastAnimation(),
+      if (this.thereIsANextCard()) {
+         // If present this loads the next card and renders it hidden behind the current one
+         this.setState({ currentUser: currentUser + 1 });
+      } else {
+         // If there are no more cards left this is executed
+         this.setState({ noMoreUsersOnServer: true });
+      }
+   }
+
+   async animateCards(liked: boolean): Promise<void> {
+      return new Promise((resolve, reject) => {
+         const { users, currentUser }: Partial<CardsPageState> = this.state;
+
+         this.setState({animating: true});
+         let finishedAnimationsAmmount: number = 0;
+         const totalAnimationsToPlay: number = currentUser + 1 < users.length ? 2 : 1;
+   
+         this.animRefs[currentUser].animate(
+            liked ? new LikeAnimation() : new DislikeAnimation(), 
             () => {
                finishedAnimationsAmmount++;
-               if (finishedAnimationsAmmount === 2) {
-                  this.onAnimationFinish();
+               if (finishedAnimationsAmmount === totalAnimationsToPlay) {
+                  this.setState({ animating: false });
+                  resolve();
                }
-            });
-      }
+            }
+         );
+         if (currentUser + 1 < users.length) {
+            this.animRefs[currentUser + 1].animate(
+               liked ? new BackCardSlowAnimation() : new BackCardFastAnimation(),
+               () => {
+                  finishedAnimationsAmmount++;
+                  if (finishedAnimationsAmmount === totalAnimationsToPlay) {
+                     this.setState({ animating: false });
+                     resolve();
+                  }
+               }
+            );
+         }   
+      });
    }
 
-   onAnimationFinish(): void {
-      const { users, currentUser }: Partial<CardsPageState> = this.state;
-
-      this.setState({ animating: false });
-      
-      if (currentUser + 1 < users.length) {
-         this.setState({ currentUser: currentUser + 1 });
-      }
-
-      if (currentUser === users.length - 1) {
-         this.onNoMoreUsersOnMemory();
-      }
-   }
-
-   onNoMoreUsersOnMemory(): void {
-      // Here request more users to the server and if the response is that there are no more users call this:
-      this.setState({ noMoreUsersOnServer: true });
+   thereIsANextCard(): boolean {
+      return (this.state.currentUser + 1 < this.state.users.length);
    }
 }
 
