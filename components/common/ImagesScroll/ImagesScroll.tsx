@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { View, Image, StyleProp, ViewStyle, ImageStyle, TouchableHighlight, ImageProps, ScrollView, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import DotsIndicator from "../DotsIndicator/DotsIndicator";
+import { Asset } from "expo-asset";
 
 export interface ImagesScrollProps {
-   photos: string[];
+   images: string[];
    renderImage?: (image: string, imageProps: ImageProps) => JSX.Element;
    onImageClick?: (index: number) => void;
    style?: StyleProp<ViewStyle>;
@@ -28,9 +29,13 @@ export default class ImagesScroll extends Component<ImagesScrollProps, ImagesScr
       currentPictureFocused: 0
    };
 
+   componentWillMount(): void {
+      this.cacheImages();
+   }
+
    render(): JSX.Element {
       const { imagesWidth, imagesHeight, currentPictureFocused }: Partial<ImagesScrollState> = this.state;
-      const { photos, style, imagesStyle, scrollViewStyle, onImageClick, showDots }: Partial<ImagesScrollProps> = this.props;
+      const { images, style, imagesStyle, scrollViewStyle, onImageClick, showDots }: Partial<ImagesScrollProps> = this.props;
 
       return (
          <View style={[{ height: 200 }, style]} onLayout={e => this.setState({ imagesWidth: e.nativeEvent.layout.width, imagesHeight: e.nativeEvent.layout.height })}>
@@ -42,7 +47,7 @@ export default class ImagesScroll extends Component<ImagesScrollProps, ImagesScr
                onMomentumScrollEnd={(event) => this.onMomentumScrollEnd(event)}
             >
                {
-                  photos.map((value: string, i: number) =>
+                  images.map((value: string, i: number) =>
                      !onImageClick
                         ?
                         this.renderImage(value, {
@@ -68,7 +73,7 @@ export default class ImagesScroll extends Component<ImagesScrollProps, ImagesScr
             </ScrollView>
             {
                showDots &&
-                  <DotsIndicator totalDots={photos.length} activeDot={currentPictureFocused} />
+                  <DotsIndicator totalDots={images.length} activeDot={currentPictureFocused} />
             }
          </View>
       );
@@ -81,10 +86,20 @@ export default class ImagesScroll extends Component<ImagesScrollProps, ImagesScr
          <Image {...imageProps} key={image} />;
    }
 
-   public onMomentumScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>): void {
+   onMomentumScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>): void {
       this.setState({
          currentPictureFocused: 
             Math.round(Math.ceil(event.nativeEvent.contentOffset.x) / event.nativeEvent.layoutMeasurement.width)
+      });
+   }
+
+   cacheImages(): Promise<void> | unknown {
+      return this.props.images.map(image => {
+         if (typeof image === "string") {
+            return Image.prefetch(image);
+         } else {
+            return Asset.fromModule(image).downloadAsync();
+         }
       });
    }
 }

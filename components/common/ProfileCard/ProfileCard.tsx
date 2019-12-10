@@ -47,7 +47,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
       }: Partial<ProfileCardProps> = this.props;
       const { 
          name, 
-         photos, 
+         images, 
          birthdate, 
          area 
       }: Partial<User> = this.props.user;
@@ -80,7 +80,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                      <Card style={[styles.card, { backgroundColor: colors.background }]}>
                         <View>
                            <ImagesScroll
-                              photos={photos}
+                              images={images}
                               style={[styles.galleryScroll, statusBarPadding && { marginTop: StatusBar.currentHeight }]}
                               onImageClick={(i: number) => this.setState({ imageSelected: i, renderImageModal: true })}
                               renderImage={(uri: string, imageProps: ImageProps) =>
@@ -177,7 +177,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                renderImageModal === true &&
                   <ImagesModal
                      visible={renderImageModal}
-                     photos={photos}
+                     images={images}
                      initialPage={imageSelected}
                      onClose={() => this.setState({ renderImageModal: false })}
                   />

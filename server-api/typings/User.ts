@@ -3,5 +3,5 @@ export interface User {
     name: string;
     birthdate: Date;
     area: string;
-    photos: string[];
+    images: string[];
 }
