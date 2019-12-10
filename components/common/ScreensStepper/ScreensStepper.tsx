@@ -68,6 +68,8 @@ export class ScreensStepper extends Component<ScreenStepperProps> {
 
    public onMomentumScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>): void {
       const newScreenIndex: number = Math.round(event.nativeEvent.contentOffset.x / this.props.screensWidth);
+      // We should remove semi hardcoded this.props.screensWidth and replace it with stuff like this:
+      // const newScreenIndex: number = Math.round(Math.ceil(event.nativeEvent.contentOffset.x) / event.nativeEvent.layoutMeasurement.width)
 
       if (newScreenIndex !== this.props.currentScreen) {
          this.props.onScreenChange(newScreenIndex);
