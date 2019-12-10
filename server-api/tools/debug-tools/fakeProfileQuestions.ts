@@ -57,19 +57,15 @@ const genderLikeQuestion: QuestionData = {
 
 const companyQuestion: QuestionData = {
    text: "¿Irías acompañade a las citas grupales de esta app?",
-   shortVersion: "Iria a la cita con",
+   shortVersion: "Iría a la cita con",
    answers: [
       {
          id: "0",
-         text: "Sole",
+         text: "Iría sole",
       },
       {
          id: "1",
-         text: "Con mi pareja",
-      },
-      {
-         id: "2",
-         text: "Con une amige",
+         text: "Iría en pareja",
       }
    ]
 };
