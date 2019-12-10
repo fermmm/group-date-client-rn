@@ -4,6 +4,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 
 export interface CardsOptimizationProps {
    currentCard: number;
+   children?: React.ReactNode[] | React.ReactNode;
 }
 export interface CardsOptimizationState {
    childA: React.ReactNode;
@@ -53,8 +54,17 @@ class CardsOptimization extends Component<CardsOptimizationProps, CardsOptimizat
    }
 
    componentDidUpdate(prevProps: CardsOptimizationProps): void {
+      const { childA, childB }: Partial<CardsOptimizationState> = this.state;
+
       if (this.props.currentCard !== prevProps.currentCard) {
          this.loadNextChild();
+      }
+
+      if (React.Children.toArray(this.props.children).length !== React.Children.toArray(prevProps.children).length) {
+         // If we are in the last position without any next child and then children are added we need to refresh:
+         if (childA == null || childB == null) {
+            this.loadNextChild();
+         }
       }
    }
 
@@ -84,7 +94,11 @@ class CardsOptimization extends Component<CardsOptimizationProps, CardsOptimizat
          :
              null;
 
-      if (centerChild === childB) {
+      /*
+         This childB == null is here to make sure a new child goes to the null holder when it's neccesary.
+         New children meaning when new elements are added to the props.children
+      */
+      if (centerChild === childB || childB == null) {
          this.setState({
             childB: nextChildren,
             centerChild: childA,

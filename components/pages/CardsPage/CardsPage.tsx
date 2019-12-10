@@ -22,26 +22,16 @@ export interface CardsPageState {
    noMoreUsersOnServer: boolean;
 }
 
-// TODO: Bug: Si carga nuevas cartas cuando estoy viendo la ultima despues rompe al dar like, parece que animRefs no se sincroniza
-// TODO: Bug: Si cuando estoy viendo el mensaje de no mas cartas carga mas se queda ahi
 class CardsPage extends Component<CardsPageProps, CardsPageState> {
    // tslint:disable-next-line: no-any
    animRefs: any[] = [];
    state: CardsPageState = {
-      // users: getAvaiableCards(),
-      users: [getAvaiableCards()[0], getAvaiableCards()[1]],
+      users: getAvaiableCards(),
       currentUser: 0,
       animating: false,
       noMoreUsersOnServer: false
       // noMoreUsersOnServer: true     // Uncomment this line to test the "no more users" UI
    };
-
-   componentDidMount(): void {
-      setTimeout(() => {
-         console.log("More loaded");
-         this.setState({users: [...this.state.users, getAvaiableCards()[2], getAvaiableCards()[3], getAvaiableCards()[4]]});
-      }, 6000);
-   }
    
    render(): JSX.Element {
       const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
@@ -93,7 +83,7 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
          // If present this loads the next card and renders it hidden behind the current one
          this.setState({ currentUser: currentUser + 1 });
       } else {
-         // If there are no more cards left this is executed
+         // Here show a loading indicator and request new cards, if there are no new cards execute this:
          this.setState({ noMoreUsersOnServer: true });
       }
    }
