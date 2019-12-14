@@ -187,15 +187,15 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
    }
 
    async callImagePicker(): Promise<string | null> {
-      await askForPermissions(Permissions.CAMERA_ROLL, {
-         rejectedDialogTexts: {
-            dialogTitle: "Error",
-            dialogText: "Tenes que aceptar permisos para continuar. Cualquier app necesita acceder a tu almacenamiento para que puedas elegir una foto",
-            openSettingsButtonText: "Modificar permisos",
-            exitAppButtonText: "Salir de la app",
-            instructionsToastText: `Toca "Permisos" y activa "Almacenamiento"`,
-         }
-      });
+      // await askForPermissions(Permissions.CAMERA_ROLL, {
+      //    rejectedDialogTexts: {
+      //       dialogTitle: "Error",
+      //       dialogText: "Tenes que aceptar permisos para continuar. Cualquier app necesita acceder a tu almacenamiento para que puedas elegir una foto",
+      //       openSettingsButtonText: "Modificar permisos",
+      //       exitAppButtonText: "Salir de la app",
+      //       instructionsToastText: `Toca "Permisos" y activa "Almacenamiento"`,
+      //    }
+      // });
 
       const result: ImageInfo = await ImagePicker.launchImageLibraryAsync({
          mediaTypes: ImagePicker.MediaTypeOptions.Images,
