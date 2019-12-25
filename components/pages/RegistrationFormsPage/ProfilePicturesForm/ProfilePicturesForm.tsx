@@ -187,6 +187,7 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
    }
 
    async callImagePicker(): Promise<string | null> {
+      // It seems this is unnecesary
       // await askForPermissions(Permissions.CAMERA_ROLL, {
       //    rejectedDialogTexts: {
       //       dialogTitle: "Error",

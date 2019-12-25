@@ -21,7 +21,7 @@ const sexIntentionsQuestion: QuestionData = {
 
 const feminismQuestion: QuestionData = {
    text: "¿Estás de acuerdo con el feminismo en general?",
-   extraText: "O con cualquier movimiento feminista",
+   extraText: "O con algún movimiento feminista",
    shortVersion: "Está de acuerdo con algún feminismo",
    answers: [
       {
