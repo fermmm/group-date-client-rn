@@ -1,6 +1,6 @@
 # Polyamory dates mobile client.
 
-This project uses React Native + Expo + TypeScript which can generate an Android and IOS application.
+This project uses React Native + Expo + TypeScript
 
 ## Installation
 
