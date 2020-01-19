@@ -35,7 +35,8 @@
     "react-navigation": "^4.0.6",
     "react-navigation-stack": "^1.9.1",
     "react-timer-mixin": "^0.13.4",
-    "simple-validator-js": "^1.8.0"
+    "simple-validator-js": "^1.8.0",
+    "expo-facebook": "~7.0.0"
   },
   "devDependencies": {
     "@types/color": "^3.0.0",

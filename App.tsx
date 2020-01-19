@@ -6,6 +6,7 @@ import QuestionsPage from "./components/pages/QuestionsPage/QuestionsPage";
 import RegistrationFormsPage from "./components/pages/RegistrationFormsPage/RegistrationFormsPage";
 import React, { Component } from "react";
 import { AppLoading } from "expo";
+import * as Facebook from "expo-facebook";
 import { Provider as PaperProvider } from "react-native-paper";
 import { loadFontMontserrat } from "./common-tools/fontLoaders/loadFontMontserrat";
 import { currentTheme } from "./config";
@@ -71,6 +72,7 @@ export default class App extends Component<{}, PageBasicWrapperState> {
 
    async componentDidMount(): Promise<void> {
       await loadFontMontserrat();
+      // await Facebook.logInWithReadPermissionsAsync();
       this.setState({ resourcesLoaded: true });
    }
 

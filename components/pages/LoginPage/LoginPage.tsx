@@ -44,14 +44,14 @@ class LoginPage extends Component<LoginProps, LoginState> {
                >
                   Entrar
                </ButtonStyled>
-               <ButtonStyled
+               {/* <ButtonStyled
                   color={colors.textLogin}
                   style={{ borderColor: colors.textLogin }}
                   // onPress={() => navigate("Questions")}
                   onPress={() => navigate("RegistrationForms")}
                >
                   Nueva cuenta
-               </ButtonStyled>
+               </ButtonStyled> */}
             </View>
          </this.Background>
       );
