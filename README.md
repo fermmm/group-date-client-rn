@@ -1,5 +1,7 @@
 # Polyamory dates mobile client.
 
+This project uses React Native + Expo + TypeScript
+
 ## Installation
 
 1. Run: `npm install -g expo-cli`
