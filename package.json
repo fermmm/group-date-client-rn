@@ -9,9 +9,9 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@types/react-native-keyboard-spacer": "^0.4.1",
     "axios": "^0.19.0",
     "expo": "^36.0.0",
+    "expo-facebook": "~8.0.0",
     "expo-font": "~8.0.0",
     "expo-image-picker": "~8.0.1",
     "expo-intent-launcher": "~8.0.0",
@@ -35,18 +35,19 @@
     "react-navigation": "^4.0.6",
     "react-navigation-stack": "^1.9.1",
     "react-timer-mixin": "^0.13.4",
-    "simple-validator-js": "^1.8.0",
-    "expo-facebook": "~8.0.0"
+    "simple-validator-js": "^1.8.0"
   },
   "devDependencies": {
     "@types/color": "^3.0.0",
     "@types/i18n-js": "^3.0.1",
     "@types/react": "^16.9.0",
     "@types/react-native": "^0.60.15",
+    "@types/react-native-keyboard-spacer": "^0.4.1",
     "@types/react-native-multi-slider": "^0.3.1",
     "@types/react-native-vector-icons": "^6.4.1",
     "babel-preset-expo": "^8.0.0",
     "react-devtools": "^3.6.3",
+    "react-native-dotenv": "^0.2.0",
     "tslint": "^5.17.0",
     "tslint-react": "^4.0.0",
     "typescript": "^3.7.5"
