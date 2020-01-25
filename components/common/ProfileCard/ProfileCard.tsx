@@ -9,13 +9,13 @@ import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
 import QuestionInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
-import { User } from "../../../server-api/typings/User";
-import { getAge } from "../../../server-api/tools/date-tools";
+import { User } from "../../../api/typings/User";
+import { getAge } from "../../../api/tools/date-tools";
 import EditButton from "./EditButton/EditButton";
 import { withNavigation, NavigationInjectedProps, NavigationScreenProp } from "react-navigation";
-import { QuestionData } from "../../../server-api/tools/debug-tools/interfaces/questions";
-import { fakeProfileQuestionsPart } from "../../../server-api/tools/debug-tools/fakeProfileQuestions";
-import { fakeFilterQuestions } from "../../../server-api/tools/debug-tools/fakeFilterQuestions";
+import { QuestionData } from "../../../api/tools/debug-tools/interfaces/questions";
+import { fakeProfileQuestionsPart } from "../../../api/tools/debug-tools/fakeProfileQuestions";
+import { fakeFilterQuestions } from "../../../api/tools/debug-tools/fakeFilterQuestions";
 
 export interface ProfileCardProps extends Themed, NavigationInjectedProps {
    user: User;

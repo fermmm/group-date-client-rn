@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { withTheme } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { User } from "../../../server-api/typings/User";
+import { User } from "../../../api/typings/User";
 import { NavigationScreenProp, NavigationContainerProps } from "react-navigation";
 import ProfileCard from "../../common/ProfileCard/ProfileCard";
 import ButtonBack from "../../common/ButtonBack/ButtonBack";

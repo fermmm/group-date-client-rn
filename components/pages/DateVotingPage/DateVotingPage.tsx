@@ -5,13 +5,13 @@ import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import VotingPoll from "../../common/VotingPoll/VotingPoll";
-import { Group } from "../../../server-api/typings/Group";
+import { Group } from "../../../api/typings/Group";
 import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
-import { testingDayVotingData, testingLocationVotingData } from "../../../server-api/tools/debug-tools/testingFakeData";
+import { testingDayVotingData, testingLocationVotingData } from "../../../api/tools/debug-tools/testingFakeData";
 
 export interface GroupEnterProps extends Themed, NavigationInjectedProps { }
 export interface GroupEnterState {

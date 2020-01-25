@@ -6,8 +6,8 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import SurfaceStyled from "../SurfaceStyled/SurfaceStyled";
 import { currentTheme } from "../../../config";
 import ProgressBar from "../ProgressBar/ProgressBar";
-import { Group } from "../../../server-api/typings/Group";
-import { VotingOption } from "../../../server-api/tools/debug-tools/testingFakeData";
+import { Group } from "../../../api/typings/Group";
+import { VotingOption } from "../../../api/tools/debug-tools/testingFakeData";
 
 export interface VotingPollProps extends Themed {
    group: Group;

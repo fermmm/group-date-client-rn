@@ -8,7 +8,7 @@ import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
 import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
 import { currentTheme } from "../../../config";
-import { getGroups } from "../../../server-api/groups";
+import { getGroups } from "../../../api/groups";
 import GraphSvg2 from "../../../assets/GraphSvg2";
 
 export interface NotificationsPageProps extends Themed, NavigationInjectedProps { }

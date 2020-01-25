@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { Alert } from "react-native";
+// @ts-ignore
+import { SERVER_URL } from "react-native-dotenv";
 
 export default class Api {
-   public static baseURL: string = "https://www.polydates.com/api/";
-
    /**
     * Axios request wrapper with error handling.
     * @param options Axios request options, example: {url: "search/users"}
@@ -12,7 +12,7 @@ export default class Api {
     */
    public static async request<T>(options: AxiosRequestConfig, showAlertOnError: boolean = true): Promise<T | string> {
       const client: AxiosInstance = axios.create({
-         baseURL: Api.baseURL,
+         baseURL: SERVER_URL,
       });
 
       return client(options)

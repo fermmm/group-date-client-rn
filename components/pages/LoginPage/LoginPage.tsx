@@ -9,6 +9,7 @@ import { NavigationContainerProps, NavigationScreenProp } from "react-navigation
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 import { currentTheme } from "../../../config";
 import i18n from "i18n-js";
+import { facebookLogin } from "../../../api/third-party/facebook/facebook-login";
 
 export interface LoginProps extends Themed, NavigationContainerProps { }
 export interface LoginState { }
@@ -42,16 +43,23 @@ class LoginPage extends Component<LoginProps, LoginState> {
                   style={{ borderColor: colors.textLogin }}
                   onPress={() => navigate("Main")}
                >
-                  Entrar
+                  App UI
                </ButtonStyled>
-               {/* <ButtonStyled
+               <ButtonStyled
                   color={colors.textLogin}
                   style={{ borderColor: colors.textLogin }}
                   // onPress={() => navigate("Questions")}
                   onPress={() => navigate("RegistrationForms")}
                >
-                  Nueva cuenta
-               </ButtonStyled> */}
+                  Nueva cuenta UI
+               </ButtonStyled>
+               <ButtonStyled
+                  color={colors.textLogin}
+                  style={{ borderColor: colors.textLogin }}
+                  onPress={() => facebookLogin()}
+               >
+                  Comenzar
+               </ButtonStyled>
             </View>
          </this.Background>
       );

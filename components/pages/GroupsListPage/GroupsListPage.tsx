@@ -5,10 +5,10 @@ import { withTheme, List } from "react-native-paper";
 import GraphSvg2 from "../../../assets/GraphSvg2";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
-import { getGroups } from "../../../server-api/groups";
+import { getGroups } from "../../../api/groups";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
-import { Group } from "../../../server-api/typings/Group";
+import { Group } from "../../../api/typings/Group";
 import EmptyPageMessage from "../../common/EmptyPageMessage/EmptyPageMessage";
 
 export interface GroupsListPageProps extends Themed, NavigationInjectedProps { }

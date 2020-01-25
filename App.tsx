@@ -6,7 +6,6 @@ import QuestionsPage from "./components/pages/QuestionsPage/QuestionsPage";
 import RegistrationFormsPage from "./components/pages/RegistrationFormsPage/RegistrationFormsPage";
 import React, { Component } from "react";
 import { AppLoading } from "expo";
-import * as Facebook from "expo-facebook";
 import { Provider as PaperProvider } from "react-native-paper";
 import { loadFontMontserrat } from "./common-tools/fontLoaders/loadFontMontserrat";
 import { currentTheme } from "./config";
@@ -25,8 +24,6 @@ import i18n from "i18n-js";
 import { esAr } from "./texts/esAr/esAr";
 import { en } from "./texts/en/en";
 import { es } from "./texts/es/es";
-// @ts-ignore
-import { API_KEY, ANOTHER_CONFIG } from "react-native-dotenv";
 
 const Navigator: NavigationContainer = createAppContainer(
    createStackNavigator(
@@ -74,8 +71,6 @@ export default class App extends Component<{}, PageBasicWrapperState> {
 
    async componentDidMount(): Promise<void> {
       await loadFontMontserrat();
-      // await Facebook.logInWithReadPermissionsAsync();
-      console.log(API_KEY);
       this.setState({ resourcesLoaded: true });
    }
 

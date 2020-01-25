@@ -4,7 +4,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withTheme, List, Avatar } from "react-native-paper";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
-import { fakeTestingUsers } from "../../../server-api/tools/debug-tools/fakeTestingUsers";
+import { fakeTestingUsers } from "../../../api/tools/debug-tools/fakeTestingUsers";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
 import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";

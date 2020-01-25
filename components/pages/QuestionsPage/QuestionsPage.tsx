@@ -5,12 +5,12 @@ import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
-import { fakeFilterQuestions } from "../../../server-api/tools/debug-tools/fakeFilterQuestions";
+import { fakeFilterQuestions } from "../../../api/tools/debug-tools/fakeFilterQuestions";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import QuestionForm from "../../common/QuestionForm/QuestionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
-import { QuestionData } from "../../../server-api/tools/debug-tools/interfaces/questions";
-import { fakeProfileQuestionsPart } from "../../../server-api/tools/debug-tools/fakeProfileQuestions";
+import { QuestionData } from "../../../api/tools/debug-tools/interfaces/questions";
+import { fakeProfileQuestionsPart } from "../../../api/tools/debug-tools/fakeProfileQuestions";
 import DialogError from "../../common/DialogError/DialogError";
 import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
 
