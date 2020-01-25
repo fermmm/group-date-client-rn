@@ -38,38 +38,40 @@ class NavigationBar extends Component<NavBarProps, NavBarState> {
             onIndexChange={i => this.setState({ index: i })}
             initialLayout={{ width: Dimensions.get("window").width }}
             renderTabBar={props =>
-               <this.Background useImageBackground={true}>
+               <View>
                   <ShadowBottom imageSource={currentTheme.shadowBottom} style={{ opacity: index === 0 ? 0.35 : 1 }} />
-                  <TabBar
-                     {...props}
-                     indicatorStyle={{ backgroundColor: colors.primary2 }}
-                     style={[styles.tabBar]}
-                     renderIcon={({ route, focused }) =>
-                        <View>
-                           {
-                              typeof route.icon === "string" ?
-                                 <Icon
-                                    name={route.icon}
-                                    color={colors.text2}
-                                    size={22}
-                                 />
-                              :
-                                 route.icon
-                           }
-                           {
-                              route.badgeText && 
-                                 <BadgeExtended 
-                                    size={20} 
-                                    extraX={-8}
-                                    extraY={-6}
-                                 >
-                                    {route.badgeText}
-                                 </BadgeExtended>
-                           }
-                        </View>
-                     }
-                  />
-               </this.Background>
+                  <this.Background useImageBackground={true}>
+                     <TabBar
+                        {...props}
+                        indicatorStyle={{ backgroundColor: colors.primary2 }}
+                        style={[styles.tabBar]}
+                        renderIcon={({ route, focused }) =>
+                           <View>
+                              {
+                                 typeof route.icon === "string" ?
+                                    <Icon
+                                       name={route.icon}
+                                       color={colors.text2}
+                                       size={22}
+                                    />
+                                 :
+                                    route.icon
+                              }
+                              {
+                                 route.badgeText && 
+                                    <BadgeExtended 
+                                       size={20} 
+                                       extraX={-8}
+                                       extraY={-6}
+                                    >
+                                       {route.badgeText}
+                                    </BadgeExtended>
+                              }
+                           </View>
+                        }
+                     />
+                  </this.Background>
+               </View>
             }
          />
       );
