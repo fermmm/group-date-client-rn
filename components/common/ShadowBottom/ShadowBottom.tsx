@@ -40,6 +40,7 @@ class ShadowBottom extends Component<PropsShadowBottom, State> {
                style,
                (!aspectRatio || !height) && {opacity: 0}
             ]}
+            key={height}
          >
             <Image
                source={imageSource}
