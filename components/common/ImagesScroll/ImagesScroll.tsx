@@ -29,7 +29,7 @@ export default class ImagesScroll extends Component<ImagesScrollProps, ImagesScr
       currentPictureFocused: 0
    };
 
-   componentWillMount(): void {
+   componentDidMount(): void {
       this.cacheImages();
    }
 

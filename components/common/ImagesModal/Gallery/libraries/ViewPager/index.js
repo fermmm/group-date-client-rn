@@ -61,6 +61,14 @@ export default class ViewPager extends PureComponent {
         this.getItemLayout = this.getItemLayout.bind(this);
 
         this.scroller = this.createScroller();
+
+        this.gestureResponder = createResponder({
+            onStartShouldSetResponder: (evt, gestureState) => true,
+            onResponderGrant: this.onResponderGrant,
+            onResponderMove: this.onResponderMove,
+            onResponderRelease: this.onResponderRelease,
+            onResponderTerminate: this.onResponderRelease
+        });
     }
 
     createScroller () {
@@ -84,16 +92,6 @@ export default class ViewPager extends PureComponent {
                     position, offset, fraction
                 });
             }
-        });
-    }
-
-    componentWillMount () {
-        this.gestureResponder = createResponder({
-            onStartShouldSetResponder: (evt, gestureState) => true,
-            onResponderGrant: this.onResponderGrant,
-            onResponderMove: this.onResponderMove,
-            onResponderRelease: this.onResponderRelease,
-            onResponderTerminate: this.onResponderRelease
         });
     }
 

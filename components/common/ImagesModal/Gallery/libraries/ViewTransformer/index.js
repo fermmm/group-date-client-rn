@@ -68,6 +68,20 @@ export default class ViewTransformer extends React.Component {
                 translateY: this.state.translateY + dy / this.state.scale
             });
         });
+
+        this.gestureResponder = createResponder({
+            onStartShouldSetResponder: (evt, gestureState) => true,
+            onMoveShouldSetResponderCapture: (evt, gestureState) => true,
+            // onMoveShouldSetResponder: this.handleMove,
+            onResponderMove: this.onResponderMove,
+            onResponderGrant: this.onResponderGrant,
+            onResponderRelease: this.onResponderRelease,
+            onResponderTerminate: this.onResponderRelease,
+            onResponderTerminationRequest: (evt, gestureState) => false, // Do not allow parent view to intercept gesture
+            onResponderSingleTapConfirmed: (evt, gestureState) => {
+                this.props.onSingleTapConfirmed && this.props.onSingleTapConfirmed();
+            }
+        });
     }
 
     viewPortRect () {
@@ -93,22 +107,6 @@ export default class ViewTransformer extends React.Component {
 
     currentTransform () {
         return new Transform(this.state.scale, this.state.translateX, this.state.translateY);
-    }
-
-    componentWillMount () {
-        this.gestureResponder = createResponder({
-            onStartShouldSetResponder: (evt, gestureState) => true,
-            onMoveShouldSetResponderCapture: (evt, gestureState) => true,
-            // onMoveShouldSetResponder: this.handleMove,
-            onResponderMove: this.onResponderMove,
-            onResponderGrant: this.onResponderGrant,
-            onResponderRelease: this.onResponderRelease,
-            onResponderTerminate: this.onResponderRelease,
-            onResponderTerminationRequest: (evt, gestureState) => false, // Do not allow parent view to intercept gesture
-            onResponderSingleTapConfirmed: (evt, gestureState) => {
-                this.props.onSingleTapConfirmed && this.props.onSingleTapConfirmed();
-            }
-        });
     }
 
     componentDidUpdate (prevProps, prevState) {

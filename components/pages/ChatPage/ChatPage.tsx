@@ -31,7 +31,7 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
       introDialogText: this.navigation.getParam("introDialogText")
    };
 
-   componentWillMount(): void {
+   componentDidMount(): void {
       this.setState({
          messages: [
             {
