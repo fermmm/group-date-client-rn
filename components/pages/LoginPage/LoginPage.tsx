@@ -9,13 +9,18 @@ import { NavigationContainerProps, NavigationScreenProp } from "react-navigation
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 import { currentTheme } from "../../../config";
 import i18n from "i18n-js";
-import { facebookLogin } from "../../../api/third-party/facebook/facebook-login";
+import { login, tryGetStoredSession } from "../../../api/server/login";
+import { loginWithFacebook } from "../../../api/third-party/facebook/facebook-login";
 
 export interface LoginProps extends Themed, NavigationContainerProps { }
 export interface LoginState { }
 
 class LoginPage extends Component<LoginProps, LoginState> {
    static defaultProps: Partial<LoginProps> = {};
+
+   async componentDidMount(): Promise<void> {
+      await login(await tryGetStoredSession());
+   }
 
    render(): JSX.Element {
       const { colors, fonts }: ThemeExt = this.props.theme as unknown as ThemeExt;
@@ -56,7 +61,7 @@ class LoginPage extends Component<LoginProps, LoginState> {
                <ButtonStyled
                   color={colors.textLogin}
                   style={{ borderColor: colors.textLogin }}
-                  onPress={() => facebookLogin()}
+                  onPress={async () => login(await loginWithFacebook())}
                >
                   Comenzar
                </ButtonStyled>
