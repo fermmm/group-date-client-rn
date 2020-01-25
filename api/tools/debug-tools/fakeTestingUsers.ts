@@ -29,8 +29,7 @@ export const fakeTestingUsers: User[] = [
       area: "Parque Chas",
       id: "2",
       images: [
-         "https://instagram.fymy1-1.fna.fbcdn.net/vp/c30e57dbcf2db91b8009dbdbcc1b82d7/5E0E3F5B/t51.2885-15/e35/67624761_891164491257833_7289520191745195235_n.jpg?_nc_ht=instagram.fymy1-1.fna.fbcdn.net",
-         "https://instagram.fymy1-1.fna.fbcdn.net/vp/49842c983807893ba6fac5efc3ea3272/5DFBD65B/t51.2885-15/e35/65460669_116374206315813_8219770711706583022_n.jpg?_nc_ht=instagram.fymy1-1.fna.fbcdn.net"
+         "https://instagram.faep22-1.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/p640x640/58410783_485378375620235_5654159599306713700_n.jpg?_nc_ht=instagram.faep22-1.fna.fbcdn.net&_nc_cat=111&_nc_ohc=LyfCdloFo9wAX92CKwU&oh=1860e02788e6f605d9f3ad5c1548f21e&oe=5EB80C1A"
       ],
    },
    {
