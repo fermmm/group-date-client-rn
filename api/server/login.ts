@@ -6,7 +6,7 @@ export async function tryGetStoredSession(): Promise<string | null> {
    if (storedToken == null) {
       return Promise.resolve(null);
    }
-   if (!await facebookTokenIsValid(storedToken)) {
+   if (!(await facebookTokenIsValid(storedToken))) {
       return Promise.resolve(null);
    }
    return Promise.resolve(storedToken);
