@@ -1,4 +1,4 @@
-import { QuestionData } from "./interfaces/questions";
+import { QuestionData } from "../../typings/endpoints-interfaces/questions";
 
 const genderQuestion: QuestionData = {
    text: "¿Cual es tu género?",

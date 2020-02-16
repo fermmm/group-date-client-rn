@@ -1,4 +1,4 @@
-import { QuestionData } from "./interfaces/questions";
+import { QuestionData } from "../../typings/endpoints-interfaces/questions";
 
 const sexIntentionsQuestion: QuestionData = {
    text: "¿Estás abierte a relacionarte sexualmente?",

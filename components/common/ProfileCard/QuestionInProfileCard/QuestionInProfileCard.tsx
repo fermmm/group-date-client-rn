@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { withTheme, Caption, Text } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
-import { QuestionData } from "../../../../api/tools/debug-tools/interfaces/questions";
+import { QuestionData } from "../../../../api/typings/endpoints-interfaces/questions";
 import color from "color";
 
 export interface IQuestionProfileProps extends Themed {

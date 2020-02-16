@@ -13,9 +13,9 @@ import { User } from "../../../api/typings/User";
 import { getAge } from "../../../api/tools/date-tools";
 import EditButton from "./EditButton/EditButton";
 import { withNavigation, NavigationInjectedProps, NavigationScreenProp } from "react-navigation";
-import { QuestionData } from "../../../api/tools/debug-tools/interfaces/questions";
 import { fakeProfileQuestionsPart } from "../../../api/tools/debug-tools/fakeProfileQuestions";
 import { fakeFilterQuestions } from "../../../api/tools/debug-tools/fakeFilterQuestions";
+import { QuestionData } from "../../../api/typings/endpoints-interfaces/questions";
 
 export interface ProfileCardProps extends Themed, NavigationInjectedProps {
    user: User;

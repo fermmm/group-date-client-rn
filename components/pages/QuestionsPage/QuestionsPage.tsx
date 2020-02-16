@@ -9,10 +9,10 @@ import { fakeFilterQuestions } from "../../../api/tools/debug-tools/fakeFilterQu
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import QuestionForm from "../../common/QuestionForm/QuestionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
-import { QuestionData } from "../../../api/tools/debug-tools/interfaces/questions";
 import { fakeProfileQuestionsPart } from "../../../api/tools/debug-tools/fakeProfileQuestions";
 import DialogError from "../../common/DialogError/DialogError";
 import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
+import { QuestionData } from "../../../api/typings/endpoints-interfaces/questions";
 
 export interface QuestionsPageProps extends Themed, NavigationInjectedProps { 
    appBarTitle?: string;

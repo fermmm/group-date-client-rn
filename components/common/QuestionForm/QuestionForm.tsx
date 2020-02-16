@@ -3,12 +3,12 @@ import { StyleSheet, View } from "react-native";
 import { withTheme, Text, Checkbox, List, IconButton } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { QuestionData } from "../../../api/tools/debug-tools/interfaces/questions";
 import TitleText from "../TitleText/TitleText";
 import RaddioButtonImproved from "../RadioButtonImproved/RadioButtonImproved";
 import { currentTheme } from "../../../config";
 import CheckboxButton from "../../common/CheckboxButton/CheckboxButton";
 import ListItemImproved from "../ListItemImproved/ListItemImproved";
+import { QuestionData } from "../../../api/typings/endpoints-interfaces/questions";
 
 export interface QuestionProps extends Themed {
    questionData: QuestionData;
