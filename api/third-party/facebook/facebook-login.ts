@@ -9,7 +9,7 @@ export async function loginWithFacebook(): Promise<string | null> {
    try {
       await initializeAsync(FACEBOOK_APP_ID, FACEBOOK_APP_NAME);
       const loginResult: FacebookLoginResult = await logInWithReadPermissionsAsync({
-         permissions: ["public_profile"]
+         permissions: ["public_profile", "email"]
       });
 
       const { type, token }: Flatten<Partial<FacebookLoginResult>> = loginResult;
