@@ -133,9 +133,9 @@ const politicsQuestion: QuestionData = {
 };
 
 export const fakeFilterQuestions: QuestionData[] = [
-   sexIntentionsQuestion,
+   // sexIntentionsQuestion,
    feminismQuestion,
    groupSexQuestion,
-   smokeQuestion,
+   // smokeQuestion,
    politicsQuestion,
 ];
