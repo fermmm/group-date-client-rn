@@ -36,8 +36,8 @@ class LoginPage extends Component<LoginProps, LoginState> {
                   cuando se gustan varias personas formando un grupo.
                </Text>
                <Text style={[styles.textBlock, { marginBottom: 100 }]}>
-                  La vas a pasar bien conociendo poliamoroses y les que quieran
-                  tienen una herramienta para relacionarse en grupo sexual o afectivamente.
+                  La vas a pasar bien conociendo poliamorosxs que te gustan y les que quieran
+                  tienen una herramienta para conectar en grupo socialmente o sexualmente.
                </Text>
                {/* <Text style={[styles.secondTextBlock, { color: colors.textLogin, fontFamily: fonts.light }]}>
                   Con esta herramienta no se busca el lucro y es de código abierto, perfeccionada

@@ -20,43 +20,43 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
    state: NotificationsPageState = {
       notifications: [
          {
-            uiTarget: UITarget.FacebookEvent,
-            redirectPath: "https://www.facebook.com/events/1770869566553161",
+            type: NotificationType.FacebookEvent,
+            targetId: "https://www.facebook.com/events/1770869566553161",
             seen: false,
             title: "Nuevo evento por tu zona",
             text: "Socializala #26 ~ Amor Libre Argentina",
             date: new Date()
          },
          {
-            uiTarget: UITarget.Group,
+            type: NotificationType.Group,
             seen: false,
             title: "¡Estas en una cita grupal!",
             text: "Felicitaciones, ¡estas en una cita grupal!, toca para verla",
             date: new Date()
          },
          {
-            uiTarget: UITarget.Chat,
+            type: NotificationType.Chat,
             seen: true,
             title: "Tenes nuevos mensajes",
             text: "Hay nuevos mensajes en el chat grupal de tu cita",
             date: new Date()
          },
          {
-            uiTarget: UITarget.Chat,
+            type: NotificationType.Chat,
             seen: true,
             title: "Tenes nuevos mensajes",
             text: "Hay nuevos mensajes en el chat grupal de tu cita",
             date: new Date()
          },
          {
-            uiTarget: UITarget.ContactChat,
+            type: NotificationType.ContactChat,
             seen: true,
             title: "Nuevo mensaje de contacto",
             text: "Te escribieron los desarrolladores de la app. Toca para ver",
             date: new Date()
          },
          {
-            uiTarget: UITarget.About,
+            type: NotificationType.About,
             seen: true,
             title: "¡Bienvenide a la app!",
             text: "Acabamos de lanzar la app, toca si queres saber que hay detrás.",
@@ -109,34 +109,34 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
    onNotificationPress(notification: Notification): void {
       const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
 
-      switch (notification.uiTarget) {
-         case UITarget.FacebookEvent:
-            Linking.openURL(notification.redirectPath);
+      switch (notification.type) {
+         case NotificationType.FacebookEvent:
+            Linking.openURL(notification.targetId);
             break;
-         case UITarget.Chat:
+         case NotificationType.Chat:
             navigate("Chat");
             break;
-         case UITarget.ContactChat:
+         case NotificationType.ContactChat:
             navigate("Chat", { contactChat: true });
             break;
-         case UITarget.Group:
+         case NotificationType.Group:
             navigate("Group", { group: getGroups()[0] });
             break;
-         case UITarget.About:
+         case NotificationType.About:
             navigate("About");
             break;
       }
    }
 
    getIcon(notification: Notification): string | ((color: string) => React.ReactNode) {      
-      switch (notification.uiTarget) {
-         case UITarget.FacebookEvent:
+      switch (notification.type) {
+         case NotificationType.FacebookEvent:
             return "event";
-         case UITarget.Chat:
+         case NotificationType.Chat:
             return "forum";
-         case UITarget.ContactChat:
+         case NotificationType.ContactChat:
             return "assistant";
-         case UITarget.Group:
+         case NotificationType.Group:
             return (color) => <GraphSvg2 circleColor={color} lineColor={color} style={styles.svgIcon} />;
          default:
             return "notifications";
@@ -169,16 +169,16 @@ const styles: Styles = StyleSheet.create({
 });
 
 export interface Notification {
-   uiTarget: UITarget;
+   type: NotificationType;
    seen: boolean;
    title: string;
    text: string;
-   redirectPath?: string;
+   targetId?: string;
    date: Date;
 }
 
-export enum UITarget {
-   None,
+export enum NotificationType {
+   TextOnly,
    Group,
    Chat,
    ContactChat,

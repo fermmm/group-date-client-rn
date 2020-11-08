@@ -15,4 +15,3 @@ export type Flatten<T> = {
    : T[K]
    : UnionToIntersection<T>[K] | undefined
 };
-

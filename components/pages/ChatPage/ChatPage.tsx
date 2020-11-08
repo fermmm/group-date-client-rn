@@ -36,11 +36,11 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
          messages: [
             {
                _id: 1,
-               text: "oooaaaaaa",
+               text: "olis como andan",
                createdAt: new Date(),
                user: {
                   _id: 2,
-                  name: "Alberto",
+                  name: "alberto666",
                   avatar: "https://placeimg.com/140/140/any",
                },
             },
@@ -73,7 +73,7 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
                         },
                      ]}
                   >
-                     No es recomandable usar el chat para conocerse o evaluarse, es un medio limitado que ditorsiona
+                     El chat es un medio limitado que distorsiona la percepción sobre los demás, recomendamos usarlo al mínimo.
                   </Banner>
             }
             <GiftedChat
