@@ -6,17 +6,17 @@ const sexIntentionsQuestion: QuestionData = {
    answers: [
       {
          id: "0",
-         text: "Si",
+         text: "Si"
       },
       {
          id: "1",
-         text: "No, no quiero relacionarme sexualmente",
+         text: "No, no quiero relacionarme sexualmente"
       }
    ],
    incompatibilitiesBetweenAnswers: {
       "0": ["1"],
       "1": ["0"]
-   },
+   }
 };
 
 const feminismQuestion: QuestionData = {
@@ -26,23 +26,23 @@ const feminismQuestion: QuestionData = {
    answers: [
       {
          id: "0",
-         text: "Si, muy de acuerdo",
+         text: "Si, muy de acuerdo"
       },
       {
          id: "1",
-         text: "Podría ser en alguna cosa, pero en general no",
+         text: "Podría ser en alguna cosa, pero en general no"
       },
       {
          id: "2",
-         text: "No sé nada sobre el tema",
+         text: "No sé nada sobre el tema"
       },
       {
          id: "3",
-         text: "No me interesa / No me parece importante",
+         text: "No me interesa / No me parece importante"
       },
       {
          id: "4",
-         text: "No estoy de acuerdo con el feminismo para nada",
+         text: "No estoy de acuerdo con el feminismo para nada"
       }
    ],
    incompatibilitiesBetweenAnswers: {
@@ -50,8 +50,8 @@ const feminismQuestion: QuestionData = {
       "1": ["0"],
       "2": ["0"],
       "3": ["0"],
-      "4": ["0"],
-   },
+      "4": ["0"]
+   }
 };
 
 const groupSexQuestion: QuestionData = {
@@ -60,26 +60,26 @@ const groupSexQuestion: QuestionData = {
    answers: [
       {
          id: "0",
-         text: "No me molesta / Me gustaría probar",
+         text: "No me molesta / Me gustaría probar"
       },
       {
          id: "1",
-         text: "Me gustó, lo haría de nuevo",
+         text: "Me gustó, lo haría de nuevo"
       },
       {
          id: "2",
-         text: "No lo se / Prefiero no opinar",
+         text: "No lo se / Prefiero no opinar"
       },
       {
          id: "3",
-         text: "No me interesa",
+         text: "No me interesa"
       }
    ],
    incompatibilitiesBetweenAnswers: {
       "0": ["3"],
       "1": ["3"],
-      "3": ["0", "1"],
-   },
+      "3": ["0", "1"]
+   }
 };
 
 const smokeQuestion: QuestionData = {
@@ -88,28 +88,29 @@ const smokeQuestion: QuestionData = {
    answers: [
       {
          id: "0",
-         text: "No",
+         text: "No"
       },
       {
          id: "1",
-         text: "Muy poco",
+         text: "Muy poco"
       },
       {
          id: "2",
-         text: "Si",
+         text: "Si"
       }
    ]
 };
 
 const politicsQuestion: QuestionData = {
    text: "¿Cuál es tu postura política?",
-   extraText: "Puede ser incómoda la pregunta pero es importante para la mayoría de personas consultadas",
+   extraText:
+      "Puede ser incómoda la pregunta pero es importante para la mayoría de personas consultadas",
    shortVersion: "Su postura política",
    itsImportantSelectedByDefault: true,
    answers: [
       {
          id: "0",
-         text: "No es un tema para hablar en una cita",
+         text: "No es un tema para hablar en una cita"
       },
       {
          id: "1",
@@ -124,12 +125,39 @@ const politicsQuestion: QuestionData = {
       {
          id: "3",
          text: "Otra"
-      },
+      }
    ],
    incompatibilitiesBetweenAnswers: {
       "1": ["2"],
       "2": ["1"]
-   },
+   }
+};
+
+/**
+ * Esta pregunta setea isCoupleProfile
+ */
+/**
+ * Translations
+ * "If you go to a group date from this app, do you plan to go with someone?": "Si vas a una cita grupal en esta app ¿Tienes pensado ir con alguien?",
+ *  "Would go on the date with": "Iría a la cita con",
+ *  "Just me": "Solo yo",
+ *  "With my couple": "Con mi pareja",
+ */
+const companyQuestion: QuestionData = {
+   questionId: 0,
+   affectsCardsGameOrdering: false,
+   text: "If you go to a group date from this app, do you plan to go with someone?",
+   shortVersion: "Would go on the date with",
+   answers: [
+      {
+         answerId: 0,
+         text: "Just me"
+      },
+      {
+         answerId: 1,
+         text: "With my couple"
+      }
+   ]
 };
 
 export const fakeFilterQuestions: QuestionData[] = [
@@ -137,5 +165,5 @@ export const fakeFilterQuestions: QuestionData[] = [
    feminismQuestion,
    groupSexQuestion,
    // smokeQuestion,
-   politicsQuestion,
+   politicsQuestion
 ];
