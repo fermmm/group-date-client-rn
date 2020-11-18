@@ -1,9 +1,10 @@
-import { ChatMessage } from './common';
-import { User } from './user';
+import { ChatMessage } from "./common";
+import { User } from "./user";
 
 export interface Group {
    groupId: string;
    creationDate: number;
+   membersAmount: number;
    members: User[];
    chat: GroupChat;
    dateIdeasVotes: Record<string, string[]>;
@@ -12,6 +13,9 @@ export interface Group {
    openForMoreUsers: boolean;
    feedback: ExperienceFeedback[];
    matches: UserWithMatches[];
+   mostVotedDate: number;
+   reminder1NotificationSent: boolean;
+   reminder2NotificationSent: boolean;
 }
 
 export interface GroupChat {
@@ -38,18 +42,19 @@ export interface ExperienceFeedback {
 }
 
 export enum ExperienceFeedbackType {
-   DidntWantToGo = 'DidntWantToGo',
-   CouldNotGo = 'CouldNotGo',
-   NoCommunication = 'NoCommunication',
-   NoInterestFromGroup = 'NoInterestFromGroup',
-   AssistedAndLiked = 'AssistedAndLiked',
-   AssistedAndNotLiked = 'AssistedAndNotLiked',
-   AssistedAndLovedIt = 'AssistedAndLovedIt',
+   DidntWantToGo = "DidntWantToGo",
+   CouldNotGo = "CouldNotGo",
+   NoCommunication = "NoCommunication",
+   NoInterestFromGroup = "NoInterestFromGroup",
+   AssistedAndLiked = "AssistedAndLiked",
+   AssistedAndNotLiked = "AssistedAndNotLiked",
+   AssistedAndLovedIt = "AssistedAndLovedIt",
 }
 
 export interface BasicGroupParams {
    token: string;
    groupId: string;
+   includeFullDetails?: boolean;
 }
 
 export interface DateIdeaVotePostParams extends BasicGroupParams {
@@ -65,10 +70,15 @@ export interface ChatPostParams extends BasicGroupParams {
 }
 
 export interface FeedbackPostParams extends BasicGroupParams {
-   feedback: Omit<ExperienceFeedback, 'userId'>;
+   feedback: Omit<ExperienceFeedback, "userId">;
 }
 
 export interface UserWithMatches {
    userId: string;
    matches: string[];
+}
+
+export interface GroupMembership {
+   newMessagesRead: boolean;
+   lastNotificationDate: number;
 }

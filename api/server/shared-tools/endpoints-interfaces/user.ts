@@ -1,7 +1,6 @@
-import { EditableUserPropKey, EditableUserProps } from '../validators/user';
-import { ThemeBasicInfo } from './themes';
-
-export type UserPropsValueTypes = number | string | boolean | string[];
+import { EditableUserPropKey, EditableUserProps } from "../validators/user";
+import { ThemeBasicInfo } from "./themes";
+import { ValueOf } from "ts-essentials";
 
 /**
  * If you want to add or remove a "user editable user prop" this is the basic todo list:
@@ -14,12 +13,13 @@ export interface User {
    userId: string;
    token: string;
    email: string;
-   notifications: Notification[];
+   isCoupleProfile: boolean;
    lastLoginDate: number;
    locationLat: number;
    locationLon: number;
    cityName: string;
    country: string;
+   language: string;
    name: string;
    age: number;
    gender: Gender;
@@ -39,22 +39,25 @@ export interface User {
    isAdmin?: boolean;
    sendNewUsersNotification: number;
    lastGroupJoinedDate: number;
-   questions?: QuestionResponse[];
+   notifications: Notification[];
+   questionsShowed: number[];
    themesSubscribed?: ThemeBasicInfo[];
    themesBlocked?: ThemeBasicInfo[];
 }
 
+export type UserPropsValueTypes = ValueOf<User>;
+
 export enum Gender {
-   Woman = 'Woman',
-   Man = 'Man',
-   TransgenderWoman = 'TransgenderWoman',
-   TransgenderMan = 'TransgenderMan',
-   Other = 'Other',
+   Woman = "Woman",
+   Man = "Man",
+   TransgenderWoman = "TransgenderWoman",
+   TransgenderMan = "TransgenderMan",
+   Other = "Other",
 }
 
 export interface ProfileStatusServerResponse {
    missingEditableUserProps: EditableUserPropKey[];
-   missingQuestionsId: number[];
+   notShowedThemeQuestions: number[];
 }
 
 export interface QuestionResponseParams {
@@ -69,21 +72,19 @@ export interface UserPostParams {
    questions?: QuestionResponseParams[];
 }
 
-export interface QuestionData {
+export interface ThemesAsQuestion {
    questionId: number;
    text: string;
-   affectsCardsGameOrdering: boolean;
    extraText?: string;
-   shortVersion?: string;
    answers: QuestionAnswerData[];
    incompatibilitiesBetweenAnswers?: { [key: number]: number[] };
 }
 
 export interface QuestionAnswerData {
-   answerId: number;
+   themeId: string;
    text: string;
+   themeName: string;
    extraText?: string;
-   shortVersion?: string;
 }
 
 export interface QuestionResponse {
@@ -113,17 +114,18 @@ export interface Attraction {
 }
 
 export enum AttractionType {
-   Like = 'Like',
-   Dislike = 'Dislike',
+   Like = "Like",
+   Dislike = "Dislike",
 }
 
 export enum MatchType {
-   Like = 'Match',
-   Dislike = 'SeenMatch',
+   Like = "Match",
+   Dislike = "SeenMatch",
 }
 
 export interface Notification {
    notificationId: string;
+   idForReplacement?: string;
    date: number;
    type: NotificationType;
    title: string;
