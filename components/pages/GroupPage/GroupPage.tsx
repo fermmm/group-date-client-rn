@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { withTheme, List } from "react-native-paper";
-import { NavigationScreenProp, NavigationInjectedProps, withNavigation } from "react-navigation";
+import { NavigationScreenProp, StackScreenProps, withNavigation } from "@react-navigation/stack";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
@@ -17,10 +17,10 @@ import ButtonForAppBar from "../../common/ButtonForAppBar/ButtonForAppBar";
 import CardAcceptInvitation from "./CardAcceptInvitation/CardAcceptInvitation";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
 
-export interface GroupPageProps extends Themed, NavigationInjectedProps { }
+export interface GroupPageProps extends Themed, StackScreenProps<{}> {}
 export interface GroupPageState {
    expandedUser: number;
- }
+}
 
 class GroupPage extends Component<GroupPageProps, GroupPageState> {
    state: GroupPageState = {
@@ -29,84 +29,79 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
 
    render(): JSX.Element {
       const { expandedUser }: Partial<GroupPageState> = this.state;
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { getParam, navigate }: NavigationScreenProp<{}> = this.props.navigation;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const { getParam, navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
       const group: Group = getParam("group");
 
       return (
          <>
             <AppBarHeader title={group.invitationAccepted ? "Grupo" : "Invitación a una cita"}>
-               {
-                  group.invitationAccepted &&
-                     <View>
-                        <ButtonForAppBar 
-                           icon="forum"
-                           onPress={() => navigate("Chat")}
-                        >
-                           Chat grupal
-                        </ButtonForAppBar>
-                        <BadgeExtended showAtLeftSide>3</BadgeExtended>
-                     </View>
-               }
+               {group.invitationAccepted && (
+                  <View>
+                     <ButtonForAppBar icon="forum" onPress={() => navigate("Chat")}>
+                        Chat grupal
+                     </ButtonForAppBar>
+                     <BadgeExtended showAtLeftSide>3</BadgeExtended>
+                  </View>
+               )}
             </AppBarHeader>
-            <BasicScreenContainer>   
-               {
-                  !group.invitationAccepted &&
-                     <CardAcceptInvitation 
-                        matchAmmount={3}
-                        onAcceptPress={() => navigate("DateVoting", { group })}
-                     />
-               }
-               {
-                  group.invitationAccepted &&
-                     <CardDateInfo 
-                        onModifyVotePress={() => navigate("DateVoting", { group })}
-                     />
-               }
+            <BasicScreenContainer>
+               {!group.invitationAccepted && (
+                  <CardAcceptInvitation
+                     matchAmmount={3}
+                     onAcceptPress={() => navigate("DateVoting", { group })}
+                  />
+               )}
+               {group.invitationAccepted && (
+                  <CardDateInfo onModifyVotePress={() => navigate("DateVoting", { group })} />
+               )}
                <SurfaceStyled>
-                  <TitleText>
-                     Miembros del grupo:
-                  </TitleText>
+                  <TitleText>Miembros del grupo:</TitleText>
                   <List.Section>
-                     {
-                        group.members.map((user, i) =>
-                           <List.Accordion
-                              title={user.name}
-                              expanded={i === expandedUser}
-                              onPress={() => this.setState({expandedUser: expandedUser !== i ? i : -1})}
-                              titleStyle={styles.itemTitle}
-                              left={props =>
-                                 <AvatarTouchable
-                                    {...props}
-                                    size={50}
-                                    source={{ uri: user.images[0] }}
-                                 />
-                              }
-                              key={i}
+                     {group.members.map((user, i) => (
+                        <List.Accordion
+                           title={user.name}
+                           expanded={i === expandedUser}
+                           onPress={() =>
+                              this.setState({ expandedUser: expandedUser !== i ? i : -1 })
+                           }
+                           titleStyle={styles.itemTitle}
+                           left={props => (
+                              <AvatarTouchable
+                                 {...props}
+                                 size={50}
+                                 source={{ uri: user.images[0] }}
+                              />
+                           )}
+                           key={i}
+                        >
+                           <List.Section
+                              title="Se gusta con:"
+                              style={styles.subItemTitle}
+                              titleStyle={styles.sectionTitle}
                            >
-                              <List.Section title="Se gusta con:" style={styles.subItemTitle} titleStyle={styles.sectionTitle}>
-                                 {
-                                    this.convertIdListInUsersList(group.matches[user.id], group.members).map((matchedUser, u) =>
-                                       <List.Item
-                                          title={matchedUser.name}
-                                          style={styles.subItem}
-                                          key={u}
+                              {this.convertIdListInUsersList(
+                                 group.matches[user.id],
+                                 group.members
+                              ).map((matchedUser, u) => (
+                                 <List.Item
+                                    title={matchedUser.name}
+                                    style={styles.subItem}
+                                    key={u}
+                                    onPress={() => navigate("Profile", { user: matchedUser })}
+                                    left={props => (
+                                       <AvatarTouchable
+                                          {...props}
                                           onPress={() => navigate("Profile", { user: matchedUser })}
-                                          left={props =>
-                                             <AvatarTouchable
-                                                {...props}
-                                                onPress={() => navigate("Profile", { user: matchedUser })}
-                                                size={50}
-                                                source={{ uri: matchedUser.images[0] }}
-                                             />
-                                          }
-                                       />,
-                                    )
-                                 }
-                              </List.Section>
-                           </List.Accordion>,
-                        )
-                     }
+                                          size={50}
+                                          source={{ uri: matchedUser.images[0] }}
+                                       />
+                                    )}
+                                 />
+                              ))}
+                           </List.Section>
+                        </List.Accordion>
+                     ))}
                   </List.Section>
                </SurfaceStyled>
             </BasicScreenContainer>
@@ -132,15 +127,17 @@ const styles: Styles = StyleSheet.create({
       textAlign: "center"
    },
    subItemTitle: {
-      paddingLeft: 10,
+      paddingLeft: 10
    },
    sectionTitle: {
       fontFamily: currentTheme.fonts.regular,
       fontSize: 15
    },
    subItem: {
-      paddingLeft: 26,
+      paddingLeft: 26
    }
 });
 
+// tslint:disable-next-line: ban-ts-ignore-except-imports
+// @ts-ignore
 export default withNavigation(withTheme(GroupPage));

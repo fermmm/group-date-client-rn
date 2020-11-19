@@ -11,10 +11,10 @@ import QuestionForm from "../../common/QuestionForm/QuestionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import { fakeProfileQuestionsPart } from "../../../api/tools/debug-tools/fakeProfileQuestions";
 import DialogError from "../../common/DialogError/DialogError";
-import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
+import { NavigationScreenProp, withNavigation, StackScreenProps } from "@react-navigation/stack";
 import { QuestionData } from "../../../api/typings/endpoints-interfaces/questions";
 
-export interface QuestionsPageProps extends Themed, NavigationInjectedProps { 
+export interface QuestionsPageProps extends Themed, StackScreenProps<{}> {
    appBarTitle?: string;
    backButtonChangesPage?: boolean;
    startingQuestion?: number;
@@ -37,71 +37,70 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
    answeredQuestions: boolean[] = [];
    state: QuestionsPageState = {
       currentStep: this.props.startingQuestion,
-      showCompleteAnswerError: false,
+      showCompleteAnswerError: false
    };
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { navigate, goBack }: NavigationScreenProp<{}> = this.props.navigation;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const { navigate, goBack }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
       const { currentStep }: Partial<QuestionsPageState> = this.state;
-      const { appBarTitle, backButtonChangesPage, showBottomButtons, onFinishGoBack }: Partial<QuestionsPageProps> = this.props;
+      const {
+         appBarTitle,
+         backButtonChangesPage,
+         showBottomButtons,
+         onFinishGoBack
+      }: Partial<QuestionsPageProps> = this.props;
 
-      const questions: QuestionData[] = [
-         ...fakeProfileQuestionsPart,
-         ...fakeFilterQuestions,
-      ];
+      const questions: QuestionData[] = [...fakeProfileQuestionsPart, ...fakeFilterQuestions];
 
       return (
          <>
-            <AppBarHeader 
+            <AppBarHeader
                title={appBarTitle}
                onBackPress={
-                  (currentStep > 0 && !backButtonChangesPage) ? 
-                     (() => this.setState({ currentStep: currentStep - 1 })) 
-                  : 
-                     null
-               } 
+                  currentStep > 0 && !backButtonChangesPage
+                     ? () => this.setState({ currentStep: currentStep - 1 })
+                     : null
+               }
             />
             <ScreensStepper
                currentScreen={currentStep}
                swipeEnabled={false}
-               onScreenChange={(newStep) => this.setState({ currentStep: newStep })}
+               onScreenChange={newStep => this.setState({ currentStep: newStep })}
             >
-               {
-                  questions.map((question, i) =>
-                     <BasicScreenContainer
-                        showBottomGradient={true}
-                        bottomGradientColor={colors.background}
-                        onBackPress={() => this.setState({ currentStep: currentStep - 1 })}
-                        onContinuePress={() =>
-                           this.answeredQuestions[i] ?
-                              currentStep < questions.length - 1 ? 
-                                 this.setState({ currentStep: currentStep + 1 })
-                              :
-                                 onFinishGoBack ? goBack() : navigate("Main")
-                           :
-                              this.setState({ showCompleteAnswerError: true })
+               {questions.map((question, i) => (
+                  <BasicScreenContainer
+                     showBottomGradient={true}
+                     bottomGradientColor={colors.background}
+                     onBackPress={() => this.setState({ currentStep: currentStep - 1 })}
+                     onContinuePress={() =>
+                        this.answeredQuestions[i]
+                           ? currentStep < questions.length - 1
+                              ? this.setState({ currentStep: currentStep + 1 })
+                              : onFinishGoBack
+                              ? goBack()
+                              : navigate("Main")
+                           : this.setState({ showCompleteAnswerError: true })
+                     }
+                     showBackButton={i !== 0 && showBottomButtons}
+                     showContinueButton={showBottomButtons}
+                     key={i}
+                  >
+                     <TitleSmallText style={styles.questionNumberIndicator}>
+                        Pregunta {i + 1} de {questions.length}
+                     </TitleSmallText>
+                     <QuestionForm
+                        questionData={question}
+                        onChange={selectedAnswers =>
+                           (this.answeredQuestions[i] = selectedAnswers.length > 0)
                         }
-                        showBackButton={i !== 0 && showBottomButtons}
-                        showContinueButton={showBottomButtons}
-                        key={i}
-                     >
-                        <TitleSmallText style={styles.questionNumberIndicator}>
-                           Pregunta {i + 1} de {questions.length}
-                        </TitleSmallText>
-                        <QuestionForm
-                           questionData={question}
-                           onChange={selectedAnswers =>
-                              this.answeredQuestions[i] = selectedAnswers.length > 0
-                           }
-                        />
-                     </BasicScreenContainer>
-                  )
-               }
+                     />
+                  </BasicScreenContainer>
+               ))}
             </ScreensStepper>
-            <DialogError 
+            <DialogError
                visible={this.state.showCompleteAnswerError}
-               onDismiss={() => this.setState({showCompleteAnswerError: false})}
+               onDismiss={() => this.setState({ showCompleteAnswerError: false })}
             >
                Tenés que contestar la pregunta para poder continuar
             </DialogError>
@@ -117,4 +116,6 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
+// tslint:disable-next-line: ban-ts-ignore-except-imports
+// @ts-ignore
 export default withNavigation(withTheme(QuestionsPage));

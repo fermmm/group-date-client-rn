@@ -5,12 +5,12 @@ import ProfilePicturesForm from "../../RegistrationFormsPage/ProfilePicturesForm
 import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
-import { NavigationInjectedProps, NavigationScreenProp, withNavigation } from "react-navigation";
+import { StackScreenProps, NavigationScreenProp, withNavigation } from "@react-navigation/stack";
 import DialogError from "../../../common/DialogError/DialogError";
 import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
 
-export interface ChangePicturesPageProps extends Themed, NavigationInjectedProps { }
-export interface ChnagePicturesPageState { 
+export interface ChangePicturesPageProps extends Themed, StackScreenProps<{}> {}
+export interface ChnagePicturesPageState {
    pictures: string[];
    error: string;
    showError: boolean;
@@ -25,11 +25,11 @@ class ChangePicturesPage extends Component<ChangePicturesPageProps, ChnagePictur
    };
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
 
       return (
          <>
-            <AppBarHeader title={"Modificar fotos"} onBackPress={() => this.onBackPress()}/>
+            <AppBarHeader title={"Modificar fotos"} onBackPress={() => this.onBackPress()} />
             <BasicScreenContainer>
                <ProfilePicturesForm
                   onChange={(pictures, error) => this.setState({ pictures, error })}
@@ -46,7 +46,7 @@ class ChangePicturesPage extends Component<ChangePicturesPageProps, ChnagePictur
    }
 
    onBackPress(): void {
-      const { goBack }: NavigationScreenProp<{}> = this.props.navigation;
+      const { goBack }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
       if (this.state.error == null) {
          // Send changes to server here
          goBack();
@@ -56,7 +56,8 @@ class ChangePicturesPage extends Component<ChangePicturesPageProps, ChnagePictur
    }
 }
 
-const styles: Styles = StyleSheet.create({
-});
+const styles: Styles = StyleSheet.create({});
 
+// tslint:disable-next-line: ban-ts-ignore-except-imports
+// @ts-ignore
 export default withNavigation(withTheme(ChangePicturesPage));

@@ -2,18 +2,18 @@ import React, { Component } from "react";
 import { withTheme } from "react-native-paper";
 import { Themed } from "../../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
-import { NavigationInjectedProps, NavigationScreenProp, withNavigation } from "react-navigation";
+import { StackScreenProps, NavigationScreenProp, withNavigation } from "@react-navigation/stack";
 import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
 import ProfileTextForm from "../../RegistrationFormsPage/ProfileTextForm/ProfileTextForm";
 
-export interface ChangeProfileTextProps extends Themed, NavigationInjectedProps { }
+export interface ChangeProfileTextProps extends Themed, StackScreenProps<{}> {}
 export interface ChangeProfileTextState {
    profileText: string;
 }
 
 class ChangeProfileTextPage extends Component<ChangeProfileTextProps, ChangeProfileTextState> {
    state: ChangeProfileTextState = {
-      profileText: "" // Retreive current profile text here 
+      profileText: "" // Retreive current profile text here
    };
 
    render(): JSX.Element {
@@ -31,10 +31,12 @@ class ChangeProfileTextPage extends Component<ChangeProfileTextProps, ChangeProf
    }
 
    onBackPress(): void {
-      const { goBack }: NavigationScreenProp<{}> = this.props.navigation;
+      const { goBack }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
       // Send changes to server here
       goBack();
    }
 }
 
+// tslint:disable-next-line: ban-ts-ignore-except-imports
+// @ts-ignore
 export default withNavigation(withTheme(ChangeProfileTextPage));

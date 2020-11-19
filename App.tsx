@@ -9,8 +9,8 @@ import { AppLoading } from "expo";
 import { Provider as PaperProvider } from "react-native-paper";
 import { loadFontMontserrat } from "./common-tools/fontLoaders/loadFontMontserrat";
 import { currentTheme } from "./config";
-import { NavigationContainer, createAppContainer } from "react-navigation";
-import { createStackNavigator } from "react-navigation-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import DateVotingPage from "./components/pages/DateVotingPage/DateVotingPage";
 import ChangePicturesPage from "./components/pages/SettingsPage/ChangePicturesPage/ChangePicturesPage";
 import ChangeProfileTextPage from "./components/pages/SettingsPage/ChangeProfileTextPage/ChangeProfileTextPage";
@@ -25,36 +25,13 @@ import { esAr } from "./texts/esAr/esAr";
 import { en } from "./texts/en/en";
 import { es } from "./texts/es/es";
 
-const Navigator: NavigationContainer = createAppContainer(
-   createStackNavigator(
-      {
-         Login: { screen: LoginPage },
-         Main: { screen: MainPage },
-         Group: { screen: GroupPage },
-         Chat: { screen: ChatPage },
-         DateVoting: { screen: DateVotingPage },
-         Profile: { screen: ProfilePage },
-         Questions: { screen: QuestionsPage },
-         RegistrationForms: { screen: RegistrationFormsPage },
-         About: { screen: AboutPage },
-         ChangePictures: { screen: ChangePicturesPage },
-         ChangeProfileText: { screen: ChangeProfileTextPage },
-         ChangeBasicInfo: { screen: ChangeBasicInfoPage },
-         ChangeDateIdea: { screen: ChangeDateIdeaPage },
-         ChangeQuestions: { screen: ChangeQuestionsPage },
-      },
-      {
-         initialRouteName: "Login",
-         headerMode: "none",
-      },
-   )
-);
+const Stack = createStackNavigator();
 
 i18n.fallbacks = true;
 i18n.translations = {
-   en, 
+   en,
    es,
-   "es-AR" : esAr, 
+   "es-AR": esAr
 };
 i18n.defaultLocale = "es";
 i18n.locale = Localization.locale;
@@ -64,9 +41,21 @@ interface PageBasicWrapperState {
    resourcesLoaded: boolean;
 }
 
+const TestTheme = {
+   dark: false,
+   colors: {
+      primary: "rgb(255, 45, 85)",
+      background: "rgb(0, 0, 0)",
+      card: "rgb(0, 0, 0)",
+      text: "rgb(28, 28, 30)",
+      border: "rgb(199, 199, 204)",
+      notification: "rgb(255, 69, 58)"
+   }
+};
+
 export default class App extends Component<{}, PageBasicWrapperState> {
    state: PageBasicWrapperState = {
-      resourcesLoaded: false,
+      resourcesLoaded: false
    };
 
    async componentDidMount(): Promise<void> {
@@ -81,7 +70,24 @@ export default class App extends Component<{}, PageBasicWrapperState> {
 
       return (
          <PaperProvider theme={currentTheme}>
-            <Navigator />
+            <NavigationContainer theme={TestTheme}>
+               <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
+                  <Stack.Screen name="Login" component={LoginPage} />
+                  <Stack.Screen name="Main" component={MainPage} />
+                  <Stack.Screen name="Group" component={GroupPage} />
+                  <Stack.Screen name="Chat" component={ChatPage} />
+                  <Stack.Screen name="DateVoting" component={DateVotingPage} />
+                  <Stack.Screen name="Profile" component={ProfilePage} />
+                  <Stack.Screen name="Questions" component={QuestionsPage} />
+                  <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
+                  <Stack.Screen name="About" component={AboutPage} />
+                  <Stack.Screen name="ChangePictures" component={ChangePicturesPage} />
+                  <Stack.Screen name="ChangeProfileText" component={ChangeProfileTextPage} />
+                  <Stack.Screen name="ChangeBasicInfo" component={ChangeBasicInfoPage} />
+                  <Stack.Screen name="ChangeDateIdea" component={ChangeDateIdeaPage} />
+                  <Stack.Screen name="ChangeQuestions" component={ChangeQuestionsPage} />
+               </Stack.Navigator>
+            </NavigationContainer>
          </PaperProvider>
       );
    }

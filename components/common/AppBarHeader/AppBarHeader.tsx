@@ -3,42 +3,41 @@ import { StyleSheet, ImageBackground, View, StatusBar, Text } from "react-native
 import { withTheme, Appbar } from "react-native-paper";
 import { Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { withNavigation, NavigationInjectedProps, NavigationScreenProp } from "react-navigation";
+import { withNavigation, StackScreenProps, NavigationScreenProp } from "@react-navigation/stack";
 import { currentTheme } from "../../../config";
 import ShadowBottom from "../ShadowBottom/ShadowBottom";
 
-export interface AppBarHeaderProps extends Themed, NavigationInjectedProps {
+export interface AppBarHeaderProps extends Themed, StackScreenProps<{}> {
    title?: string;
    showBackButton?: boolean;
    onBackPress?(): void;
 }
-export interface AppBarHeaderState { }
+export interface AppBarHeaderState {}
 
 class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
    static defaultProps: Partial<AppBarHeaderProps> = {
       title: "",
-      showBackButton: true,
+      showBackButton: true
    };
 
    render(): JSX.Element {
-      const { goBack }: NavigationScreenProp<{}> = this.props.navigation;
+      const { goBack }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
       return (
          <View style={styles.mainContainer}>
             <ShadowBottom imageSource={currentTheme.shadowBottom} />
             <this.Background useImageBackground={true}>
                <View style={styles.contentContainer}>
-                  {
-                     this.props.showBackButton &&
+                  {this.props.showBackButton && (
                      <Appbar.BackAction
                         color={currentTheme.colors.text2}
-                        onPress={() => this.props.onBackPress != null ? this.props.onBackPress() : goBack()}
-                        style={{marginRight: 25}}
+                        onPress={() =>
+                           this.props.onBackPress != null ? this.props.onBackPress() : goBack()
+                        }
+                        style={{ marginRight: 25 }}
                      />
-                  }
+                  )}
                   <View style={{ flex: 1 }}>
-                     <Text style={styles.titleText}>
-                        {this.props.title}
-                     </Text>
+                     <Text style={styles.titleText}>{this.props.title}</Text>
                   </View>
                   {this.props.children}
                </View>
@@ -47,7 +46,7 @@ class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
       );
    }
 
-   Background(props: { children?: JSX.Element, useImageBackground: boolean }): JSX.Element {
+   Background(props: { children?: JSX.Element; useImageBackground: boolean }): JSX.Element {
       if (props.useImageBackground) {
          return (
             <ImageBackground source={currentTheme.backgroundImage} style={styles.imageBackground}>
@@ -55,11 +54,7 @@ class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
             </ImageBackground>
          );
       } else {
-         return (
-            <View style={styles.colorBackground}>
-               {props.children}
-            </View>
-         );
+         return <View style={styles.colorBackground}>{props.children}</View>;
       }
    }
 }
@@ -74,27 +69,29 @@ const styles: Styles = StyleSheet.create({
       flex: 1,
       width: "100%",
       justifyContent: "center",
-      paddingTop: StatusBar.currentHeight,
+      paddingTop: StatusBar.currentHeight
    },
    colorBackground: {
       flex: 1,
       width: "100%",
       justifyContent: "center",
       backgroundColor: currentTheme.colors.primary,
-      paddingTop: StatusBar.currentHeight,
+      paddingTop: StatusBar.currentHeight
    },
    contentContainer: {
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
       paddingRight: 10,
-      paddingLeft: 0,
+      paddingLeft: 0
    },
    titleText: {
       color: currentTheme.colors.text2,
       fontSize: 16,
-      fontFamily: currentTheme.fonts.medium,
+      fontFamily: currentTheme.fonts.medium
    }
 });
 
+// tslint:disable-next-line: ban-ts-ignore-except-imports
+// @ts-ignore
 export default withNavigation(withTheme(AppBarHeader));

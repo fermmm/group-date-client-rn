@@ -7,10 +7,11 @@ import { GiftedChat, IMessage, Bubble, Send } from "react-native-gifted-chat";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import color from "color";
-import { NavigationInjectedProps, withNavigation, NavigationScreenProp } from "react-navigation";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import DialogError from "../../common/DialogError/DialogError";
+import { withNavigation } from "@react-navigation/compat";
 
-export interface ChatPageProps extends Themed, NavigationInjectedProps { }
+export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
    messages: IMessage[];
    adviseBannerVisible: boolean;
@@ -21,8 +22,8 @@ export interface ChatPageState {
 
 class ChatPage extends Component<ChatPageProps, ChatPageState> {
    static defaultProps: Partial<ChatPageProps> = {};
-   navigation: NavigationScreenProp<{}> = this.props.navigation;
-   
+   navigation: StackNavigationProp<Record<string, {}>> = this.props.navigation;
+
    state: ChatPageState = {
       messages: [],
       adviseBannerVisible: true,
@@ -41,50 +42,58 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
                user: {
                   _id: 2,
                   name: "alberto666",
-                  avatar: "https://placeimg.com/140/140/any",
-               },
-            },
-         ],
+                  avatar: "https://placeimg.com/140/140/any"
+               }
+            }
+         ]
       });
    }
 
    onSend(messages: IMessage[] = []): void {
       this.setState(previousState => ({
-         messages: GiftedChat.append(previousState.messages, messages),
+         messages: GiftedChat.append(previousState.messages, messages)
       }));
    }
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { isContactChat, showIntroDialog, introDialogText }: Partial<ChatPageState> = this.state;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const {
+         isContactChat,
+         showIntroDialog,
+         introDialogText
+      }: Partial<ChatPageState> = this.state;
 
       return (
          <>
             <AppBarHeader title={!isContactChat ? "Chat" : "Contactanos"} />
-            {
-               !isContactChat && 
-                  <Banner
-                     visible={this.state.adviseBannerVisible}
-                     style={{backgroundColor: color(colors.background).darken(0.04).toString(), elevation: 12, marginBottom: 25}}
-                     actions={[
-                        {
-                           label: "Entendido",
-                           onPress: () => this.setState({ adviseBannerVisible: false }),
-                        },
-                     ]}
-                  >
-                     El chat es un medio limitado que distorsiona la percepción sobre los demás, recomendamos usarlo al mínimo.
-                  </Banner>
-            }
+            {!isContactChat && (
+               <Banner
+                  visible={this.state.adviseBannerVisible}
+                  style={{
+                     backgroundColor: color(colors.background).darken(0.04).toString(),
+                     elevation: 12,
+                     marginBottom: 25
+                  }}
+                  actions={[
+                     {
+                        label: "Entendido",
+                        onPress: () => this.setState({ adviseBannerVisible: false })
+                     }
+                  ]}
+               >
+                  El chat es un medio limitado que distorsiona la percepción sobre los demás,
+                  recomendamos usarlo al mínimo.
+               </Banner>
+            )}
             <GiftedChat
                messages={this.state.messages}
                onSend={messages => this.onSend(messages)}
                user={{
-                  _id: 1,
+                  _id: 1
                }}
                renderUsernameOnMessage={true}
                placeholder={"Escribir un mensaje..."}
-               renderBubble={props =>
+               renderBubble={props => (
                   <Bubble
                      {...props}
                      // tslint:disable-next-line: ban-ts-ignore-except-imports
@@ -93,14 +102,10 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
                         right: { backgroundColor: colors.primary }
                      }}
                   />
-               }
-               renderSend={props =>
-                  <Send
-                     {...props}
-                     label={"Enviar"}
-                     textStyle={{ color: colors.primary }}
-                  />
-               }
+               )}
+               renderSend={props => (
+                  <Send {...props} label={"Enviar"} textStyle={{ color: colors.primary }} />
+               )}
                keyboardShouldPersistTaps="never"
                scrollToBottom
                alignTop
@@ -117,7 +122,8 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
    }
 }
 
-const styles: Styles = StyleSheet.create({
-});
+const styles: Styles = StyleSheet.create({});
 
+// tslint:disable-next-line: ban-ts-ignore-except-imports
+// @ts-ignore
 export default withNavigation(withTheme(ChatPage));

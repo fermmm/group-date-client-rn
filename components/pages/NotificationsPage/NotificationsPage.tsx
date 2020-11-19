@@ -6,12 +6,12 @@ import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
-import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
+import { NavigationScreenProp, withNavigation, StackScreenProps } from "@react-navigation/stack";
 import { currentTheme } from "../../../config";
 import { getGroups } from "../../../api/groups";
 import GraphSvg2 from "../../../assets/GraphSvg2";
 
-export interface NotificationsPageProps extends Themed, NavigationInjectedProps { }
+export interface NotificationsPageProps extends Themed, StackScreenProps<{}> {}
 export interface NotificationsPageState {
    notifications: Notification[];
 }
@@ -61,13 +61,13 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
             title: "¡Bienvenide a la app!",
             text: "Acabamos de lanzar la app, toca si queres saber que hay detrás.",
             date: new Date()
-         },
+         }
       ]
    };
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
 
       return (
          <>
@@ -76,38 +76,38 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
                   Notificaciones
                </TitleText>
                <EmptySpace height={10} />
-               {
-                  this.state.notifications.map((notification, i) => {
-                     const icon: string | ((color: string) => React.ReactNode) = this.getIcon(notification);
+               {this.state.notifications.map((notification, i) => {
+                  const icon: string | ((color: string) => React.ReactNode) = this.getIcon(
+                     notification
+                  );
 
-                     return (
-                        <List.Item
-                           title={notification.title}
-                           description={notification.text}
-                           left={props =>
-                              typeof icon === "string" ? 
-                                 <List.Icon
-                                    {...props}
-                                    style={styles.optionIcon}
-                                    icon={icon}
-                                 />
-                              :
-                                 icon(props.color)
-                           }
-                           onPress={() => this.onNotificationPress(notification)}
-                           style={[styles.notification, !notification.seen && styles.unseenNotification]}
-                           key={i}
-                        />
-                     );
-                  })
-               }
+                  return (
+                     <List.Item
+                        title={notification.title}
+                        description={notification.text}
+                        left={props =>
+                           typeof icon === "string" ? (
+                              <List.Icon {...props} style={styles.optionIcon} icon={icon} />
+                           ) : (
+                              icon(props.color)
+                           )
+                        }
+                        onPress={() => this.onNotificationPress(notification)}
+                        style={[
+                           styles.notification,
+                           !notification.seen && styles.unseenNotification
+                        ]}
+                        key={i}
+                     />
+                  );
+               })}
             </BasicScreenContainer>
          </>
       );
    }
 
    onNotificationPress(notification: Notification): void {
-      const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
+      const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
 
       switch (notification.type) {
          case NotificationType.FacebookEvent:
@@ -128,7 +128,7 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
       }
    }
 
-   getIcon(notification: Notification): string | ((color: string) => React.ReactNode) {      
+   getIcon(notification: Notification): string | ((color: string) => React.ReactNode) {
       switch (notification.type) {
          case NotificationType.FacebookEvent:
             return "event";
@@ -137,7 +137,9 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
          case NotificationType.ContactChat:
             return "assistant";
          case NotificationType.Group:
-            return (color) => <GraphSvg2 circleColor={color} lineColor={color} style={styles.svgIcon} />;
+            return color => (
+               <GraphSvg2 circleColor={color} lineColor={color} style={styles.svgIcon} />
+            );
          default:
             return "notifications";
       }
@@ -165,7 +167,7 @@ const styles: Styles = StyleSheet.create({
    unseenNotification: {
       backgroundColor: currentTheme.colors.backgroundBottomGradient,
       elevation: 6
-   },
+   }
 });
 
 export interface Notification {
@@ -186,4 +188,6 @@ export enum NotificationType {
    About
 }
 
+// tslint:disable-next-line: ban-ts-ignore-except-imports
+// @ts-ignore
 export default withNavigation(withTheme(NotificationsPage));

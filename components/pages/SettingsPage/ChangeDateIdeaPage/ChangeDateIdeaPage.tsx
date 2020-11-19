@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { withTheme } from "react-native-paper";
 import { Themed } from "../../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
-import { NavigationInjectedProps, NavigationScreenProp, withNavigation } from "react-navigation";
+import { StackScreenProps, NavigationScreenProp, withNavigation } from "@react-navigation/stack";
 import DialogError from "../../../common/DialogError/DialogError";
 import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
 import DateIdeaForm, { DateIdeaState } from "../../RegistrationFormsPage/DateIdeaForm/DateIdeaForm";
 
-interface ChangeDateIdeaPageProps extends Themed, NavigationInjectedProps { }
+interface ChangeDateIdeaPageProps extends Themed, StackScreenProps<{}> {}
 interface ChangeDateIdeaPageState {
    dateIdeaFormData: DateIdeaState;
    error: string;
@@ -41,7 +41,7 @@ class ChangeDateIdeaPage extends Component<ChangeDateIdeaPageProps, ChangeDateId
    }
 
    onBackPress(): void {
-      const { goBack }: NavigationScreenProp<{}> = this.props.navigation;
+      const { goBack }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
       if (this.state.error == null) {
          // Send changes to server here
          goBack();
@@ -51,4 +51,6 @@ class ChangeDateIdeaPage extends Component<ChangeDateIdeaPageProps, ChangeDateId
    }
 }
 
+// tslint:disable-next-line: ban-ts-ignore-except-imports
+// @ts-ignore
 export default withNavigation(withTheme(ChangeDateIdeaPage));

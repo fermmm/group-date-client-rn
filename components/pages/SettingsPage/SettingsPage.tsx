@@ -7,71 +7,55 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import { fakeTestingUsers } from "../../../api/tools/debug-tools/fakeTestingUsers";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
-import { NavigationScreenProp, withNavigation, NavigationInjectedProps } from "react-navigation";
+import { NavigationScreenProp, withNavigation, StackScreenProps } from "@react-navigation/stack";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
 
-export interface SettingsPageProps extends Themed, NavigationInjectedProps { }
-export interface SettingsPageState { }
+export interface SettingsPageProps extends Themed, StackScreenProps<{}> {}
+export interface SettingsPageState {}
 
 class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { navigate }: NavigationScreenProp<{}> = this.props.navigation;
-      
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
+
       return (
          <>
             <BasicScreenContainer>
                <TitleText extraMarginLeft extraSize>
                   Ajustes y otras cosas
                </TitleText>
-               <EmptySpace height={25}/>
+               <EmptySpace height={25} />
                <List.Item
                   title="Tus fotos y otros datos"
-                  left={props => 
-                     <Avatar.Image 
-                        {...props} 
+                  left={props => (
+                     <Avatar.Image
+                        {...props}
                         style={styles.profileIcon}
-                        size={42} 
-                        source={{ uri: fakeTestingUsers[0].images[0] }} 
+                        size={42}
+                        source={{ uri: fakeTestingUsers[0].images[0] }}
                      />
-               }
+                  )}
                   onPress={() => navigate("Profile", { user: fakeTestingUsers[0], editMode: true })}
                />
-               <EmptySpace height={10}/>
+               <EmptySpace height={10} />
                <List.Item
                   title="Preguntas y filtros"
                   description="Modifica la información sobre tu sexualidad y preferencias"
-                  left={props => 
-                     <List.Icon 
-                        {...props} 
-                        style={styles.optionIcon} 
-                        icon="search" 
-                     />
-                  }
+                  left={props => <List.Icon {...props} style={styles.optionIcon} icon="search" />}
                   onPress={() => navigate("ChangeQuestions")}
                />
                <List.Item
                   title="Tu lugar recomendado"
                   description="Modifica tu lugar recomendado para citas grupales"
-                  left={props => 
-                     <List.Icon 
-                        {...props} 
-                        style={styles.optionIcon} 
-                        icon="terrain" 
-                     />
-                  }
+                  left={props => <List.Icon {...props} style={styles.optionIcon} icon="terrain" />}
                   onPress={() => navigate("ChangeDateIdea")}
                />
                <List.Item
                   title="Sobre la app y más"
                   description="Te contamos sobre la app, la gente detras de su creación y más"
-                  left={props => 
-                     <List.Icon 
-                        {...props} 
-                        style={styles.optionIcon} 
-                        icon="all-inclusive" 
-                     />
-                  }
+                  left={props => (
+                     <List.Icon {...props} style={styles.optionIcon} icon="all-inclusive" />
+                  )}
                   onPress={() => navigate("About")}
                />
                {/* 
@@ -92,22 +76,15 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                <List.Item
                   title="Chatear con nosotros"
                   description="Escribinos lo que necesites: problemas, pedidos, quejas, etc."
-                  left={props => 
+                  left={props => (
                      <View>
-                        <List.Icon 
-                           {...props} 
-                           style={styles.optionIcon} 
-                           icon="forum" 
-                        />
-                        <BadgeExtended 
-                           size={23} 
-                           extraX={7}
-                        >
+                        <List.Icon {...props} style={styles.optionIcon} icon="forum" />
+                        <BadgeExtended size={23} extraX={7}>
                            1
                         </BadgeExtended>
                      </View>
-                  }
-                  onPress={() => navigate("Chat", {contactChat: true})}
+                  )}
+                  onPress={() => navigate("Chat", { contactChat: true })}
                />
             </BasicScreenContainer>
          </>
@@ -123,7 +100,9 @@ const styles: Styles = StyleSheet.create({
    optionIcon: {
       marginLeft: 5,
       marginRight: 8
-   },
+   }
 });
 
+// tslint:disable-next-line: ban-ts-ignore-except-imports
+// @ts-ignore
 export default withNavigation(withTheme(SettingsPage));
