@@ -6,8 +6,9 @@ import { Themed } from "../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
-import { withNavigation, StackScreenProps } from "@react-navigation/stack";
+import { StackScreenProps } from "@react-navigation/stack";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
+import { withNavigation } from "@react-navigation/compat";
 
 export interface AboutPageProps extends Themed, StackScreenProps<{}> {}
 

@@ -6,7 +6,7 @@ import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
-import { NavigationScreenProp, withNavigation, StackScreenProps } from "@react-navigation/stack";
+import { StackScreenProps, StackNavigationProp } from "@react-navigation/stack";
 import { currentTheme } from "../../../config";
 import { getGroups } from "../../../api/groups";
 import GraphSvg2 from "../../../assets/GraphSvg2";

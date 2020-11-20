@@ -10,6 +10,7 @@ import color from "color";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import DialogError from "../../common/DialogError/DialogError";
 import { withNavigation } from "@react-navigation/compat";
+import { Route } from "@react-navigation/native";
 
 export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
@@ -19,17 +20,22 @@ export interface ChatPageState {
    showIntroDialog: boolean;
    introDialogText: string;
 }
+interface RouteParams {
+   contactChat: boolean;
+   introDialogText: string;
+}
 
 class ChatPage extends Component<ChatPageProps, ChatPageState> {
    static defaultProps: Partial<ChatPageProps> = {};
    navigation: StackNavigationProp<Record<string, {}>> = this.props.navigation;
+   route: Route<string, RouteParams> = this.props.route as Route<string, RouteParams>;
 
    state: ChatPageState = {
       messages: [],
       adviseBannerVisible: true,
-      isContactChat: this.navigation.getParam("contactChat") || false,
-      showIntroDialog: this.navigation.getParam("introDialogText") || false,
-      introDialogText: this.navigation.getParam("introDialogText")
+      isContactChat: this.route.params.contactChat ?? false,
+      showIntroDialog: this.route.params.introDialogText != null,
+      introDialogText: this.route.params.introDialogText
    };
 
    componentDidMount(): void {

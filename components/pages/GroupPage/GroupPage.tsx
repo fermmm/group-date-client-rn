@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { withTheme, List } from "react-native-paper";
-import { NavigationScreenProp, StackScreenProps, withNavigation } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import AvatarTouchable from "../../common/AvatarTouchable/AvatarTouchable";
-import { Group } from "../../../api/typings/Group";
-import { User } from "../../../api/typings/User";
 import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
@@ -16,6 +14,8 @@ import CardDateInfo from "./CardDateInfo/CardDateInfo";
 import ButtonForAppBar from "../../common/ButtonForAppBar/ButtonForAppBar";
 import CardAcceptInvitation from "./CardAcceptInvitation/CardAcceptInvitation";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
+import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
+import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
 export interface GroupPageProps extends Themed, StackScreenProps<{}> {}
 export interface GroupPageState {
@@ -30,8 +30,12 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
    render(): JSX.Element {
       const { expandedUser }: Partial<GroupPageState> = this.state;
       const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-      const { getParam, navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
-      const group: Group = getParam("group");
+      const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
+      const route: Route<string, { group: Group }> = this.props.route as Route<
+         string,
+         { group: Group }
+      >;
+      const group: Group = route.params.group;
 
       return (
          <>

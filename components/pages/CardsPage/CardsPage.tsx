@@ -5,7 +5,6 @@ import ProfileCard from "../../common/ProfileCard/ProfileCard";
 import { withTheme } from "react-native-paper";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { getAvaiableCards } from "../../../api/cards-game";
-import { User } from "../../../api/typings/User";
 import NoMoreUsersMessage from "./NoMoreUsersMessage/NoMoreUsersMessage";
 import CardsOptimization from "../../common/CardsEffect/CardsOptimization";
 import CardAnimator from "../../common/CardsEffect/CardAnimator/CardAnimator";
@@ -13,8 +12,9 @@ import { LikeAnimation } from "../../common/CardsEffect/CardAnimator/animations/
 import { DislikeAnimation } from "../../common/CardsEffect/CardAnimator/animations/DislikeAnimation";
 import { BackCardSlowAnimation } from "../../common/CardsEffect/CardAnimator/animations/BackCardSlow";
 import { BackCardFastAnimation } from "../../common/CardsEffect/CardAnimator/animations/BackCardFast";
+import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
-export interface CardsPageProps extends Themed { }
+export interface CardsPageProps extends Themed {}
 export interface CardsPageState {
    users: User[];
    currentUser: number;
@@ -32,46 +32,39 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
       noMoreUsersOnServer: false
       // noMoreUsersOnServer: true     // Uncomment this line to test the "no more users" UI
    };
-   
+
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const {
-         users,
-         currentUser,
-         noMoreUsersOnServer,
-      }: Partial<CardsPageState> = this.state;
-      
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const { users, currentUser, noMoreUsersOnServer }: Partial<CardsPageState> = this.state;
+
       return (
          <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
-            {
-               noMoreUsersOnServer ?
-                  <NoMoreUsersMessage />
-               :
-                  <CardsOptimization currentCard={currentUser}>
-                     { 
-                        users.map((user, i) =>
-                           <CardAnimator
-                              ref={component => this.animRefs[i] = component}
-                              key={user.id}
-                           >
-                              <ProfileCard
-                                 user={user}
-                                 showLikeDislikeButtons={true}
-                                 onLikeClick={() => this.onLikeOrDislike(true)}
-                                 onDislikeClick={() => this.onLikeOrDislike(false)}
-                              />
-                           </CardAnimator>
-                        )
-                     }
-                  </CardsOptimization>
-            }
+            {noMoreUsersOnServer ? (
+               <NoMoreUsersMessage />
+            ) : (
+               <CardsOptimization currentCard={currentUser}>
+                  {users.map((user, i) => (
+                     <CardAnimator
+                        ref={component => (this.animRefs[i] = component)}
+                        key={user.userId}
+                     >
+                        <ProfileCard
+                           user={user}
+                           showLikeDislikeButtons={true}
+                           onLikeClick={() => this.onLikeOrDislike(true)}
+                           onDislikeClick={() => this.onLikeOrDislike(false)}
+                        />
+                     </CardAnimator>
+                  ))}
+               </CardsOptimization>
+            )}
          </View>
       );
    }
 
    async onLikeOrDislike(liked: boolean): Promise<void> {
       const { currentUser, animating }: Partial<CardsPageState> = this.state;
-      
+
       if (animating) {
          return;
       }
@@ -92,12 +85,12 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
       return new Promise((resolve, reject) => {
          const { users, currentUser }: Partial<CardsPageState> = this.state;
 
-         this.setState({animating: true});
+         this.setState({ animating: true });
          let finishedAnimationsAmmount: number = 0;
          const totalAnimationsToPlay: number = currentUser + 1 < users.length ? 2 : 1;
-   
+
          this.animRefs[currentUser].animate(
-            liked ? new LikeAnimation() : new DislikeAnimation(), 
+            liked ? new LikeAnimation() : new DislikeAnimation(),
             () => {
                finishedAnimationsAmmount++;
                if (finishedAnimationsAmmount === totalAnimationsToPlay) {
@@ -117,20 +110,20 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
                   }
                }
             );
-         }   
+         }
       });
    }
 
    thereIsANextCard(): boolean {
-      return (this.state.currentUser + 1 < this.state.users.length);
+      return this.state.currentUser + 1 < this.state.users.length;
    }
 }
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       flex: 1,
-      padding: 0,
-   },
+      padding: 0
+   }
 });
 
 export default withTheme(CardsPage);

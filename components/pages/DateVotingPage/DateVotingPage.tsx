@@ -5,16 +5,18 @@ import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import VotingPoll from "../../common/VotingPoll/VotingPoll";
-import { Group } from "../../../api/typings/Group";
-import { NavigationScreenProp, withNavigation, StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
+import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
 import {
    testingDayVotingData,
    testingLocationVotingData
 } from "../../../api/tools/debug-tools/testingFakeData";
+import { withNavigation } from "@react-navigation/compat";
+import { Route } from "@react-navigation/native";
 
 export interface GroupEnterProps extends Themed, StackScreenProps<{}> {}
 export interface GroupEnterState {
@@ -29,8 +31,12 @@ class GroupEnterForm extends Component<GroupEnterProps, GroupEnterState> {
 
    render(): JSX.Element {
       const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-      const { getParam, goBack }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
-      const group: Group = getParam("group");
+      const { goBack }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
+      const route: Route<string, { group: Group }> = this.props.route as Route<
+         string,
+         { group: Group }
+      >;
+      const group: Group = route.params.group;
 
       return (
          <>
