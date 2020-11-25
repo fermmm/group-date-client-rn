@@ -5,14 +5,12 @@ import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
-import { fakeFilterQuestions } from "../../../api/tools/debug-tools/fakeFilterQuestions";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import QuestionForm from "../../common/QuestionForm/QuestionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
-import { fakeProfileQuestionsPart } from "../../../api/tools/debug-tools/fakeProfileQuestions";
 import DialogError from "../../common/DialogError/DialogError";
-import { NavigationScreenProp, withNavigation, StackScreenProps } from "@react-navigation/stack";
-import { QuestionData } from "../../../api/typings/endpoints-interfaces/questions";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import { ThemesAsQuestion } from "../../../api/server/shared-tools/endpoints-interfaces/themes";
 
 export interface QuestionsPageProps extends Themed, StackScreenProps<{}> {
    appBarTitle?: string;
@@ -51,7 +49,8 @@ class QuestionsPage extends Component<QuestionsPageProps, QuestionsPageState> {
          onFinishGoBack
       }: Partial<QuestionsPageProps> = this.props;
 
-      const questions: QuestionData[] = [...fakeProfileQuestionsPart, ...fakeFilterQuestions];
+      // TODO: Retrieve questions from server
+      const questions: ThemesAsQuestion[] = [];
 
       return (
          <>

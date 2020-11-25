@@ -4,11 +4,11 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withTheme, List, Avatar } from "react-native-paper";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
-import { fakeTestingUsers } from "../../../api/tools/debug-tools/fakeTestingUsers";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
-import { NavigationScreenProp, withNavigation, StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
+import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
 export interface SettingsPageProps extends Themed, StackScreenProps<{}> {}
 export interface SettingsPageState {}
@@ -17,6 +17,9 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
    render(): JSX.Element {
       const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
       const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
+
+      // TODO: Retrive user from server
+      const localUser: User = null;
 
       return (
          <>
@@ -32,10 +35,10 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                         {...props}
                         style={styles.profileIcon}
                         size={42}
-                        source={{ uri: fakeTestingUsers[0].images[0] }}
+                        source={{ uri: localUser.pictures[0] }}
                      />
                   )}
-                  onPress={() => navigate("Profile", { user: fakeTestingUsers[0], editMode: true })}
+                  onPress={() => navigate("Profile", { user: localUser, editMode: true })}
                />
                <EmptySpace height={10} />
                <List.Item

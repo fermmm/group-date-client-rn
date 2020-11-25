@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { Route } from "@react-navigation/native";
 import { withTheme } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -11,12 +12,7 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import TitleText from "../../common/TitleText/TitleText";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
-import {
-   testingDayVotingData,
-   testingLocationVotingData
-} from "../../../api/tools/debug-tools/testingFakeData";
 import { withNavigation } from "@react-navigation/compat";
-import { Route } from "@react-navigation/native";
 
 export interface GroupEnterProps extends Themed, StackScreenProps<{}> {}
 export interface GroupEnterState {
@@ -59,7 +55,7 @@ class GroupEnterForm extends Component<GroupEnterProps, GroupEnterState> {
                      Estos son los dias y horas en los que todos pueden, o la mayoría. Podes votar
                      por más de una opción.
                   </TitleSmallText>
-                  <VotingPoll group={group} votingOptions={testingDayVotingData} />
+                  <VotingPoll group={group} votingOptions={group.dayOptions} />
                </BasicScreenContainer>
                <BasicScreenContainer
                   showBottomGradient={true}
@@ -76,7 +72,7 @@ class GroupEnterForm extends Component<GroupEnterProps, GroupEnterState> {
                      Estas son todas las opciones recomendadas de todos los miembros del grupo.
                      Podés votar por más de una opción.
                   </TitleSmallText>
-                  <VotingPoll group={group} votingOptions={testingLocationVotingData} />
+                  <VotingPoll group={group} votingOptions={group.dateIdeasVotes} />
                </BasicScreenContainer>
             </ScreensStepper>
          </>

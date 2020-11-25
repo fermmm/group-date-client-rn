@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withTheme } from "react-native-paper";
 import { Themed } from "../../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
-import { StackScreenProps, NavigationScreenProp, withNavigation } from "@react-navigation/stack";
+import { StackScreenProps, StackNavigationProp } from "@react-navigation/stack";
 import DialogError from "../../../common/DialogError/DialogError";
 import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
 import BasicInfoForm, {
@@ -10,15 +10,15 @@ import BasicInfoForm, {
 } from "../../RegistrationFormsPage/BasicInfoForm/BasicInfoForm";
 
 interface ChangeBasicInfoPageProps extends Themed, StackScreenProps<{}> {}
-interface ChnageBasicInfoPageState {
+interface ChangeBasicInfoPageState {
    basicInfoFormData: BasicInfoState;
    error: string;
    showError: boolean;
 }
 
-class ChangeBasicInfoPage extends Component<ChangeBasicInfoPageProps, ChnageBasicInfoPageState> {
+class ChangeBasicInfoPage extends Component<ChangeBasicInfoPageProps, ChangeBasicInfoPageState> {
    static defaultProps: Partial<ChangeBasicInfoPageProps> = {};
-   state: ChnageBasicInfoPageState = {
+   state: ChangeBasicInfoPageState = {
       basicInfoFormData: null,
       error: null,
       showError: false

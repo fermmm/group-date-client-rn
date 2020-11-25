@@ -9,11 +9,11 @@ import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import BasicInfoForm, { BasicInfoState } from "./BasicInfoForm/BasicInfoForm";
-import { NavigationScreenProp, NavigationContainerProps } from "@react-navigation/stack";
 import ProfilePicturesForm from "./ProfilePicturesForm/ProfilePicturesForm";
 import DateIdeaForm, { DateIdeaState } from "./DateIdeaForm/DateIdeaForm";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 
-export interface RegistrationFormsProps extends Themed, NavigationContainerProps {}
+export interface RegistrationFormsProps extends Themed, StackScreenProps<{}> {}
 export interface RegistrationFormsState {
    currentStep: number;
    showIncompleteError: boolean;

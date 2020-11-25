@@ -1,9 +1,9 @@
 import React, { Component } from "react";
+import { NavigationContainerProps } from "@react-navigation/native";
 import NavigationBar from "../../common/NavigationBar/NavigationBar";
 import CardsPage from "../CardsPage/CardsPage";
 import GroupsListPage from "../GroupsListPage/GroupsListPage";
 import SettingsPage from "../SettingsPage/SettingsPage";
-import { NavigationContainerProps } from "@react-navigation/stack";
 import NotificationsPage from "../NotificationsPage/NotificationsPage";
 import GraphSvg2 from "../../../assets/GraphSvg2";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";

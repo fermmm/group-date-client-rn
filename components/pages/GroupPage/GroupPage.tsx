@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
+import { Route } from "@react-navigation/native";
 import { withTheme, List } from "react-native-paper";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
@@ -37,10 +38,13 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
       >;
       const group: Group = route.params.group;
 
+      // TODO: Remove this
+      const invitationAccepted: boolean = true;
+
       return (
          <>
-            <AppBarHeader title={group.invitationAccepted ? "Grupo" : "Invitación a una cita"}>
-               {group.invitationAccepted && (
+            <AppBarHeader title={invitationAccepted ? "Grupo" : "Invitación a una cita"}>
+               {invitationAccepted && (
                   <View>
                      <ButtonForAppBar icon="forum" onPress={() => navigate("Chat")}>
                         Chat grupal
@@ -50,13 +54,13 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                )}
             </AppBarHeader>
             <BasicScreenContainer>
-               {!group.invitationAccepted && (
+               {!invitationAccepted && (
                   <CardAcceptInvitation
-                     matchAmmount={3}
+                     matchAmount={3}
                      onAcceptPress={() => navigate("DateVoting", { group })}
                   />
                )}
-               {group.invitationAccepted && (
+               {invitationAccepted && (
                   <CardDateInfo onModifyVotePress={() => navigate("DateVoting", { group })} />
                )}
                <SurfaceStyled>
@@ -74,7 +78,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                               <AvatarTouchable
                                  {...props}
                                  size={50}
-                                 source={{ uri: user.images[0] }}
+                                 source={{ uri: user.pictures[0] }}
                               />
                            )}
                            key={i}
@@ -84,10 +88,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                               style={styles.subItemTitle}
                               titleStyle={styles.sectionTitle}
                            >
-                              {this.convertIdListInUsersList(
-                                 group.matches[user.id],
-                                 group.members
-                              ).map((matchedUser, u) => (
+                              {this.getMatchesOf(user.userId, group).map((matchedUser, u) => (
                                  <List.Item
                                     title={matchedUser.name}
                                     style={styles.subItem}
@@ -98,7 +99,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                                           {...props}
                                           onPress={() => navigate("Profile", { user: matchedUser })}
                                           size={50}
-                                          source={{ uri: matchedUser.images[0] }}
+                                          source={{ uri: matchedUser.pictures[0] }}
                                        />
                                     )}
                                  />
@@ -113,16 +114,9 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
       );
    }
 
-   convertIdListInUsersList(idList: string[], allUsersList: User[]): User[] {
-      const result: User[] = [];
-
-      for (const user of allUsersList) {
-         if (idList.indexOf(user.id) !== -1) {
-            result.push(user);
-         }
-      }
-
-      return result;
+   getMatchesOf(userId: string, group: Group): User[] {
+      const matchesList: string[] = group.matches.find(m => m.userId === userId).matches;
+      return group.members.filter(u => matchesList.includes(u.userId));
    }
 }
 

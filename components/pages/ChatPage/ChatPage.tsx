@@ -71,7 +71,7 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
 
       return (
          <>
-            <AppBarHeader title={!isContactChat ? "Chat" : "Contactanos"} />
+            <AppBarHeader title={!isContactChat ? "Chat" : "Contáctanos"} />
             {!isContactChat && (
                <Banner
                   visible={this.state.adviseBannerVisible}

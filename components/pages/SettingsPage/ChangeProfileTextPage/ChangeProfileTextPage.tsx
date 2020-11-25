@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withTheme } from "react-native-paper";
 import { Themed } from "../../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
-import { StackScreenProps, NavigationScreenProp, withNavigation } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
 import ProfileTextForm from "../../RegistrationFormsPage/ProfileTextForm/ProfileTextForm";
 

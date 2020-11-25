@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withTheme } from "react-native-paper";
 import { Themed } from "../../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
-import { StackScreenProps, NavigationScreenProp, withNavigation } from "@react-navigation/stack";
+import { StackScreenProps, StackNavigationProp } from "@react-navigation/stack";
 import DialogError from "../../../common/DialogError/DialogError";
 import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
 import DateIdeaForm, { DateIdeaState } from "../../RegistrationFormsPage/DateIdeaForm/DateIdeaForm";

@@ -9,22 +9,25 @@ import { currentTheme } from "../../../../config";
 import { LinearGradient } from "expo-linear-gradient";
 import color from "color";
 
-export interface NoMoreUsersProps extends Themed { }
+export interface NoMoreUsersProps extends Themed {}
 export interface NoMoreUsersState {
    sendNotification: boolean;
-   ammountNotification: number;
+   amountNotification: number;
 }
 
 class NoMoreUsersMessage extends Component<NoMoreUsersProps, NoMoreUsersState> {
    static defaultProps: Partial<NoMoreUsersProps> = {};
    state: NoMoreUsersState = {
       sendNotification: true,
-      ammountNotification: 3
+      amountNotification: 3
    };
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { sendNotification, ammountNotification }: Partial<NoMoreUsersState> = this.state;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const {
+         sendNotification,
+         amountNotification: amountNotification
+      }: Partial<NoMoreUsersState> = this.state;
 
       return (
          <LinearGradient
@@ -32,7 +35,7 @@ class NoMoreUsersMessage extends Component<NoMoreUsersProps, NoMoreUsersState> {
             locations={[0.7, 1]}
             colors={[
                color(currentTheme.colors.background).string(),
-               color(currentTheme.colors.backgroundBottomGradient).alpha(1).string(),
+               color(currentTheme.colors.backgroundBottomGradient).alpha(1).string()
             ]}
          >
             <View style={styles.mainContainer}>
@@ -42,18 +45,15 @@ class NoMoreUsersMessage extends Component<NoMoreUsersProps, NoMoreUsersState> {
                <EmptySpace />
                <NewUsersNotificationSelector
                   checked={sendNotification}
-                  ammountSelected={ammountNotification}
-                  onAmmountChange={(v) => this.setState({ ammountNotification: v })}
+                  amountSelected={amountNotification}
+                  onAmountChange={v => this.setState({ amountNotification: v })}
                   onCheckChange={() => this.setState({ sendNotification: !sendNotification })}
                />
                <EmptySpace />
                <Text style={styles.text}>
                   Si te sirve podes repasar a les usuaries que dejaste de lado:
                </Text>
-               <Button
-                  mode="text"
-                  onPress={() => console.log("press")}
-               >
+               <Button mode="text" onPress={() => console.log("press")}>
                   Repasar usuaries
                </Button>
             </View>

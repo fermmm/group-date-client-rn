@@ -8,8 +8,12 @@ import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
 import { StackScreenProps, StackNavigationProp } from "@react-navigation/stack";
 import { currentTheme } from "../../../config";
-import { getGroups } from "../../../api/groups";
 import GraphSvg2 from "../../../assets/GraphSvg2";
+import {
+   Notification,
+   NotificationType
+} from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
 
 export interface NotificationsPageProps extends Themed, StackScreenProps<{}> {}
 export interface NotificationsPageState {
@@ -18,57 +22,15 @@ export interface NotificationsPageState {
 
 class NotificationsPage extends Component<NotificationsPageProps, NotificationsPageState> {
    state: NotificationsPageState = {
-      notifications: [
-         {
-            type: NotificationType.FacebookEvent,
-            targetId: "https://www.facebook.com/events/1770869566553161",
-            seen: false,
-            title: "Nuevo evento por tu zona",
-            text: "Socializala #26 ~ Amor Libre Argentina",
-            date: new Date()
-         },
-         {
-            type: NotificationType.Group,
-            seen: false,
-            title: "¡Estas en una cita grupal!",
-            text: "Felicitaciones, ¡estas en una cita grupal!, toca para verla",
-            date: new Date()
-         },
-         {
-            type: NotificationType.Chat,
-            seen: true,
-            title: "Tenes nuevos mensajes",
-            text: "Hay nuevos mensajes en el chat grupal de tu cita",
-            date: new Date()
-         },
-         {
-            type: NotificationType.Chat,
-            seen: true,
-            title: "Tenes nuevos mensajes",
-            text: "Hay nuevos mensajes en el chat grupal de tu cita",
-            date: new Date()
-         },
-         {
-            type: NotificationType.ContactChat,
-            seen: true,
-            title: "Nuevo mensaje de contacto",
-            text: "Te escribieron los desarrolladores de la app. Toca para ver",
-            date: new Date()
-         },
-         {
-            type: NotificationType.About,
-            seen: true,
-            title: "¡Bienvenide a la app!",
-            text: "Acabamos de lanzar la app, toca si queres saber que hay detrás.",
-            date: new Date()
-         }
-      ]
+      // TODO: Get notifications from server
+      notifications: []
    };
+   // TODO: Save this into local storage
+   seenNotificationsIds: string[] = [];
+   // TODO: Get local user from server:
+   userGroups: Group[] = [];
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-      const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
-
       return (
          <>
             <BasicScreenContainer>
@@ -95,7 +57,8 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
                         onPress={() => this.onNotificationPress(notification)}
                         style={[
                            styles.notification,
-                           !notification.seen && styles.unseenNotification
+                           !this.seenNotificationsIds.includes(notification.notificationId) &&
+                              styles.unseenNotification
                         ]}
                         key={i}
                      />
@@ -120,7 +83,9 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
             navigate("Chat", { contactChat: true });
             break;
          case NotificationType.Group:
-            navigate("Group", { group: getGroups()[0] });
+            navigate("Group", {
+               group: this.userGroups.find(g => g.groupId === notification.targetId)
+            });
             break;
          case NotificationType.About:
             navigate("About");
@@ -169,24 +134,6 @@ const styles: Styles = StyleSheet.create({
       elevation: 6
    }
 });
-
-export interface Notification {
-   type: NotificationType;
-   seen: boolean;
-   title: string;
-   text: string;
-   targetId?: string;
-   date: Date;
-}
-
-export enum NotificationType {
-   TextOnly,
-   Group,
-   Chat,
-   ContactChat,
-   FacebookEvent,
-   About
-}
 
 // tslint:disable-next-line: ban-ts-ignore-except-imports
 // @ts-ignore

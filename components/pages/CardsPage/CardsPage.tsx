@@ -4,7 +4,6 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import ProfileCard from "../../common/ProfileCard/ProfileCard";
 import { withTheme } from "react-native-paper";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
-import { getAvaiableCards } from "../../../api/cards-game";
 import NoMoreUsersMessage from "./NoMoreUsersMessage/NoMoreUsersMessage";
 import CardsOptimization from "../../common/CardsEffect/CardsOptimization";
 import CardAnimator from "../../common/CardsEffect/CardAnimator/CardAnimator";
@@ -26,11 +25,12 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
    // tslint:disable-next-line: no-any
    animRefs: any[] = [];
    state: CardsPageState = {
-      users: getAvaiableCards(),
+      // TODO: Here users prop should contain the result of the cards request
+      users: [],
       currentUser: 0,
       animating: false,
-      noMoreUsersOnServer: false
-      // noMoreUsersOnServer: true     // Uncomment this line to test the "no more users" UI
+      // noMoreUsersOnServer: false
+      noMoreUsersOnServer: true // Uncomment this line to test the "no more users" UI
    };
 
    render(): JSX.Element {
@@ -86,14 +86,14 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
          const { users, currentUser }: Partial<CardsPageState> = this.state;
 
          this.setState({ animating: true });
-         let finishedAnimationsAmmount: number = 0;
+         let finishedAnimationsAmount: number = 0;
          const totalAnimationsToPlay: number = currentUser + 1 < users.length ? 2 : 1;
 
          this.animRefs[currentUser].animate(
             liked ? new LikeAnimation() : new DislikeAnimation(),
             () => {
-               finishedAnimationsAmmount++;
-               if (finishedAnimationsAmmount === totalAnimationsToPlay) {
+               finishedAnimationsAmount++;
+               if (finishedAnimationsAmount === totalAnimationsToPlay) {
                   this.setState({ animating: false });
                   resolve();
                }
@@ -103,8 +103,8 @@ class CardsPage extends Component<CardsPageProps, CardsPageState> {
             this.animRefs[currentUser + 1].animate(
                liked ? new BackCardSlowAnimation() : new BackCardFastAnimation(),
                () => {
-                  finishedAnimationsAmmount++;
-                  if (finishedAnimationsAmmount === totalAnimationsToPlay) {
+                  finishedAnimationsAmount++;
+                  if (finishedAnimationsAmount === totalAnimationsToPlay) {
                      this.setState({ animating: false });
                      resolve();
                   }

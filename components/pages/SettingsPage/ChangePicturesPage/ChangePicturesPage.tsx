@@ -5,20 +5,20 @@ import ProfilePicturesForm from "../../RegistrationFormsPage/ProfilePicturesForm
 import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
-import { StackScreenProps, NavigationScreenProp, withNavigation } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import DialogError from "../../../common/DialogError/DialogError";
 import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
 
 export interface ChangePicturesPageProps extends Themed, StackScreenProps<{}> {}
-export interface ChnagePicturesPageState {
+export interface ChangePicturesPageState {
    pictures: string[];
    error: string;
    showError: boolean;
 }
 
-class ChangePicturesPage extends Component<ChangePicturesPageProps, ChnagePicturesPageState> {
+class ChangePicturesPage extends Component<ChangePicturesPageProps, ChangePicturesPageState> {
    static defaultProps: Partial<ChangePicturesPageProps> = {};
-   state: ChnagePicturesPageState = {
+   state: ChangePicturesPageState = {
       pictures: null,
       error: null,
       showError: false
