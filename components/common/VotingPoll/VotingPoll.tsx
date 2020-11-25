@@ -6,11 +6,15 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import SurfaceStyled from "../SurfaceStyled/SurfaceStyled";
 import { currentTheme } from "../../../config";
 import ProgressBar from "../ProgressBar/ProgressBar";
-import { DayOption, Group } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
+import {
+   DayOption,
+   Group,
+   IdeaOption
+} from "../../../api/server/shared-tools/endpoints-interfaces/groups";
 
 export interface VotingPollProps extends Themed {
    group: Group;
-   votingOptions: DayOption[] | Record<string, string[]>;
+   votingOptions: Array<DayOption | IdeaOption>;
 }
 export interface VotingPollState {}
 
@@ -23,7 +27,7 @@ class VotingPoll extends Component<VotingPollProps, VotingPollState> {
 
       return (
          <>
-            {votingOptions.map((votingOption, i) => (
+            {votingOptions.map((votingOption: DayOption | IdeaOption, i) => (
                <SurfaceStyled key={i}>
                   <Text style={styles.textLine1}>{votingOption.textLine1}</Text>
                   {votingOption.textLine2 && (
