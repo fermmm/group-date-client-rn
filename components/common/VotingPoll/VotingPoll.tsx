@@ -11,6 +11,8 @@ import {
    Group,
    IdeaOption
 } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
+import { dayAndMonthFromUnixDate } from "../../../common-tools/dates/dates-tools";
+import { getGroupMember } from "../../../api/tools/groupTools";
 
 export interface VotingPollProps extends Themed {
    group: Group;
@@ -29,13 +31,17 @@ class VotingPoll extends Component<VotingPollProps, VotingPollState> {
          <>
             {votingOptions.map((votingOption: DayOption | IdeaOption, i) => (
                <SurfaceStyled key={i}>
-                  <Text style={styles.textLine1}>{votingOption.textLine1}</Text>
-                  {votingOption.textLine2 && (
+                  <Text style={styles.textLine1}>
+                     {"date" in votingOption
+                        ? dayAndMonthFromUnixDate(votingOption.date)
+                        : getGroupMember(votingOption.ideaOfUser, group).dateIdea}
+                  </Text>
+                  {/* {votingOption.textLine2 && (
                      <Text style={styles.textLine2}>{votingOption.textLine2}</Text>
-                  )}
+                  )} */}
                   <View style={styles.rowContainer}>
                      <ProgressBar
-                        progress={votingOption.votersAmmount / group.members.length}
+                        progress={votingOption.votersUserId.length / group.members.length}
                         fillColor={colors.primary}
                      />
                      <Button
@@ -47,14 +53,18 @@ class VotingPoll extends Component<VotingPollProps, VotingPollState> {
                         Votar
                      </Button>
                   </View>
-                  {votingOption.votersAmmount > 0 && (
+                  {votingOption.votersUserId.length > 0 && (
                      <View style={styles.rowContainer}>
-                        <Text style={styles.votesAmmountText}>
-                           {votingOption.votersAmmount}{" "}
-                           {votingOption.votersAmmount > 1 ? "votos" : "voto"}
+                        <Text style={styles.votesAmountText}>
+                           {votingOption.votersUserId.length}{" "}
+                           {votingOption.votersUserId.length > 1 ? "votos" : "voto"}
                            {":"}
                         </Text>
-                        <Text style={styles.votersText}>{votingOption.votersNames.join(", ")}</Text>
+                        <Text style={styles.votersText}>
+                           {votingOption.votersUserId
+                              .map(id => getGroupMember(id, group).name)
+                              .join(", ")}
+                        </Text>
                      </View>
                   )}
                </SurfaceStyled>
@@ -81,7 +91,7 @@ const styles: Styles = StyleSheet.create({
    resultBar: {
       flex: 1
    },
-   votesAmmountText: {
+   votesAmountText: {
       fontFamily: currentTheme.fonts.regular,
       fontSize: 12,
       marginRight: 7

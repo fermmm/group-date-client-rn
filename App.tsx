@@ -1,3 +1,5 @@
+import * as Localization from "expo-localization";
+import i18n from "i18n-js";
 import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
@@ -19,8 +21,6 @@ import ChangeDateIdeaPage from "./components/pages/SettingsPage/ChangeDateIdeaPa
 import ChangeQuestionsPage from "./components/pages/SettingsPage/ChangeQuestionsPage/ChangeQuestionsPage";
 import ChatPage from "./components/pages/ChatPage/ChatPage";
 import AboutPage from "./components/pages/AboutPage/AboutPage";
-import * as Localization from "expo-localization";
-import i18n from "i18n-js";
 import { esAr } from "./texts/esAr/esAr";
 import { en } from "./texts/en/en";
 import { es } from "./texts/es/es";
