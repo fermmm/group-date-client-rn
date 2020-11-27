@@ -68,7 +68,7 @@ const styles: Styles = StyleSheet.create({
    text: {
       marginRight: 0,
       fontSize: 13,
-      fontFamily: currentTheme.fonts.light
+      fontFamily: currentTheme.font.light
    },
    picker: {
       width: 85,

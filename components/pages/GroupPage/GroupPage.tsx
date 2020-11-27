@@ -128,7 +128,7 @@ const styles: Styles = StyleSheet.create({
       paddingLeft: 10
    },
    sectionTitle: {
-      fontFamily: currentTheme.fonts.regular,
+      fontFamily: currentTheme.font.regular,
       fontSize: 15
    },
    subItem: {

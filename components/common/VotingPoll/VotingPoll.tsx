@@ -76,12 +76,12 @@ class VotingPoll extends Component<VotingPollProps, VotingPollState> {
 
 const styles: Styles = StyleSheet.create({
    textLine1: {
-      fontFamily: currentTheme.fonts.regular,
+      fontFamily: currentTheme.font.regular,
       fontSize: 15,
       marginBottom: 5
    },
    textLine2: {
-      fontFamily: currentTheme.fonts.light,
+      fontFamily: currentTheme.font.light,
       fontSize: 12
    },
    rowContainer: {
@@ -92,13 +92,13 @@ const styles: Styles = StyleSheet.create({
       flex: 1
    },
    votesAmountText: {
-      fontFamily: currentTheme.fonts.regular,
+      fontFamily: currentTheme.font.regular,
       fontSize: 12,
       marginRight: 7
    },
    votersText: {
       flex: 1,
-      fontFamily: currentTheme.fonts.thin,
+      fontFamily: currentTheme.font.thin,
       fontSize: 12
    }
 });

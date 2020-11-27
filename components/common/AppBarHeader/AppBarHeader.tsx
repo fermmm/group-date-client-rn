@@ -88,7 +88,7 @@ const styles: Styles = StyleSheet.create({
    titleText: {
       color: currentTheme.colors.text2,
       fontSize: 16,
-      fontFamily: currentTheme.fonts.medium
+      fontFamily: currentTheme.font.medium
    }
 });
 

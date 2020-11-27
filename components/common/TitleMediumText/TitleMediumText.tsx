@@ -5,22 +5,22 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 
 class TitleMediumText extends Component<TypographyProps> {
-    render(): JSX.Element {
-        return (
-            <Text {...this.props} style={[styles.titleStyle, this.props.style]}>
-              {this.props.children}
-            </Text>
-        );
-    }
+   render(): JSX.Element {
+      return (
+         <Text {...this.props} style={[styles.titleStyle, this.props.style]}>
+            {this.props.children}
+         </Text>
+      );
+   }
 }
 
 const styles: Styles = StyleSheet.create({
-    titleStyle: {
-        fontFamily: currentTheme.fonts.regular,
-        fontSize: 14,
-        marginBottom: 25,
-        paddingLeft: 4,
-    },
+   titleStyle: {
+      fontFamily: currentTheme.font.regular,
+      fontSize: 14,
+      marginBottom: 25,
+      paddingLeft: 4
+   }
 });
 
 export default TitleMediumText;

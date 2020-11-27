@@ -1,5 +1,5 @@
 import color from "color";
-import montserrat from "./fonts/montserrat";
+import { montserratForPaper, montserrat } from "./fonts/montserrat";
 
 export default {
    dark: false,
@@ -24,23 +24,18 @@ export default {
       statusWarning: "#FFAA15",
       statusBad: "#FF4040",
       disabled: "#FFBF9C",
-      placeholder: color("#DCC4CA")
-         .alpha(0.54)
-         .rgb()
-         .string(),
-      backdrop: color("#DCC4CA")
-         .alpha(0.5)
-         .rgb()
-         .string(),
-      notification: "#FF7A8F",
+      placeholder: color("#DCC4CA").alpha(0.54).rgb().string(),
+      backdrop: color("#DCC4CA").alpha(0.5).rgb().string(),
+      notification: "#FF7A8F"
    },
-   fonts: montserrat,
+   font: montserrat,
+   fonts: montserratForPaper,
    backgroundImage: require("../../assets/backgroundLight4.png"),
    backgroundImage2: require("../../assets/backgroundLight4_vertical.png"),
    backgroundForPictures: require("../../assets/backgroundSuperLight.png"),
    backgroundForText: require("../../assets/pattern2.png"),
    shadowBottom: require("../../assets/navBarShadow.png"),
    animation: {
-      scale: 1.0,
-   },
+      scale: 1.0
+   }
 };

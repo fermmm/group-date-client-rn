@@ -72,7 +72,7 @@ const styles: Styles = StyleSheet.create({
    },
    text: {
       fontSize: 17,
-      fontFamily: currentTheme.fonts.light
+      fontFamily: currentTheme.font.light
    }
 });
 

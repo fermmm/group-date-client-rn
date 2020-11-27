@@ -31,7 +31,7 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
       bodyHeight: null,
       targetAgeMin: 18,
       targetAgeMax: 28,
-      targetAgeModified: false,
+      targetAgeModified: false
    };
 
    componentDidMount(): void {
@@ -39,26 +39,39 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
    }
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { nameText, age, bodyHeight, targetAgeModified, targetAgeMin, targetAgeMax }: Partial<BasicInfoState> = this.state;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const {
+         nameText,
+         age,
+         bodyHeight,
+         targetAgeModified,
+         targetAgeMin,
+         targetAgeMax
+      }: Partial<BasicInfoState> = this.state;
 
       return (
          <View style={styles.mainContainer}>
-            <TitleText style={styles.title}>
-               Datos básicos
-            </TitleText>
+            <TitleText style={styles.title}>Datos básicos</TitleText>
             <TextInputExtended
                title="Tu nombre o apodo"
                mode="outlined"
                value={nameText}
-               onChangeText={t => this.setState({ nameText: formValidators.name(t).result.text }, () => this.sendChanges())}
+               onChangeText={t =>
+                  this.setState({ nameText: formValidators.name(t).result.text }, () =>
+                     this.sendChanges()
+                  )
+               }
             />
             <TextInputExtended
                title="Tu edad"
                mode="outlined"
                keyboardType="number-pad"
                value={age ? age.toString() : ""}
-               onChangeText={t => this.setState({ age: Number(formValidators.age(t).result.text) }, () => this.sendChanges())}
+               onChangeText={t =>
+                  this.setState({ age: Number(formValidators.age(t).result.text) }, () =>
+                     this.sendChanges()
+                  )
+               }
             />
             <TextInputExtended
                title="Tu altura en centímetros (opcional) ej: 160"
@@ -66,32 +79,38 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
                mode="outlined"
                keyboardType="number-pad"
                value={bodyHeight ? bodyHeight.toString() : ""}
-               onChangeText={t => this.setState({ bodyHeight: Number(formValidators.bodyHeight(t).result.text) || 0 }, () => this.sendChanges())}
+               onChangeText={t =>
+                  this.setState(
+                     { bodyHeight: Number(formValidators.bodyHeight(t).result.text) || 0 },
+                     () => this.sendChanges()
+                  )
+               }
             />
-            <TitleMediumText style={styles.label}>
-               ¿Qué edades te interesan más?
-            </TitleMediumText>
+            <TitleMediumText style={styles.label}>¿Qué edades te interesan más?</TitleMediumText>
             <TitleMediumText style={styles.labelLine2}>
                Esta funcionalidad no actúa de forma totalmente estricta
             </TitleMediumText>
-               <AgeSelector
-                  min={targetAgeModified ? targetAgeMin : age - this.defaultAgeDifference}
-                  max={targetAgeModified ? targetAgeMax : age + this.defaultAgeDifference}
-                  style={styles.ageSelector}
-                  onChange={({ min, max }) =>
-                     this.setState({
+            <AgeSelector
+               min={targetAgeModified ? targetAgeMin : age - this.defaultAgeDifference}
+               max={targetAgeModified ? targetAgeMax : age + this.defaultAgeDifference}
+               style={styles.ageSelector}
+               onChange={({ min, max }) =>
+                  this.setState(
+                     {
                         targetAgeMin: min,
                         targetAgeMax: max,
                         targetAgeModified: true
-                     }, () => this.sendChanges())
-                  }
-               />
+                     },
+                     () => this.sendChanges()
+                  )
+               }
+            />
          </View>
       );
    }
 
    sendChanges(): void {
-      this.props.onChange({...this.state}, this.getError());
+      this.props.onChange({ ...this.state }, this.getError());
    }
 
    getError(): string {
@@ -120,11 +139,11 @@ class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       padding: 20,
-      paddingTop: 10,
+      paddingTop: 10
    },
    title: {
       fontSize: 19,
-      marginBottom: 20,
+      marginBottom: 20
    },
    label: {
       marginTop: 30,
@@ -132,7 +151,7 @@ const styles: Styles = StyleSheet.create({
    },
    labelLine2: {
       marginBottom: 0,
-      fontFamily: currentTheme.fonts.extraLight
+      fontFamily: currentTheme.font.extraLight
    },
    ageSelector: {
       marginLeft: 5

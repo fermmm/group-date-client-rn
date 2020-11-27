@@ -35,7 +35,7 @@ export type ThemeExt = Merge<
          statusWarning: string;
          statusBad: string;
       };
-      fonts: FontExt;
+      font: FontExt;
    }
 >;
 

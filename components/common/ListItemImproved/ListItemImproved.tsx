@@ -11,12 +11,11 @@ class ListItemImproved extends Component<ItemProps> {
          <List.Item
             {...this.props}
             description={
-               typeof this.props.description === "string" ?
-                  <Text style={styles.descriptionText}>
-                     {this.props.description}
-                  </Text>
-               :
+               typeof this.props.description === "string" ? (
+                  <Text style={styles.descriptionText}>{this.props.description}</Text>
+               ) : (
                   this.props.description
+               )
             }
             style={[this.props.disabled && { opacity: 0.5 }, this.props.style]}
          />
@@ -26,9 +25,9 @@ class ListItemImproved extends Component<ItemProps> {
 
 const styles: Styles = StyleSheet.create({
    descriptionText: {
-      fontFamily: currentTheme.fonts.light,
-      fontSize: 13,
-   },
+      fontFamily: currentTheme.font.light,
+      fontSize: 13
+   }
 });
 
 export default ListItemImproved;

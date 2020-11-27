@@ -7,25 +7,23 @@ import SurfaceStyled from "../../../common/SurfaceStyled/SurfaceStyled";
 import TitleText from "../../../common/TitleText/TitleText";
 import { currentTheme } from "../../../../config";
 
-export interface DateInfoProps extends Themed { 
+export interface DateInfoProps extends Themed {
    onModifyVotePress(): void;
 }
-export interface DateInfoState { }
+export interface DateInfoState {}
 
 class CardDateInfo extends Component<DateInfoProps, DateInfoState> {
    static defaultProps: Partial<DateInfoProps> = {};
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
 
       return (
          <SurfaceStyled>
-            <TitleText>
-               Cita votada:
-            </TitleText>
+            <TitleText>Cita votada:</TitleText>
             <View style={styles.row}>
                <Text style={styles.textHighlighted}>Fecha:</Text>
-               <Text style={styles.textNormal}>Este Sábado 20 de Sep. a las 21hs</Text> 
+               <Text style={styles.textNormal}>Este Sábado 20 de Sep. a las 21hs</Text>
             </View>
             <View style={styles.row}>
                <Text style={styles.textHighlighted}>Lugar:</Text>
@@ -35,10 +33,7 @@ class CardDateInfo extends Component<DateInfoProps, DateInfoState> {
                <Text style={styles.textHighlighted}>Dirección:</Text>
                <Text style={styles.textNormal}>Av. Angel Gallardo 400</Text>
             </View>
-            <Button
-               uppercase={false}
-               onPress={() => this.props.onModifyVotePress()}
-            >
+            <Button uppercase={false} onPress={() => this.props.onModifyVotePress()}>
                Modificar voto
             </Button>
          </SurfaceStyled>
@@ -48,19 +43,19 @@ class CardDateInfo extends Component<DateInfoProps, DateInfoState> {
 
 const styles: Styles = StyleSheet.create({
    textHighlighted: {
-      fontFamily: currentTheme.fonts.regular,
+      fontFamily: currentTheme.font.regular,
       fontSize: 15,
-      marginRight: 7,
+      marginRight: 7
    },
    textNormal: {
-      fontFamily: currentTheme.fonts.light,
+      fontFamily: currentTheme.font.light,
       fontSize: 15,
       flex: 1,
-      flexWrap: "wrap",
+      flexWrap: "wrap"
    },
    row: {
       flexDirection: "row",
-      marginBottom: 10,
+      marginBottom: 10
    }
 });
 

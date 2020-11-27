@@ -14,7 +14,7 @@ export interface QuestionProps extends Themed {
    questionData: QuestionData;
    onChange?(selectedAnswers: string[], itsImportantSelected: boolean): void;
 }
-export interface QuestionState { 
+export interface QuestionState {
    selectedAnswers: string[];
    itsImportantChecked: boolean;
 }
@@ -24,106 +24,120 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
 
    state: QuestionState = {
       selectedAnswers: this.props.questionData.defaultSelectedAnswers || [],
-      itsImportantChecked: this.props.questionData.itsImportantSelectedByDefault || false,
+      itsImportantChecked: this.props.questionData.itsImportantSelectedByDefault || false
    };
-   
+
    render(): JSX.Element {
-      const { text, extraText, answers, incompatibilitiesBetweenAnswers, multipleAnswersAllowed }: Partial<QuestionData> = this.props.questionData;
+      const {
+         text,
+         extraText,
+         answers,
+         incompatibilitiesBetweenAnswers,
+         multipleAnswersAllowed
+      }: Partial<QuestionData> = this.props.questionData;
       const { selectedAnswers, itsImportantChecked }: Partial<QuestionState> = this.state;
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const incompatibilitiesPresent: boolean = incompatibilitiesBetweenAnswers != null && incompatibilitiesBetweenAnswers !== {};
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const incompatibilitiesPresent: boolean =
+         incompatibilitiesBetweenAnswers != null && incompatibilitiesBetweenAnswers !== {};
       const incompatibleResponsesAmmount: number = this.getIncompatibleResponsesIds().length;
 
       return (
          <>
-            <TitleText style={styles.question}>
-               {text}
-            </TitleText>
-            {
-               extraText != null &&
-                  <TitleText style={styles.questionExtraText}>
-                     {extraText}
-                  </TitleText>
-            }
-            {
-               multipleAnswersAllowed &&
+            <TitleText style={styles.question}>{text}</TitleText>
+            {extraText != null && (
+               <TitleText style={styles.questionExtraText}>{extraText}</TitleText>
+            )}
+            {multipleAnswersAllowed && (
                <View style={styles.helpTextContainer}>
                   <IconButton
                      icon="live-help"
                      size={25}
                      color={colors.statusOk}
-                     style={{opacity: 0.4}}
+                     style={{ opacity: 0.4 }}
                   />
                   <TitleText style={styles.helpText}>
                      Se puede seleccionar más de una opción
                   </TitleText>
                </View>
-            }
+            )}
             <View style={styles.responsesContainer}>
-               {
-                  multipleAnswersAllowed === true ? 
-                     answers.map((answer, i) =>
-                        <CheckboxButton 
-                           checked={selectedAnswers.indexOf(answer.id) !== -1}
-                           onPress={() => {
-                                 selectedAnswers.indexOf(answer.id) === -1 ?
-                                    this.setState({
-                                       selectedAnswers: [...selectedAnswers, answer.id]
-                                    }, () => this.sendChanges())
-                                 :
-                                    this.removeAnswerFromSelectedList(answer.id);
-                              }
-                           }
-                           key={i}
-                        >
-                           <Text style={styles.responseText}>
-                              {answer.text} 
-                              <Text style={styles.responseExtraText}>
-                                 {"  "}{answer.extraText}
-                              </Text>
-                           </Text>
-                        </CheckboxButton>
-                     )
-                  :
-                     answers.map((answer, i) =>
-                        <RaddioButtonImproved 
-                           checked={selectedAnswers[0] === answer.id}
-                           onPress={() => this.setState({selectedAnswers: [answer.id]}, () => this.sendChanges())}
-                           key={i}
-                        >
-                           <Text style={styles.responseText}>
-                              {answer.text} 
-                              <Text style={styles.responseExtraText}>
-                                 {"  "}{answer.extraText}
-                              </Text>
-                           </Text>
-                        </RaddioButtonImproved>
-                     )
-               }
+               {multipleAnswersAllowed === true
+                  ? answers.map((answer, i) => (
+                       <CheckboxButton
+                          checked={selectedAnswers.indexOf(answer.id) !== -1}
+                          onPress={() => {
+                             selectedAnswers.indexOf(answer.id) === -1
+                                ? this.setState(
+                                     {
+                                        selectedAnswers: [...selectedAnswers, answer.id]
+                                     },
+                                     () => this.sendChanges()
+                                  )
+                                : this.removeAnswerFromSelectedList(answer.id);
+                          }}
+                          key={i}
+                       >
+                          <Text style={styles.responseText}>
+                             {answer.text}
+                             <Text style={styles.responseExtraText}>
+                                {"  "}
+                                {answer.extraText}
+                             </Text>
+                          </Text>
+                       </CheckboxButton>
+                    ))
+                  : answers.map((answer, i) => (
+                       <RaddioButtonImproved
+                          checked={selectedAnswers[0] === answer.id}
+                          onPress={() =>
+                             this.setState({ selectedAnswers: [answer.id] }, () =>
+                                this.sendChanges()
+                             )
+                          }
+                          key={i}
+                       >
+                          <Text style={styles.responseText}>
+                             {answer.text}
+                             <Text style={styles.responseExtraText}>
+                                {"  "}
+                                {answer.extraText}
+                             </Text>
+                          </Text>
+                       </RaddioButtonImproved>
+                    ))}
             </View>
-            {
-               (selectedAnswers.length > 0 && incompatibilitiesPresent && incompatibleResponsesAmmount > 0) ?
-                  <ListItemImproved
-                     title="Usar de filtro"
-                     description={() => this.getIsImportantDescriptionText()}
-                     left={props => 
-                        <Checkbox 
-                           status={
-                              (itsImportantChecked && incompatibleResponsesAmmount > 0) ? 
-                                 "checked" : "unchecked"
-                           } 
-                        />
-                     }
-                     onPress={() => this.setState({itsImportantChecked: !itsImportantChecked}, () => this.sendChanges())}
-                     disabled={incompatibleResponsesAmmount === 0}
-                     style={styles.importantCheck}
-                  />
-               :
-                  selectedAnswers.length > 0 && incompatibilitiesPresent && incompatibleResponsesAmmount === 0 &&             
-                     <Text style={styles.noFiltersText}>
-                        Con esa respuesta nadie te va a filtrar ni tampoco podes filtrar
-                     </Text>
-            }
+            {selectedAnswers.length > 0 &&
+            incompatibilitiesPresent &&
+            incompatibleResponsesAmmount > 0 ? (
+               <ListItemImproved
+                  title="Usar de filtro"
+                  description={() => this.getIsImportantDescriptionText()}
+                  left={props => (
+                     <Checkbox
+                        status={
+                           itsImportantChecked && incompatibleResponsesAmmount > 0
+                              ? "checked"
+                              : "unchecked"
+                        }
+                     />
+                  )}
+                  onPress={() =>
+                     this.setState({ itsImportantChecked: !itsImportantChecked }, () =>
+                        this.sendChanges()
+                     )
+                  }
+                  disabled={incompatibleResponsesAmmount === 0}
+                  style={styles.importantCheck}
+               />
+            ) : (
+               selectedAnswers.length > 0 &&
+               incompatibilitiesPresent &&
+               incompatibleResponsesAmmount === 0 && (
+                  <Text style={styles.noFiltersText}>
+                     Con esa respuesta nadie te va a filtrar ni tampoco podes filtrar
+                  </Text>
+               )
+            )}
          </>
       );
    }
@@ -134,15 +148,12 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
 
       return (
          <Text style={styles.importantDescriptionTextBold}>
-            No mostrarme a quienes responden lo opuesto: 
-            {
-               incompatibleResponsesText.map((response, i) => 
-                  <Text style={styles.importantDescriptionText} key={i}>
-                     {i !== 0 && " ni"}{" "}"{response}"
-                  </Text>
-               )
-            }
-            
+            No mostrarme a quienes responden lo opuesto:
+            {incompatibleResponsesText.map((response, i) => (
+               <Text style={styles.importantDescriptionText} key={i}>
+                  {i !== 0 && " ni"} "{response}"
+               </Text>
+            ))}
          </Text>
       );
    }
@@ -180,7 +191,7 @@ class QuestionForm extends Component<QuestionProps, QuestionState> {
    removeAnswerFromSelectedList(answerId: string): void {
       const selectedAnswers: string[] = [...this.state.selectedAnswers];
       selectedAnswers.splice(selectedAnswers.indexOf(answerId), 1);
-      this.setState({selectedAnswers}, () => this.sendChanges());
+      this.setState({ selectedAnswers }, () => this.sendChanges());
    }
 
    sendChanges(): void {
@@ -194,30 +205,30 @@ const styles: Styles = StyleSheet.create({
    question: {
       fontSize: 21,
       paddingLeft: 10,
-      marginBottom: 0,
+      marginBottom: 0
    },
    questionExtraText: {
-      fontFamily: currentTheme.fonts.extraLight,
+      fontFamily: currentTheme.font.extraLight,
       fontSize: 17,
       paddingLeft: 10,
       paddingRight: 10,
       marginBottom: 0,
-      marginTop: 0,
+      marginTop: 0
    },
    helpTextContainer: {
       flexDirection: "row",
       marginTop: 8,
       paddingLeft: 5,
       paddingRight: 5,
-      alignItems: "center",
+      alignItems: "center"
    },
    helpText: {
       flex: 1,
       flexWrap: "wrap",
-      fontFamily: currentTheme.fonts.extraLight,
+      fontFamily: currentTheme.font.extraLight,
       fontSize: 16,
       marginBottom: 0,
-      marginTop: 0,
+      marginTop: 0
    },
    responsesContainer: {
       marginTop: 15,
@@ -229,7 +240,7 @@ const styles: Styles = StyleSheet.create({
    },
    responseExtraText: {
       fontSize: 15,
-      fontFamily: currentTheme.fonts.light
+      fontFamily: currentTheme.font.light
    },
    importantCheck: {
       marginTop: 50,
@@ -238,12 +249,12 @@ const styles: Styles = StyleSheet.create({
    noFiltersText: {
       marginTop: 50,
       padding: 25,
-      fontFamily: currentTheme.fonts.light,
-      fontSize: 13,
+      fontFamily: currentTheme.font.light,
+      fontSize: 13
    },
    importantDescriptionText: {
-      fontFamily: currentTheme.fonts.light,
-      fontSize: 13,
+      fontFamily: currentTheme.font.light,
+      fontSize: 13
    },
    importantDescriptionTextBold: {
       fontSize: 14

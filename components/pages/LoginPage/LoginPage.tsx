@@ -23,7 +23,7 @@ class LoginPage extends Component<LoginProps, LoginState> {
    }
 
    render(): JSX.Element {
-      const { colors, fonts }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const { colors, font: fonts }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
       const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
 
       return (
@@ -116,7 +116,7 @@ const styles: Styles = StyleSheet.create({
    },
    textBlock: {
       textAlign: "center",
-      fontFamily: currentTheme.fonts.light,
+      fontFamily: currentTheme.font.light,
       color: currentTheme.colors.textLogin
    },
    secondTextBlock: {

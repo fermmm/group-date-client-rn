@@ -15,7 +15,7 @@ class EmptyPageMessage extends Component<EmptyPageMessageProps> {
    static defaultProps: Partial<EmptyPageMessageProps> = {};
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
 
       return (
          <LinearGradient
@@ -23,16 +23,11 @@ class EmptyPageMessage extends Component<EmptyPageMessageProps> {
             locations={[0.7, 1]}
             colors={[
                color(currentTheme.colors.background).string(),
-               color(currentTheme.colors.backgroundBottomGradient).alpha(1).string(),
+               color(currentTheme.colors.backgroundBottomGradient).alpha(1).string()
             ]}
          >
             <View style={styles.mainContainer}>
-               {
-                  this.props.text && 
-                     <Text style={styles.text}>
-                        {this.props.text}
-                     </Text>
-               }
+               {this.props.text && <Text style={styles.text}>{this.props.text}</Text>}
                {this.props.children}
             </View>
          </LinearGradient>
@@ -50,7 +45,7 @@ const styles: Styles = StyleSheet.create({
    },
    text: {
       fontSize: 17,
-      fontFamily: currentTheme.fonts.light
+      fontFamily: currentTheme.font.light
    }
 });
 

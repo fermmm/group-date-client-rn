@@ -20,7 +20,7 @@ export interface DateIdeaState {
 class DateIdeaForm extends Component<DateIdeaProps, DateIdeaState> {
    state: DateIdeaState = {
       placeName: "",
-      address: "",
+      address: ""
    };
 
    componentDidMount(): void {
@@ -28,14 +28,12 @@ class DateIdeaForm extends Component<DateIdeaProps, DateIdeaState> {
    }
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
       const { placeName, address }: Partial<DateIdeaState> = this.state;
 
       return (
          <View style={styles.mainContainer}>
-            <TitleText>
-               ¿Dónde harías una cita grupal?
-            </TitleText>
+            <TitleText>¿Dónde harías una cita grupal?</TitleText>
             <TitleSmallText style={styles.titleSmall}>
                Todes conocemos algún lugar público agradable.
             </TitleSmallText>
@@ -83,7 +81,7 @@ class DateIdeaForm extends Component<DateIdeaProps, DateIdeaState> {
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       padding: 20,
-      justifyContent: "flex-end",
+      justifyContent: "flex-end"
    },
    titleSmall: {
       paddingLeft: 0
@@ -94,7 +92,7 @@ const styles: Styles = StyleSheet.create({
    },
    labelLine2: {
       marginBottom: 0,
-      fontFamily: currentTheme.fonts.extraLight
+      fontFamily: currentTheme.font.extraLight
    },
    ageSelector: {
       marginLeft: 5

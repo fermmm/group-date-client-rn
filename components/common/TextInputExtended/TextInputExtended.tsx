@@ -116,7 +116,7 @@ const styles: Styles = StyleSheet.create({
    },
    titleLine2: {
       marginBottom: 0,
-      fontFamily: currentTheme.fonts.extraLight
+      fontFamily: currentTheme.font.extraLight
    },
    modal: {
       position: "absolute",

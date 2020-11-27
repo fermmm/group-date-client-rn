@@ -30,7 +30,7 @@ class TitleText extends Component<TitleTextProps> {
 
 const styles: Styles = StyleSheet.create({
    titleStyle: {
-      fontFamily: currentTheme.fonts.light,
+      fontFamily: currentTheme.font.light,
       fontSize: 17,
       marginBottom: 10,
       marginRight: 10
