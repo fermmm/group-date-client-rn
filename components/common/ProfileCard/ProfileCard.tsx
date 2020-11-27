@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import color from "color";
 import {
    ImageProps,
    Image,
@@ -17,11 +16,11 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
-import QuestionInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
-import { getAge } from "../../../api/tools/date-tools";
+import ThemeInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
 import EditButton from "./EditButton/EditButton";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { Theme } from "../../../api/server/shared-tools/endpoints-interfaces/themes";
 
 export interface ProfileCardProps extends Themed, StackScreenProps<{}> {
    user: User;
@@ -47,6 +46,10 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
       const { renderImageModal, imageSelected }: Partial<ProfileCardState> = this.state;
       const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
       const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
+      // TODO: Get local user from server
+      const localUser: User = null;
+      // TODO: Get local user from server
+      const allThemes: Theme[] = null;
 
       const {
          showLikeDislikeButtons,
@@ -64,6 +67,16 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
          themesSubscribed,
          themesBlocked
       }: Partial<User> = this.props.user;
+
+      const themesSubscribedInCommon: Theme[] = themesSubscribed
+         .filter(t => localUser.themesSubscribed.find(ut => ut.themeId === t.themeId) != null)
+         .map(t => allThemes.find(at => at.themeId === t.themeId))
+         .filter(t => t != null);
+
+      const themesBlockedInCommon: Theme[] = themesBlocked
+         .filter(t => localUser.themesBlocked.find(ut => ut.themeId === t.themeId) != null)
+         .map(t => allThemes.find(at => at.themeId === t.themeId))
+         .filter(t => t != null);
 
       return (
          <>
@@ -83,7 +96,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                      <Card style={[styles.card, { backgroundColor: colors.background }]}>
                         <View>
                            <ImagesScroll
-                              images={pictures}
+                              images={images}
                               style={[
                                  styles.galleryScroll,
                                  statusBarPadding && { marginTop: StatusBar.currentHeight }
@@ -117,7 +130,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                         <View style={styles.titleAreaContainer}>
                            <Card.Title
                               title={name}
-                              subtitle={`${getAge(birthdate)} · ${area} · 195cm`}
+                              subtitle={`${age} · ${cityName} · 195cm`}
                               style={{ flex: 1 }}
                               titleStyle={{ color: colors.text }}
                               subtitleStyle={{ color: colors.text }}
@@ -150,18 +163,20 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                               />
                            )}
                            <View style={styles.questionsContainer}>
-                              {questions.map((question, i) => (
-                                 <QuestionInProfileCard
-                                    questionData={question}
-                                    key={question.text}
-                                 />
+                              {themesSubscribedInCommon.map((theme, i) => (
+                                 <ThemeInProfileCard theme={theme} key={theme.themeId} />
+                              ))}
+                           </View>
+                           <View style={styles.questionsContainer}>
+                              {themesBlockedInCommon.map((theme, i) => (
+                                 <ThemeInProfileCard theme={theme} key={theme.themeId} />
                               ))}
                            </View>
                            {editMode && (
                               <EditButton
                                  showAtBottom
                                  absolutePosition={false}
-                                 label={"Revisar todas las preguntas"}
+                                 label={"Modificar temáticas"}
                                  onPress={() => navigate("ChangeQuestions")}
                               />
                            )}

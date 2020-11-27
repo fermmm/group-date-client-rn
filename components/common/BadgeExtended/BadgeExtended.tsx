@@ -1,13 +1,17 @@
-import React, { Component } from "react";
-import { StyleSheet } from "react-native";
-import { Badge, Text, BadgeProps } from "react-native-paper";
+import React, { Component, ReactText } from "react";
+import { StyleProp, StyleSheet, TextStyle } from "react-native";
+import { Badge, Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 
-export interface BadgeExtendedProps extends BadgeProps { 
+export interface BadgeExtendedProps {
+   amount: number;
    showAtLeftSide?: boolean;
    extraX?: number;
    extraY?: number;
+   size?: number;
+   style?: StyleProp<TextStyle>;
+   children?: null;
 }
 
 class BadgeExtended extends Component<BadgeExtendedProps> {
@@ -22,22 +26,17 @@ class BadgeExtended extends Component<BadgeExtendedProps> {
 
       return (
          <Badge
-            {...this.props}
+            visible={this.props.amount != null && this.props.amount > 0}
+            size={this.props.size}
             style={[
-                  this.props.style, 
-                  styles.mainStyle, 
-                  {top: -4 + extraY},
-                  showAtLeftSide ? 
-                     {left: -12 + extraX}
-                  : 
-                     {right: -9 + extraX}
+               this.props.style,
+               styles.mainStyle,
+               { top: -4 + extraY },
+               { color: currentTheme.colors.text2 },
+               showAtLeftSide ? { left: -12 + extraX } : { right: -9 + extraX }
             ]}
          >
-            <Text
-               style={{ color: currentTheme.colors.text2 }}
-            >
-               {this.props.children}
-            </Text>
+            {this.props.amount}
          </Badge>
       );
    }
@@ -45,8 +44,8 @@ class BadgeExtended extends Component<BadgeExtendedProps> {
 
 const styles: Styles = StyleSheet.create({
    mainStyle: {
-      position: "absolute",
-   },
+      position: "absolute"
+   }
 });
 
 export default BadgeExtended;

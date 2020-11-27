@@ -82,9 +82,7 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                   left={props => (
                      <View>
                         <List.Icon {...props} style={styles.optionIcon} icon="forum" />
-                        <BadgeExtended size={23} extraX={7}>
-                           1
-                        </BadgeExtended>
+                        <BadgeExtended amount={1} size={23} extraX={7} />
                      </View>
                   )}
                   onPress={() => navigate("Chat", { contactChat: true })}

@@ -13,7 +13,7 @@ export interface ChangeProfileTextState {
 
 class ChangeProfileTextPage extends Component<ChangeProfileTextProps, ChangeProfileTextState> {
    state: ChangeProfileTextState = {
-      profileText: "" // Retreive current profile text here
+      profileText: "" // Retrieve current profile text here
    };
 
    render(): JSX.Element {

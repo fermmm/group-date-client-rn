@@ -1,64 +1,58 @@
-import React, { Component } from "react";
+import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
-import { withTheme, Caption, Text } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
-import { QuestionData } from "../../../../api/typings/endpoints-interfaces/questions";
+import { Caption, Text } from "react-native-paper";
+import { ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import color from "color";
+import { Theme } from "../../../../api/server/shared-tools/endpoints-interfaces/themes";
+import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 
-export interface IQuestionProfileProps extends Themed {
-   questionData: QuestionData;
+export interface ThemeInProfileCardProps {
+   theme: Theme;
 }
 
-class QuestionInProfileCard extends Component<IQuestionProfileProps> {
-   render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { questionData }: IQuestionProfileProps = this.props;
-      const answerMatches: boolean = true; // Implement compare logic here
+const ThemeInProfileCard: FC<ThemeInProfileCardProps> = ({ theme }) => {
+   const { colors }: ThemeExt = useTheme();
+   const answerMatches: boolean = true; // Implement compare logic here
 
-      return (
-         <View style={[
+   return (
+      <View
+         style={[
             styles.mainContainer,
             {
                backgroundColor: color(colors.background).darken(0.05).string(),
-               borderColor: !answerMatches && color(colors.statusBad).alpha(0.6).string(),
+               borderColor: !answerMatches && color(colors.statusBad).alpha(0.6).string()
             },
-            !answerMatches && styles.border,
-         ]}>
-            <Text style={{ color: colors.text }}>
-               {
-                  questionData.shortVersion ? 
-                     questionData.shortVersion 
-                  : 
-                     questionData.text
-               }
-            </Text>
-            <Caption style={{ color: colors.text }}>
-               {
-                  !questionData.multipleAnswersAllowed ?
-                     questionData.answers[0].shortVersion ? 
-                        questionData.answers[0].shortVersion 
-                     : 
-                        questionData.answers[0].text
-                  :
-                     `${questionData.answers[0].text}, ${questionData.answers[1].text}` // Implemet multiple questions separated by comma here
-               }
-            </Caption>
-         </View>
-      );
-   }
-}
-
+            !answerMatches && styles.border
+         ]}
+      >
+         <Text
+            style={{
+               color: colors.text
+            }}
+         >
+            {theme.category}
+         </Text>
+         <Caption
+            style={{
+               color: colors.text
+            }}
+         >
+            {theme.name}
+         </Caption>
+      </View>
+   );
+};
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       alignSelf: "flex-start",
       padding: 10,
       marginRight: 5,
-      marginBottom: 5,
+      marginBottom: 5
    },
    border: {
-      borderBottomWidth: 1,
-   },
+      borderBottomWidth: 1
+   }
 });
 
-export default withTheme(QuestionInProfileCard);
+export default ThemeInProfileCard;
