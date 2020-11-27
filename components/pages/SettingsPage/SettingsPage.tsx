@@ -35,7 +35,7 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                         {...props}
                         style={styles.profileIcon}
                         size={42}
-                        source={{ uri: localUser.pictures[0] }}
+                        source={{ uri: localUser.images[0] }}
                      />
                   )}
                   onPress={() => navigate("Profile", { user: localUser, editMode: true })}

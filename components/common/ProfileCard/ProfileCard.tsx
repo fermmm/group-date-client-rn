@@ -18,13 +18,10 @@ import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
 import QuestionInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
-import { User } from "../../../api/typings/User";
 import { getAge } from "../../../api/tools/date-tools";
 import EditButton from "./EditButton/EditButton";
-import { withNavigation, StackScreenProps, NavigationScreenProp } from "@react-navigation/stack";
-import { fakeProfileQuestionsPart } from "../../../api/tools/debug-tools/fakeProfileQuestions";
-import { fakeFilterQuestions } from "../../../api/tools/debug-tools/fakeFilterQuestions";
-import { QuestionData } from "../../../api/typings/endpoints-interfaces/questions";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
 export interface ProfileCardProps extends Themed, StackScreenProps<{}> {
    user: User;
@@ -47,6 +44,10 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
    };
 
    render(): JSX.Element {
+      const { renderImageModal, imageSelected }: Partial<ProfileCardState> = this.state;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
+      const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
+
       const {
          showLikeDislikeButtons,
          onLikeClick,
@@ -54,11 +55,15 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
          statusBarPadding,
          editMode
       }: Partial<ProfileCardProps> = this.props;
-      const { name, images, birthdate, area }: Partial<User> = this.props.user;
-      const { renderImageModal, imageSelected }: Partial<ProfileCardState> = this.state;
-      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-      const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
-      const questions: QuestionData[] = [...fakeProfileQuestionsPart, ...fakeFilterQuestions];
+
+      const {
+         name,
+         images,
+         age,
+         cityName,
+         themesSubscribed,
+         themesBlocked
+      }: Partial<User> = this.props.user;
 
       return (
          <>
@@ -78,7 +83,7 @@ class ProfileCard extends Component<ProfileCardProps, ProfileCardState> {
                      <Card style={[styles.card, { backgroundColor: colors.background }]}>
                         <View>
                            <ImagesScroll
-                              images={images}
+                              images={pictures}
                               style={[
                                  styles.galleryScroll,
                                  statusBarPadding && { marginTop: StatusBar.currentHeight }

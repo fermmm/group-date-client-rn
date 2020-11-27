@@ -30,8 +30,7 @@ const Stack = createStackNavigator();
 i18n.fallbacks = true;
 i18n.translations = {
    en,
-   es,
-   "es-AR": esAr
+   es
 };
 i18n.defaultLocale = "es";
 i18n.locale = Localization.locale;

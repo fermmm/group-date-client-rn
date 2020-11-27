@@ -78,7 +78,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                               <AvatarTouchable
                                  {...props}
                                  size={50}
-                                 source={{ uri: user.pictures[0] }}
+                                 source={{ uri: user.images[0] }}
                               />
                            )}
                            key={i}
@@ -99,7 +99,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                                           {...props}
                                           onPress={() => navigate("Profile", { user: matchedUser })}
                                           size={50}
-                                          source={{ uri: matchedUser.pictures[0] }}
+                                          source={{ uri: matchedUser.images[0] }}
                                        />
                                     )}
                                  />
