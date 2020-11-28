@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import { withTheme } from "react-native-paper";
+import { withNavigation } from "@react-navigation/compat";
 import ProfilePicturesForm from "../../RegistrationFormsPage/ProfilePicturesForm/ProfilePicturesForm";
 import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
@@ -60,4 +61,4 @@ const styles: Styles = StyleSheet.create({});
 
 // tslint:disable-next-line: ban-ts-ignore-except-imports
 // @ts-ignore
-export default withNavigation(withTheme(ChangePicturesPage));
+export default withTheme(withNavigation(ChangePicturesPage));

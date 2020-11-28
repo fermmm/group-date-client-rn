@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withTheme } from "react-native-paper";
+import { withNavigation } from "@react-navigation/compat";
 import { Themed } from "../../../../common-tools/themes/types/Themed";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import QuestionsPage from "../../QuestionsPage/QuestionsPage";
@@ -33,4 +34,4 @@ class ChangeQuestionsPage extends Component<ChangeQuestionsPageProps, ChangeQues
 
 // tslint:disable-next-line: ban-ts-ignore-except-imports
 // @ts-ignore
-export default withNavigation(withTheme(ChangeQuestionsPage));
+export default withTheme(withNavigation(ChangeQuestionsPage));

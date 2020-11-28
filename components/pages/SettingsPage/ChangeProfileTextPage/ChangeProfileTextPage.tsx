@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withTheme } from "react-native-paper";
+import { withNavigation } from "@react-navigation/compat";
 import { Themed } from "../../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
@@ -39,4 +40,4 @@ class ChangeProfileTextPage extends Component<ChangeProfileTextProps, ChangeProf
 
 // tslint:disable-next-line: ban-ts-ignore-except-imports
 // @ts-ignore
-export default withNavigation(withTheme(ChangeProfileTextPage));
+export default withTheme(withNavigation(ChangeProfileTextPage));

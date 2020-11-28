@@ -10,6 +10,7 @@ import {
    ImageBackground
 } from "react-native";
 import { Card, Paragraph, withTheme, Text, Caption } from "react-native-paper";
+import { withNavigation } from "@react-navigation/compat";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -251,4 +252,4 @@ const styles: Styles = StyleSheet.create({
 
 // tslint:disable-next-line: ban-ts-ignore-except-imports
 // @ts-ignore
-export default withNavigation(withTheme(ProfileCard));
+export default withTheme(withNavigation(ProfileCard));

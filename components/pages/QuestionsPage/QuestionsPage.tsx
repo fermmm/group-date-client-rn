@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import { withTheme } from "react-native-paper";
+import { withNavigation } from "@react-navigation/compat";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
@@ -115,6 +116,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-// tslint:disable-next-line: ban-ts-ignore-except-imports
-// @ts-ignore
-export default withNavigation(withTheme(QuestionsPage));
+export default (withTheme(withNavigation(QuestionsPage as any)) as unknown) as typeof QuestionsPage;

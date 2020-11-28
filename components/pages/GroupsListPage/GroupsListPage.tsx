@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet } from "react-native";
+import { withNavigation } from "@react-navigation/compat";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withTheme, List } from "react-native-paper";
@@ -73,4 +74,4 @@ const styles: Styles = StyleSheet.create({
 
 // tslint:disable-next-line: ban-ts-ignore-except-imports
 // @ts-ignore
-export default withNavigation(withTheme(GroupsListPage));
+export default withTheme(withNavigation(GroupsListPage));

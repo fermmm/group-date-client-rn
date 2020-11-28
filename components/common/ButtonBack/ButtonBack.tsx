@@ -1,37 +1,25 @@
-import React, { Component } from "react";
+import React, { FC } from "react";
 import { StyleSheet, TouchableHighlight } from "react-native";
-import { FAB, FABProps } from "react-native-paper";
+import { FAB } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { NavigationScreenProp, StackScreenProps, withNavigation } from "@react-navigation/stack";
 import { currentTheme } from "../../../config";
 import color from "color";
+import { useNavigation } from "@react-navigation/native";
 
-export interface Props extends StackScreenProps, Partial<FABProps> {}
+const ButtonBack: FC = props => {
+   const navigation = useNavigation();
 
-class ButtonBack extends Component<Props> {
-   static defaultProps: Partial<Props> = {};
-
-   render(): JSX.Element {
-      const { goBack }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
-
-      return (
-         <TouchableHighlight
-            style={styles.container}
-            onPress={() => goBack()}
-            underlayColor={color("white").alpha(0).string()}
-            activeOpacity={1}
-         >
-            <FAB
-               style={styles.fab}
-               icon="arrow-back"
-               onPress={() => goBack()}
-               small
-               {...this.props}
-            />
-         </TouchableHighlight>
-      );
-   }
-}
+   return (
+      <TouchableHighlight
+         style={styles.container}
+         onPress={() => navigation.goBack()}
+         underlayColor={color("white").alpha(0).string()}
+         activeOpacity={1}
+      >
+         <FAB style={styles.fab} icon="arrow-back" onPress={() => navigation.goBack()} small />
+      </TouchableHighlight>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    container: {
@@ -46,6 +34,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-// tslint:disable-next-line: ban-ts-ignore-except-imports
-// @ts-ignore
-export default withNavigation(ButtonBack);
+export default ButtonBack;

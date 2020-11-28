@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Route } from "@react-navigation/native";
 import { withTheme, List } from "react-native-paper";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import { withNavigation } from "@react-navigation/compat";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
@@ -138,4 +139,4 @@ const styles: Styles = StyleSheet.create({
 
 // tslint:disable-next-line: ban-ts-ignore-except-imports
 // @ts-ignore
-export default withNavigation(withTheme(GroupPage));
+export default withTheme(withNavigation(GroupPage));

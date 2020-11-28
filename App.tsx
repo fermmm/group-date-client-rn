@@ -71,8 +71,8 @@ export default class App extends Component<{}, PageBasicWrapperState> {
             <NavigationContainer theme={TestTheme}>
                <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
                   <Stack.Screen name="Login" component={LoginPage} />
-                  {/* <Stack.Screen name="Main" component={MainPage} />
-                  <Stack.Screen name="Group" component={GroupPage} />
+                  <Stack.Screen name="Main" component={MainPage} />
+                  {/* <Stack.Screen name="Group" component={GroupPage} />
                   <Stack.Screen name="Chat" component={ChatPage} />
                   <Stack.Screen name="DateVoting" component={DateVotingPage} />
                   <Stack.Screen name="Profile" component={ProfilePage} />

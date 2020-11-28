@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withTheme } from "react-native-paper";
+import { withNavigation } from "@react-navigation/compat";
 import { Themed } from "../../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
 import { StackScreenProps, StackNavigationProp } from "@react-navigation/stack";
@@ -53,4 +54,4 @@ class ChangeDateIdeaPage extends Component<ChangeDateIdeaPageProps, ChangeDateId
 
 // tslint:disable-next-line: ban-ts-ignore-except-imports
 // @ts-ignore
-export default withNavigation(withTheme(ChangeDateIdeaPage));
+export default withTheme(withNavigation(ChangeDateIdeaPage));

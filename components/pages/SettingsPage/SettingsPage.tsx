@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
+import { withNavigation } from "@react-navigation/compat";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { withTheme, List, Avatar } from "react-native-paper";
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
@@ -106,4 +107,4 @@ const styles: Styles = StyleSheet.create({
 
 // tslint:disable-next-line: ban-ts-ignore-except-imports
 // @ts-ignore
-export default withNavigation(withTheme(SettingsPage));
+export default withTheme(withNavigation(SettingsPage));

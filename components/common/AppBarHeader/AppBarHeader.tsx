@@ -1,61 +1,65 @@
-import React, { Component } from "react";
+import React, { FC } from "react";
 import { StyleSheet, ImageBackground, View, StatusBar, Text } from "react-native";
-import { withTheme, Appbar } from "react-native-paper";
-import { Themed } from "../../../common-tools/themes/types/Themed";
+import { Appbar } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { withNavigation, StackScreenProps, NavigationScreenProp } from "@react-navigation/stack";
 import { currentTheme } from "../../../config";
 import ShadowBottom from "../ShadowBottom/ShadowBottom";
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
+import { ThemeExt } from "../../../common-tools/themes/types/Themed";
 
-export interface AppBarHeaderProps extends Themed, StackScreenProps<{}> {
+export interface AppBarHeaderProps {
    title?: string;
    showBackButton?: boolean;
    onBackPress?(): void;
 }
-export interface AppBarHeaderState {}
 
-class AppBarHeader extends Component<AppBarHeaderProps, AppBarHeaderState> {
-   static defaultProps: Partial<AppBarHeaderProps> = {
+const AppBarHeader: FC<AppBarHeaderProps> = (
+   props = {
       title: "",
       showBackButton: true
-   };
-
-   render(): JSX.Element {
-      const { goBack }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
-      return (
-         <View style={styles.mainContainer}>
-            <ShadowBottom imageSource={currentTheme.shadowBottom} />
-            <this.Background useImageBackground={true}>
-               <View style={styles.contentContainer}>
-                  {this.props.showBackButton && (
-                     <Appbar.BackAction
-                        color={currentTheme.colors.text2}
-                        onPress={() =>
-                           this.props.onBackPress != null ? this.props.onBackPress() : goBack()
-                        }
-                        style={{ marginRight: 25 }}
-                     />
-                  )}
-                  <View style={{ flex: 1 }}>
-                     <Text style={styles.titleText}>{this.props.title}</Text>
-                  </View>
-                  {this.props.children}
-               </View>
-            </this.Background>
-         </View>
-      );
    }
+) => {
+   const { goBack } = useNavigation();
+   const theme: ThemeExt = useTheme();
 
-   Background(props: { children?: JSX.Element; useImageBackground: boolean }): JSX.Element {
-      if (props.useImageBackground) {
-         return (
-            <ImageBackground source={currentTheme.backgroundImage} style={styles.imageBackground}>
+   return (
+      <View style={styles.mainContainer}>
+         <ShadowBottom imageSource={theme.shadowBottom} />
+         <Background useImageBackground={true}>
+            <View style={styles.contentContainer}>
+               {props.showBackButton && (
+                  <Appbar.BackAction
+                     color={theme.colors.text2}
+                     onPress={() => (props.onBackPress != null ? props.onBackPress() : goBack())}
+                     style={{
+                        marginRight: 25
+                     }}
+                  />
+               )}
+               <View
+                  style={{
+                     flex: 1
+                  }}
+               >
+                  <Text style={styles.titleText}>{props.title}</Text>
+               </View>
                {props.children}
-            </ImageBackground>
-         );
-      } else {
-         return <View style={styles.colorBackground}>{props.children}</View>;
-      }
+            </View>
+         </Background>
+      </View>
+   );
+};
+
+function Background(props: { children?: JSX.Element; useImageBackground: boolean }): JSX.Element {
+   if (props.useImageBackground) {
+      return (
+         <ImageBackground source={currentTheme.backgroundImage} style={styles.imageBackground}>
+            {props.children}
+         </ImageBackground>
+      );
+   } else {
+      return <View style={styles.colorBackground}>{props.children}</View>;
    }
 }
 
@@ -92,6 +96,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-// tslint:disable-next-line: ban-ts-ignore-except-imports
-// @ts-ignore
-export default withNavigation(withTheme(AppBarHeader));
+export default AppBarHeader;
