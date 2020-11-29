@@ -16,8 +16,7 @@
         "call-signature",
         "parameter",
         "property-declaration",
-        "member-variable-declaration",
-        "array-destructuring"
+        "member-variable-declaration"
     ],
     "member-ordering": [
         true,

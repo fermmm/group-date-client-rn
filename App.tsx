@@ -72,18 +72,18 @@ export default class App extends Component<{}, PageBasicWrapperState> {
                <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
                   <Stack.Screen name="Login" component={LoginPage} />
                   <Stack.Screen name="Main" component={MainPage} />
-                  {/* <Stack.Screen name="Group" component={GroupPage} />
+                  <Stack.Screen name="Group" component={GroupPage} />
                   <Stack.Screen name="Chat" component={ChatPage} />
                   <Stack.Screen name="DateVoting" component={DateVotingPage} />
                   <Stack.Screen name="Profile" component={ProfilePage} />
                   <Stack.Screen name="Questions" component={QuestionsPage} />
-                  <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
                   <Stack.Screen name="About" component={AboutPage} />
+                  <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
                   <Stack.Screen name="ChangePictures" component={ChangePicturesPage} />
                   <Stack.Screen name="ChangeProfileText" component={ChangeProfileTextPage} />
                   <Stack.Screen name="ChangeBasicInfo" component={ChangeBasicInfoPage} />
                   <Stack.Screen name="ChangeDateIdea" component={ChangeDateIdeaPage} />
-                  <Stack.Screen name="ChangeQuestions" component={ChangeQuestionsPage} /> */}
+                  <Stack.Screen name="ChangeQuestions" component={ChangeQuestionsPage} />
                </Stack.Navigator>
             </NavigationContainer>
          </PaperProvider>

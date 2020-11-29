@@ -9,6 +9,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@breeffy/react-native-popup-menu": "^0.8.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/compat": "^5.3.9",
     "@react-navigation/native": "^5.8.9",
@@ -27,7 +28,6 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz",
-    "react-native-enhanced-popup-menu": "^0.6.1",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-gifted-chat": "^0.12.0-beta-0",
     "react-native-keyboard-spacer": "^0.4.1",
@@ -35,7 +35,7 @@
     "react-native-reanimated": "~1.13.0",
     "react-native-screens": "^2.15.0",
     "react-native-svg": "12.1.0",
-    "react-native-tab-view": "^2.10.0",
+    "react-native-tab-view": "^2.15.2",
     "react-native-vector-icons": "^6.4.2",
     "react-native-web": "~0.13.7",
     "react-timer-mixin": "^0.13.4",

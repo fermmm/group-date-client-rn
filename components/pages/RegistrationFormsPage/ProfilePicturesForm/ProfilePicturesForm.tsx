@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { StyleSheet, View, TouchableHighlight, Image, ImageStyle, ImageBackground, Platform } from "react-native";
+import {
+   StyleSheet,
+   View,
+   TouchableHighlight,
+   Image,
+   ImageStyle,
+   ImageBackground,
+   Platform
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import { askForPermissions } from "../../../../common-tools/device-native-api/permissions/askForPermissions";
@@ -9,7 +17,7 @@ import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { currentTheme } from "../../../../config";
 import SurfaceStyled from "../../../common/SurfaceStyled/SurfaceStyled";
-import Menu, { Position } from "react-native-enhanced-popup-menu";
+import { Menu, Position } from "@breeffy/react-native-popup-menu";
 import TitleText from "../../../common/TitleText/TitleText";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 
@@ -27,22 +35,23 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
    menuRef: Menu;
    state: ProfilePictureFormState = {
       placeholderClicked: null,
-      pictures: [    // With this line you control how many picture placeholder can be
+      pictures: [
+         // With this line you control how many picture placeholder can be
          null,
          null,
          null,
          null,
          null,
-         null,
+         null
       ]
    };
-   
+
    componentDidMount(): void {
       this.props.onChange(this.state.pictures, this.getErrors());
    }
 
    render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
       const { pictures, placeholderClicked }: ProfilePictureFormState = this.state;
 
       return (
@@ -56,46 +65,45 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                </TitleSmallText>
             </View>
             <View style={styles.picturesContainer}>
-               {
-                  this.state.pictures.map((uri, i) =>
-                     <TouchableHighlight
-                        onPress={() => this.setState({ placeholderClicked: i }, () => this.showMenu())}
-                        style={styles.pictureContainer}
-                        underlayColor="white"
-                        activeOpacity={0.6}
-                        ref={c => this.placeholdersRefs[i] = c}
-                        key={i}
+               {this.state.pictures.map((uri, i) => (
+                  <TouchableHighlight
+                     onPress={() => this.setState({ placeholderClicked: i }, () => this.showMenu())}
+                     style={styles.pictureContainer}
+                     underlayColor="white"
+                     activeOpacity={0.6}
+                     ref={c => (this.placeholdersRefs[i] = c)}
+                     key={i}
+                  >
+                     <SurfaceStyled
+                        style={[styles.pictureSurface, uri != null && { backgroundColor: "black" }]}
                      >
-                        <SurfaceStyled style={[styles.pictureSurface, uri != null && {backgroundColor: "black"}]}>
-                           {
-                              uri != null ?
-                                 <ImageBackground
-                                    style={{width: "100%", height: "100%" }}
-                                    source={{uri}}
-                                    blurRadius={Platform.OS === "ios" ? 120 : 60}
-                                 >
-                                    <Image 
-                                       source={{uri}} 
-                                       resizeMode={"contain"}
-                                       style={styles.pictureImage as ImageStyle} 
-                                    />
-                                 </ImageBackground>
-                                 :
-                                 <Icon
-                                    name={"plus-circle-outline"}
-                                    color={currentTheme.colors.primary}
-                                    style={{ fontSize: 60 }}
-                                 />
-                           }
-                        </SurfaceStyled>
-                     </TouchableHighlight>
-                  )
-               }
+                        {uri != null ? (
+                           <ImageBackground
+                              style={{ width: "100%", height: "100%" }}
+                              source={{ uri }}
+                              blurRadius={Platform.OS === "ios" ? 120 : 60}
+                           >
+                              <Image
+                                 source={{ uri }}
+                                 resizeMode={"contain"}
+                                 style={styles.pictureImage as ImageStyle}
+                              />
+                           </ImageBackground>
+                        ) : (
+                           <Icon
+                              name={"plus-circle-outline"}
+                              color={currentTheme.colors.primary}
+                              style={{ fontSize: 60 }}
+                           />
+                        )}
+                     </SurfaceStyled>
+                  </TouchableHighlight>
+               ))}
             </View>
-            <Menu ref={c => this.menuRef = c}>
+            <Menu ref={c => (this.menuRef = c)}>
                <PaperMenu.Item
                   title="Elegir de tus fotos"
-                  icon="photo-library"
+                  icon="account-box-multiple"
                   style={styles.menuItem}
                   onPress={async () => {
                      this.hideMenu();
@@ -111,20 +119,20 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                      this.addPicture(await this.callCameraPicture(), placeholderClicked);
                   }}
                />
-               {
-                  (placeholderClicked != null && placeholderClicked !== 0 && pictures[placeholderClicked]) &&
-                  <PaperMenu.Item
-                     title="Mover al principio"
-                     icon="arrow-upward"
-                     style={styles.menuItem}
-                     onPress={() => {
-                        this.hideMenu();
-                        this.movePictureToFirstPosition(placeholderClicked);
-                     }}
-                  />
-               }
-               {
-                  (placeholderClicked != null && pictures[placeholderClicked]) &&
+               {placeholderClicked != null &&
+                  placeholderClicked !== 0 &&
+                  pictures[placeholderClicked] && (
+                     <PaperMenu.Item
+                        title="Mover al principio"
+                        icon="arrow-top-left"
+                        style={styles.menuItem}
+                        onPress={() => {
+                           this.hideMenu();
+                           this.movePictureToFirstPosition(placeholderClicked);
+                        }}
+                     />
+                  )}
+               {placeholderClicked != null && pictures[placeholderClicked] && (
                   <PaperMenu.Item
                      title="Eliminar"
                      icon="delete"
@@ -134,7 +142,7 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
                         this.deletePicture(placeholderClicked);
                      }}
                   />
-               }
+               )}
             </Menu>
          </>
       );
@@ -145,7 +153,10 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
    }
 
    showMenu(): void {
-      this.menuRef.show(this.placeholdersRefs[this.state.placeholderClicked], Position.TOP_LEFT, { left: 0, top: 20 });
+      this.menuRef.show(this.placeholdersRefs[this.state.placeholderClicked], Position.TOP_LEFT, {
+         left: 0,
+         top: 20
+      });
    }
 
    addPicture(newPicture: string, id: number): void {
@@ -160,7 +171,9 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
          const picture: string = result[i];
          if (picture == null || i === id) {
             result[i] = newPicture;
-            this.setState({ pictures: result }, () => this.props.onChange(pictures, this.getErrors()));
+            this.setState({ pictures: result }, () =>
+               this.props.onChange(pictures, this.getErrors())
+            );
             return;
          }
       }
@@ -178,7 +191,7 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
       if (this.state.pictures[index] == null) {
          return;
       }
-      
+
       const { pictures }: ProfilePictureFormState = this.state;
 
       const result: string[] = [...pictures];
@@ -198,11 +211,11 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
       //    }
       // });
 
-      const result: ImageInfo = await ImagePicker.launchImageLibraryAsync({
+      const result: ImageInfo = ((await ImagePicker.launchImageLibraryAsync({
          mediaTypes: ImagePicker.MediaTypeOptions.Images,
          allowsEditing: true,
          quality: 0.8
-      }) as unknown as ImageInfo;
+      })) as unknown) as ImageInfo;
 
       return Promise.resolve(result.uri || null);
    }
@@ -211,17 +224,18 @@ class ProfilePictureForm extends Component<ProfilePictureFormProps, ProfilePictu
       await askForPermissions(Permissions.CAMERA, {
          rejectedDialogTexts: {
             dialogTitle: "Error",
-            dialogText: "Tenes que aceptar permisos para continuar. Cualquier app necesita acceder a la cámara para que puedas sacar una foto",
+            dialogText:
+               "Tenes que aceptar permisos para continuar. Cualquier app necesita acceder a la cámara para que puedas sacar una foto",
             openSettingsButtonText: "Modificar permisos",
             exitAppButtonText: "Salir de la app",
-            instructionsToastText: `Toca "Permisos" y activa "Cámara"`,
+            instructionsToastText: `Toca "Permisos" y activa "Cámara"`
          }
       });
 
-      const result: ImageInfo = await ImagePicker.launchCameraAsync({
+      const result: ImageInfo = ((await ImagePicker.launchCameraAsync({
          mediaTypes: ImagePicker.MediaTypeOptions.Images,
          quality: 0.8
-      }) as unknown as ImageInfo;
+      })) as unknown) as ImageInfo;
 
       return Promise.resolve(result.uri || null);
    }
@@ -264,11 +278,11 @@ const styles: Styles = StyleSheet.create({
    },
    pictureImage: {
       width: "100%",
-      height: "100%",
+      height: "100%"
    },
    menuItem: {
-      flex: 1,
-   },
+      flex: 1
+   }
 });
 
 interface ImageInfo {

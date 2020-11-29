@@ -36,7 +36,7 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                         {...props}
                         style={styles.profileIcon}
                         size={42}
-                        source={{ uri: localUser.images[0] }}
+                        source={{ uri: localUser?.images[0] }}
                      />
                   )}
                   onPress={() => navigate("Profile", { user: localUser, editMode: true })}
@@ -45,7 +45,9 @@ class SettingsPage extends Component<SettingsPageProps, SettingsPageState> {
                <List.Item
                   title="Preguntas y filtros"
                   description="Modifica la información sobre tu sexualidad y preferencias"
-                  left={props => <List.Icon {...props} style={styles.optionIcon} icon="search" />}
+                  left={props => (
+                     <List.Icon {...props} style={styles.optionIcon} icon="account-heart" />
+                  )}
                   onPress={() => navigate("ChangeQuestions")}
                />
                <List.Item

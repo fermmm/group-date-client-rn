@@ -1,96 +1,96 @@
-import React, { Component } from "react";
+import React, { useState, FC } from "react";
 import { StyleSheet, Dimensions, StatusBar, View, ImageBackground } from "react-native";
 import { TabView, SceneMap, TabBar, Route } from "react-native-tab-view";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
-import { withTheme } from "react-native-paper";
 import { currentTheme } from "../../../config";
 import color from "color";
 import ShadowBottom from "../ShadowBottom/ShadowBottom";
 import BadgeExtended from "../BadgeExtended/BadgeExtended";
-import { Merge } from "../../../common-tools/ts-tools/common-ts-tools";
+import { Scene } from "react-native-tab-view/lib/typescript/src/types";
+import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 
-interface NavBarProps extends Themed {
+interface NavBarProps {
    sections: { [key: string]: () => JSX.Element };
    routes: RouteExtended[];
 }
 
-interface NavBarState {
-   index: number;
-}
+export const NavigationBar: FC<NavBarProps> = props => {
+   const [index, setIndex] = useState<number>(0);
+   const theme = useTheme();
 
-class NavigationBar extends Component<NavBarProps, NavBarState> {
-   state: NavBarState = {
-      index: 0,
-   };
+   const { routes }: NavBarProps = props;
 
-   render(): JSX.Element {
-      const { routes }: NavBarProps = this.props;
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const { index }: NavBarState = this.state;
-
-      return (
-         <TabView
-            swipeEnabled={false}
-            navigationState={{ index, routes }}
-            renderScene={SceneMap(this.props.sections)}
-            onIndexChange={i => this.setState({ index: i })}
-            initialLayout={{ width: Dimensions.get("window").width }}
-            renderTabBar={props =>
-               <View>
-                  <ShadowBottom imageSource={currentTheme.shadowBottom} style={{ opacity: index === 0 ? 0.35 : 1 }} />
-                  <this.Background useImageBackground={true}>
-                     <TabBar
-                        {...props}
-                        indicatorStyle={{ backgroundColor: colors.primary2 }}
-                        style={[styles.tabBar]}
-                        renderIcon={({ route, focused }) =>
-                           <View>
-                              {
-                                 typeof route.icon === "string" ?
-                                    <Icon
-                                       name={route.icon}
-                                       color={colors.text2}
-                                       size={22}
-                                    />
-                                 :
-                                    route.icon
-                              }
-                              {
-                                 route.badgeText && 
-                                    <BadgeExtended 
-                                       size={20} 
-                                       extraX={-8}
-                                       extraY={-6}
-                                    >
-                                       {route.badgeText}
-                                    </BadgeExtended>
-                              }
-                           </View>
-                        }
-                     />
-                  </this.Background>
-               </View>
-            }
-         />
-      );
-   }
-
-   Background(props: { children?: React.ReactNode, useImageBackground: boolean }): JSX.Element {
-      if (props.useImageBackground) {
-         return (
-            <ImageBackground source={currentTheme.backgroundImage} style={styles.backgroundImage}>
-               {props.children}
-            </ImageBackground>
-         );
-      } else {
-         return (
-            <View style={styles.backgroundSolidColor}>
-               {props.children}
+   return (
+      <TabView
+         swipeEnabled={false}
+         navigationState={{
+            index,
+            routes
+         }}
+         renderScene={SceneMap(props.sections)}
+         onIndexChange={setIndex}
+         initialLayout={{
+            width: Dimensions.get("window").width
+         }}
+         renderTabBar={tabBarProps => (
+            <View>
+               <ShadowBottom
+                  imageSource={theme.shadowBottom}
+                  style={{
+                     opacity: index === 0 ? 0.35 : 1
+                  }}
+               />
+               <Background useImageBackground={true}>
+                  <TabBar
+                     {...tabBarProps}
+                     indicatorStyle={{
+                        backgroundColor: theme.colors.primary2
+                     }}
+                     style={[styles.tabBar]}
+                     renderIcon={(scene: Scene<RouteExtended>) => (
+                        <View>
+                           {typeof scene.route.iconNameOrComp === "string" ? (
+                              <Icon
+                                 name={scene.route.iconNameOrComp}
+                                 color={theme.colors.text2}
+                                 size={22}
+                              />
+                           ) : (
+                              scene.route.iconNameOrComp
+                           )}
+                           {scene.route.badgeNumber && (
+                              <BadgeExtended
+                                 amount={scene.route.badgeNumber}
+                                 size={20}
+                                 extraX={-8}
+                                 extraY={-6}
+                              />
+                           )}
+                        </View>
+                     )}
+                  />
+               </Background>
             </View>
-         );
-      }
+         )}
+      />
+   );
+};
+
+function Background(props: {
+   children?: React.ReactNode;
+   useImageBackground: boolean;
+}): JSX.Element {
+   const theme = useTheme();
+
+   if (props.useImageBackground) {
+      return (
+         <ImageBackground source={theme.backgroundImage} style={styles.backgroundImage}>
+            {props.children}
+         </ImageBackground>
+      );
+   } else {
+      return <View style={styles.backgroundSolidColor}>{props.children}</View>;
    }
 }
 
@@ -98,18 +98,15 @@ const styles: Styles = StyleSheet.create({
    tabBar: {
       paddingTop: StatusBar.currentHeight,
       backgroundColor: color("black").alpha(0).string(),
-      zIndex: 1,
+      zIndex: 1
    },
    backgroundSolidColor: {
       backgroundColor: currentTheme.colors.backgroundBottomGradient
    },
-   backgroundImage: {
-   }
+   backgroundImage: {}
 });
 
-export type RouteExtended = Merge<Route, {
-   badgeText?: string;
-   icon: string | React.ReactNode
-}>;
-
-export default withTheme(NavigationBar);
+export type RouteExtended = Route & {
+   badgeNumber?: number;
+   iconNameOrComp: string | React.ReactNode;
+};
