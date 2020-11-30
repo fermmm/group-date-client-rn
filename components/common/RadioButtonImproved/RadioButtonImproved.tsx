@@ -10,41 +10,42 @@ export interface RadioButtonImprovedProps {
    iconElement?(checked: boolean): JSX.Element;
 }
 
-interface RaddioButtonImprovedState {
+interface RadioButtonImprovedState {
    margin: number;
 }
 
-class RaddioButtonImproved extends Component<RadioButtonImprovedProps, RaddioButtonImprovedState> {
-   state: RaddioButtonImprovedState = {
+class RadioButtonImproved extends Component<RadioButtonImprovedProps, RadioButtonImprovedState> {
+   state: RadioButtonImprovedState = {
       margin: null
    };
 
    render(): JSX.Element {
-      const { margin }: Partial<RaddioButtonImprovedState> = this.state;
+      const { margin }: Partial<RadioButtonImprovedState> = this.state;
 
       return (
          <TouchableRipple onPress={() => this.props.onPress()}>
-            <View 
-               pointerEvents={"none"} 
+            <View
+               pointerEvents={"none"}
                style={[
-                  this.props.style, 
-                  styles.mainContainer, 
-                  margin != null 
-                     && {
-                           marginBottom: margin, 
-                           marginTop: margin
-                        }
-                     ]}
+                  this.props.style,
+                  styles.mainContainer,
+                  margin != null && {
+                     marginBottom: margin,
+                     marginTop: margin
+                  }
+               ]}
             >
                <View>
-                  {
-                     this.props.iconElement != null ?
-                        this.props.iconElement(this.props.checked)
-                     :
-                        <RadioButton value={""} status={this.props.checked ? "checked" : "unchecked"}/>
-                  }
+                  {this.props.iconElement != null ? (
+                     this.props.iconElement(this.props.checked)
+                  ) : (
+                     <RadioButton
+                        value={""}
+                        status={this.props.checked ? "checked" : "unchecked"}
+                     />
+                  )}
                </View>
-               <View style={styles.childrenContainer} onLayout={e => this.measureView(e)} >
+               <View style={styles.childrenContainer} onLayout={e => this.measureView(e)}>
                   {this.props.children}
                </View>
             </View>
@@ -55,18 +56,27 @@ class RaddioButtonImproved extends Component<RadioButtonImprovedProps, RaddioBut
    measureView(event: LayoutChangeEvent): void {
       const responseHeight: number = event.nativeEvent.layout.height;
       if (this.state.margin == null) {
-         this.setState({margin: this.translateBetweenRanges(responseHeight, 20, 64, 0, 9)});
+         this.setState({ margin: this.translateBetweenRanges(responseHeight, 20, 64, 0, 9) });
       }
    }
 
-   translateBetweenRanges(valueToTranslate: number, range1Min: number, range1Max: number, range2Min: number, range2Max: number): number {
-      return (((valueToTranslate - range1Min) * (range2Max - range2Min)) / (range1Max - range1Min)) + range2Min;
+   translateBetweenRanges(
+      valueToTranslate: number,
+      range1Min: number,
+      range1Max: number,
+      range2Min: number,
+      range2Max: number
+   ): number {
+      return (
+         ((valueToTranslate - range1Min) * (range2Max - range2Min)) / (range1Max - range1Min) +
+         range2Min
+      );
    }
 }
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
-      flexDirection: "row", 
+      flexDirection: "row",
       alignItems: "center"
    },
    childrenContainer: {
@@ -74,4 +84,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default RaddioButtonImproved;
+export default RadioButtonImproved;

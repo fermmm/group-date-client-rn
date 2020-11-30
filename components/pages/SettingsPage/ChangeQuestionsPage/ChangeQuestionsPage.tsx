@@ -1,37 +1,24 @@
-import React, { Component } from "react";
-import { withTheme } from "react-native-paper";
-import { withNavigation } from "@react-navigation/compat";
-import { Themed } from "../../../../common-tools/themes/types/Themed";
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import React, { FC } from "react";
 import QuestionsPage from "../../QuestionsPage/QuestionsPage";
-import { Route } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 
-export interface ChangeQuestionsPageProps extends Themed, StackScreenProps<{}> {}
-export interface ChangeQuestionsPageState {}
 interface RouteParams {
    startingQuestion: number;
 }
 
-class ChangeQuestionsPage extends Component<ChangeQuestionsPageProps, ChangeQuestionsPageState> {
-   static defaultProps: Partial<ChangeQuestionsPageProps> = {};
-   route: Route<string, RouteParams> = this.props.route as Route<string, RouteParams>;
+const ChangeQuestionsPage: FC = () => {
+   const route = useRoute();
+   const routeParams = route.params as RouteParams;
 
-   render(): JSX.Element {
-      const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
-      const { startingQuestion }: RouteParams = this.route.params;
+   return (
+      <QuestionsPage
+         appBarTitle={"Modificar preguntas"}
+         backButtonChangesPage={true}
+         startingQuestion={routeParams?.startingQuestion ?? 0}
+         showBottomButtons={routeParams?.startingQuestion == null}
+         onFinishGoBack
+      />
+   );
+};
 
-      return (
-         <QuestionsPage
-            appBarTitle={"Modificar preguntas"}
-            backButtonChangesPage={true}
-            startingQuestion={startingQuestion || 0}
-            showBottomButtons={startingQuestion == null}
-            onFinishGoBack
-         />
-      );
-   }
-}
-
-// tslint:disable-next-line: ban-ts-ignore-except-imports
-// @ts-ignore
-export default withTheme(withNavigation(ChangeQuestionsPage));
+export default ChangeQuestionsPage;

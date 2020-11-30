@@ -31,8 +31,8 @@ i18n.translations = {
    en,
    es
 };
-i18n.defaultLocale = "es";
-i18n.locale = Localization.locale;
+i18n.defaultLocale = "en";
+i18n.locale = Localization.locale.split("-")[0];
 // i18n.locale = "en";    // Uncomment to try another language
 
 interface PageBasicWrapperState {
