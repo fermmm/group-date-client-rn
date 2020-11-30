@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, FC, useCallback } from "react";
 import {
    StyleSheet,
    View,
@@ -7,7 +7,8 @@ import {
    StatusBar,
    TextStyle,
    StyleProp,
-   KeyboardTypeOptions
+   KeyboardTypeOptions,
+   TextInput as NativeTextInput
 } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { TextInput, Portal } from "react-native-paper";
@@ -28,84 +29,106 @@ export interface TextInputExtendedProps {
    onChangeText?: ((text: string) => void) & Function;
    value: string;
 }
-export interface TextInputExtendedState {
-   fullScreenMode: boolean;
-}
 
-class TextInputExtended extends Component<TextInputExtendedProps, TextInputExtendedState> {
-   state: TextInputExtendedState = {
-      fullScreenMode: false
-   };
+const TextInputExtended: FC<TextInputExtendedProps> = props => {
+   const {
+      title,
+      titleLine2,
+      multiline,
+      mode,
+      keyboardType,
+      value,
+      onChangeText,
+      style
+   }: TextInputExtendedProps = props;
 
-   componentDidMount(): void {
-      Keyboard.addListener("keyboardDidHide", this.onKeyboardClose);
-   }
+   const [fullScreenMode, setFullScreenMode] = useState(false);
 
-   render(): JSX.Element {
-      const { title, titleLine2, multiline }: TextInputExtendedProps = this.props;
+   React.useEffect(() => {
+      Keyboard.addListener("keyboardDidHide", onKeyboardClose);
+      return () => {
+         Keyboard.removeListener("keyboardDidHide", onKeyboardClose);
+      };
+   }, []);
 
-      return (
-         <>
-            <View style={styles.mainContainer}>
-               {title && <TitleMediumText style={styles.title}>{title}</TitleMediumText>}
-               {titleLine2 && (
-                  <TitleMediumText style={styles.titleLine2}>{titleLine2}</TitleMediumText>
-               )}
-               <TouchableHighlight
-                  onPress={() => this.setState({ fullScreenMode: true })}
-                  underlayColor={color("white").alpha(0.5).string()}
-                  activeOpacity={1}
-               >
-                  <TextInput
-                     mode={this.props.mode}
-                     keyboardType={this.props.keyboardType}
-                     value={this.props.value}
-                     onChangeText={this.props.onChangeText}
-                     disabled
-                  />
-               </TouchableHighlight>
-            </View>
-            {this.state.fullScreenMode && (
-               <Portal>
-                  <View style={styles.modal}>
-                     {title && <TitleMediumText style={styles.title}>{title}</TitleMediumText>}
-                     {titleLine2 && (
-                        <TitleMediumText style={styles.titleLine2}>{titleLine2}</TitleMediumText>
-                     )}
-                     <TextInput
-                        mode={this.props.mode}
-                        style={[this.props.style, { flex: multiline ? 1 : 0 }]}
-                        onBlur={() => this.setState({ fullScreenMode: false })}
-                        keyboardType={this.props.keyboardType}
-                        value={this.props.value}
-                        onChangeText={this.props.onChangeText}
-                        autoFocus
-                     />
-                     <ButtonStyled
-                        onPress={() => this.setState({ fullScreenMode: false })}
-                        style={styles.buttonSave}
-                        color={currentTheme.colors.text2}
-                     >
-                        Guardar
-                     </ButtonStyled>
-                     <KeyboardSpacer />
-                  </View>
-               </Portal>
+   const onKeyboardClose = useCallback(() => {
+      setFullScreenMode(false);
+   }, []);
+
+   return (
+      <>
+         <View style={styles.mainContainer}>
+            {title && <TitleMediumText style={styles.title}>{title}</TitleMediumText>}
+            {titleLine2 && (
+               <TitleMediumText style={styles.titleLine2}>{titleLine2}</TitleMediumText>
             )}
-         </>
-      );
-   }
-
-   onKeyboardClose = () => {
-      if (this.state.fullScreenMode) {
-         this.setState({ fullScreenMode: false });
-      }
-   };
-
-   componentWillUnmount(): void {
-      Keyboard.removeListener("keyboardDidHide", this.onKeyboardClose);
-   }
-}
+            <TouchableHighlight
+               onPress={() => setFullScreenMode(true)}
+               underlayColor={color("white").alpha(0.5).string()}
+               activeOpacity={1}
+            >
+               <TextInput
+                  mode={mode}
+                  keyboardType={keyboardType}
+                  value={value}
+                  onChangeText={onChangeText}
+                  style={[
+                     style,
+                     {
+                        textAlignVertical: "top"
+                     }
+                  ]}
+                  multiline={multiline}
+                  render={innerProps => (
+                     <NativeTextInput
+                        {...innerProps}
+                        style={[
+                           innerProps.style,
+                           multiline
+                              ? {
+                                   paddingTop: 8,
+                                   paddingBottom: 8
+                                }
+                              : null
+                        ]}
+                     />
+                  )}
+                  disabled
+               />
+            </TouchableHighlight>
+         </View>
+         {fullScreenMode && (
+            <Portal>
+               <View style={styles.modal}>
+                  {title && <TitleMediumText style={styles.title}>{title}</TitleMediumText>}
+                  {titleLine2 && (
+                     <TitleMediumText style={styles.titleLine2}>{titleLine2}</TitleMediumText>
+                  )}
+                  <TextInput
+                     mode={mode}
+                     style={[{ flex: 0 }]}
+                     onBlur={() => setFullScreenMode(false)}
+                     keyboardType={keyboardType}
+                     value={value}
+                     multiline={multiline}
+                     onChangeText={onChangeText}
+                     numberOfLines={20}
+                     autoFocus
+                  />
+                  <ButtonStyled
+                     onPress={() => setFullScreenMode(false)}
+                     style={styles.buttonSave}
+                     color={currentTheme.colors.text2}
+                  >
+                     Guardar
+                  </ButtonStyled>
+                  <KeyboardSpacer />
+               </View>
+            </Portal>
+         )}
+      </>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
@@ -122,7 +145,7 @@ const styles: Styles = StyleSheet.create({
       position: "absolute",
       backgroundColor: currentTheme.colors.background,
       padding: 10,
-      paddingBottom: 30,
+      paddingBottom: 75,
       paddingTop: StatusBar.currentHeight + 15,
       zIndex: 100,
       top: 0,
