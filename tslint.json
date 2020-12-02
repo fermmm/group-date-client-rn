@@ -13,7 +13,6 @@
     },
     "typedef": [
         true,
-        "call-signature",
         "parameter",
         "property-declaration",
         "member-variable-declaration"

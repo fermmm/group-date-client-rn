@@ -1,5 +1,7 @@
 import * as Localization from "expo-localization";
 import i18n from "i18n-js";
+import { ReactQueryCacheProvider } from "react-query";
+import { queryCache } from "./api/tools/reactQueryTools";
 import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
@@ -67,26 +69,28 @@ export default class App extends Component<{}, PageBasicWrapperState> {
       }
 
       return (
-         <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
-            <NavigationContainer theme={TestTheme}>
-               <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
-                  <Stack.Screen name="Login" component={LoginPage} />
-                  <Stack.Screen name="Main" component={MainPage} />
-                  <Stack.Screen name="Group" component={GroupPage} />
-                  <Stack.Screen name="Chat" component={ChatPage} />
-                  <Stack.Screen name="DateVoting" component={DateVotingPage} />
-                  <Stack.Screen name="Profile" component={ProfilePage} />
-                  <Stack.Screen name="Questions" component={QuestionsPage} />
-                  <Stack.Screen name="About" component={AboutPage} />
-                  <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
-                  <Stack.Screen name="ChangePictures" component={ChangePicturesPage} />
-                  <Stack.Screen name="ChangeProfileText" component={ChangeProfileTextPage} />
-                  <Stack.Screen name="ChangeBasicInfo" component={ChangeBasicInfoPage} />
-                  <Stack.Screen name="ChangeDateIdea" component={ChangeDateIdeaPage} />
-                  <Stack.Screen name="ChangeQuestions" component={ChangeQuestionsPage} />
-               </Stack.Navigator>
-            </NavigationContainer>
-         </PaperProvider>
+         <ReactQueryCacheProvider queryCache={queryCache}>
+            <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
+               <NavigationContainer theme={TestTheme}>
+                  <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
+                     <Stack.Screen name="Login" component={LoginPage} />
+                     <Stack.Screen name="Main" component={MainPage} />
+                     <Stack.Screen name="Group" component={GroupPage} />
+                     <Stack.Screen name="Chat" component={ChatPage} />
+                     <Stack.Screen name="DateVoting" component={DateVotingPage} />
+                     <Stack.Screen name="Profile" component={ProfilePage} />
+                     <Stack.Screen name="Questions" component={QuestionsPage} />
+                     <Stack.Screen name="About" component={AboutPage} />
+                     <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
+                     <Stack.Screen name="ChangePictures" component={ChangePicturesPage} />
+                     <Stack.Screen name="ChangeProfileText" component={ChangeProfileTextPage} />
+                     <Stack.Screen name="ChangeBasicInfo" component={ChangeBasicInfoPage} />
+                     <Stack.Screen name="ChangeDateIdea" component={ChangeDateIdeaPage} />
+                     <Stack.Screen name="ChangeQuestions" component={ChangeQuestionsPage} />
+                  </Stack.Navigator>
+               </NavigationContainer>
+            </PaperProvider>
+         </ReactQueryCacheProvider>
       );
    }
 }

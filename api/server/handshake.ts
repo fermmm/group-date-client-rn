@@ -1,10 +1,14 @@
-import Constants from "expo-constants";
-import { httpRequest } from "../tools/httpRequest";
-import { ServerHandshakeResponse } from "../typings/endpoints-interfaces";
+import { QueryConfig, useQuery } from "react-query";
+import {
+   HandshakeParams,
+   ServerHandshakeResponse
+} from "./shared-tools/endpoints-interfaces/handshake";
+import { defaultRequestFunction, defaultErrorHandler } from "../tools/reactQueryTools";
 
-export async function serverHandshake(): Promise<void> {
-   console.log(Constants.manifest.version);
-   const response: ServerHandshakeResponse = await httpRequest({
-      url: "handshake"
-   });
+export function useServerHandshake<T = ServerHandshakeResponse>(
+   data: HandshakeParams,
+   config?: QueryConfig<T>
+) {
+   const query = useQuery<T>(["handshake", "GET", data], defaultRequestFunction, config);
+   return defaultErrorHandler(query);
 }
