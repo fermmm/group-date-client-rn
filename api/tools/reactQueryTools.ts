@@ -45,7 +45,7 @@ export function defaultErrorHandler<T>(queryResult: QueryResult<T>): QueryResult
                onPress: async () => queryResult.refetch()
             }
          ],
-         { cancelable: false }
+         { cancelable: __DEV__ }
       );
    } else {
       Alert.alert(

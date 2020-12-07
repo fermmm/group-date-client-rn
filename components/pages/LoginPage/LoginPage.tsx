@@ -1,7 +1,8 @@
-import React, { Component, FC, useRef, useEffect } from "react";
+import React, { Component, FC, useState, useEffect } from "react";
 import { StyleSheet, Text, View, ImageBackground } from "react-native";
 import Constants from "expo-constants";
 import { withTheme } from "react-native-paper";
+
 import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LinearGradient } from "expo-linear-gradient";
@@ -14,55 +15,73 @@ import { loginWithFacebook } from "../../../api/third-party/facebook/facebook-lo
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useNavigation } from "@react-navigation/native";
 import { useServerHandshake } from "../../../api/server/handshake";
+import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 
 const LoginPage: FC = () => {
    const { colors, font: fonts } = useTheme();
    const { navigate } = useNavigation();
-   const { data, status } = useServerHandshake({ version: Constants.manifest.version });
-   console.log(data);
+   const [color, setColor] = useState(colors.logoColor);
+   const [animate, setAnimate] = useState(true);
+
+   // Send the version of the client to get information about possible updates needed and service status
+   const { data, isLoading } = useServerHandshake({ version: Constants.manifest.version });
 
    // useEffect(() => {
-   //    await login(await tryGetStoredSession());
+   //    if (animate) {
+   //       setTimeout(() => {
+   //          setColor(color === colors.accent3 ? colors.accent2 : colors.accent3);
+   //       }, 60);
+   //    } else {
+   //       setColor(colors.logoColor);
+   //    }
+   // }, [color]);
+
+   // useEffect(() => {
+   //    setTimeout(() => {
+   //       setAnimate(false);
+   //    }, 1500);
    // }, []);
 
    return (
       <Background useImageBackground={true}>
          <View style={styles.mainContainer}>
-            <LogoSvg style={styles.logo} color={colors.logoColor} />
-            <Text
-               style={[
-                  styles.textBlock,
-                  {
-                     marginBottom: 15
-                  }
-               ]}
-            >
-               <Text
-                  style={{
-                     fontWeight: "bold"
-                  }}
-               >
-                  {" "}
-                  {i18n.t("welcome")}{" "}
-               </Text>
-               Poly Dates es una app de citas grupales. Las citas se forman cuando se gustan varias
-               personas formando un grupo.
-            </Text>
-            <Text
-               style={[
-                  styles.textBlock,
-                  {
-                     marginBottom: 100
-                  }
-               ]}
-            >
-               La vas a pasar bien conociendo poliamorosxs que te gustan y les que quieran tienen
-               una herramienta para conectar en grupo socialmente o sexualmente.
-            </Text>
-            {/* <Text style={[styles.secondTextBlock, { color: colors.textLogin, fontFamily: fonts.light }]}>
-          Con esta herramienta no se busca el lucro y es de código abierto, perfeccionada
-          con la comunidad.
-        </Text> */}
+            <View style={data?.serverOperating === false ? styles.logo : styles.logoBig}>
+               <LogoAnimator>
+                  <LogoSvg color={color} style={{ width: "100%", height: "100%" }} />
+               </LogoAnimator>
+            </View>
+            {data?.serverOperating === false && (
+               <>
+                  <Text
+                     style={[
+                        styles.textBlock,
+                        {
+                           marginBottom: 15
+                        }
+                     ]}
+                  >
+                     <Text
+                        style={{
+                           fontWeight: "bold"
+                        }}
+                     >
+                        La app no esta disponible en este momento
+                     </Text>
+                  </Text>
+                  {data.serverMessage && (
+                     <Text
+                        style={[
+                           styles.textBlock,
+                           {
+                              marginBottom: 100
+                           }
+                        ]}
+                     >
+                        {data.serverMessage}
+                     </Text>
+                  )}
+               </>
+            )}
             <ButtonStyled
                color={colors.textLogin}
                style={{
@@ -81,19 +100,22 @@ const LoginPage: FC = () => {
             >
                Nueva cuenta UI
             </ButtonStyled>
-            <ButtonStyled
-               color={colors.textLogin}
-               style={{
-                  borderColor: colors.textLogin
-               }}
-               onPress={async () => login(await loginWithFacebook())}
-            >
-               Comenzar
-            </ButtonStyled>
+            {!isLoading && data?.serverOperating && (
+               <ButtonStyled
+                  color={colors.textLogin}
+                  style={{
+                     borderColor: colors.textLogin
+                  }}
+                  onPress={async () => login(await loginWithFacebook())}
+               >
+                  Comenzar
+               </ButtonStyled>
+            )}
          </View>
       </Background>
    );
 };
+
 function Background(props: { children?: JSX.Element; useImageBackground: boolean }): JSX.Element {
    if (props.useImageBackground) {
       return (
@@ -136,6 +158,11 @@ const styles: Styles = StyleSheet.create({
       position: "absolute",
       top: "15%",
       width: "35%"
+   },
+   logoBig: {
+      position: "absolute",
+      top: "30%",
+      width: "55%"
    },
    textBlock: {
       textAlign: "center",

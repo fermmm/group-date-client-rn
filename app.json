@@ -22,6 +22,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "experiments": {
+      "turboModules": true
+    },
     "android": {
       "package": "com.polydates.polydates"
     },

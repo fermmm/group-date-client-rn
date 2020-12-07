@@ -20,6 +20,7 @@ export default {
       text2: "#FFFFFF",
       textLogin: "#ECEFFB",
       logoColor: "#FF84A2",
+      logoColor2: "#FF7AB4",
       statusOk: "#00C781",
       statusWarning: "#FFAA15",
       statusBad: "#FF4040",

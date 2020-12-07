@@ -28,6 +28,7 @@ export type ThemeExt = Merge<
          text2: string;
          textLogin: string;
          logoColor: string;
+         logoColor2: string;
          disabled: string;
          placeholder: string;
          backdrop: string;
