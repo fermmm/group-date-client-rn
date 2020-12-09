@@ -16,39 +16,23 @@ import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useNavigation } from "@react-navigation/native";
 import { useServerHandshake } from "../../../api/server/handshake";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
+import { LogoAnimator2 } from "./LogoAnimator/LogoAnimator2";
 
 const LoginPage: FC = () => {
    const { colors, font: fonts } = useTheme();
    const { navigate } = useNavigation();
    const [color, setColor] = useState(colors.logoColor);
-   const [animate, setAnimate] = useState(true);
 
    // Send the version of the client to get information about possible updates needed and service status
    const { data, isLoading } = useServerHandshake({ version: Constants.manifest.version });
-
-   // useEffect(() => {
-   //    if (animate) {
-   //       setTimeout(() => {
-   //          setColor(color === colors.accent3 ? colors.accent2 : colors.accent3);
-   //       }, 60);
-   //    } else {
-   //       setColor(colors.logoColor);
-   //    }
-   // }, [color]);
-
-   // useEffect(() => {
-   //    setTimeout(() => {
-   //       setAnimate(false);
-   //    }, 1500);
-   // }, []);
 
    return (
       <Background useImageBackground={true}>
          <View style={styles.mainContainer}>
             <View style={data?.serverOperating === false ? styles.logo : styles.logoBig}>
-               <LogoAnimator>
+               <LogoAnimator2>
                   <LogoSvg color={color} style={{ width: "100%", height: "100%" }} />
-               </LogoAnimator>
+               </LogoAnimator2>
             </View>
             {data?.serverOperating === false && (
                <>
