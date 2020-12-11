@@ -54,6 +54,10 @@ class RegistrationFormsPage extends Component<RegistrationFormsProps, Registrati
          errorsDateIdea
       }: Partial<RegistrationFormsState> = this.state;
 
+      const userPropToScreenMap: Record<string, EditableUserPropKey[]> = {
+         name: [""]
+      };
+
       return (
          <>
             <AppBarHeader title={"Nueva cuenta"} />

@@ -1,40 +1,69 @@
-import React, { Component, FC, useState, useEffect } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
 import { StyleSheet, Text, View, ImageBackground } from "react-native";
 import Constants from "expo-constants";
 import { withTheme } from "react-native-paper";
-
-import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 import { currentTheme } from "../../../config";
-import i18n from "i18n-js";
-import { login } from "../../../api/server/login";
-import { loginWithFacebook } from "../../../api/third-party/facebook/facebook-login";
+import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useNavigation } from "@react-navigation/native";
 import { useServerHandshake } from "../../../api/server/handshake";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { LogoAnimator2 } from "./LogoAnimator/LogoAnimator2";
+import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
+import { useServerProfileStatus } from "../../../api/server/user";
 
 const LoginPage: FC = () => {
-   const { colors, font: fonts } = useTheme();
+   const showDebugButtons: boolean = true;
+
+   const { colors } = useTheme();
    const { navigate } = useNavigation();
-   const [color, setColor] = useState(colors.logoColor);
+
+   const { token, isLoading: tokenLoading, getTokenByShowingFacebookScreen } = useFacebookToken();
 
    // Send the version of the client to get information about possible updates needed and service status
-   const { data, isLoading } = useServerHandshake({ version: Constants.manifest.version });
+   const { data: handshakeData, isLoading: handshakeLoading } = useServerHandshake({
+      version: Constants.manifest.version
+   });
+
+   // If we have the user token we check if there is any property missing and the user needs to be redirected to registration screens
+   const { data: profileStatusData, isLoading: profileStatusLoading } = useServerProfileStatus(
+      { token },
+      { enabled: token != null } // When the token is finally retrieved enable this request to check the profile status
+   );
+
+   useEffect(() => {
+      if (profileStatusData == null) {
+         return;
+      }
+
+      const { missingEditableUserProps, notShowedThemeQuestions } = profileStatusData;
+
+      // If the user has unfinished registration redirect to RegistrationForms otherwise redirect to Main
+      if (missingEditableUserProps?.length > 0 || notShowedThemeQuestions?.length > 0) {
+         navigate("RegistrationForms");
+      } else {
+         navigate("Main");
+      }
+   }, [profileStatusData]);
+
+   const handleLoginClick = () => {
+      getTokenByShowingFacebookScreen();
+   };
 
    return (
       <Background useImageBackground={true}>
          <View style={styles.mainContainer}>
-            <View style={data?.serverOperating === false ? styles.logo : styles.logoBig}>
+            <LoadingAnimation visible={tokenLoading || handshakeLoading || profileStatusLoading} />
+            <View style={handshakeData?.serverOperating === false ? styles.logo : styles.logoBig}>
                <LogoAnimator2>
-                  <LogoSvg color={color} style={{ width: "100%", height: "100%" }} />
+                  <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
                </LogoAnimator2>
             </View>
-            {data?.serverOperating === false && (
+            {handshakeData?.serverOperating === false && (
                <>
                   <Text
                      style={[
@@ -52,7 +81,7 @@ const LoginPage: FC = () => {
                         La app no esta disponible en este momento
                      </Text>
                   </Text>
-                  {data.serverMessage && (
+                  {handshakeData.serverMessage && (
                      <Text
                         style={[
                            styles.textBlock,
@@ -61,36 +90,38 @@ const LoginPage: FC = () => {
                            }
                         ]}
                      >
-                        {data.serverMessage}
+                        {handshakeData.serverMessage}
                      </Text>
                   )}
                </>
             )}
-            <ButtonStyled
-               color={colors.textLogin}
-               style={{
-                  borderColor: colors.textLogin
-               }}
-               onPress={() => navigate("Main")}
-            >
-               App UI
-            </ButtonStyled>
-            <ButtonStyled
-               color={colors.textLogin}
-               style={{
-                  borderColor: colors.textLogin
-               }} // onPress={() => navigate("Questions")}
-               onPress={() => navigate("RegistrationForms")}
-            >
-               Nueva cuenta UI
-            </ButtonStyled>
-            {!isLoading && data?.serverOperating && (
+            {__DEV__ && showDebugButtons && (
+               <>
+                  <ButtonStyled
+                     color={colors.textLogin}
+                     style={{
+                        borderColor: colors.textLogin
+                     }}
+                     onPress={() => navigate("Main")}
+                  >
+                     App UI
+                  </ButtonStyled>
+                  <ButtonStyled
+                     color={colors.textLogin}
+                     style={{
+                        borderColor: colors.textLogin
+                     }} // onPress={() => navigate("Questions")}
+                     onPress={() => navigate("RegistrationForms")}
+                  >
+                     Nueva cuenta UI
+                  </ButtonStyled>
+               </>
+            )}
+            {!tokenLoading && !token && handshakeData?.serverOperating && (
                <ButtonStyled
                   color={colors.textLogin}
-                  style={{
-                     borderColor: colors.textLogin
-                  }}
-                  onPress={async () => login(await loginWithFacebook())}
+                  style={{ borderColor: colors.textLogin }}
+                  onPress={handleLoginClick}
                >
                   Comenzar
                </ButtonStyled>
@@ -100,7 +131,7 @@ const LoginPage: FC = () => {
    );
 };
 
-function Background(props: { children?: JSX.Element; useImageBackground: boolean }): JSX.Element {
+function Background(props: { children?: ReactNode; useImageBackground: boolean }): JSX.Element {
    if (props.useImageBackground) {
       return (
          <ImageBackground source={currentTheme.backgroundImage} style={styles.background}>
