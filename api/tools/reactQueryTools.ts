@@ -5,7 +5,9 @@ import { AxiosRequestConfigExtended, httpRequest } from "./httpRequest";
 
 export const queryCache = new QueryCache({
    defaultConfig: {
-      queries: {},
+      queries: {
+         staleTime: 1000 * 60 * 15
+      },
       mutations: {}
    }
 });
