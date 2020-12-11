@@ -36,12 +36,21 @@ export async function getFacebookToken(props: {
  *
  * @param checkToken If true makes a request to Facebook to check that the stored token is valid (when it was found stored)
  */
-export function useFacebookToken(checkToken: boolean = true): FacebookLoginHook {
+export function useFacebookToken(props: {
+   enabled?: boolean;
+   checkToken?: boolean;
+}): FacebookLoginHook {
+   const { enabled, checkToken } = props;
+
+   if (enabled != null && enabled === false) {
+      return { isLoading: false, token: null, getTokenByShowingFacebookScreen: () => {} };
+   }
+
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const [token, setToken] = useState<string>(null);
 
    // Try to get stored token from previous session
-   tryGetStoredToken(checkToken)
+   tryGetStoredToken(checkToken || checkToken == null)
       .then(t => {
          setIsLoading(false);
          setToken(t);

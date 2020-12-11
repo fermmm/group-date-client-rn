@@ -15,6 +15,7 @@ import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { LogoAnimator2 } from "./LogoAnimator/LogoAnimator2";
 import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useServerProfileStatus } from "../../../api/server/user";
+import { userFinishedRegistration } from "../../../api/tools/userTools";
 
 const LoginPage: FC = () => {
    const showDebugButtons: boolean = true;
@@ -22,35 +23,35 @@ const LoginPage: FC = () => {
    const { colors } = useTheme();
    const { navigate } = useNavigation();
 
-   const { token, isLoading: tokenLoading, getTokenByShowingFacebookScreen } = useFacebookToken();
-
    // Send the version of the client to get information about possible updates needed and service status
    const { data: handshakeData, isLoading: handshakeLoading } = useServerHandshake({
       version: Constants.manifest.version
    });
 
-   // If we have the user token we check if there is any property missing and the user needs to be redirected to registration screens
+   // If the service is OK get the user token
+   const { token, isLoading: tokenLoading, getTokenByShowingFacebookScreen } = useFacebookToken({
+      enabled: handshakeData?.serverOperating ?? false // This request is not enabled until we know server is operating
+   });
+
+   // If we have the user token we check if there is any user property missing
    const { data: profileStatusData, isLoading: profileStatusLoading } = useServerProfileStatus(
       { token },
-      { enabled: token != null } // When the token is finally retrieved enable this request to check the profile status
+      { enabled: token != null } // This request is not enabled until we have the token
    );
 
+   // If the user has unfinished registration redirect to RegistrationForms otherwise redirect to Main
    useEffect(() => {
-      if (profileStatusData == null) {
-         return;
-      }
-
-      const { missingEditableUserProps, notShowedThemeQuestions } = profileStatusData;
-
-      // If the user has unfinished registration redirect to RegistrationForms otherwise redirect to Main
-      if (missingEditableUserProps?.length > 0 || notShowedThemeQuestions?.length > 0) {
-         navigate("RegistrationForms");
-      } else {
-         navigate("Main");
+      const registrationFinished: boolean = userFinishedRegistration(profileStatusData);
+      if (profileStatusData != null) {
+         navigate(registrationFinished ? "Main" : "RegistrationForms");
       }
    }, [profileStatusData]);
 
-   const handleLoginClick = () => {
+   /**
+    * The login button is visible when we don't have the token. The user clicks a button before seeing a
+    * Facebook login screen.
+    */
+   const handleLoginButtonClick = () => {
       getTokenByShowingFacebookScreen();
    };
 
@@ -121,7 +122,7 @@ const LoginPage: FC = () => {
                <ButtonStyled
                   color={colors.textLogin}
                   style={{ borderColor: colors.textLogin }}
-                  onPress={handleLoginClick}
+                  onPress={handleLoginButtonClick}
                >
                   Comenzar
                </ButtonStyled>
