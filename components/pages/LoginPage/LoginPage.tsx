@@ -55,16 +55,18 @@ const LoginPage: FC = () => {
       getTokenByShowingFacebookScreen();
    };
 
+   const serverOperating: boolean = handshakeData != null && !handshakeData.serverOperating;
+
    return (
       <Background useImageBackground={true}>
          <View style={styles.mainContainer}>
             <LoadingAnimation visible={tokenLoading || handshakeLoading || profileStatusLoading} />
-            <View style={handshakeData?.serverOperating === false ? styles.logo : styles.logoBig}>
+            <View style={serverOperating ? styles.logo : styles.logoBig}>
                <LogoAnimator2>
                   <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
                </LogoAnimator2>
             </View>
-            {handshakeData?.serverOperating === false && (
+            {serverOperating && (
                <>
                   <Text
                      style={[
@@ -118,7 +120,7 @@ const LoginPage: FC = () => {
                   </ButtonStyled>
                </>
             )}
-            {!tokenLoading && !token && handshakeData?.serverOperating && (
+            {!token && !tokenLoading && serverOperating && (
                <ButtonStyled
                   color={colors.textLogin}
                   style={{ borderColor: colors.textLogin }}
