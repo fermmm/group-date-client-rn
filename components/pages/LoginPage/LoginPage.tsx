@@ -32,7 +32,7 @@ const LoginPage: FC = () => {
       enabled: handshakeData?.serverOperating ?? false // This request is not enabled until we know server is operating
    });
 
-   // If we have the user token we check if there is any user property missing
+   // If we have the user token we check if there is any user property missing (unfinished registration or not registered)
    const { data: profileStatusData, isLoading: profileStatusLoading } = useServerProfileStatus(
       { token },
       { enabled: token != null } // This request is not enabled until we have the token
@@ -47,8 +47,7 @@ const LoginPage: FC = () => {
    }, [profileStatusData, logoAnimCompleted]);
 
    /**
-    * The login button is visible when we don't have the token. The user clicks a button before seeing a
-    * Facebook login screen.
+    * The login button is visible when we don't have the token.
     */
    const handleLoginButtonClick = () => {
       getTokenByShowingFacebookScreen();
