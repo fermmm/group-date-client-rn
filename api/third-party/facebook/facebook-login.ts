@@ -41,13 +41,12 @@ export function useFacebookToken(props: {
    checkToken?: boolean;
 }): FacebookLoginHook {
    const { enabled, checkToken } = props;
+   const [isLoading, setIsLoading] = useState<boolean>(true);
+   const [token, setToken] = useState<string>(null);
 
    if (enabled != null && enabled === false) {
       return { isLoading: false, token: null, getTokenByShowingFacebookScreen: () => {} };
    }
-
-   const [isLoading, setIsLoading] = useState<boolean>(true);
-   const [token, setToken] = useState<string>(null);
 
    // Try to get stored token from previous session
    tryGetStoredToken(checkToken || checkToken == null)
