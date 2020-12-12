@@ -1,5 +1,5 @@
 import { Method } from "axios";
-import { Alert } from "react-native";
+import { Alert, LogBox } from "react-native";
 import { QueryCache, QueryResult } from "react-query";
 import { AxiosRequestConfigExtended, httpRequest } from "./httpRequest";
 
@@ -11,6 +11,7 @@ export const queryCache = new QueryCache({
       mutations: {}
    }
 });
+LogBox.ignoreLogs(["Setting a timer"]);
 
 export async function defaultRequestFunction<D = void, R = void>(
    url: string,
