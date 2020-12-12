@@ -1,31 +1,37 @@
-import React, { FC, useEffect, useState } from "react";
-import posed from "react-native-pose";
+import React, { FC, useState, useEffect } from "react";
+import { Animated, Easing } from "react-native";
 
-export const LogoAnimator: FC = ({ children }) => {
-   const [pose, setPose] = useState("origin");
+interface PropsLogoAnimator {
+   onAnimationComplete?: () => void;
+}
 
-   useEffect(() => {
-      if (pose === "origin") {
-         setTimeout(() => {
-            setPose("destination");
-         }, 100);
-      }
-   }, [pose]);
+export const LogoAnimator: FC<PropsLogoAnimator> = ({ children, onAnimationComplete }) => {
+   const [animValue] = useState(new Animated.Value(0));
 
-   return <AnimationContainer pose={pose}>{children}</AnimationContainer>;
+   useEffect(
+      () =>
+         Animated.timing(animValue, {
+            toValue: 1,
+            duration: 3000,
+            easing: Easing.out(Easing.exp),
+            useNativeDriver: true
+         }).start(onAnimationComplete),
+      []
+   );
+
+   const rotationValue: Animated.AnimatedInterpolation = animValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ["100deg", "0deg"]
+   });
+
+   const scaleValue: Animated.AnimatedInterpolation = animValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [15, 1]
+   });
+
+   return (
+      <Animated.View style={{ transform: [{ scale: scaleValue }, { rotate: rotationValue }] }}>
+         {children}
+      </Animated.View>
+   );
 };
-
-const AnimationContainer = posed.View({
-   origin: {
-      scale: 15,
-      rotate: "100deg",
-      opacity: 0,
-      transition: { duration: 0 }
-   },
-   destination: {
-      scale: 1,
-      rotate: "0deg",
-      opacity: 1,
-      transition: { duration: 3000 }
-   }
-});

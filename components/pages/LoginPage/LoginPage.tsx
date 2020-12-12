@@ -1,7 +1,6 @@
-import React, { FC, ReactNode, useEffect } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import { StyleSheet, Text, View, ImageBackground } from "react-native";
 import Constants from "expo-constants";
-import { withTheme } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { LogoSvg } from "../../../assets/LogoSvg";
@@ -11,15 +10,15 @@ import { useFacebookToken } from "../../../api/third-party/facebook/facebook-log
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useNavigation } from "@react-navigation/native";
 import { useServerHandshake } from "../../../api/server/handshake";
-import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
-import { LogoAnimator2 } from "./LogoAnimator/LogoAnimator2";
 import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useServerProfileStatus } from "../../../api/server/user";
 import { userFinishedRegistration } from "../../../api/tools/userTools";
+import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 
 const LoginPage: FC = () => {
-   const showDebugButtons: boolean = true;
+   const showDebugButtons: boolean = false;
 
+   const [logoAnimCompleted, setLogoAnimCompleted] = useState(false);
    const { colors } = useTheme();
    const { navigate } = useNavigation();
 
@@ -42,10 +41,10 @@ const LoginPage: FC = () => {
    // If the user has unfinished registration redirect to RegistrationForms otherwise redirect to Main
    useEffect(() => {
       const registrationFinished: boolean = userFinishedRegistration(profileStatusData);
-      if (profileStatusData != null) {
+      if (profileStatusData != null && logoAnimCompleted) {
          navigate(registrationFinished ? "Main" : "RegistrationForms");
       }
-   }, [profileStatusData]);
+   }, [profileStatusData, logoAnimCompleted]);
 
    /**
     * The login button is visible when we don't have the token. The user clicks a button before seeing a
@@ -60,11 +59,15 @@ const LoginPage: FC = () => {
    return (
       <Background useImageBackground={true}>
          <View style={styles.mainContainer}>
-            <LoadingAnimation visible={tokenLoading || handshakeLoading || profileStatusLoading} />
+            <LoadingAnimation
+               visible={
+                  logoAnimCompleted && (tokenLoading || handshakeLoading || profileStatusLoading)
+               }
+            />
             <View style={serverOperating ? styles.logo : styles.logoBig}>
-               <LogoAnimator2>
+               <LogoAnimator onAnimationComplete={() => setLogoAnimCompleted(true)}>
                   <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
-               </LogoAnimator2>
+               </LogoAnimator>
             </View>
             {serverOperating && (
                <>
@@ -193,4 +196,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(LoginPage);
+export default LoginPage;
