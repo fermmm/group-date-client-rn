@@ -9,7 +9,6 @@ import {
 import { httpRequest } from "../../tools/httpRequest";
 import { useState } from "react";
 import { QueryConfig, useQuery } from "react-query";
-import { defaultErrorHandler } from "../../tools/reactQueryTools";
 
 /**
  * This hook tries to get the facebook token, first from local storage, if it's null you should call
