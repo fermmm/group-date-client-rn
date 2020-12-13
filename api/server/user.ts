@@ -10,10 +10,11 @@ export function useServerProfileStatus<T = ProfileStatusServerResponse>(
 ) {
    const storedToken = useFacebookToken();
    const { token } = requestParams ?? storedToken;
+   const extraConfig: QueryConfig<T> = token == null ? { enabled: false } : {};
 
    const query = useQuery<T>(["user/profile-status", "GET", { token }], defaultRequestFunction, {
       ...config,
-      enabled: (config?.enabled ?? true) && token != null
+      ...extraConfig
    });
 
    return defaultErrorHandler(query);

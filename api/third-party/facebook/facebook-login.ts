@@ -23,8 +23,8 @@ export function useFacebookToken(): UseFacebookTokenHook {
    const getNewTokenFromFacebook = () =>
       getTokenFromFacebook().then(t => {
          saveOnDeviceSecure("pdfbtoken", t);
-         setToken(t);
          fasterTokenCache = t;
+         setToken(t);
       });
 
    if (fasterTokenCache != null) {
@@ -35,8 +35,8 @@ export function useFacebookToken(): UseFacebookTokenHook {
    loadFromDeviceSecure("pdfbtoken")
       .then(t => {
          setIsLoading(false);
-         setToken(t);
          fasterTokenCache = t;
+         setToken(t);
       })
       .catch(() => {
          setIsLoading(false);

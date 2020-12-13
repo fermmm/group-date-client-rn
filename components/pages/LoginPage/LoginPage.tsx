@@ -20,6 +20,7 @@ import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { removeFromDeviceSecure } from "../../../common-tools/device-native-api/storage/storage";
 
 const LoginPage: FC = () => {
+   // These are constants for debugging:
    const showDebugButtons: boolean = false;
    const forceShowConnectButton: boolean = false;
 
@@ -43,7 +44,7 @@ const LoginPage: FC = () => {
    // If we have the user token we check if there is any user property missing (unfinished registration or not registered)
    const { data: profileStatusData, isLoading: profileStatusLoading } = useServerProfileStatus(
       { token },
-      { enabled: tokenIsValid } // This request is not enabled until we have a valid token
+      { enabled: tokenIsValid }
    );
 
    // If the user has unfinished registration redirect to RegistrationForms otherwise redirect to Main
