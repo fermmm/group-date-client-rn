@@ -1,7 +1,6 @@
-import React, { Component } from "react";
+import React, { useState, FC } from "react";
 import { StyleSheet } from "react-native";
-import { withTheme } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
+import { ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import ProfileTextForm from "./ProfileTextForm/ProfileTextForm";
@@ -11,138 +10,109 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import BasicInfoForm, { BasicInfoState } from "./BasicInfoForm/BasicInfoForm";
 import ProfilePicturesForm from "./ProfilePicturesForm/ProfilePicturesForm";
 import DateIdeaForm, { DateIdeaState } from "./DateIdeaForm/DateIdeaForm";
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useServerProfileStatus } from "../../../api/server/user";
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 
-export interface RegistrationFormsProps extends Themed, StackScreenProps<{}> {}
-export interface RegistrationFormsState {
-   currentStep: number;
-   showIncompleteError: boolean;
-   profileDescription: string;
-   basicInfoFormData: BasicInfoState;
-   pictures: string[];
-   dateIdeaFormData: DateIdeaState;
-   errorsBasicInfo: string;
-   errorsProfilePictures: string;
-   errorsDateIdea: string;
-}
+const RegistrationFormsPage: FC = () => {
+   const [currentStep, setCurrentStep] = useState(0);
+   const [showIncompleteError, setShowIncompleteError] = useState(false);
+   const [profileDescription, setProfileDescription] = useState<string>();
+   const [basicInfoFormData, setBasicInfoFormData] = useState<BasicInfoState>();
+   const [dateIdeaFormData, setDateIdeaFormData] = useState<DateIdeaState>();
+   const [pictures, setPictures] = useState<string[]>();
+   const [errorsBasicInfo, setErrorsBasicInfo] = useState<string>();
+   const [errorsProfilePictures, setErrorsProfilePictures] = useState<string>();
+   const [errorsDateIdea, setErrorsDateIdea] = useState<string>();
 
-class RegistrationFormsPage extends Component<RegistrationFormsProps, RegistrationFormsState> {
-   static defaultProps: Partial<RegistrationFormsProps> = {};
-   formsCompleted: boolean[] = [];
+   const { colors }: ThemeExt = useTheme();
+   const { navigate }: StackNavigationProp<Record<string, {}>> = useNavigation();
 
-   state: RegistrationFormsState = {
-      currentStep: 0,
-      showIncompleteError: false,
-      profileDescription: null,
-      basicInfoFormData: null,
-      dateIdeaFormData: null,
-      pictures: null,
-      errorsBasicInfo: null,
-      errorsProfilePictures: null,
-      errorsDateIdea: null
-   };
+   const { data, isLoading } = useServerProfileStatus();
 
-   render(): JSX.Element {
-      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-      const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
-      const {
-         currentStep,
-         showIncompleteError,
-         profileDescription,
-         errorsBasicInfo,
-         errorsProfilePictures,
-         errorsDateIdea
-      }: Partial<RegistrationFormsState> = this.state;
+   // const userPropToScreenMap: Record<string, EditableUserPropKey[]> = {
+   //    name: [""]
+   // };
 
-      const userPropToScreenMap: Record<string, EditableUserPropKey[]> = {
-         name: [""]
-      };
-
-      return (
-         <>
-            <AppBarHeader title={"Nueva cuenta"} />
-            <ScreensStepper
-               currentScreen={currentStep}
-               swipeEnabled={false}
-               onScreenChange={newStep => this.setState({ currentStep: newStep })}
+   return (
+      <>
+         <AppBarHeader title={"Nueva cuenta"} />
+         <ScreensStepper
+            currentScreen={currentStep}
+            swipeEnabled={false}
+            onScreenChange={newStep => setCurrentStep(newStep)}
+         >
+            <BasicScreenContainer
+               showBottomGradient={true}
+               bottomGradientColor={colors.background}
+               onContinuePress={() =>
+                  errorsBasicInfo == null ? setCurrentStep(1) : setShowIncompleteError(true)
+               }
+               showContinueButton
             >
-               <BasicScreenContainer
-                  showBottomGradient={true}
-                  bottomGradientColor={colors.background}
-                  onContinuePress={() =>
-                     errorsBasicInfo == null
-                        ? this.setState({ currentStep: 1 })
-                        : this.setState({ showIncompleteError: true })
-                  }
-                  showContinueButton
-               >
-                  <BasicInfoForm
-                     onChange={(formData, error) =>
-                        this.setState({ basicInfoFormData: formData, errorsBasicInfo: error })
-                     }
-                  />
-               </BasicScreenContainer>
-               <BasicScreenContainer
-                  showBottomGradient={true}
-                  bottomGradientColor={colors.background}
-                  onBackPress={() => this.setState({ currentStep: 0 })}
-                  onContinuePress={() =>
-                     errorsProfilePictures == null
-                        ? this.setState({ currentStep: 2 })
-                        : this.setState({ showIncompleteError: true })
-                  }
-                  showBackButton
-                  showContinueButton
-               >
-                  <ProfilePicturesForm
-                     onChange={(pictures, error) =>
-                        this.setState({ pictures, errorsProfilePictures: error })
-                     }
-                  />
-               </BasicScreenContainer>
-               <BasicScreenContainer
-                  showBottomGradient={true}
-                  bottomGradientColor={colors.background}
-                  onBackPress={() => this.setState({ currentStep: 1 })}
-                  onContinuePress={() =>
-                     errorsDateIdea == null
-                        ? this.setState({ currentStep: 3 })
-                        : this.setState({ showIncompleteError: true })
-                  }
-                  showBackButton
-                  showContinueButton
-               >
-                  <DateIdeaForm
-                     onChange={(data, error) =>
-                        this.setState({ dateIdeaFormData: data, errorsDateIdea: error })
-                     }
-                  />
-               </BasicScreenContainer>
-               <BasicScreenContainer
-                  showBottomGradient={true}
-                  bottomGradientColor={colors.background}
-                  onBackPress={() => this.setState({ currentStep: 2 })}
-                  onContinuePress={() => navigate("Questions")}
-                  showBackButton
-                  showContinueButton
-               >
-                  <ProfileTextForm
-                     text={profileDescription}
-                     onChange={t => this.setState({ profileDescription: t })}
-                  />
-               </BasicScreenContainer>
-            </ScreensStepper>
-            <DialogError
-               visible={showIncompleteError}
-               onDismiss={() => this.setState({ showIncompleteError: false })}
+               <BasicInfoForm
+                  onChange={(formData, error) => {
+                     setBasicInfoFormData(formData);
+                     setErrorsBasicInfo(error);
+                  }}
+               />
+            </BasicScreenContainer>
+            <BasicScreenContainer
+               showBottomGradient={true}
+               bottomGradientColor={colors.background}
+               onBackPress={() => setCurrentStep(0)}
+               onContinuePress={() =>
+                  errorsProfilePictures == null ? setCurrentStep(2) : setShowIncompleteError(true)
+               }
+               showBackButton
+               showContinueButton
             >
-               {errorsBasicInfo || errorsProfilePictures || errorsDateIdea}
-            </DialogError>
-         </>
-      );
-   }
-}
+               <ProfilePicturesForm
+                  onChange={(pictures, error) => {
+                     setPictures(pictures);
+                     setErrorsProfilePictures(error);
+                  }}
+               />
+            </BasicScreenContainer>
+            <BasicScreenContainer
+               showBottomGradient={true}
+               bottomGradientColor={colors.background}
+               onBackPress={() => setCurrentStep(1)}
+               onContinuePress={() =>
+                  errorsDateIdea == null ? setCurrentStep(3) : setShowIncompleteError(true)
+               }
+               showBackButton
+               showContinueButton
+            >
+               <DateIdeaForm
+                  onChange={(data, error) => {
+                     setDateIdeaFormData(data);
+                     setErrorsDateIdea(error);
+                  }}
+               />
+            </BasicScreenContainer>
+            <BasicScreenContainer
+               showBottomGradient={true}
+               bottomGradientColor={colors.background}
+               onBackPress={() => setCurrentStep(2)}
+               onContinuePress={() => navigate("Questions")}
+               showBackButton
+               showContinueButton
+            >
+               <ProfileTextForm
+                  text={profileDescription}
+                  onChange={t => setProfileDescription(t)}
+               />
+            </BasicScreenContainer>
+         </ScreensStepper>
+         <DialogError visible={showIncompleteError} onDismiss={() => setShowIncompleteError(false)}>
+            {errorsBasicInfo || errorsProfilePictures || errorsDateIdea}
+         </DialogError>
+      </>
+   );
+};
 
 const styles: Styles = StyleSheet.create({});
 
-export default withTheme(RegistrationFormsPage);
+export default RegistrationFormsPage;

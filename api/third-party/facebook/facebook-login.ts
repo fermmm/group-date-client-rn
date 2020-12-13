@@ -13,27 +13,34 @@ import { defaultErrorHandler } from "../../tools/reactQueryTools";
 
 /**
  * This hook tries to get the facebook token, first from local storage, if it's null you should call
- * getTokenShowingFacebookScreen function returned by this hook this shows an app login screen from Facebook.
- * After calling getTokenShowingFacebookScreen the token can be still null (user cancelled, API or connection problem)
+ * getNewTokenFromFacebook() function returned by this hook this shows an authorize screen from Facebook if necessary.
+ * After calling getNewTokenFromFacebook() the token can be still null (user cancelled, API or connection problem)
  */
+let fasterTokenCache: string = null;
 export function useFacebookToken(): UseFacebookTokenHook {
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const [token, setToken] = useState<string>(null);
+
+   const getNewTokenFromFacebook = () =>
+      getTokenFromFacebook().then(t => {
+         saveOnDeviceSecure("pdfbtoken", t);
+         setToken(t);
+         fasterTokenCache = t;
+      });
+
+   if (fasterTokenCache != null) {
+      return { token: fasterTokenCache, isLoading: false, getNewTokenFromFacebook };
+   }
 
    // Try to get stored token from previous session
    loadFromDeviceSecure("pdfbtoken")
       .then(t => {
          setIsLoading(false);
          setToken(t);
+         fasterTokenCache = t;
       })
       .catch(() => {
          setIsLoading(false);
-      });
-
-   const getNewTokenFromFacebook = () =>
-      getTokenFromFacebook().then(t => {
-         saveOnDeviceSecure("pdfbtoken", t);
-         setToken(t);
       });
 
    return { token, isLoading, getNewTokenFromFacebook };
