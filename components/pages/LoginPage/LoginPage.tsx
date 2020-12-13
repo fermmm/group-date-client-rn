@@ -6,7 +6,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 import { currentTheme } from "../../../config";
-import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
+import {
+   useFacebookToken,
+   useFacebookTokenCheck
+} from "../../../api/third-party/facebook/facebook-login";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useNavigation } from "@react-navigation/native";
 import { useServerHandshake } from "../../../api/server/handshake";
@@ -14,9 +17,11 @@ import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation
 import { useServerProfileStatus } from "../../../api/server/user";
 import { userFinishedRegistration } from "../../../api/tools/userTools";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
+import { removeFromDeviceSecure } from "../../../common-tools/device-native-api/storage/storage";
 
 const LoginPage: FC = () => {
    const showDebugButtons: boolean = false;
+   const forceShowConnectButton: boolean = false;
 
    const [logoAnimCompleted, setLogoAnimCompleted] = useState(false);
    const { colors } = useTheme();
@@ -27,15 +32,18 @@ const LoginPage: FC = () => {
       version: Constants.manifest.version
    });
 
-   // If the service is OK get the user token
-   const { token, isLoading: tokenLoading, getTokenByShowingFacebookScreen } = useFacebookToken({
-      enabled: handshakeData?.serverOperating ?? false // This request is not enabled until we know server is operating
+   // Get the user token
+   const { token, isLoading: tokenLoading, getNewTokenFromFacebook } = useFacebookToken();
+
+   // Check the user token is valid
+   const { data: tokenIsValid, isLoading: tokenCheckLoading } = useFacebookTokenCheck(token, {
+      enabled: token != null
    });
 
    // If we have the user token we check if there is any user property missing (unfinished registration or not registered)
    const { data: profileStatusData, isLoading: profileStatusLoading } = useServerProfileStatus(
       { token },
-      { enabled: token != null } // This request is not enabled until we have the token
+      { enabled: tokenIsValid } // This request is not enabled until we have a valid token
    );
 
    // If the user has unfinished registration redirect to RegistrationForms otherwise redirect to Main
@@ -47,28 +55,38 @@ const LoginPage: FC = () => {
    }, [profileStatusData, logoAnimCompleted]);
 
    /**
-    * The login button is visible when we don't have the token.
+    * The login button is visible when we don't have the token or we don't have a valid token.
+    * The button calls the Facebook API to get a new Token, showing an authorization screen if
+    * the user never authorized the app.
     */
    const handleLoginButtonClick = () => {
-      getTokenByShowingFacebookScreen();
+      getNewTokenFromFacebook();
    };
 
-   const serverOperating: boolean = handshakeData != null && !handshakeData.serverOperating;
+   const serverOperating: boolean = handshakeData != null && handshakeData.serverOperating;
+
+   const showLoginButton: boolean =
+      (serverOperating &&
+         (token == null || tokenIsValid === false) &&
+         !tokenCheckLoading &&
+         !tokenLoading &&
+         !handshakeLoading) ||
+      forceShowConnectButton;
+
+   const showLoadingAnimation: boolean =
+      logoAnimCompleted &&
+      (tokenLoading || tokenCheckLoading || handshakeLoading || profileStatusLoading);
 
    return (
       <Background useImageBackground={true}>
          <View style={styles.mainContainer}>
-            <LoadingAnimation
-               visible={
-                  logoAnimCompleted && (tokenLoading || handshakeLoading || profileStatusLoading)
-               }
-            />
-            <View style={serverOperating ? styles.logo : styles.logoBig}>
+            <LoadingAnimation visible={showLoadingAnimation} />
+            <View style={styles.logo}>
                <LogoAnimator onAnimationComplete={() => setLogoAnimCompleted(true)}>
                   <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
                </LogoAnimator>
             </View>
-            {serverOperating && (
+            {!serverOperating && (
                <>
                   <Text
                      style={[
@@ -83,21 +101,19 @@ const LoginPage: FC = () => {
                            fontWeight: "bold"
                         }}
                      >
-                        La app no esta disponible en este momento
+                        Lo sentimos, la app no esta disponible en este momento
                      </Text>
                   </Text>
-                  {handshakeData.serverMessage && (
-                     <Text
-                        style={[
-                           styles.textBlock,
-                           {
-                              marginBottom: 100
-                           }
-                        ]}
-                     >
-                        {handshakeData.serverMessage}
-                     </Text>
-                  )}
+                  <Text
+                     style={[
+                        styles.textBlock,
+                        {
+                           marginBottom: 100
+                        }
+                     ]}
+                  >
+                     {handshakeData?.serverMessage}
+                  </Text>
                </>
             )}
             {__DEV__ && showDebugButtons && (
@@ -120,9 +136,18 @@ const LoginPage: FC = () => {
                   >
                      Nueva cuenta UI
                   </ButtonStyled>
+                  <ButtonStyled
+                     color={colors.textLogin}
+                     style={{
+                        borderColor: colors.textLogin
+                     }}
+                     onPress={() => removeFromDeviceSecure("pdfbtoken")}
+                  >
+                     Debug button
+                  </ButtonStyled>
                </>
             )}
-            {!token && !tokenLoading && serverOperating && (
+            {showLoginButton && (
                <ButtonStyled
                   color={colors.textLogin}
                   style={{ borderColor: colors.textLogin }}
@@ -175,11 +200,6 @@ const styles: Styles = StyleSheet.create({
       justifyContent: "flex-end"
    },
    logo: {
-      position: "absolute",
-      top: "15%",
-      width: "35%"
-   },
-   logoBig: {
       position: "absolute",
       top: "30%",
       width: "55%"

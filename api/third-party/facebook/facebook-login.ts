@@ -8,48 +8,20 @@ import {
 } from "../../../common-tools/device-native-api/storage/storage";
 import { httpRequest } from "../../tools/httpRequest";
 import { useState } from "react";
+import { QueryConfig, useQuery } from "react-query";
+import { defaultErrorHandler } from "../../tools/reactQueryTools";
 
 /**
- * Tries to get the facebook token, first from local storage, if not found and showFacebookLoginIfNeeded = true shows
- * a facebook login screen, if it's not found after showing the screen (user cancelled, API or connection problem)
- * then returns null.
- *
- * If checkStoredTokenIsValid = true makes a request to Facebook to check that the stored token is valid (when it was found stored)
- */
-export async function getFacebookToken(props: {
-   showFacebookLoginIfNeeded: boolean;
-   checkStoredTokenIsValid?: boolean;
-}): Promise<string | null> {
-   let token: string | null = await tryGetStoredToken(props.checkStoredTokenIsValid);
-   if (token == null && props.showFacebookLoginIfNeeded) {
-      token = await loginWithFacebook();
-   }
-   return token;
-}
-
-/**
- * Hooks version of getFacebookToken().
- *
  * This hook tries to get the facebook token, first from local storage, if it's null you should call
  * getTokenShowingFacebookScreen function returned by this hook this shows an app login screen from Facebook.
  * After calling getTokenShowingFacebookScreen the token can be still null (user cancelled, API or connection problem)
- *
- * @param checkToken If true makes a request to Facebook to check that the stored token is valid (when it was found stored)
  */
-export function useFacebookToken(props: {
-   enabled?: boolean;
-   checkToken?: boolean;
-}): FacebookLoginHook {
-   const { enabled, checkToken } = props;
+export function useFacebookToken(): UseFacebookTokenHook {
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const [token, setToken] = useState<string>(null);
 
-   if (enabled != null && enabled === false) {
-      return { isLoading: false, token: null, getTokenByShowingFacebookScreen: () => {} };
-   }
-
    // Try to get stored token from previous session
-   tryGetStoredToken(checkToken || checkToken == null)
+   loadFromDeviceSecure("pdfbtoken")
       .then(t => {
          setIsLoading(false);
          setToken(t);
@@ -58,65 +30,69 @@ export function useFacebookToken(props: {
          setIsLoading(false);
       });
 
-   const getTokenByShowingFacebookScreen = () => loginWithFacebook().then(t => setToken(t));
+   const getNewTokenFromFacebook = () =>
+      getTokenFromFacebook().then(t => {
+         saveOnDeviceSecure("pdfbtoken", t);
+         setToken(t);
+      });
 
-   return { isLoading, token, getTokenByShowingFacebookScreen };
+   return { token, isLoading, getNewTokenFromFacebook };
 }
 
 /**
- * Prompts a facebook login using Facebook API and returns the access token or null if the user didn't login
+ * Retrieves a new token from Facebook, if the user did not authorized the app it shows an authorization screen
+ * executed by the Facebook API.
  */
-async function loginWithFacebook(): Promise<string | null> {
+async function getTokenFromFacebook(): Promise<string | null> {
    try {
-      await initializeAsync(FACEBOOK_APP_ID, FACEBOOK_APP_NAME);
-      const loginResult: FacebookLoginResult = await logInWithReadPermissionsAsync({
+      await initializeAsync({ appId: FACEBOOK_APP_ID, appName: FACEBOOK_APP_NAME });
+
+      let loginResult: FacebookLoginResult = null;
+
+      loginResult = await logInWithReadPermissionsAsync({
          permissions: ["public_profile", "email"]
       });
 
-      const { type, token }: Flatten<Partial<FacebookLoginResult>> = loginResult;
+      const { type, token }: Flatten<Partial<FacebookLoginResult>> = loginResult ?? {};
 
       if (type === "success") {
-         saveOnDeviceSecure("pdfbtoken", token);
          return Promise.resolve(token);
       } else {
-         // here the user cancelled the login
+         // Here the user cancelled the login
          return Promise.resolve(null);
       }
    } catch ({ message }) {
-      Alert.alert("Error con el login de Facebook", message);
+      Alert.alert("Facebook login: ", message);
    }
 
    return Promise.resolve(null);
 }
 
 /**
- * Calls facebook with a token and checks if valid data returns from it.
+ * Uses the token to get some user information from Facebook and if the information is returned it means
+ * the token is valid. It's better to check this on th client than on the server, dealing with an extra
+ * server error is more complex. If the token is not valid then getTokenFromFacebook() should be called
+ * to get a new token from Facebook.
  */
-async function facebookTokenIsValid(token: string): Promise<boolean> {
-   const response: { id: string; name: string } = await httpRequest({
-      baseURL: `https://graph.facebook.com/me?access_token=${token}`,
-      errorResponseSilent: true
-   });
-   return Promise.resolve(response?.name != null);
+export function useFacebookTokenCheck(token: string, config?: QueryConfig<boolean>) {
+   const response = useQuery<boolean>(
+      [`graph.facebook.com/me?access_token=${token}`, "GET"],
+      async () => {
+         const response: { id: string; name: string } = await httpRequest({
+            baseURL: `https://graph.facebook.com/me?access_token=${token}`,
+            errorResponseSilent: true,
+            handleErrors: true
+         });
+
+         return response?.name != null;
+      },
+      { staleTime: 0, ...config }
+   );
+   return response;
 }
 
-/**
- * Tries to get the access token from local storage saved in a previous login
- * @param checkToken If te token is found on local storage makes a request to Facebook in order to check that is valid
- */
-async function tryGetStoredToken(checkToken: boolean = true): Promise<string | null> {
-   const storedToken: string = await loadFromDeviceSecure("pdfbtoken");
-   if (storedToken == null) {
-      return Promise.resolve(null);
-   }
-   if (checkToken && !(await facebookTokenIsValid(storedToken))) {
-      return Promise.resolve(null);
-   }
-   return Promise.resolve(storedToken);
-}
-
-export interface FacebookLoginHook {
+export interface UseFacebookTokenHook {
    isLoading: boolean;
    token?: string;
-   getTokenByShowingFacebookScreen: () => void;
+   getNewTokenFromFacebook: () => void;
 }

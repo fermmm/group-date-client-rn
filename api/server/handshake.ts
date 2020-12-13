@@ -6,9 +6,13 @@ import {
 import { defaultRequestFunction, defaultErrorHandler } from "../tools/reactQueryTools";
 
 export function useServerHandshake<T = ServerHandshakeResponse>(
-   data: HandshakeParams,
+   requestParams: HandshakeParams,
    config?: QueryConfig<T>
 ) {
-   const query = useQuery<T>(["handshake", "GET", data], defaultRequestFunction, config);
-   return defaultErrorHandler(query);
+   const response = useQuery<T>(
+      ["handshake", "GET", requestParams],
+      defaultRequestFunction,
+      config
+   );
+   return defaultErrorHandler(response);
 }
