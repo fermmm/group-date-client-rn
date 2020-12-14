@@ -7,19 +7,24 @@ import ProfileTextForm from "./ProfileTextForm/ProfileTextForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
-import BasicInfoForm, { BasicInfoState } from "./BasicInfoForm/BasicInfoForm";
+import BasicInfoForm, { FormDataBasicInfo } from "./BasicInfoForm/BasicInfoForm";
 import ProfilePicturesForm from "./ProfilePicturesForm/ProfilePicturesForm";
 import DateIdeaForm, { DateIdeaState } from "./DateIdeaForm/DateIdeaForm";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useServerProfileStatus } from "../../../api/server/user";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
+import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
+import {
+   USE_AUTOMATIC_TARGET_AGE_AT_REGISTRATION,
+   USE_AUTOMATIC_TARGET_DISTANCE_AT_REGISTRATION
+} from "../../../config";
 
 const RegistrationFormsPage: FC = () => {
    const [currentStep, setCurrentStep] = useState(0);
    const [showIncompleteError, setShowIncompleteError] = useState(false);
    const [profileDescription, setProfileDescription] = useState<string>();
-   const [basicInfoFormData, setBasicInfoFormData] = useState<BasicInfoState>();
+   const [basicInfoFormData, setBasicInfoFormData] = useState<FormDataBasicInfo>();
    const [dateIdeaFormData, setDateIdeaFormData] = useState<DateIdeaState>();
    const [pictures, setPictures] = useState<string[]>();
    const [errorsBasicInfo, setErrorsBasicInfo] = useState<string>();
@@ -52,6 +57,9 @@ const RegistrationFormsPage: FC = () => {
                showContinueButton
             >
                <BasicInfoForm
+                  askTargetAge={!USE_AUTOMATIC_TARGET_AGE_AT_REGISTRATION}
+                  askTargetDistance={!USE_AUTOMATIC_TARGET_DISTANCE_AT_REGISTRATION}
+                  initialFormData={data.user}
                   onChange={(formData, error) => {
                      setBasicInfoFormData(formData);
                      setErrorsBasicInfo(error);

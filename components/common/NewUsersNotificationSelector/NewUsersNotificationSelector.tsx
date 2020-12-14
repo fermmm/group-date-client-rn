@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Picker, StyleProp, ViewStyle } from "react-native";
+import { StyleSheet, View, StyleProp, ViewStyle } from "react-native";
 import { withTheme, Text } from "react-native-paper";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import PickerThemed from "../PickerThemed/PickerThemed";
+import { Picker } from "@react-native-picker/picker";
 import CheckboxButton from "../CheckboxButton/CheckboxButton";
 import { currentTheme } from "../../../config";
 
@@ -38,16 +38,16 @@ class NewUsersNotificationSelector extends Component<NewUsersSelectorProps> {
             {checked && (
                <View style={styles.amountSelectorContainer}>
                   <Text style={styles.text}>Cuando haya</Text>
-                  <PickerThemed
+                  <Picker
                      selectedValue={amountSelected}
                      style={styles.picker}
-                     onValueChange={itemValue => onAmountChange(itemValue)}
+                     onValueChange={itemValue => onAmountChange(Number(itemValue))}
                   >
                      {this.amountOptions.map((amount, i) => (
                         <Picker.Item label={amount.toString()} value={amount} key={i} />
                      ))}
-                  </PickerThemed>
-                  <Text style={styles.text}>usuaries nuevos</Text>
+                  </Picker>
+                  <Text style={styles.text}>usuarixs nuevos</Text>
                </View>
             )}
          </View>

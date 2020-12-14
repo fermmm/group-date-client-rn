@@ -1,43 +1,35 @@
-import React, { Component } from "react";
-import { StyleSheet, View, Picker, Text } from "react-native";
-import { withTheme } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
+import React, { FC, useState } from "react";
+import { StyleSheet, View, Text } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import PickerThemed from "../PickerThemed/PickerThemed";
+import { AUTOMATIC_TARGET_DISTANCE, AVAILABLE_DISTANCES } from "../../../config";
 
-export interface DistanceSelectorProps extends Themed {
+export interface PropsDistanceSelector {
    value: number;
    onChange(newValue: number): void;
 }
 
-class DistanceSelector extends Component<DistanceSelectorProps> {
-   distanceOptions: number[] = this.generateDistanceOptions();
-   render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
+const DistanceSelector: FC<PropsDistanceSelector> = props => {
+   const [distanceOptions] = useState(AVAILABLE_DISTANCES);
 
-      return (
-         <View style={styles.mainContainer}>
-            <PickerThemed
-               selectedValue={this.props.value}
-               style={{ height: 50, width: 90 }}
-               onValueChange={itemValue => this.props.onChange(itemValue)}
-            >
-               {
-                  this.distanceOptions.map((distance, i) =>
-                     <Picker.Item label={distance.toString()} value={distance} key={i} />
-                  )
-               }
-            </PickerThemed>
-            <Text style={styles.text}>Km</Text>
-         </View>
-      );
-   }
+   const distanceToString = (distance: number) => {
+      return `${distance} Km ${distance === AUTOMATIC_TARGET_DISTANCE ? " (Recomendado)" : ""}`;
+   };
 
-   generateDistanceOptions(): number[] {
-      const result: number[] = Array.from({ length: 20 }, (v, k) => k + 5);
-      return result;
-   }
-}
+   return (
+      <View style={styles.mainContainer}>
+         <Picker
+            selectedValue={props.value}
+            style={styles.picker}
+            onValueChange={itemValue => props.onChange(Number(itemValue))}
+         >
+            {distanceOptions.map((distance, i) => (
+               <Picker.Item label={distanceToString(distance)} value={distance} key={i} />
+            ))}
+         </Picker>
+      </View>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
@@ -45,10 +37,14 @@ const styles: Styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center"
    },
+   picker: {
+      width: 240,
+      height: 45
+   },
    text: {
       marginRight: 20,
       fontSize: 18
    }
 });
 
-export default withTheme(DistanceSelector);
+export default DistanceSelector;

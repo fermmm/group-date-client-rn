@@ -1,85 +1,47 @@
-import React, { Component } from "react";
-import { StyleSheet, View, Picker, Text, StyleProp, ViewStyle } from "react-native";
-import { withTheme } from "react-native-paper";
-import equal from "fast-deep-equal";
-import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
+import React, { FC, useEffect, useState } from "react";
+import { StyleSheet, View, Text, StyleProp, ViewStyle } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import PickerThemed from "../PickerThemed/PickerThemed";
 
-export interface AgeSelectorProps extends Themed {
+export interface AgeSelectorProps {
    min?: number;
    max?: number;
    style?: StyleProp<ViewStyle>;
-   onChange(newValues: AgeSelectorState): void;
-}
-export interface AgeSelectorState {
-   min: number;
-   max: number;
+   onChange(newValues: { min: number; max: number }): void;
 }
 
-class AgeSelector extends Component<AgeSelectorProps, AgeSelectorState> {
-   static defaultProps: Partial<AgeSelectorProps> = {};
-   ageOptions: number[] = this.generateAgeArray();
-   state: AgeSelectorState = {
-      min: 18,
-      max: 25
-   };
+export const AgeSelector: FC<AgeSelectorProps> = ({ min, max, onChange, style }) => {
+   const [ageOptions] = useState(Array.from({ length: 99 }, (v, k) => ++k).slice(18 - 1));
 
-   render(): JSX.Element {
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-      const {min, max}: Partial<AgeSelectorState> = this.state;
-
-      return (
-         <View style={[styles.mainContainer, this.props.style]}>
-            <Text style={styles.text}>De:</Text>
-            <PickerThemed
-               selectedValue={min}
-               style={styles.picker}
-               onValueChange={(itemValue) =>
-                  this.setState({ min: itemValue <= max ? itemValue : max }, () => this.sendChanges())
-               }>
-               {
-                  this.ageOptions.map((age, i) =>
-                     <Picker.Item label={age.toString()} value={age} key={i} />
-                  )
-               }
-            </PickerThemed>
-            <Text style={styles.text}>a:</Text>
-            <PickerThemed
-               selectedValue={max}
-               style={styles.picker}
-               onValueChange={(itemValue) =>
-                  this.setState({ max: itemValue >= min ? itemValue : min}, () => this.sendChanges())
-               }>
-               {
-                  this.ageOptions.map((age, i) =>
-                     <Picker.Item label={age.toString()} value={age} key={i} />
-                  )
-               }
-            </PickerThemed>
-         </View>
-      );
-   }
-
-   componentDidUpdate(prevProps: AgeSelectorProps): void {
-      if (!equal(prevProps, this.props)) {
-         this.setState({
-            min: this.props.min, 
-            max: this.props.max
-         });
-      }
-   }
-
-   generateAgeArray(): number[] {
-      const result: number[] = Array.from({ length: 99 }, (v, k) => ++k);
-      result.splice(0, 17);
-      return result;
-   }
-
-   sendChanges(): void {
-      this.props.onChange(this.state);
-   }
-}
+   return (
+      <View style={[styles.mainContainer, style]}>
+         <Text style={styles.text}>De:</Text>
+         <Picker
+            selectedValue={min}
+            style={styles.picker}
+            onValueChange={newMin =>
+               onChange({ min: Number(newMin), max: Number(newMin) > max ? Number(newMin) : max })
+            }
+         >
+            {ageOptions.map((age, i) => (
+               <Picker.Item label={age.toString()} value={age} key={i} />
+            ))}
+         </Picker>
+         <Text style={styles.text}>a:</Text>
+         <Picker
+            selectedValue={max}
+            style={styles.picker}
+            onValueChange={newMax =>
+               onChange({ max: Number(newMax), min: Number(newMax) < min ? Number(newMax) : min })
+            }
+         >
+            {ageOptions.map((age, i) => (
+               <Picker.Item label={age.toString()} value={age} key={i} />
+            ))}
+         </Picker>
+      </View>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
@@ -93,9 +55,9 @@ const styles: Styles = StyleSheet.create({
       fontSize: 18
    },
    picker: {
-      width: 90,
-      height: 50 
+      width: 85,
+      height: 50
    }
 });
 
-export default withTheme(AgeSelector);
+export default AgeSelector;

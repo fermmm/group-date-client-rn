@@ -36,7 +36,9 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
    }, [visible]);
 
    return (
-      <View style={[styles.animationContainer, centered && { height: "100%" }, style]}>
+      <View
+         style={[styles.animationContainer, centered && { width: "100%", height: "100%" }, style]}
+      >
          <Animated.View style={{ opacity: animValue }}>
             <LottieView
                source={require("./animation-loading.json")}
@@ -54,12 +56,11 @@ const styles: Styles = StyleSheet.create({
    animationContainer: {
       position: "absolute",
       flex: 0,
-      width: "40%",
       bottom: 60,
       alignItems: "center",
       justifyContent: "center"
    },
    animation: {
-      width: "100%"
+      width: "40%"
    }
 });

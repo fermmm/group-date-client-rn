@@ -1,140 +1,147 @@
-import React, { Component } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { withTheme, TextInput } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import AgeSelector from "../../../common/AgeSelector/AgeSelector";
 import { formValidators } from "../../../../common-tools/formValidators/formValidators";
-import { currentTheme } from "../../../../config";
+import { currentTheme, AUTOMATIC_TARGET_AGE, AUTOMATIC_TARGET_DISTANCE } from "../../../../config";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
+import DistanceSelector from "../../../common/DistanceSelector/DistanceSelector";
 
-export interface BasicInfoProps extends Themed {
-   onChange(formData: BasicInfoState, error: string | null): void;
+export interface BasicInfoProps {
+   initialFormData: Partial<FormDataBasicInfo>;
+   askTargetAge?: boolean;
+   askTargetDistance?: boolean;
+   onChange(formData: FormDataBasicInfo, error: string | null): void;
 }
-export interface BasicInfoState {
-   nameText: string;
+
+export interface FormDataBasicInfo {
+   name: string;
    age: number;
-   bodyHeight: number;
+   height: number;
    targetAgeMin: number;
    targetAgeMax: number;
-   targetAgeModified: boolean;
+   targetDistance: number;
 }
 
-class BasicInfoForm extends Component<BasicInfoProps, BasicInfoState> {
-   static defaultProps: Partial<BasicInfoProps> = {};
-   defaultAgeDifference: number = 9;
-   state: BasicInfoState = {
-      nameText: "",
-      age: null,
-      bodyHeight: null,
-      targetAgeMin: 18,
-      targetAgeMax: 28,
-      targetAgeModified: false
-   };
+export const BasicInfoForm: FC<BasicInfoProps> = ({
+   initialFormData,
+   onChange,
+   askTargetAge = true,
+   askTargetDistance = true
+}) => {
+   const [name, setName] = useState(initialFormData?.name ?? "");
+   const [age, setAge] = useState(initialFormData?.age);
+   const [height, setHeight] = useState(initialFormData?.height);
+   const [targetDistance, setTargetDistance] = useState(
+      initialFormData?.targetDistance ?? AUTOMATIC_TARGET_DISTANCE
+   );
+   const [targetAgeMin, setTargetAgeMin] = useState(initialFormData?.targetAgeMin);
+   const [targetAgeMax, setTargetAgeMax] = useState(initialFormData?.targetAgeMax);
 
-   componentDidMount(): void {
-      this.sendChanges();
-   }
+   // Calculate a final target age that manages cases where the user didn't set the target age
+   let finalTargetAgeMin = targetAgeMin != null ? targetAgeMin : (age ?? 18) - AUTOMATIC_TARGET_AGE;
+   finalTargetAgeMin = finalTargetAgeMin >= 18 ? finalTargetAgeMin : 18;
+   const finalTargetAgeMax =
+      targetAgeMax != null ? targetAgeMax : (age ?? 18) + AUTOMATIC_TARGET_AGE;
 
-   render(): JSX.Element {
-      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-      const {
-         nameText,
-         age,
-         bodyHeight,
-         targetAgeModified,
-         targetAgeMin,
-         targetAgeMax
-      }: Partial<BasicInfoState> = this.state;
-
-      return (
-         <View style={styles.mainContainer}>
-            <TitleText style={styles.title}>Datos básicos</TitleText>
-            <TextInputExtended
-               title="Tu nombre o apodo"
-               mode="outlined"
-               value={nameText}
-               onChangeText={t =>
-                  this.setState({ nameText: formValidators.name(t).result.text }, () =>
-                     this.sendChanges()
-                  )
-               }
-            />
-            <TextInputExtended
-               title="Tu edad"
-               mode="outlined"
-               keyboardType="number-pad"
-               value={age ? age.toString() : ""}
-               onChangeText={t =>
-                  this.setState({ age: Number(formValidators.age(t).result.text) }, () =>
-                     this.sendChanges()
-                  )
-               }
-            />
-            <TextInputExtended
-               title="Tu altura en centímetros (opcional) ej: 160"
-               titleLine2="Este dato para algunes es muy importante y a otres no les importa"
-               mode="outlined"
-               keyboardType="number-pad"
-               value={bodyHeight ? bodyHeight.toString() : ""}
-               onChangeText={t =>
-                  this.setState(
-                     { bodyHeight: Number(formValidators.bodyHeight(t).result.text) || 0 },
-                     () => this.sendChanges()
-                  )
-               }
-            />
-            <TitleMediumText style={styles.label}>¿Qué edades te interesan más?</TitleMediumText>
-            <TitleMediumText style={styles.labelLine2}>
-               Esta funcionalidad no actúa de forma totalmente estricta
-            </TitleMediumText>
-            <AgeSelector
-               min={targetAgeModified ? targetAgeMin : age - this.defaultAgeDifference}
-               max={targetAgeModified ? targetAgeMax : age + this.defaultAgeDifference}
-               style={styles.ageSelector}
-               onChange={({ min, max }) =>
-                  this.setState(
-                     {
-                        targetAgeMin: min,
-                        targetAgeMax: max,
-                        targetAgeModified: true
-                     },
-                     () => this.sendChanges()
-                  )
-               }
-            />
-         </View>
+   useEffect(() => {
+      onChange(
+         {
+            name,
+            age,
+            height,
+            targetDistance,
+            targetAgeMin: finalTargetAgeMin,
+            targetAgeMax: finalTargetAgeMax
+         },
+         getError()
       );
-   }
+   }, [name, age, height, targetDistance, targetAgeMin, targetAgeMax]);
 
-   sendChanges(): void {
-      this.props.onChange({ ...this.state }, this.getError());
-   }
-
-   getError(): string {
-      const { nameText, age }: Partial<BasicInfoState> = this.state;
-
-      if (nameText.length === 0) {
-         return "Tenes que escribir un nombre o apodo";
+   const getError = () => {
+      if (name.length === 0) {
+         return "No has completado tu nombre o apodo";
       }
 
-      if (nameText.length < 2) {
+      if (name.length < 2) {
          return "El nombre o apodo es demasiado corto";
       }
 
       if (age == null) {
-         return "El campo de edad esta vacío";
+         return "No has completado el campo de tu edad";
       }
 
       if (age < 12) {
-         return "Edad demasiado baja";
+         return "Edad demasiado baja, lo sentimos.";
       }
 
       return null;
-   }
-}
+   };
+
+   return (
+      <View style={styles.mainContainer}>
+         <TitleText style={styles.title}>Datos básicos</TitleText>
+         <TextInputExtended
+            title="Tu nombre o apodo"
+            mode="outlined"
+            value={name}
+            onChangeText={t => setName(formValidators.name(t).result.text)}
+         />
+         <TextInputExtended
+            title="Tu edad"
+            mode="outlined"
+            keyboardType="number-pad"
+            value={age ? age.toString() : ""}
+            onChangeText={t => setAge(Number(formValidators.age(t).result.text))}
+         />
+         <TextInputExtended
+            title="Tu altura en centímetros (opcional) ej: 160"
+            titleLine2="Este dato para algunxs es muy importante y a otrxs no les importa"
+            mode="outlined"
+            keyboardType="number-pad"
+            value={height ? height.toString() : ""}
+            onChangeText={t => setHeight(Number(formValidators.bodyHeight(t).result.text) || 0)}
+         />
+         {askTargetAge && (
+            <>
+               <TitleMediumText style={styles.label}>
+                  ¿Qué rango de edad te interesa más?
+               </TitleMediumText>
+               <TitleMediumText style={styles.labelLine2}>
+                  Esta funcionalidad no actúa de forma totalmente estricta
+               </TitleMediumText>
+               <AgeSelector
+                  min={finalTargetAgeMin}
+                  max={finalTargetAgeMax}
+                  style={styles.ageSelector}
+                  onChange={({ min, max }) => {
+                     setTargetAgeMin(min);
+                     setTargetAgeMax(max);
+                  }}
+               />
+            </>
+         )}
+         {askTargetDistance && (
+            <>
+               <TitleMediumText style={styles.label}>
+                  ¿Qué tan lejos pueden estar lxs demás usuarixs?
+               </TitleMediumText>
+               <TitleMediumText style={styles.labelLine2}>
+                  Esta funcionalidad no actúa de forma totalmente estricta
+               </TitleMediumText>
+               <DistanceSelector
+                  value={targetDistance}
+                  onChange={newDistance => {
+                     setTargetDistance(newDistance);
+                  }}
+               />
+            </>
+         )}
+      </View>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
@@ -158,4 +165,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(BasicInfoForm);
+export default BasicInfoForm;
