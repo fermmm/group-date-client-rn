@@ -10,7 +10,7 @@ export interface DescriptionFormProps {
    onChange(newText: string): void;
 }
 
-const ProfileTextForm: FC<DescriptionFormProps> = props => {
+const ProfileDescriptionForm: FC<DescriptionFormProps> = props => {
    const { text, onChange }: DescriptionFormProps = props;
 
    return (
@@ -41,4 +41,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default ProfileTextForm;
+export default ProfileDescriptionForm;

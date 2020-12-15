@@ -22,7 +22,7 @@ export const currentTheme: ThemeExt = (WhiteTheme as unknown) as ThemeExt;
  * If this is true the target age is not prompted to the user and it's automatically set instead.
  * The user can manually set this value later after registration.
  */
-export const USE_AUTOMATIC_TARGET_AGE_AT_REGISTRATION: boolean = true;
+export const USE_AUTOMATIC_TARGET_AGE_AT_REGISTRATION: boolean = false;
 
 /**
  * If USE_AUTOMATIC_TARGET_AGE is true then the target age is the user age +- this value
@@ -33,15 +33,15 @@ export const AUTOMATIC_TARGET_AGE: number = 10;
  * If this is true the target distance is not prompt to the user and it's automatically set instead
  * The user can manually set this value later after registration.
  */
-export const USE_AUTOMATIC_TARGET_DISTANCE_AT_REGISTRATION: boolean = true;
+export const USE_AUTOMATIC_TARGET_DISTANCE_AT_REGISTRATION: boolean = false;
 
 /**
  * Distances values available in KM
  */
-export const AVAILABLE_DISTANCES: number[] = [50, 80, 150, 250, 1000];
+export const AVAILABLE_DISTANCES: number[] = [50, 70, 90, 200, 600, 1000];
 
 /**
  * If USE_AUTOMATIC_TARGET_DISTANCE is true then the target distance is this value. It must be a value from
  * the previous setting array.
  */
-export const AUTOMATIC_TARGET_DISTANCE: number = 50;
+export const AUTOMATIC_TARGET_DISTANCE: number = 70;

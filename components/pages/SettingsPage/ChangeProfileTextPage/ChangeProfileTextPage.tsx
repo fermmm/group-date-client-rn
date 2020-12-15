@@ -5,7 +5,7 @@ import { Themed } from "../../../../common-tools/themes/types/Themed";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
-import ProfileTextForm from "../../RegistrationFormsPage/ProfileTextForm/ProfileTextForm";
+import ProfileDescriptionForm from "../../RegistrationFormsPage/ProfileDescriptionForm/ProfileDescriptionForm";
 
 export interface ChangeProfileTextProps extends Themed, StackScreenProps<{}> {}
 export interface ChangeProfileTextState {
@@ -22,7 +22,7 @@ class ChangeProfileTextPage extends Component<ChangeProfileTextProps, ChangeProf
          <>
             <AppBarHeader title={"Modificar texto libre"} onBackPress={() => this.onBackPress()} />
             <BasicScreenContainer>
-               <ProfileTextForm
+               <ProfileDescriptionForm
                   text={this.state.profileText}
                   onChange={t => this.setState({ profileText: t })}
                />

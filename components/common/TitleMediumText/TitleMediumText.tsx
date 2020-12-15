@@ -1,18 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, ComponentProps, FC } from "react";
 import { StyleSheet } from "react-native";
-import { Text, TypographyProps } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 
-class TitleMediumText extends Component<TypographyProps> {
-   render(): JSX.Element {
-      return (
-         <Text {...this.props} style={[styles.titleStyle, this.props.style]}>
-            {this.props.children}
-         </Text>
-      );
-   }
-}
+const TitleMediumText: FC<ComponentProps<typeof Text>> = props => {
+   return (
+      <Text {...props} style={[styles.titleStyle, props.style]}>
+         {props.children}
+      </Text>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    titleStyle: {

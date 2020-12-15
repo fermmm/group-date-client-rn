@@ -1,7 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
-import { Animated, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { Animated, StyleProp, StyleSheet, View, ViewStyle, Dimensions } from "react-native";
 import LottieView from "lottie-react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
+import { currentTheme } from "../../../config";
 
 interface PropsLoadingAnimation {
    visible: boolean;
@@ -37,7 +38,15 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
 
    return (
       <View
-         style={[styles.animationContainer, centered && { width: "100%", height: "100%" }, style]}
+         style={[
+            styles.animationContainer,
+            centered && {
+               width: Dimensions.get("window").width,
+               height: "100%",
+               backgroundColor: "red"
+            },
+            style
+         ]}
       >
          <Animated.View style={{ opacity: animValue }}>
             <LottieView

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, FC } from "react";
 import { StyleProp, StyleSheet, TextStyle } from "react-native";
 import { Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -10,23 +10,21 @@ export interface TitleTextProps {
    style?: StyleProp<TextStyle>;
 }
 
-class TitleText extends Component<TitleTextProps> {
-   render(): JSX.Element {
-      return (
-         <Text
-            {...this.props}
-            style={[
-               styles.titleStyle,
-               this.props.extraMarginLeft && { marginLeft: 10 },
-               this.props.extraSize && { fontSize: 20 },
-               this.props.style
-            ]}
-         >
-            {this.props.children}
-         </Text>
-      );
-   }
-}
+const TitleText: FC<TitleTextProps> = props => {
+   return (
+      <Text
+         {...props}
+         style={[
+            styles.titleStyle,
+            props.extraMarginLeft && { marginLeft: 10 },
+            props.extraSize && { fontSize: 20 },
+            props.style
+         ]}
+      >
+         {props.children}
+      </Text>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    titleStyle: {

@@ -8,6 +8,7 @@ import { formValidators } from "../../../../common-tools/formValidators/formVali
 import { currentTheme, AUTOMATIC_TARGET_AGE, AUTOMATIC_TARGET_DISTANCE } from "../../../../config";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import DistanceSelector from "../../../common/DistanceSelector/DistanceSelector";
+import { useGeolocation } from "../../../../common-tools/device-native-api/geolocation/getGeolocation";
 
 export interface BasicInfoProps {
    initialFormData: Partial<FormDataBasicInfo>;
@@ -23,6 +24,10 @@ export interface FormDataBasicInfo {
    targetAgeMin: number;
    targetAgeMax: number;
    targetDistance: number;
+   locationLat: number;
+   locationLon: number;
+   cityName: string;
+   country: string;
 }
 
 export const BasicInfoForm: FC<BasicInfoProps> = ({
@@ -31,7 +36,8 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
    askTargetAge = true,
    askTargetDistance = true
 }) => {
-   const [name, setName] = useState(initialFormData?.name ?? "");
+   const { geolocation, isLoading } = useGeolocation();
+   const [name, setName] = useState(initialFormData?.name);
    const [age, setAge] = useState(initialFormData?.age);
    const [height, setHeight] = useState(initialFormData?.height);
    const [targetDistance, setTargetDistance] = useState(
@@ -39,8 +45,10 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
    );
    const [targetAgeMin, setTargetAgeMin] = useState(initialFormData?.targetAgeMin);
    const [targetAgeMax, setTargetAgeMax] = useState(initialFormData?.targetAgeMax);
+   const [cityName, setCityName] = useState(initialFormData?.cityName ?? "");
+   const [cityNameModified, setCityNameModified] = useState(false);
 
-   // Calculate a final target age that manages cases where the user didn't set the target age
+   // Calculate a final target age based on the user age and manage cases where the user didn't set the his / her age
    let finalTargetAgeMin = targetAgeMin != null ? targetAgeMin : (age ?? 18) - AUTOMATIC_TARGET_AGE;
    finalTargetAgeMin = finalTargetAgeMin >= 18 ? finalTargetAgeMin : 18;
    const finalTargetAgeMax =
@@ -54,14 +62,24 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
             height,
             targetDistance,
             targetAgeMin: finalTargetAgeMin,
-            targetAgeMax: finalTargetAgeMax
+            targetAgeMax: finalTargetAgeMax,
+            locationLat: geolocation?.coords?.latitude,
+            locationLon: geolocation?.coords?.longitude,
+            country: geolocation?.info?.isoCountryCode,
+            cityName
          },
          getError()
       );
-   }, [name, age, height, targetDistance, targetAgeMin, targetAgeMax]);
+   }, [name, age, height, targetDistance, targetAgeMin, targetAgeMax, cityName, geolocation]);
+
+   useEffect(() => {
+      if (!cityName && !cityNameModified) {
+         setCityName(geolocation?.info?.district ?? geolocation?.info?.region ?? "");
+      }
+   }, [geolocation]);
 
    const getError = () => {
-      if (name.length === 0) {
+      if (!name) {
          return "No has completado tu nombre o apodo";
       }
 
@@ -69,7 +87,11 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
          return "El nombre o apodo es demasiado corto";
       }
 
-      if (age == null) {
+      if (!cityName || cityName?.length < 2) {
+         return "No has completado el nombre de tu ciudad o región";
+      }
+
+      if (!age) {
          return "No has completado el campo de tu edad";
       }
 
@@ -95,6 +117,16 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
             keyboardType="number-pad"
             value={age ? age.toString() : ""}
             onChangeText={t => setAge(Number(formValidators.age(t).result.text))}
+         />
+         <TextInputExtended
+            title="¿Con qué nombre se conoce mejor tu ciudad o región?"
+            titleLine2="Este dato les servirá a lxs demás para saber más o menos de donde eres"
+            mode="outlined"
+            value={cityName}
+            onChangeText={t => {
+               setCityNameModified(true);
+               setCityName(t);
+            }}
          />
          <TextInputExtended
             title="Tu altura en centímetros (opcional) ej: 160"
