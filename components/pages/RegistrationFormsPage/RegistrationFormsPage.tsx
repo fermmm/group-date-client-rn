@@ -95,7 +95,6 @@ const RegistrationFormsPage: FC = () => {
             >
                <BasicScreenContainer
                   showBottomGradient={true}
-                  bottomGradientColor={colors.background}
                   onContinuePress={() =>
                      errorsBasicInfo == null ? setCurrentStep(1) : setShowIncompleteError(true)
                   }
@@ -113,7 +112,6 @@ const RegistrationFormsPage: FC = () => {
                </BasicScreenContainer>
                <BasicScreenContainer
                   showBottomGradient={true}
-                  bottomGradientColor={colors.background}
                   onBackPress={() => setCurrentStep(0)}
                   onContinuePress={() =>
                      errorsProfilePictures == null
@@ -132,7 +130,6 @@ const RegistrationFormsPage: FC = () => {
                </BasicScreenContainer>
                <BasicScreenContainer
                   showBottomGradient={true}
-                  bottomGradientColor={colors.background}
                   onBackPress={() => setCurrentStep(1)}
                   onContinuePress={() =>
                      errorsDateIdea == null ? setCurrentStep(3) : setShowIncompleteError(true)
@@ -149,7 +146,6 @@ const RegistrationFormsPage: FC = () => {
                </BasicScreenContainer>
                <BasicScreenContainer
                   showBottomGradient={true}
-                  bottomGradientColor={colors.background}
                   onBackPress={() => setCurrentStep(2)}
                   onContinuePress={() => navigate("Questions")}
                   showBackButton

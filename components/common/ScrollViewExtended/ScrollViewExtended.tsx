@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { FC, useState } from "react";
 import {
    StyleSheet,
    ScrollView,
@@ -35,106 +35,100 @@ export interface ScrollViewExtendedState {
    viewportHeight: number;
 }
 
-class ScrollViewExtended extends Component<ScrollViewExtendedProps, ScrollViewExtendedState> {
-   static defaultProps: Partial<ScrollViewExtendedProps> = {
-      bottomGradientColor: "white"
+const ScrollViewExtended: FC<ScrollViewExtendedProps> = props => {
+   const {
+      showBottomGradient = true,
+      bottomGradientColor = "black"
+   }: Partial<ScrollViewExtendedProps> = props;
+
+   let scrolledToBottom: boolean;
+
+   const [bottomFadeOpacity] = useState(new Animated.Value(0));
+   const [contentHeight, setContentHeight] = useState(0);
+   const [viewportHeight, setViewportHeight] = useState(0);
+
+   const isCloseToBottom = ({
+      layoutMeasurement,
+      contentOffset,
+      contentSize
+   }: NativeScrollEvent) => {
+      const paddingToBottom: number = 1;
+      return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
    };
-   scrolledToBottom: boolean;
-   state: ScrollViewExtendedState = {
-      bottomFadeOpacity: new Animated.Value(0),
-      contentHeight: 0,
-      viewportHeight: 0
-   };
 
-   render(): JSX.Element {
-      const { bottomFadeOpacity }: Partial<ScrollViewExtendedState> = this.state;
-      const {
-         showBottomGradient,
-         bottomGradientColor
-      }: Partial<ScrollViewExtendedProps> = this.props;
-
-      return (
-         <View style={{ flex: 1 }}>
-            <ScrollView
-               {...this.props}
-               onScroll={e => this.onScroll(e)}
-               onContentSizeChange={(w, h) => this.onContentSizeChange(w, h)}
-               onLayout={e => this.onLayout(e)}
-               scrollEventThrottle={0}
-            >
-               {this.props.children}
-            </ScrollView>
-            {showBottomGradient && (
-               <Animated.View
-                  style={[styles.bottomGradient, { opacity: bottomFadeOpacity }]}
-                  pointerEvents="none"
-               >
-                  <LinearGradient
-                     locations={[0, 0.5]}
-                     colors={[
-                        color(bottomGradientColor).alpha(0).string(),
-                        color(bottomGradientColor).alpha(1).string()
-                     ]}
-                     style={{ flex: 1 }}
-                  />
-               </Animated.View>
-            )}
-         </View>
-      );
-   }
-
-   onScroll(event: NativeSyntheticEvent<NativeScrollEvent>): void {
-      if (this.props.onScroll != null) {
-         this.props.onScroll(event);
+   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (props.onScroll != null) {
+         props.onScroll(event);
       }
-      const isCloseToBottom: boolean = this.isCloseToBottom(event.nativeEvent);
-      this.onBottomDetector(isCloseToBottom);
-      this.props.onBottomDetector && this.props.onBottomDetector(isCloseToBottom);
-   }
+      const closeToBottom: boolean = isCloseToBottom(event.nativeEvent);
+      onBottomDetector(closeToBottom);
+      props.onBottomDetector && props.onBottomDetector(closeToBottom);
+   };
 
-   onContentSizeChange(contentWidth: number, contentHeight: number): void {
-      this.setState({ contentHeight });
-      this.props.onContentSizeChange && this.props.onContentSizeChange(contentWidth, contentHeight);
-   }
+   const onContentSizeChange = (newWidth: number, newHeight: number) => {
+      setContentHeight(newHeight);
+      props.onContentSizeChange && props.onContentSizeChange(newWidth, newHeight);
+   };
 
-   onBottomDetector(scrolledToBottom: boolean): void {
-      if (this.scrolledToBottom === scrolledToBottom) {
+   const onBottomDetector = (scrolledToBottom: boolean) => {
+      if (scrolledToBottom === scrolledToBottom) {
          return;
       }
 
-      this.scrolledToBottom = scrolledToBottom;
+      scrolledToBottom = scrolledToBottom;
 
-      Animated.timing(this.state.bottomFadeOpacity, {
+      Animated.timing(bottomFadeOpacity, {
          toValue: scrolledToBottom ? 0 : 1,
          duration: 300,
          useNativeDriver: true
       }).start();
-   }
+   };
 
-   onLayout(event: LayoutChangeEvent): void {
-      const { contentHeight }: Partial<ScrollViewExtendedState> = this.state;
-
+   const onLayout = (event: LayoutChangeEvent) => {
       const vh: number = event.nativeEvent.layout.height;
       const scrollingActivated: boolean = contentHeight > vh;
 
-      this.setState({ viewportHeight: vh });
+      setViewportHeight(vh);
 
-      Animated.timing(this.state.bottomFadeOpacity, {
+      Animated.timing(bottomFadeOpacity, {
          toValue: scrollingActivated ? 1 : 0,
          duration: 300,
          useNativeDriver: true
       }).start();
 
-      this.props.onScrollActivatedDetector &&
-         this.props.onScrollActivatedDetector(scrollingActivated);
-      this.props.onLayout && this.props.onLayout(event);
-   }
+      props.onScrollActivatedDetector && props.onScrollActivatedDetector(scrollingActivated);
+      props.onLayout && props.onLayout(event);
+   };
 
-   isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent): boolean {
-      const paddingToBottom: number = 1;
-      return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
-   }
-}
+   return (
+      <View style={{ flex: 1 }}>
+         <ScrollView
+            {...props}
+            onScroll={e => onScroll(e)}
+            onContentSizeChange={(w, h) => onContentSizeChange(w, h)}
+            onLayout={e => onLayout(e)}
+            scrollEventThrottle={0}
+         >
+            {props.children}
+         </ScrollView>
+         {showBottomGradient && (
+            <Animated.View
+               style={[styles.bottomGradient, { opacity: bottomFadeOpacity }]}
+               pointerEvents="none"
+            >
+               <LinearGradient
+                  locations={[0, 0.5]}
+                  colors={[
+                     color(bottomGradientColor).alpha(0).string(),
+                     color(bottomGradientColor).alpha(1).string()
+                  ]}
+                  style={{ flex: 1 }}
+               />
+            </Animated.View>
+         )}
+      </View>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    bottomGradient: {
