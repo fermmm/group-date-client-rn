@@ -7,7 +7,7 @@ import ProfileDescriptionForm from "./ProfileDescriptionForm/ProfileDescriptionF
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
-import BasicInfoForm, { FormDataBasicInfo } from "./BasicInfoForm/BasicInfoForm";
+import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import ProfilePicturesForm from "./ProfilePicturesForm/ProfilePicturesForm";
 import DateIdeaForm, { DateIdeaState } from "./DateIdeaForm/DateIdeaForm";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -19,10 +19,8 @@ import {
    USE_AUTOMATIC_TARGET_AGE_AT_REGISTRATION,
    USE_AUTOMATIC_TARGET_DISTANCE_AT_REGISTRATION
 } from "../../../config";
-import {
-   EditableUserPropKey,
-   EditableUserProps
-} from "../../../api/server/shared-tools/validators/user";
+import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
+import { useRequiredScreensList } from "./hooks/useRequiredScreensList";
 
 // TODO: Agregar validación usando fastest-validator
 /*
@@ -48,6 +46,7 @@ import {
    likesManTrans
    likesOtherGenders
    isCoupleProfile
+
    questionsShowed
 */
 
@@ -64,32 +63,16 @@ const RegistrationFormsPage: FC = () => {
    const { colors }: ThemeExt = useTheme();
    const { navigate }: StackNavigationProp<Record<string, {}>> = useNavigation();
 
-   // Get which user prop is incomplete and requires user to provide information
-   const { data, isLoading } = useServerProfileStatus();
+   /**
+    * Get which user prop is incomplete and requires user to provide information
+    */
+   const { data: profileStatus, isLoading } = useServerProfileStatus();
 
    /**
-    * The list contains the screens name with the user props that each screen provides.
-    * Also this list determines the order in which the screens will be displayed.
-    * This determines which screen will be displayed based on the user props that are incomplete and
-    * the user needs to provide information.
+    * Get list of registration screens names to show, if the user has completed part of the registration
+    * in the past, then some screens are not showed so this list based on the profileStatus.
     */
-   const screenToUserProp: Record<string, EditableUserPropKey[]> = {
-      BasicInfoForm: [
-         "name",
-         "age",
-         "height",
-         "targetAgeMin",
-         "targetAgeMax",
-         "targetDistance",
-         "locationLat",
-         "locationLon",
-         "cityName",
-         "country"
-      ],
-      ProfilePicturesForm: ["images"],
-      DateIdeaForm: ["dateIdea"],
-      ProfileDescriptionForm: ["profileDescription"]
-   };
+   const screensToShow = useRequiredScreensList(profileStatus);
 
    /**
     * Props gathered from the user that will be sent
@@ -121,7 +104,7 @@ const RegistrationFormsPage: FC = () => {
                   <BasicInfoForm
                      askTargetAge={!USE_AUTOMATIC_TARGET_AGE_AT_REGISTRATION}
                      askTargetDistance={!USE_AUTOMATIC_TARGET_DISTANCE_AT_REGISTRATION}
-                     initialFormData={data.user}
+                     initialFormData={profileStatus.user}
                      onChange={(formData, error) => {
                         setPropsGathered({ ...propsGathered, ...formData });
                         setErrorsBasicInfo(error);

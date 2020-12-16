@@ -45,7 +45,7 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
    );
    const [targetAgeMin, setTargetAgeMin] = useState(initialFormData?.targetAgeMin);
    const [targetAgeMax, setTargetAgeMax] = useState(initialFormData?.targetAgeMax);
-   const [cityName, setCityName] = useState(initialFormData?.cityName ?? "");
+   const [cityName, setCityName] = useState(initialFormData?.cityName);
    const [cityNameModified, setCityNameModified] = useState(false);
 
    // Calculate a final target age based on the user age and manage cases where the user didn't set the his / her age
