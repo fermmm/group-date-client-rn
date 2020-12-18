@@ -40,21 +40,19 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
     * Make sure the support more images.
     */
    const [images, setImages] = useState<string[]>([null, null, null, null, null, null]);
-   const [placeholderClicked, setPlaceholderClicked] = useState<number>();
+   const [placeholderClicked, setPlaceholderClicked] = useState<number>(null);
 
    useEffect(() => {
       onChange({ images }, getErrors());
    }, [images]);
 
-   useEffect(() => {
-      placeholderClicked && showMenu();
-   }, [placeholderClicked]);
-
-   const showMenu = () => {
-      menuRef.current.show(placeholdersRefs.current[placeholderClicked], Position.TOP_LEFT, {
-         left: 0,
-         top: 20
-      });
+   const showMenu = (placeholder: number) => {
+      placeholder != null &&
+         placeholdersRefs &&
+         menuRef.current.show(placeholdersRefs?.current[placeholder], Position.TOP_LEFT, {
+            left: 0,
+            top: 20
+         });
    };
 
    const hideMenu = () => {
@@ -153,7 +151,10 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
          <View style={styles.picturesContainer}>
             {images.map((uri, i) => (
                <TouchableHighlight
-                  onPress={() => setPlaceholderClicked(i)}
+                  onPress={() => {
+                     setPlaceholderClicked(i);
+                     showMenu(i);
+                  }}
                   style={styles.pictureContainer}
                   underlayColor="white"
                   activeOpacity={0.6}
