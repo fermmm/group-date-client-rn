@@ -1,16 +1,13 @@
 import { Validation } from "simple-validator-js";
 
 export const formValidators: FormValidators = {
-   name: (t) =>
-      new Validation(t)
-         .noInvalidSpacesAllowed(true)
-         .maxChars(35, true),
-   age: (t) =>
+   name: t => new Validation(t).noInvalidSpacesAllowed(true).maxChars(35, true),
+   age: t =>
       new Validation(t)
          .noLettersAllowed(true)
-         .maxChars(2, true)
+         .maxChars(3, true)
          .noSpecialCharactersAllowed(false, [], true),
-   bodyHeight: (t) =>
+   bodyHeight: t =>
       new Validation(t)
          .noLettersAllowed(true)
          .maxChars(3, true)

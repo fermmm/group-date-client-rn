@@ -5,7 +5,7 @@ import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
-import DateIdeaForm, { DateIdeaState } from "./DateIdeaForm/DateIdeaForm";
+import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useServerProfileStatus } from "../../../api/server/user";
 import { useNavigation } from "@react-navigation/native";
@@ -31,8 +31,8 @@ import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
    [Hecho] country
 
    images
-   dateIdea
-   profileDescription
+   [Hecho] dateIdea
+   [Hecho] profileDescription
    
    gender
    likesWoman
@@ -51,13 +51,6 @@ const RegistrationFormsPage: FC = () => {
    const [currentErrorOnForms, setCurrentErrorOnForms] = useState<
       Partial<Record<RegistrationFormName, string>>
    >({});
-
-   const [profileDescription, setProfileDescription] = useState<string>();
-   const [dateIdeaFormData, setDateIdeaFormData] = useState<DateIdeaState>();
-   const [pictures, setPictures] = useState<string[]>();
-   const [errorsProfilePictures, setErrorsProfilePictures] = useState<string>();
-   const [errorsDateIdea, setErrorsDateIdea] = useState<string>();
-
    const { navigate }: StackNavigationProp<Record<string, {}>> = useNavigation();
 
    /**
@@ -142,23 +135,25 @@ const RegistrationFormsPage: FC = () => {
                      {screenName === "ProfileImagesForm" && (
                         <ProfileImagesForm
                            // initialData={profileStatus.user}
-                           onChange={(newData, error) => {
-                              handleFormChange("BasicInfoForm", newData, error);
-                           }}
+                           onChange={(newData, error) =>
+                              handleFormChange("ProfileImagesForm", newData, error)
+                           }
                         />
                      )}
                      {screenName === "DateIdeaForm" && (
                         <DateIdeaForm
-                           onChange={(data, error) => {
-                              setDateIdeaFormData(data);
-                              setErrorsDateIdea(error);
-                           }}
+                           initialFormData={profileStatus.user}
+                           onChange={(newData, error) =>
+                              handleFormChange("DateIdeaForm", newData, error)
+                           }
                         />
                      )}
                      {screenName === "ProfileDescriptionForm" && (
                         <ProfileDescriptionForm
-                           text={profileDescription}
-                           onChange={t => setProfileDescription(t)}
+                           initialFormData={profileStatus.user}
+                           onChange={(newData, error) =>
+                              handleFormChange("ProfileDescriptionForm", newData, error)
+                           }
                         />
                      )}
                   </BasicScreenContainer>

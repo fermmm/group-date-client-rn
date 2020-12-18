@@ -10,7 +10,7 @@ import TextInputExtended from "../../../common/TextInputExtended/TextInputExtend
 import DistanceSelector from "../../../common/DistanceSelector/DistanceSelector";
 import { useGeolocation } from "../../../../common-tools/device-native-api/geolocation/getGeolocation";
 
-export interface BasicInfoProps {
+export interface PropsBasicInfoForm {
    initialFormData: Partial<FormDataBasicInfo>;
    askTargetAge?: boolean;
    askTargetDistance?: boolean;
@@ -30,7 +30,7 @@ export interface FormDataBasicInfo {
    country: string;
 }
 
-export const BasicInfoForm: FC<BasicInfoProps> = ({
+export const BasicInfoForm: FC<PropsBasicInfoForm> = ({
    initialFormData,
    onChange,
    askTargetAge = true,
@@ -79,6 +79,10 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
    }, [geolocation]);
 
    const getError = () => {
+      return getNameError() || getAgeError() || getCityNameError();
+   };
+
+   const getNameError = () => {
       if (!name) {
          return "No has completado tu nombre o apodo";
       }
@@ -91,14 +95,10 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
          return "El nombre o apodo es demasiado largo. Máximo 32 caracteres.";
       }
 
-      if (!cityName || cityName.length < 2) {
-         return "No has completado el nombre de tu ciudad o región";
-      }
+      return null;
+   };
 
-      if (cityName.length >= 32) {
-         return "El nombre de tu ciudad o región debe ser mas corto. Máximo 32 caracteres.";
-      }
-
+   const getAgeError = () => {
       if (!age) {
          return "No has completado el campo de tu edad";
       }
@@ -108,7 +108,19 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
       }
 
       if (age >= 179) {
-         return "Tu edad es demasiado alta para un humano.";
+         return "Tu edad es demasiado alta para ser un humano.";
+      }
+
+      return null;
+   };
+
+   const getCityNameError = () => {
+      if (!cityName || cityName.length < 2) {
+         return "No has completado el nombre de tu ciudad o región";
+      }
+
+      if (cityName.length >= 32) {
+         return "El nombre de tu ciudad o región debe ser mas corto. Máximo 32 caracteres.";
       }
 
       return null;
@@ -119,12 +131,14 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
          <TitleText style={styles.title}>Datos básicos</TitleText>
          <TextInputExtended
             title="Tu nombre o apodo"
+            errorText={getNameError()}
             mode="outlined"
             value={name}
             onChangeText={t => setName(formValidators.name(t).result.text)}
          />
          <TextInputExtended
             title="Tu edad"
+            errorText={getAgeError()}
             mode="outlined"
             keyboardType="number-pad"
             value={age ? age.toString() : ""}
@@ -133,6 +147,7 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
          <TextInputExtended
             title="¿Con qué nombre se conoce mejor tu ciudad o región?"
             titleLine2="Este dato les servirá a lxs demás para saber más o menos de donde eres"
+            errorText={getCityNameError()}
             mode="outlined"
             value={cityName}
             onChangeText={t => {

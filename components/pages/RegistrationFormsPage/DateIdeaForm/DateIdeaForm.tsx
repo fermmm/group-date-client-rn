@@ -1,7 +1,5 @@
-import React, { Component } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { withTheme } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import { currentTheme } from "../../../../config";
@@ -9,74 +7,56 @@ import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 
-export interface DateIdeaProps extends Themed {
-   onChange(formData: DateIdeaState, error: string | null): void;
-}
-export interface DateIdeaState {
-   placeName: string;
-   address: string;
+export interface PropsDateIdeaForm {
+   initialFormData?: { dateIdea?: string };
+   onChange(formData: { dateIdea: string }, error: string | null): void;
 }
 
-class DateIdeaForm extends Component<DateIdeaProps, DateIdeaState> {
-   state: DateIdeaState = {
-      placeName: "",
-      address: ""
-   };
+const DateIdeaForm: FC<PropsDateIdeaForm> = ({ onChange, initialFormData }) => {
+   const maxCharactersAllowed: number = 300;
+   const [dateIdea, setDateIdea] = useState(initialFormData?.dateIdea);
 
-   componentDidMount(): void {
-      this.sendChanges();
-   }
+   useEffect(() => onChange({ dateIdea }, getError()), [dateIdea]);
 
-   render(): JSX.Element {
-      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-      const { placeName, address }: Partial<DateIdeaState> = this.state;
-
-      return (
-         <View style={styles.mainContainer}>
-            <TitleText>¿Dónde harías una cita grupal?</TitleText>
-            <TitleSmallText style={styles.titleSmall}>
-               Todes conocemos algún lugar público agradable.
-            </TitleSmallText>
-            <TitleSmallText style={styles.titleSmall}>
-               Esto es muy importante para que funcione la app.
-            </TitleSmallText>
-            <EmptySpace />
-            <TextInputExtended
-               title="Nombre del lugar y/o actividad"
-               titleLine2='Ejemplo: "Merienda en la playa"'
-               mode="outlined"
-               value={placeName}
-               onChangeText={t => this.setState({ placeName: t }, () => this.sendChanges())}
-            />
-            <TextInputExtended
-               title="Dirección"
-               mode="outlined"
-               value={address}
-               onChangeText={t => this.setState({ address: t }, () => this.sendChanges())}
-            />
-            <View style={{ flex: 1 }} />
-         </View>
-      );
-   }
-
-   sendChanges(): void {
-      this.props.onChange({ ...this.state }, this.getError());
-   }
-
-   getError(): string {
-      const { placeName, address }: Partial<DateIdeaState> = this.state;
-
-      if (placeName.length < 3) {
-         return "Tenés que escribir un nombre válido, es importante para que funcione la app";
+   const getError = (): string => {
+      if (!dateIdea || dateIdea.length < 3) {
+         return "Tienes que escribir una idea válida, es importante para que todxs tengamos una mejor experiencia";
       }
 
-      if (address.length < 2) {
-         return "Tenés que escribir una dirección válida, es importante para que funcione la app";
+      if (dateIdea.length > maxCharactersAllowed) {
+         return (
+            "Te has pasado del máximo de caracteres permitidos por " +
+            (dateIdea.length - maxCharactersAllowed) +
+            " caracteres"
+         );
       }
 
       return null;
-   }
-}
+   };
+
+   return (
+      <View style={styles.mainContainer}>
+         <TitleText>¿Dónde te gustaría que fuese una cita grupal?</TitleText>
+         <TitleSmallText style={styles.titleSmall}>
+            Improvisa una idea, todxs conocemos algún lugar público agradable.
+         </TitleSmallText>
+         <TitleSmallText style={styles.titleSmall}>
+            Es importante para que funcione mejor la app.
+         </TitleSmallText>
+         <EmptySpace />
+         <TextInputExtended
+            title="Nombre del lugar y/o actividad"
+            titleLine2='Ejemplo: "Merienda en la playa"'
+            multiline
+            errorText={getError()}
+            mode="outlined"
+            value={dateIdea}
+            onChangeText={setDateIdea}
+         />
+         <View style={{ flex: 1 }} />
+      </View>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
@@ -99,4 +79,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(DateIdeaForm);
+export default DateIdeaForm;

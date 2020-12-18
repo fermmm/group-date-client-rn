@@ -6,9 +6,7 @@ export async function showLocationDisabledDialog(
 ): Promise<void> {
    dialogSettings.dialogTitle = dialogSettings.dialogTitle || i18n.t("Error");
    dialogSettings.tryAgainButtonText = dialogSettings.tryAgainButtonText || i18n.t("Try again");
-   dialogSettings.dialogText =
-      dialogSettings.dialogText ||
-      i18n.t("Location is not available, check if it's disabled or if Airplane mode is enabled");
+   dialogSettings.dialogText = dialogSettings.dialogText || i18n.t("Location is not available");
 
    let promiseResolve: () => void = null;
    const resultPromise: Promise<void> = new Promise(resolve => {

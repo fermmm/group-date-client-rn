@@ -20,7 +20,7 @@ const EDITABLE_USER_PROPS_SCHEMA = {
    targetAgeMax: { type: "number", min: 18, max: 120, optional: true } as V,
    targetDistance: { type: "number", min: 25, max: 150, optional: true } as V,
    images: { type: "array", items: "url", min: 1, max: 6, optional: true } as V,
-   dateIdea: { type: "string", min: 3, max: 100, optional: true } as V,
+   dateIdea: { type: "string", min: 3, max: 300, optional: true } as V,
    profileDescription: { type: "string", max: 4000, optional: true } as V,
    locationLat: { type: "number", optional: true } as V,
    locationLon: { type: "number", optional: true } as V,
@@ -32,7 +32,7 @@ const EDITABLE_USER_PROPS_SCHEMA = {
    gender: { type: "enum", values: Object.values(Gender), optional: true } as V,
    height: { type: "number", min: 100, max: 300, optional: true } as V,
    sendNewUsersNotification: { type: "number", min: 0, max: 50, optional: true } as V,
-   questionsShowed: { type: "array", items: { type: "number" }, max: 20, optional: true } as V,
+   questionsShowed: { type: "array", items: { type: "number" }, max: 20, optional: true } as V
 };
 
 // Export the same object casted with more type information
@@ -55,7 +55,7 @@ export type EditableUserProps = Partial<Record<EditableUserPropKey, UserPropsVal
 
 // The editable props as string list
 export const editableUserPropsList: EditableUserPropKey[] = Object.keys(
-   EDITABLE_USER_PROPS_SCHEMA,
+   EDITABLE_USER_PROPS_SCHEMA
 ) as EditableUserPropKey[];
 
 // Function to validate user props

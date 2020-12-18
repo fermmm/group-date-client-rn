@@ -8,7 +8,8 @@ import {
    TextStyle,
    StyleProp,
    KeyboardTypeOptions,
-   TextInput as NativeTextInput
+   TextInput as NativeTextInput,
+   Dimensions
 } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { TextInput, Portal } from "react-native-paper";
@@ -21,6 +22,7 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 export interface TextInputExtendedProps {
    title?: string;
    titleLine2?: string;
+   errorText?: string;
    multiline?: boolean;
    style?: StyleProp<TextStyle>;
    mode?: "flat" | "outlined";
@@ -34,6 +36,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
    const {
       title,
       titleLine2,
+      errorText,
       multiline,
       mode,
       keyboardType,
@@ -43,6 +46,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
    }: TextInputExtendedProps = props;
 
    const [fullScreenMode, setFullScreenMode] = useState(false);
+   const [canShowError, setCanShowError] = useState(false);
 
    React.useEffect(() => {
       Keyboard.addListener("keyboardDidHide", onKeyboardClose);
@@ -96,6 +100,9 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                   disabled
                />
             </TouchableHighlight>
+            {errorText && canShowError && (
+               <TitleMediumText style={styles.errorText}>{errorText}</TitleMediumText>
+            )}
          </View>
          {fullScreenMode && (
             <Portal>
@@ -106,24 +113,31 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                   )}
                   <TextInput
                      mode={mode}
-                     style={[{ flex: 0 }]}
                      onBlur={() => setFullScreenMode(false)}
                      keyboardType={keyboardType}
                      value={value}
                      multiline={multiline}
                      onChangeText={onChangeText}
-                     numberOfLines={20}
+                     numberOfLines={200}
+                     style={{ flex: 1 }}
                      autoFocus
                   />
+                  {errorText && canShowError && (
+                     <TitleMediumText style={styles.errorText}>{errorText}</TitleMediumText>
+                  )}
                   <ButtonStyled
-                     onPress={() => setFullScreenMode(false)}
+                     onPress={() => {
+                        setFullScreenMode(false);
+                        setCanShowError(true);
+                     }}
                      style={styles.buttonSave}
                      color={currentTheme.colors.text2}
                   >
                      Guardar
                   </ButtonStyled>
-                  <KeyboardSpacer />
                </View>
+               {/* This seemed to be required before but not anymore after updating expo, if there is any problem uncomment */}
+               {/* <KeyboardSpacer /> */}
             </Portal>
          )}
       </>
@@ -141,17 +155,23 @@ const styles: Styles = StyleSheet.create({
       marginBottom: 0,
       fontFamily: currentTheme.font.extraLight
    },
+   errorText: {
+      marginBottom: 0,
+      marginTop: 6,
+      fontFamily: currentTheme.font.medium,
+      color: currentTheme.colors.error
+   },
    modal: {
       position: "absolute",
       backgroundColor: currentTheme.colors.background,
       padding: 10,
-      paddingBottom: 75,
       paddingTop: StatusBar.currentHeight + 15,
+      paddingBottom: 0,
       zIndex: 100,
       top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0
+      left: 0,
+      width: "100%",
+      height: "100%"
    },
    buttonSave: {
       marginTop: 15,
