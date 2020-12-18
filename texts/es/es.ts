@@ -7,5 +7,6 @@ export const es: { [key: string]: string } = {
    "Exit app": "Salir",
    "The app cannot continue without":
       "La app no puede continuar si no aceptas los permisos requeridos",
-   "Click on permissions": 'Toca en "permisos"'
+   "Touch on Permissions": 'Toca en "Permisos"',
+   "Touch on Camera": 'Toca en "Permisos" y permite "Cámara"'
 };

@@ -5,7 +5,6 @@ import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
-import ProfilePicturesForm from "./ProfilePicturesForm/ProfilePicturesForm";
 import DateIdeaForm, { DateIdeaState } from "./DateIdeaForm/DateIdeaForm";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useServerProfileStatus } from "../../../api/server/user";
@@ -17,6 +16,7 @@ import {
 } from "../../../config";
 import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
 import { RegistrationFormName, useRequiredScreensList } from "./hooks/useRequiredScreensList";
+import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
 
 /*
    [Hecho] name
@@ -139,11 +139,11 @@ const RegistrationFormsPage: FC = () => {
                            }
                         />
                      )}
-                     {screenName === "ProfilePicturesForm" && (
-                        <ProfilePicturesForm
-                           onChange={(pictures, error) => {
-                              setPictures(pictures);
-                              setErrorsProfilePictures(error);
+                     {screenName === "ProfileImagesForm" && (
+                        <ProfileImagesForm
+                           // initialData={profileStatus.user}
+                           onChange={(newData, error) => {
+                              handleFormChange("BasicInfoForm", newData, error);
                            }}
                         />
                      )}

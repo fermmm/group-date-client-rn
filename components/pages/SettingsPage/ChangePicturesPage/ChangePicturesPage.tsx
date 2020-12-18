@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import { withTheme } from "react-native-paper";
 import { withNavigation } from "@react-navigation/compat";
-import ProfilePicturesForm from "../../RegistrationFormsPage/ProfilePicturesForm/ProfilePicturesForm";
 import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import DialogError from "../../../common/DialogError/DialogError";
 import AppBarHeader from "../../../common/AppBarHeader/AppBarHeader";
+import ProfileImagesForm from "../../RegistrationFormsPage/ProfileImagesForm/ProfileImagesForm";
 
 export interface ChangePicturesPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChangePicturesPageState {
@@ -32,8 +32,10 @@ class ChangePicturesPage extends Component<ChangePicturesPageProps, ChangePictur
          <>
             <AppBarHeader title={"Modificar fotos"} onBackPress={() => this.onBackPress()} />
             <BasicScreenContainer>
-               <ProfilePicturesForm
-                  onChange={(pictures, error) => this.setState({ pictures, error })}
+               <ProfileImagesForm
+                  onChange={(formData, error) =>
+                     this.setState({ pictures: formData.images, error })
+                  }
                />
             </BasicScreenContainer>
             <DialogError

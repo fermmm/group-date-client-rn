@@ -15,7 +15,7 @@ export async function showRejectedPermissionsDialog(
       dialogSettings.dialogText ||
       i18n.t("The app cannot continue without you accepting the required permissions");
    dialogSettings.instructionsToastText =
-      dialogSettings.instructionsToastText || i18n.t("Click on permissions");
+      dialogSettings.instructionsToastText || i18n.t("Touch on Permissions");
 
    let promiseResolve: () => void = null;
    const resultPromise: Promise<void> = new Promise(resolve => {

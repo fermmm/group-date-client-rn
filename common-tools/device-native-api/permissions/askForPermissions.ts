@@ -22,7 +22,7 @@ export function usePermission(
 ) {
    const [granted, setGranted] = useState(false);
    if (!granted) {
-      askForPermissions(permissions, settings).then(() => setGranted(true));
+      askForPermission(permissions, settings).then(() => setGranted(true));
    }
    return granted;
 }
@@ -38,7 +38,7 @@ export function usePermission(
  * @param permissions The permission to ask, example: Permissions.LOCATION with this import: import * as Permissions from "expo-permissions";
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
-async function askForPermissions(
+export async function askForPermission(
    permissions: Permissions.PermissionType,
    settings?: AskPermissionSettings
 ): Promise<void> {
@@ -59,7 +59,7 @@ async function askForPermissions(
          return Promise.resolve(null);
       }
       await showRejectedPermissionsDialog(settings.rejectedDialogTexts);
-      return askForPermissions(permissions, settings);
+      return askForPermission(permissions, settings);
    }
 
    return Promise.resolve(null);

@@ -39,7 +39,7 @@ export function useRequiredScreensList(
          "cityName",
          "country"
       ],
-      ProfilePicturesForm: ["images"],
+      ProfileImagesForm: ["images"],
       ProfileDescriptionForm: ["profileDescription"]
    };
 
@@ -55,7 +55,7 @@ export function useRequiredScreensList(
 
 export type RegistrationFormName =
    | "BasicInfoForm"
-   | "ProfilePicturesForm"
+   | "ProfileImagesForm"
    | "DateIdeaForm"
    | "ProfileDescriptionForm"
    | "ThemeQuestionForm"
