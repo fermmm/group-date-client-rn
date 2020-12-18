@@ -47,7 +47,6 @@ const DateIdeaForm: FC<PropsDateIdeaForm> = ({ onChange, initialFormData }) => {
          <TextInputExtended
             title="Nombre del lugar y/o actividad"
             titleLine2='Ejemplo: "Merienda en la playa"'
-            multiline
             errorText={getError()}
             mode="outlined"
             value={dateIdea}

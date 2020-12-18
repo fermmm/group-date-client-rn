@@ -8,8 +8,7 @@ import {
    TextStyle,
    StyleProp,
    KeyboardTypeOptions,
-   TextInput as NativeTextInput,
-   Dimensions
+   TextInput as NativeTextInput
 } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { TextInput, Portal } from "react-native-paper";
@@ -119,7 +118,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                      multiline={multiline}
                      onChangeText={onChangeText}
                      numberOfLines={200}
-                     style={{ flex: 1 }}
+                     style={{ flex: multiline ? 1 : 0 }}
                      autoFocus
                   />
                   {errorText && canShowError && (
