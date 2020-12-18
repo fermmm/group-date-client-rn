@@ -2,16 +2,23 @@ import { Alert, BackHandler, ToastAndroid, Platform } from "react-native";
 import * as IntentLauncher from "expo-intent-launcher";
 import Constants from "expo-constants";
 import { Linking } from "expo";
+import i18n from "i18n-js";
 
-export async function showRejectedPermissionsDialog(dialogSettings: RejectedDialogSettings = {}): Promise<void> {
-   dialogSettings.dialogTitle = dialogSettings.dialogTitle || "Error";
-   dialogSettings.openSettingsButtonText = dialogSettings.openSettingsButtonText || "Open app settings";
-   dialogSettings.exitAppButtonText = dialogSettings.exitAppButtonText || "Exit app";
-   dialogSettings.dialogText = dialogSettings.dialogText || "The app cannot continue without you accepting the required permissions";
-   dialogSettings.instructionsToastText = dialogSettings.instructionsToastText || "Click on permissions";
+export async function showRejectedPermissionsDialog(
+   dialogSettings: RejectedDialogSettings = {}
+): Promise<void> {
+   dialogSettings.dialogTitle = dialogSettings.dialogTitle || i18n.t("Error");
+   dialogSettings.openSettingsButtonText =
+      dialogSettings.openSettingsButtonText || i18n.t("Open app settings");
+   dialogSettings.exitAppButtonText = dialogSettings.exitAppButtonText || i18n.t("Exit app");
+   dialogSettings.dialogText =
+      dialogSettings.dialogText ||
+      i18n.t("The app cannot continue without you accepting the required permissions");
+   dialogSettings.instructionsToastText =
+      dialogSettings.instructionsToastText || i18n.t("Click on permissions");
 
    let promiseResolve: () => void = null;
-   const resultPromise: Promise<void> = new Promise((resolve) => {
+   const resultPromise: Promise<void> = new Promise(resolve => {
       promiseResolve = resolve;
    });
 
@@ -20,14 +27,15 @@ export async function showRejectedPermissionsDialog(dialogSettings: RejectedDial
       dialogSettings.dialogText,
       [
          {
-            text: dialogSettings.openSettingsButtonText, onPress: async () => {
+            text: dialogSettings.openSettingsButtonText,
+            onPress: async () => {
                await openAppSettings(dialogSettings.instructionsToastText);
                promiseResolve();
             }
          },
-         { text: dialogSettings.exitAppButtonText, onPress: () => BackHandler.exitApp() },
+         { text: dialogSettings.exitAppButtonText, onPress: () => BackHandler.exitApp() }
       ],
-      { cancelable: false },
+      { cancelable: false }
    );
 
    return resultPromise;
@@ -39,10 +47,9 @@ function openAppSettings(instructionsText: string): Promise<unknown> {
       return Linking.openURL("app-settings:");
    } else {
       ToastAndroid.show(instructionsText, ToastAndroid.LONG);
-      return IntentLauncher.startActivityAsync(
-         IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-         { data: "package:" + Constants.manifest.android.package },
-      );
+      return IntentLauncher.startActivityAsync(IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS, {
+         data: "package:" + Constants.manifest.android.package
+      });
    }
 }
 

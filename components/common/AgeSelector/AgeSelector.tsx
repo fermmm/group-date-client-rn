@@ -3,15 +3,15 @@ import { StyleSheet, View, Text, StyleProp, ViewStyle } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 
-export interface AgeSelectorProps {
+export interface PropsAgeRangeSelector {
    min?: number;
    max?: number;
    style?: StyleProp<ViewStyle>;
    onChange(newValues: { min: number; max: number }): void;
 }
 
-export const AgeSelector: FC<AgeSelectorProps> = ({ min, max, onChange, style }) => {
-   const [ageOptions] = useState(Array.from({ length: 99 }, (v, k) => ++k).slice(18 - 1));
+export const AgeRangeSelector: FC<PropsAgeRangeSelector> = ({ min, max, onChange, style }) => {
+   const [ageOptions] = useState(Array.from({ length: 179 }, (v, k) => ++k).slice(18 - 1));
 
    return (
       <View style={[styles.mainContainer, style]}>
@@ -60,4 +60,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default AgeSelector;
+export default AgeRangeSelector;

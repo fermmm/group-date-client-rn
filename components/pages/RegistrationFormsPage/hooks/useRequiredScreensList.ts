@@ -3,12 +3,12 @@ import { EditableUserPropKey } from "../../../../api/server/shared-tools/validat
 
 export function useRequiredScreensList(
    profileStatus: ProfileStatusServerResponse
-): RegistrationScreensNames[] {
-   let screens: RegistrationScreensNames[] = [];
+): RegistrationFormName[] {
+   let screens: RegistrationFormName[] = [];
 
-   if (profileStatus?.notShowedThemeQuestions?.length > 0) {
-      screens.push("ThemeQuestionForm");
-   }
+   // if (profileStatus?.notShowedThemeQuestions?.length > 0) {
+   //    screens.push("ThemeQuestionForm");
+   // }
 
    /**
     * The list contains the screens name with the user props that each screen provides.
@@ -16,16 +16,16 @@ export function useRequiredScreensList(
     * This determines which screen will be displayed based on the user props that are incomplete and
     * the user needs to provide information.
     */
-   const formScreenToUserProps: Partial<Record<RegistrationScreensNames, EditableUserPropKey[]>> = {
-      PropsAsQuestionsForm: [
-         "gender",
-         "likesWoman",
-         "likesMan",
-         "likesWomanTrans",
-         "likesManTrans",
-         "likesOtherGenders",
-         "isCoupleProfile"
-      ],
+   const formScreenToUserProps: Partial<Record<RegistrationFormName, EditableUserPropKey[]>> = {
+      // PropsAsQuestionsForm: [
+      //    "gender",
+      //    "likesWoman",
+      //    "likesMan",
+      //    "likesWomanTrans",
+      //    "likesManTrans",
+      //    "likesOtherGenders",
+      //    "isCoupleProfile"
+      // ],
       DateIdeaForm: ["dateIdea"],
       BasicInfoForm: [
          "name",
@@ -43,7 +43,7 @@ export function useRequiredScreensList(
       ProfileDescriptionForm: ["profileDescription"]
    };
 
-   let formScreens = Object.keys(formScreenToUserProps) as RegistrationScreensNames[];
+   let formScreens = Object.keys(formScreenToUserProps) as RegistrationFormName[];
    formScreens = formScreens.filter(screen =>
       formScreenToUserProps[screen].some(s => profileStatus?.missingEditableUserProps?.includes(s))
    );
@@ -53,7 +53,7 @@ export function useRequiredScreensList(
    return screens;
 }
 
-export type RegistrationScreensNames =
+export type RegistrationFormName =
    | "BasicInfoForm"
    | "ProfilePicturesForm"
    | "DateIdeaForm"

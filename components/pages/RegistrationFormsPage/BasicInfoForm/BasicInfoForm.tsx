@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
-import AgeSelector from "../../../common/AgeSelector/AgeSelector";
+import AgeRangeSelector from "../../../common/AgeSelector/AgeSelector";
 import { formValidators } from "../../../../common-tools/formValidators/formValidators";
 import { currentTheme, AUTOMATIC_TARGET_AGE, AUTOMATIC_TARGET_DISTANCE } from "../../../../config";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
@@ -87,8 +87,16 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
          return "El nombre o apodo es demasiado corto";
       }
 
-      if (!cityName || cityName?.length < 2) {
+      if (name.length >= 32) {
+         return "El nombre o apodo es demasiado largo. Máximo 32 caracteres.";
+      }
+
+      if (!cityName || cityName.length < 2) {
          return "No has completado el nombre de tu ciudad o región";
+      }
+
+      if (cityName.length >= 32) {
+         return "El nombre de tu ciudad o región debe ser mas corto. Máximo 32 caracteres.";
       }
 
       if (!age) {
@@ -96,7 +104,11 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
       }
 
       if (age < 12) {
-         return "Edad demasiado baja, lo sentimos.";
+         return "Tu edad demasiado baja para lo que se permite en este tipo de apps, lo sentimos.";
+      }
+
+      if (age >= 179) {
+         return "Tu edad es demasiado alta para un humano.";
       }
 
       return null;
@@ -144,7 +156,7 @@ export const BasicInfoForm: FC<BasicInfoProps> = ({
                <TitleMediumText style={styles.labelLine2}>
                   Esta funcionalidad no actúa de forma totalmente estricta
                </TitleMediumText>
-               <AgeSelector
+               <AgeRangeSelector
                   min={finalTargetAgeMin}
                   max={finalTargetAgeMax}
                   style={styles.ageSelector}
