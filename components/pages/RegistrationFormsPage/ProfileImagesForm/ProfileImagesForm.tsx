@@ -22,10 +22,11 @@ import { askForPermission } from "../../../../common-tools/device-native-api/per
 import i18n from "i18n-js";
 
 export interface PropsProfileImagesForm {
+   initialData?: { images?: string[] };
    onChange(formData: { images: string[] }, error: string | null): void;
 }
 
-const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ onChange }) => {
+const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }) => {
    const menuRef = useRef<Menu>();
 
    /*

@@ -75,7 +75,9 @@ const RegistrationFormsPage: FC = () => {
       error: string | null
    ) => {
       setPropsGathered({ ...propsGathered, ...props });
-      setCurrentErrorOnForms({ ...currentErrorOnForms, [formName]: error });
+      let newError = currentErrorOnForms;
+      newError[formName] = error;
+      setCurrentErrorOnForms({ ...currentErrorOnForms, ...newError });
    };
 
    const handleContinueButtonClick = (screenName: RegistrationFormName) => {
@@ -134,7 +136,7 @@ const RegistrationFormsPage: FC = () => {
                      )}
                      {screenName === "ProfileImagesForm" && (
                         <ProfileImagesForm
-                           // initialData={profileStatus.user}
+                           initialData={profileStatus.user}
                            onChange={(newData, error) =>
                               handleFormChange("ProfileImagesForm", newData, error)
                            }
