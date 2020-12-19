@@ -1,8 +1,12 @@
 import { QueryConfig, useQuery } from "react-query";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
+import { AxiosRequestConfigExtended, httpRequest } from "../tools/httpRequest";
 import { defaultRequestFunction, defaultErrorHandler } from "../tools/reactQueryTools";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
-import { ProfileStatusServerResponse } from "./shared-tools/endpoints-interfaces/user";
+import {
+   FileUploadResponse,
+   ProfileStatusServerResponse
+} from "./shared-tools/endpoints-interfaces/user";
 
 export function useServerProfileStatus<T = ProfileStatusServerResponse>(
    requestParams?: TokenParameter,
@@ -18,4 +22,20 @@ export function useServerProfileStatus<T = ProfileStatusServerResponse>(
    });
 
    return defaultErrorHandler(query);
+}
+
+export async function uploadImage(localUrl: string, token: string): Promise<FileUploadResponse> {
+   const data = new FormData();
+   data.append("image", localUrl);
+
+   const axiosObject: AxiosRequestConfigExtended = {
+      url: "user/upload-image",
+      method: "POST",
+      params: { token },
+      data,
+      headers: { "Content-Type": "multipart/form-data" },
+      handleErrors: true
+   };
+
+   return httpRequest<FileUploadResponse>(axiosObject);
 }

@@ -38,14 +38,10 @@ const DateIdeaForm: FC<PropsDateIdeaForm> = ({ onChange, initialFormData }) => {
       <View style={styles.mainContainer}>
          <TitleText>¿Dónde te gustaría que fuese una cita grupal?</TitleText>
          <TitleSmallText style={styles.titleSmall}>
-            Improvisa una idea, todxs conocemos algún lugar público agradable.
+            Todxs conocemos algún lugar público agradable.
          </TitleSmallText>
-         <TitleSmallText style={styles.titleSmall}>
-            Es importante para que funcione mejor la app.
-         </TitleSmallText>
-         <EmptySpace />
+         <EmptySpace height={16} />
          <TextInputExtended
-            title="Nombre del lugar y/o actividad"
             titleLine2='Ejemplo: "Merienda en la playa"'
             errorText={getError()}
             mode="outlined"

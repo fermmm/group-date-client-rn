@@ -19,6 +19,12 @@ export const currentTheme: ThemeExt = (WhiteTheme as unknown) as ThemeExt;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * The amount of images the users can upload to their profile.
+ * If you are going to increase the amount make sure the server supports it.
+ */
+export const PROFILE_IMAGES_AMOUNT = 6;
+
+/**
  * If this is true the target age is not prompted to the user and it's automatically set instead.
  * The user can manually set this value later after registration.
  */

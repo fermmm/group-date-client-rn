@@ -12,7 +12,7 @@ export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
 }
 
 /**
- * Axios request wrapper with optional error handling and other options.
+ * Axios request wrapper with optional error handling and other react native expo related features.
  * @param options Axios request options, example: {url: "search/users", method: "GET", data: {myBodyProp: "bodyValue"}}
  * @param showAlertOnError Shows a native alert to the user when the request has a network error
  * @returns When there is an error in the request returns a string resolved promise with the error text.

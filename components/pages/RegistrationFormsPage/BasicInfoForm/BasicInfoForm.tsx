@@ -83,6 +83,8 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({
    };
 
    const getNameError = () => {
+      const maxCharactersAllowed = 32;
+
       if (!name) {
          return "No has completado tu nombre o apodo";
       }
@@ -91,8 +93,12 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({
          return "El nombre o apodo es demasiado corto";
       }
 
-      if (name.length >= 32) {
-         return "El nombre o apodo es demasiado largo. Máximo 32 caracteres.";
+      if (name.length > maxCharactersAllowed) {
+         return (
+            "Te has pasado del máximo de caracteres permitidos por " +
+            (name.length - maxCharactersAllowed) +
+            " caracteres"
+         );
       }
 
       return null;
@@ -108,19 +114,25 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({
       }
 
       if (age >= 179) {
-         return "Tu edad es demasiado alta para ser un humano.";
+         return "Tu edad es demasiado alta para ser la de un ser humano.";
       }
 
       return null;
    };
 
    const getCityNameError = () => {
+      const maxCharactersAllowed = 32;
+
       if (!cityName || cityName.length < 2) {
          return "No has completado el nombre de tu ciudad o región";
       }
 
-      if (cityName.length >= 32) {
-         return "El nombre de tu ciudad o región debe ser mas corto. Máximo 32 caracteres.";
+      if (cityName.length > maxCharactersAllowed) {
+         return (
+            "Te has pasado del máximo de caracteres permitidos por " +
+            (cityName.length - maxCharactersAllowed) +
+            " caracteres"
+         );
       }
 
       return null;

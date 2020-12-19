@@ -13,20 +13,28 @@ import * as Permissions from "expo-permissions";
 import { Menu as PaperMenu } from "react-native-paper";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { currentTheme } from "../../../../config";
+import { currentTheme, PROFILE_IMAGES_AMOUNT } from "../../../../config";
 import SurfaceStyled from "../../../common/SurfaceStyled/SurfaceStyled";
 import { Menu, Position } from "@breeffy/react-native-popup-menu";
 import TitleText from "../../../common/TitleText/TitleText";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import { askForPermission } from "../../../../common-tools/device-native-api/permissions/askForPermissions";
 import i18n from "i18n-js";
+import { uploadImage } from "../../../../api/server/user";
+
+// TODO:
 
 export interface PropsProfileImagesForm {
-   initialData?: { images?: string[] };
+   initialData?: { images?: string[]; token: string };
    onChange(formData: { images: string[] }, error: string | null): void;
 }
 
 const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }) => {
+   // initialData images in an array with fixed size to the amount of images that can be uploaded
+   const initialDataImagesFixedSizeArray = new Array(PROFILE_IMAGES_AMOUNT)
+      .fill(null)
+      .map((e, i) => initialData?.images?.[i] || null);
+
    const menuRef = useRef<Menu>();
 
    /*
@@ -35,16 +43,26 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
     */
    const placeholdersRefs = useRef<TouchableHighlight[]>([]);
 
-   /*
-    * With the amount of nulls here you control how many picture can be uploaded.
-    * Make sure the support more images.
-    */
-   const [images, setImages] = useState<string[]>([null, null, null, null, null, null]);
    const [placeholderClicked, setPlaceholderClicked] = useState<number>(null);
 
+   /*
+    * This array stores images path to the local device, when the image is uploaded it stores the path
+    * of the image in the server. The images displayed to the user uses the paths on this array.
+    * This array is not sent to the parent because it may contain local paths during uploads.
+    */
+   const [imagesDisplayed, setImagesDisplayed] = useState<string[]>(
+      initialDataImagesFixedSizeArray
+   );
+
+   /**
+    * When an image is uploaded and we have the server path we add it to this array, this is the array
+    * free of local paths that we can send to the parent component to be uploaded.
+    */
+   const [imagesUploaded, setImagesUploaded] = useState<string[]>(initialDataImagesFixedSizeArray);
+
    useEffect(() => {
-      onChange({ images }, getErrors());
-   }, [images]);
+      onChange({ images: imagesUploaded }, getErrors());
+   }, [imagesUploaded]);
 
    const showMenu = (placeholder: number) => {
       placeholder != null &&
@@ -59,43 +77,61 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
       menuRef.current.hide();
    };
 
-   const addPicture = (newPicture: string, id: number) => {
-      if (newPicture == null) {
+   const addPicture = async (source: "camera" | "gallery", placeholderId: number) => {
+      let localUrl: string;
+
+      if (source === "gallery") {
+         localUrl = await callImagePicker();
+      }
+
+      if (source === "camera") {
+         localUrl = await callCameraPicture();
+      }
+
+      if (localUrl == null) {
          return;
       }
 
-      const result: string[] = [...images];
+      // TODO: Testear esto, no se si esta bien seteado que es lo que devuelve
+      const uploadResponse = await uploadImage(localUrl, initialData.token);
+
+      console.log(uploadResponse);
+
+      // TODO: Esto habria uqe moverlo arriba y tal vez tener un state por cada imagen por que si no
+      // vamos a mandar el state que tenemos aca que cuando vuelve el request ya es viejo
+
+      const result: string[] = [...imagesDisplayed];
 
       for (let i: number = 0; i < result.length; i++) {
          const picture: string = result[i];
-         if (picture == null || i === id) {
-            result[i] = newPicture;
-            setImages(result);
+         if (picture == null || i === placeholderId) {
+            result[i] = localUrl;
+            setImagesDisplayed(result);
             return;
          }
       }
    };
 
-   const deletePicture = (index: number) => {
-      const result: string[] = [...images];
-      result.splice(index, 1);
+   const deletePicture = (placeholderId: number) => {
+      const result: string[] = [...imagesDisplayed];
+      result.splice(placeholderId, 1);
       // This is here to maintain array size:
       result.push(null);
-      setImages(result);
+      setImagesDisplayed(result);
    };
 
-   const movePictureToFirstPosition = (index: number) => {
-      if (images[index] == null) {
+   const movePictureToFirstPosition = (placeholderId: number) => {
+      if (imagesDisplayed[placeholderId] == null) {
          return;
       }
 
-      const result: string[] = [...images];
-      result.unshift(result.splice(index, 1)[0]);
-      setImages(result);
+      const result: string[] = [...imagesDisplayed];
+      result.unshift(result.splice(placeholderId, 1)[0]);
+      setImagesDisplayed(result);
    };
 
    const callImagePicker = async (): Promise<string | null> => {
-      // It seems this is unnecessary
+      // It seems this is unnecessary, after testing with an apk remove this
       // await askForPermissions(Permissions.CAMERA_ROLL, {
       //    rejectedDialogTexts: {
       //       dialogTitle: "Error",
@@ -109,7 +145,8 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
       const result: ImageInfo = ((await ImagePicker.launchImageLibraryAsync({
          mediaTypes: ImagePicker.MediaTypeOptions.Images,
          allowsEditing: true,
-         quality: 0.8
+         quality: 0.8,
+         aspect: [4, 4] // TODO: Testear esto que esta interesante y si funca agregarlo tambien a la camara
       })) as unknown) as ImageInfo;
 
       return Promise.resolve(result.uri || null);
@@ -131,8 +168,8 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
    };
 
    const getErrors = (): string | null => {
-      if (images[0] == null) {
-         return "Para que aprobemos tu perfil en la app y puedas usarla, debes subir al menos una foto en la que se te vea";
+      if (imagesDisplayed[0] == null) {
+         return "Debes subir al menos una foto en la que se te vea, lxs que suban cualquier imagen para hacer trampa no podrán usar más la app. Los perfiles sin foto perjudican a muchos usuarixs, seamos respetuosxs con lxs demás.";
       }
 
       return null;
@@ -149,7 +186,7 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
             </TitleSmallText>
          </View>
          <View style={styles.picturesContainer}>
-            {images.map((uri, i) => (
+            {imagesDisplayed.map((uri, i) => (
                <TouchableHighlight
                   onPress={() => {
                      setPlaceholderClicked(i);
@@ -194,7 +231,7 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
                style={styles.menuItem}
                onPress={async () => {
                   hideMenu();
-                  addPicture(await callImagePicker(), placeholderClicked);
+                  addPicture("gallery", placeholderClicked);
                }}
             />
             <PaperMenu.Item
@@ -203,21 +240,23 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
                style={styles.menuItem}
                onPress={async () => {
                   hideMenu();
-                  addPicture(await callCameraPicture(), placeholderClicked);
+                  addPicture("camera", placeholderClicked);
                }}
             />
-            {placeholderClicked != null && placeholderClicked !== 0 && images[placeholderClicked] && (
-               <PaperMenu.Item
-                  title="Mover al principio"
-                  icon="arrow-top-left"
-                  style={styles.menuItem}
-                  onPress={() => {
-                     hideMenu();
-                     movePictureToFirstPosition(placeholderClicked);
-                  }}
-               />
-            )}
-            {placeholderClicked != null && images[placeholderClicked] && (
+            {placeholderClicked != null &&
+               placeholderClicked !== 0 &&
+               imagesDisplayed[placeholderClicked] && (
+                  <PaperMenu.Item
+                     title="Mover al principio"
+                     icon="arrow-top-left"
+                     style={styles.menuItem}
+                     onPress={() => {
+                        hideMenu();
+                        movePictureToFirstPosition(placeholderClicked);
+                     }}
+                  />
+               )}
+            {placeholderClicked != null && imagesDisplayed[placeholderClicked] && (
                <PaperMenu.Item
                   title="Eliminar"
                   icon="delete"
