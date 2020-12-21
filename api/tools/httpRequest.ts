@@ -19,20 +19,9 @@ export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
  */
 export async function httpRequest<T>(options: AxiosRequestConfigExtended): Promise<T> {
    options.addLanguageInHeader = options.addLanguageInHeader ?? true;
-   let defaultBaseUrl: string = SERVER_URL;
-
-   /**
-    * Replace localhost by the local address of the development machine otherwise localhost will be
-    * the localhost of the phone and not the machine one
-    */
-   if (Constants.manifest.packagerOpts?.dev && defaultBaseUrl.includes("localhost")) {
-      defaultBaseUrl =
-         "http://" +
-         defaultBaseUrl.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
-   }
 
    const client: AxiosInstance = axios.create({
-      baseURL: options.baseURL ?? defaultBaseUrl
+      baseURL: options.baseURL ?? getServerUrl()
    });
 
    if (options.addLanguageInHeader) {
@@ -92,4 +81,20 @@ export async function httpRequest<T>(options: AxiosRequestConfigExtended): Promi
    }
 
    return resultPromise;
+}
+
+export function getServerUrl(): string {
+   let result: string = SERVER_URL;
+
+   /**
+    * Replace localhost by the local address of the development machine otherwise localhost will be
+    * the localhost of the phone and not the machine one
+    */
+   if (Constants.manifest.packagerOpts?.dev && result.includes("localhost")) {
+      result =
+         "http://" +
+         result.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
+   }
+
+   return result;
 }

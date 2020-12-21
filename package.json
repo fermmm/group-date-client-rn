@@ -1,7 +1,6 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "preinstall": "npm install -g expo-cli",
     "start": "expo start",
     "inspector": "react-devtools",
     "android": "expo start --android",
@@ -47,7 +46,9 @@
     "react-query": "^2.26.3",
     "react-timer-mixin": "^0.13.4",
     "simple-validator-js": "^1.8.0",
-    "ts-essentials": "^7.0.1"
+    "ts-essentials": "^7.0.1",
+    "expo-file-system": "~9.2.0",
+    "expo-image-manipulator": "~8.3.0"
   },
   "devDependencies": {
     "@types/color": "^3.0.0",

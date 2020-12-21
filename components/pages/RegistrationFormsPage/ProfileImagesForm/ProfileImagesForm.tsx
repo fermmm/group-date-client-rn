@@ -92,7 +92,8 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
          return;
       }
 
-      // TODO: Testear esto, no se si esta bien seteado que es lo que devuelve
+      // TODO: La imagen hay que achicarla aca también antes de mandar, por que el server tiene limite 2mb
+      // TODO: Implementar y testear manejo de errores aca que no usa la misma api
       const uploadResponse = await uploadImage(localUrl, initialData.token);
 
       console.log(uploadResponse);
