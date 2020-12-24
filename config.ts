@@ -52,8 +52,21 @@ export const AVAILABLE_DISTANCES: number[] = [50, 70, 90, 200, 600, 1000];
  */
 export const AUTOMATIC_TARGET_DISTANCE: number = 70;
 
+/**
+ * Allow the user to change the aspect ratio of the images, bad for profile page design but the users
+ * have more freedom to get the best image
+ */
+export const LOCK_IMAGES_ASPECT_RATIO: boolean = true;
+
+/**
+ * Only works if LOCK_IMAGES_ASPECT_RATIO = true. The aspect ratio can be configured here. It's recommended
+ * that the aspect ratio fits the design of the profile page.
+ */
+export const IMAGES_ASPECT_RATIO: [number, number] = [4, 4];
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////  PERFORMANCE  /////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH = 512;
+export const RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH: number = 512;
+export const IMAGE_QUALITY_WHEN_UPLOADING: number = 0.9;

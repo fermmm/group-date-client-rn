@@ -4,6 +4,7 @@ import { montserratForPaper, montserrat } from "./fonts/montserrat";
 export default {
    dark: false,
    roundness: 25,
+   roundnessSmall: 10,
    colors: {
       primary: "#FFBF9C",
       primary2: "#5EFFF4",

@@ -84,17 +84,18 @@ export async function httpRequest<T>(options: AxiosRequestConfigExtended): Promi
 }
 
 export function getServerUrl(): string {
-   let result: string = SERVER_URL;
+   return prepareUrl(SERVER_URL);
+}
 
-   /**
-    * Replace localhost by the local address of the development machine otherwise localhost will be
-    * the localhost of the phone and not the machine one
-    */
-   if (Constants.manifest.packagerOpts?.dev && result.includes("localhost")) {
-      result =
-         "http://" +
-         result.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
+/**
+ * Currently this function only replaces the localhost part of the url by the local address of the development
+ * machine otherwise localhost will be the localhost of the phone and not the machine one, if the app is
+ * executing in production there is no localhost part on the url so it remains unchanged.
+ */
+export function prepareUrl(url: string): string {
+   if (url.includes("localhost")) {
+      return url.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
+   } else {
+      return url;
    }
-
-   return result;
 }

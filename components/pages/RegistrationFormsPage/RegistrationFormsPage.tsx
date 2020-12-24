@@ -9,7 +9,7 @@ import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useServerProfileStatus } from "../../../api/server/user";
 import { useNavigation } from "@react-navigation/native";
-import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
+import { CenteredMethod, LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import {
    USE_AUTOMATIC_TARGET_AGE_AT_REGISTRATION,
    USE_AUTOMATIC_TARGET_DISTANCE_AT_REGISTRATION
@@ -17,6 +17,7 @@ import {
 import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
 import { RegistrationFormName, useRequiredScreensList } from "./hooks/useRequiredScreensList";
 import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
+import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
 /*
    [Hecho] name
@@ -30,7 +31,7 @@ import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
    [Hecho] cityName
    [Hecho] country
 
-   images
+   [Hecho] images
    [Hecho] dateIdea
    [Hecho] profileDescription
    
@@ -111,7 +112,7 @@ const RegistrationFormsPage: FC = () => {
          {isLoading ? (
             <>
                <BasicScreenContainer />
-               <LoadingAnimation visible centered />
+               <LoadingAnimation visible centeredMethod={CenteredMethod.ToWindow} />
             </>
          ) : (
             <ScreensStepper currentScreen={currentStep} swipeEnabled={false}>
@@ -136,7 +137,7 @@ const RegistrationFormsPage: FC = () => {
                      )}
                      {screenName === "ProfileImagesForm" && (
                         <ProfileImagesForm
-                           initialData={profileStatus.user}
+                           initialData={profileStatus.user as User}
                            onChange={(newData, error) =>
                               handleFormChange("ProfileImagesForm", newData, error)
                            }

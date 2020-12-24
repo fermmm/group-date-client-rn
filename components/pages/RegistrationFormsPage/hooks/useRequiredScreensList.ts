@@ -26,7 +26,6 @@ export function useRequiredScreensList(
       //    "likesOtherGenders",
       //    "isCoupleProfile"
       // ],
-      ProfileImagesForm: ["images"],
       DateIdeaForm: ["dateIdea"],
       BasicInfoForm: [
          "name",
@@ -40,6 +39,7 @@ export function useRequiredScreensList(
          "cityName",
          "country"
       ],
+      ProfileImagesForm: ["images"],
       ProfileDescriptionForm: ["profileDescription"]
    };
 

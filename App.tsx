@@ -1,7 +1,7 @@
 import * as Localization from "expo-localization";
 import i18n from "i18n-js";
-import { ReactQueryCacheProvider } from "react-query";
-import { queryCache } from "./api/tools/reactQueryTools";
+import { QueryClientProvider } from "react-query";
+import { queryClient } from "./api/tools/reactQueryTools";
 import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
@@ -69,7 +69,7 @@ export default class App extends Component<{}, PageBasicWrapperState> {
       }
 
       return (
-         <ReactQueryCacheProvider queryCache={queryCache}>
+         <QueryClientProvider client={queryClient}>
             <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
                <NavigationContainer theme={TestTheme}>
                   <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
@@ -90,7 +90,7 @@ export default class App extends Component<{}, PageBasicWrapperState> {
                   </Stack.Navigator>
                </NavigationContainer>
             </PaperProvider>
-         </ReactQueryCacheProvider>
+         </QueryClientProvider>
       );
    }
 }

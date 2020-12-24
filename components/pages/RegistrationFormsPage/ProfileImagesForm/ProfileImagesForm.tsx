@@ -1,28 +1,11 @@
-import React, { useEffect, FC, useRef, useState } from "react";
-import {
-   StyleSheet,
-   View,
-   TouchableHighlight,
-   Image,
-   ImageStyle,
-   ImageBackground,
-   Platform
-} from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import * as Permissions from "expo-permissions";
-import { Menu as PaperMenu } from "react-native-paper";
+import React, { useEffect, FC, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { currentTheme, PROFILE_IMAGES_AMOUNT } from "../../../../config";
-import SurfaceStyled from "../../../common/SurfaceStyled/SurfaceStyled";
-import { Menu, Position } from "@breeffy/react-native-popup-menu";
+import { PROFILE_IMAGES_AMOUNT } from "../../../../config";
 import TitleText from "../../../common/TitleText/TitleText";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
-import { askForPermission } from "../../../../common-tools/device-native-api/permissions/askForPermissions";
-import i18n from "i18n-js";
-import { uploadImage } from "../../../../api/server/user";
-
-// TODO:
+import ImagePlaceholder, { ImagePlaceholderState } from "./ImagePlaceholder/ImagePlaceholder";
+import { moveElementInArray } from "../../../../common-tools/js-tools/js-tools";
 
 export interface PropsProfileImagesForm {
    initialData?: { images?: string[]; token: string };
@@ -30,147 +13,86 @@ export interface PropsProfileImagesForm {
 }
 
 const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }) => {
-   // initialData images in an array with fixed size to the amount of images that can be uploaded
-   const initialDataImagesFixedSizeArray = new Array(PROFILE_IMAGES_AMOUNT)
-      .fill(null)
-      .map((e, i) => initialData?.images?.[i] || null);
-
-   const menuRef = useRef<Menu>();
-
-   /*
-    * Refs can hold anything under the "current" property even an array of refs like in this case.
-    * Also refs are mutable (as described by the return type name).
-    */
-   const placeholdersRefs = useRef<TouchableHighlight[]>([]);
-
-   const [placeholderClicked, setPlaceholderClicked] = useState<number>(null);
-
-   /*
-    * This array stores images path to the local device, when the image is uploaded it stores the path
-    * of the image in the server. The images displayed to the user uses the paths on this array.
-    * This array is not sent to the parent because it may contain local paths during uploads.
-    */
-   const [imagesDisplayed, setImagesDisplayed] = useState<string[]>(
-      initialDataImagesFixedSizeArray
+   const [placeholdersState, setPlaceholdersState] = useState<ImagePlaceholderState[]>(
+      new Array(PROFILE_IMAGES_AMOUNT).fill(null).map((e, i) => ({
+         uri: initialData?.images?.[i] || null,
+         isUploading: false,
+         id: "ph" + i
+      }))
    );
-
-   /**
-    * When an image is uploaded and we have the server path we add it to this array, this is the array
-    * free of local paths that we can send to the parent component to be uploaded.
-    */
-   const [imagesUploaded, setImagesUploaded] = useState<string[]>(initialDataImagesFixedSizeArray);
+   const [imageToReposition, setImageToReposition] = useState<string>(null);
 
    useEffect(() => {
-      onChange({ images: imagesUploaded }, getErrors());
-   }, [imagesUploaded]);
+      onChange({ images: getImagesArray() }, getErrors());
+   }, [placeholdersState]);
 
-   const showMenu = (placeholder: number) => {
-      placeholder != null &&
-         placeholdersRefs &&
-         menuRef.current.show(placeholdersRefs?.current[placeholder], Position.TOP_LEFT, {
-            left: 0,
-            top: 20
-         });
+   const handlePlaceholderChange = (newState: ImagePlaceholderState) => {
+      let newPlaceholdersState = [...placeholdersState];
+      newPlaceholdersState[getPlaceholderPositionById(newState.id)] = newState;
+      newPlaceholdersState = removeGapsFromPlaceholdersList(newPlaceholdersState);
+      setPlaceholdersState(newPlaceholdersState);
    };
 
-   const hideMenu = () => {
-      menuRef.current.hide();
+   const handleRepositionModeStart = (placeholderId: string) => {
+      setImageToReposition(placeholderId);
    };
 
-   const addPicture = async (source: "camera" | "gallery", placeholderId: number) => {
-      let localUrl: string;
-
-      if (source === "gallery") {
-         localUrl = await callImagePicker();
-      }
-
-      if (source === "camera") {
-         localUrl = await callCameraPicture();
-      }
-
-      if (localUrl == null) {
-         return;
-      }
-
-      // TODO: La imagen hay que achicarla aca también antes de mandar, por que el server tiene limite 2mb
-      // TODO: Implementar y testear manejo de errores aca que no usa la misma api
-      const uploadResponse = await uploadImage(localUrl, initialData.token);
-
-      console.log(uploadResponse);
-
-      // TODO: Esto habria uqe moverlo arriba y tal vez tener un state por cada imagen por que si no
-      // vamos a mandar el state que tenemos aca que cuando vuelve el request ya es viejo
-
-      const result: string[] = [...imagesDisplayed];
-
-      for (let i: number = 0; i < result.length; i++) {
-         const picture: string = result[i];
-         if (picture == null || i === placeholderId) {
-            result[i] = localUrl;
-            setImagesDisplayed(result);
-            return;
-         }
-      }
+   const handleRepositionSelect = (targetPosition: number) => {
+      const newPlaceholdersState = [...placeholdersState];
+      moveElementInArray(
+         newPlaceholdersState,
+         getPlaceholderPositionById(imageToReposition),
+         targetPosition
+      );
+      setPlaceholdersState(newPlaceholdersState);
+      setImageToReposition(null);
    };
 
-   const deletePicture = (placeholderId: number) => {
-      const result: string[] = [...imagesDisplayed];
-      result.splice(placeholderId, 1);
-      // This is here to maintain array size:
-      result.push(null);
-      setImagesDisplayed(result);
+   const handleRepositionCancel = () => {
+      setImageToReposition(null);
    };
 
-   const movePictureToFirstPosition = (placeholderId: number) => {
-      if (imagesDisplayed[placeholderId] == null) {
-         return;
-      }
-
-      const result: string[] = [...imagesDisplayed];
-      result.unshift(result.splice(placeholderId, 1)[0]);
-      setImagesDisplayed(result);
+   const handleImageDelete = (placeholderId: string) => {
+      const newPlaceholdersState = [...placeholdersState];
+      moveElementInArray(
+         newPlaceholdersState,
+         getPlaceholderPositionById(placeholderId),
+         placeholdersState.length - 1
+      );
+      setPlaceholdersState(newPlaceholdersState);
    };
 
-   const callImagePicker = async (): Promise<string | null> => {
-      // It seems this is unnecessary, after testing with an apk remove this
-      // await askForPermissions(Permissions.CAMERA_ROLL, {
-      //    rejectedDialogTexts: {
-      //       dialogTitle: "Error",
-      //       dialogText: "Tenes que aceptar permisos para continuar. Cualquier app necesita acceder a tu almacenamiento para que puedas elegir una foto",
-      //       openSettingsButtonText: "Modificar permisos",
-      //       exitAppButtonText: "Salir de la app",
-      //       instructionsToastText: `Toca "Permisos" y activa "Almacenamiento"`,
-      //    }
-      // });
-
-      const result: ImageInfo = ((await ImagePicker.launchImageLibraryAsync({
-         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-         allowsEditing: true,
-         quality: 0.8,
-         aspect: [4, 4] // TODO: Testear esto que esta interesante y si funca agregarlo tambien a la camara
-      })) as unknown) as ImageInfo;
-
-      return Promise.resolve(result.uri || null);
+   const getImagesArray = (): string[] => {
+      return placeholdersState.filter(state => state.uri).map(state => state.uri);
    };
 
-   const callCameraPicture = async (): Promise<string | null> => {
-      await askForPermission(Permissions.CAMERA, {
-         rejectedDialogTexts: {
-            instructionsToastText: i18n.t("Touch on Camera")
-         }
-      });
+   const isAnyImageUploading = (): boolean => {
+      return !placeholdersState.every(state => state.isUploading === false);
+   };
 
-      const result: ImageInfo = ((await ImagePicker.launchCameraAsync({
-         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-         quality: 0.8
-      })) as unknown) as ImageInfo;
+   const getPlaceholderPositionById = (placeholderId: string): number => {
+      return placeholdersState.findIndex(p => p.id === placeholderId);
+   };
 
-      return Promise.resolve(result.uri || null);
+   const removeGapsFromPlaceholdersList = (
+      placeholders: ImagePlaceholderState[]
+   ): ImagePlaceholderState[] => {
+      const placeholdersWithImage = placeholders.filter(state => state.uri);
+      const placeholdersWithoutImage = placeholders.filter(state => !state.uri);
+      return [...placeholdersWithImage, ...placeholdersWithoutImage];
    };
 
    const getErrors = (): string | null => {
-      if (imagesDisplayed[0] == null) {
+      if (getImagesArray().length === 0) {
          return "Debes subir al menos una foto en la que se te vea, lxs que suban cualquier imagen para hacer trampa no podrán usar más la app. Los perfiles sin foto perjudican a muchos usuarixs, seamos respetuosxs con lxs demás.";
+      }
+
+      if (imageToReposition != null) {
+         return "Debes elegir la nueva posición para tu foto.";
+      }
+
+      if (isAnyImageUploading()) {
+         return "Debes esperar a que terminen de subir todas las fotos para continuar.";
       }
 
       return null;
@@ -186,89 +108,21 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
                Si irías acompañadx a las citas no olvides subir fotos de tus acompañantes.
             </TitleSmallText>
          </View>
-         <View style={styles.picturesContainer}>
-            {imagesDisplayed.map((uri, i) => (
-               <TouchableHighlight
-                  onPress={() => {
-                     setPlaceholderClicked(i);
-                     showMenu(i);
-                  }}
-                  style={styles.pictureContainer}
-                  underlayColor="white"
-                  activeOpacity={0.6}
-                  ref={el => (placeholdersRefs.current[i] = el)}
-                  key={i}
-               >
-                  <SurfaceStyled
-                     style={[styles.pictureSurface, uri != null && { backgroundColor: "black" }]}
-                  >
-                     {uri != null ? (
-                        <ImageBackground
-                           style={{ width: "100%", height: "100%" }}
-                           source={{ uri }}
-                           blurRadius={Platform.OS === "ios" ? 120 : 60}
-                        >
-                           <Image
-                              source={{ uri }}
-                              resizeMode={"contain"}
-                              style={styles.pictureImage as ImageStyle}
-                           />
-                        </ImageBackground>
-                     ) : (
-                        <Icon
-                           name={"plus-circle-outline"}
-                           color={currentTheme.colors.primary}
-                           style={{ fontSize: 60 }}
-                        />
-                     )}
-                  </SurfaceStyled>
-               </TouchableHighlight>
+         <View style={styles.imagesContainer}>
+            {placeholdersState.map((state, i) => (
+               <ImagePlaceholder
+                  initialUri={state.uri}
+                  id={state.id}
+                  token={initialData.token}
+                  repositionMode={imageToReposition != null}
+                  onChange={newState => handlePlaceholderChange(newState)}
+                  onRepositionModeRequested={id => handleRepositionModeStart(id)}
+                  onRepositionSelect={id => handleRepositionSelect(i)}
+                  onImageDeleted={id => handleImageDelete(id)}
+                  key={state.id}
+               />
             ))}
          </View>
-         <Menu ref={menuRef}>
-            <PaperMenu.Item
-               title="Elegir de tus fotos"
-               icon="account-box-multiple"
-               style={styles.menuItem}
-               onPress={async () => {
-                  hideMenu();
-                  addPicture("gallery", placeholderClicked);
-               }}
-            />
-            <PaperMenu.Item
-               title="Cámara"
-               icon="camera-enhance"
-               style={styles.menuItem}
-               onPress={async () => {
-                  hideMenu();
-                  addPicture("camera", placeholderClicked);
-               }}
-            />
-            {placeholderClicked != null &&
-               placeholderClicked !== 0 &&
-               imagesDisplayed[placeholderClicked] && (
-                  <PaperMenu.Item
-                     title="Mover al principio"
-                     icon="arrow-top-left"
-                     style={styles.menuItem}
-                     onPress={() => {
-                        hideMenu();
-                        movePictureToFirstPosition(placeholderClicked);
-                     }}
-                  />
-               )}
-            {placeholderClicked != null && imagesDisplayed[placeholderClicked] && (
-               <PaperMenu.Item
-                  title="Eliminar"
-                  icon="delete"
-                  style={styles.menuItem}
-                  onPress={() => {
-                     hideMenu();
-                     deletePicture(placeholderClicked);
-                  }}
-               />
-            )}
-         </Menu>
       </>
    );
 };
@@ -277,42 +131,10 @@ const styles: Styles = StyleSheet.create({
    topContainer: {
       marginBottom: 15
    },
-   picturesContainer: {
+   imagesContainer: {
       flexDirection: "row",
       flexWrap: "wrap"
-   },
-   pictureContainer: {
-      width: "50%",
-      aspectRatio: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      paddingLeft: 5,
-      paddingRight: 5
-   },
-   pictureSurface: {
-      flex: 1,
-      width: "100%",
-      height: "100%",
-      backgroundColor: currentTheme.colors.surface,
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 0
-   },
-   pictureImage: {
-      width: "100%",
-      height: "100%"
-   },
-   menuItem: {
-      flex: 1
    }
 });
-
-interface ImageInfo {
-   uri: string;
-   width: number;
-   height: number;
-   type?: "image" | "video";
-   cancelled: boolean;
-}
 
 export default ProfileImagesForm;

@@ -1,12 +1,12 @@
 import { Method } from "axios";
 import { Alert, LogBox } from "react-native";
-import { QueryCache, QueryResult } from "react-query";
+import { QueryClient, QueryObserverResult } from "react-query";
 import { AxiosRequestConfigExtended, httpRequest } from "./httpRequest";
 
-export const queryCache = new QueryCache({
-   defaultConfig: {
+export const queryClient = new QueryClient({
+   defaultOptions: {
       queries: {
-         staleTime: 1000 * 60 * 15
+         staleTime: Infinity
       },
       mutations: {}
    }
@@ -33,11 +33,14 @@ export async function defaultRequestFunction<D = void, R = void>(
    return httpRequest<R>(axiosObject);
 }
 
-export function defaultErrorHandler<T>(queryResult: QueryResult<T>): QueryResult<T> {
+export function defaultErrorHandler<T>(
+   queryResult: QueryObserverResult<T>
+): QueryObserverResult<T> {
    if (!queryResult.isError) {
       return queryResult;
    }
-   const error = (queryResult as QueryResult<T, { message: string; response: string }>).error;
+   const error = (queryResult as QueryObserverResult<T, { message: string; response: string }>)
+      .error;
    if (error.response == null) {
       Alert.alert(
          "ಠ_ಠ",

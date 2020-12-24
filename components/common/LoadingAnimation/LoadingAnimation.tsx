@@ -6,9 +6,15 @@ import { currentTheme } from "../../../config";
 
 interface PropsLoadingAnimation {
    visible: boolean;
-   centered?: boolean;
+   centeredMethod?: CenteredMethod;
    style?: StyleProp<ViewStyle>;
    animationStyle?: StyleProp<ViewStyle>;
+}
+
+export enum CenteredMethod {
+   None,
+   ToWindow,
+   ToContainer
 }
 
 /**
@@ -17,7 +23,7 @@ interface PropsLoadingAnimation {
  */
 export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
    visible,
-   centered,
+   centeredMethod,
    style,
    animationStyle
 }) => {
@@ -36,22 +42,22 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
       }).start();
    }, [visible]);
 
+   let centeringStyle: StyleProp<ViewStyle> = {};
+
+   if (centeredMethod === CenteredMethod.ToWindow) {
+      centeringStyle = styles.centerToWindow;
+   }
+
+   if (centeredMethod === CenteredMethod.ToContainer) {
+      centeringStyle = styles.centerToContainer;
+   }
+
    return (
-      <View
-         style={[
-            styles.animationContainer,
-            centered && {
-               width: Dimensions.get("window").width,
-               height: "100%",
-               backgroundColor: "red"
-            },
-            style
-         ]}
-      >
+      <View style={[styles.animationContainer, centeringStyle, style]}>
          <Animated.View style={{ opacity: animValue }}>
             <LottieView
                source={require("./animation-loading.json")}
-               style={[styles.animation, animationStyle]}
+               style={[styles.lottie, animationStyle]}
                speed={0.5}
                autoPlay
                loop
@@ -65,11 +71,18 @@ const styles: Styles = StyleSheet.create({
    animationContainer: {
       position: "absolute",
       flex: 0,
-      bottom: 60,
       alignItems: "center",
       justifyContent: "center"
    },
-   animation: {
+   centerToWindow: {
+      width: Dimensions.get("window").width,
+      height: "100%"
+   },
+   centerToContainer: {
+      width: "100%",
+      height: "100%"
+   },
+   lottie: {
       width: "40%"
    }
 });

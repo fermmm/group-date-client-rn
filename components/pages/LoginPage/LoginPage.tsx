@@ -1,6 +1,5 @@
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import { StyleSheet, Text, View, ImageBackground } from "react-native";
-import Constants from "expo-constants";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { LogoSvg } from "../../../assets/LogoSvg";
@@ -12,7 +11,7 @@ import {
 } from "../../../api/third-party/facebook/facebook-login";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useNavigation } from "@react-navigation/native";
-import { useServerHandshake } from "../../../api/server/handshake";
+import { useServerInfo } from "../../../api/server/server-info";
 import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useServerProfileStatus } from "../../../api/server/user";
 import { userFinishedRegistration } from "../../../api/tools/userTools";
@@ -27,11 +26,7 @@ const LoginPage: FC = () => {
    const [logoAnimCompleted, setLogoAnimCompleted] = useState(false);
    const { colors } = useTheme();
    const { navigate } = useNavigation();
-
-   // Send the version of the client to get information about possible updates needed and service status
-   const { data: handshakeData, isLoading: handshakeLoading } = useServerHandshake({
-      version: Constants.manifest.version
-   });
+   const { data: serverInfoData, isLoading: serverInfoLoading } = useServerInfo();
 
    // Get the user token
    const { token, isLoading: tokenLoading, getNewTokenFromFacebook } = useFacebookToken();
@@ -64,19 +59,19 @@ const LoginPage: FC = () => {
       getNewTokenFromFacebook();
    };
 
-   const serverOperating: boolean = handshakeData != null && handshakeData.serverOperating;
+   const serverOperating: boolean = serverInfoData != null && serverInfoData.serverOperating;
 
    const showLoginButton: boolean =
       (serverOperating &&
          (token == null || tokenIsValid === false) &&
          !tokenCheckLoading &&
          !tokenLoading &&
-         !handshakeLoading) ||
+         !serverInfoLoading) ||
       forceShowConnectButton;
 
    const showLoadingAnimation: boolean =
       logoAnimCompleted &&
-      (tokenLoading || tokenCheckLoading || handshakeLoading || profileStatusLoading);
+      (tokenLoading || tokenCheckLoading || serverInfoLoading || profileStatusLoading);
 
    return (
       <Background useImageBackground={true}>
@@ -113,7 +108,7 @@ const LoginPage: FC = () => {
                         }
                      ]}
                   >
-                     {handshakeData?.serverMessage}
+                     {serverInfoData?.serverMessage}
                   </Text>
                </>
             )}
