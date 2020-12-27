@@ -1,5 +1,12 @@
-import React, { Component } from "react";
-import { ScrollView, Dimensions, View, NativeSyntheticEvent, NativeScrollEvent, BackHandler } from "react-native";
+import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
+import {
+   ScrollView,
+   Dimensions,
+   View,
+   NativeSyntheticEvent,
+   NativeScrollEvent,
+   BackHandler
+} from "react-native";
 
 export interface ScreenStepperProps {
    currentScreen: number;
@@ -7,104 +14,129 @@ export interface ScreenStepperProps {
    animated?: boolean;
    swipeEnabled?: boolean;
    /**
-    * This triggers when the user press the back button or when 
+    * This triggers when the user press the back button or when
     * swiping is enabled and the user changes the screen.
     */
-   onScreenChange(newScreen: number): void;
+   onScreenChange: (newScreen: number) => void;
 }
 
-export class ScreensStepper extends Component<ScreenStepperProps> {
-   static defaultProps: Partial<ScreenStepperProps> = {
-      screensWidth: Dimensions.get("window").width,
-      animated: true,
-      swipeEnabled: true
+export const ScreensStepper: FC<ScreenStepperProps> = props => {
+   const {
+      screensWidth = Dimensions.get("window").width,
+      animated = true,
+      swipeEnabled = true,
+      currentScreen,
+      onScreenChange,
+      children
+   } = props;
+
+   const ref = useRef<ScrollView>();
+   const history = useRef<number[]>([]);
+   const dontSaveHistoryNextTime = useRef(false);
+
+   useEffect(() => {
+      BackHandler.addEventListener("hardwareBackPress", handleBackButton);
+      return () => BackHandler.removeEventListener("hardwareBackPress", handleBackButton);
+   }, [onScreenChange]);
+
+   useEffect(() => {
+      scrollToScreen(currentScreen, animated);
+      addCurrentStepToHistory(currentScreen);
+   }, [currentScreen]);
+
+   /**
+    * This is triggered when the user finishes swiping to another screen
+    */
+   const onMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>): void => {
+      const newScreenIndex: number = Math.round(event.nativeEvent.contentOffset.x / screensWidth);
+      if (newScreenIndex !== currentScreen) {
+         onScreenChange(newScreenIndex);
+      }
    };
-   ref: ScrollView;
-   history: number[] = [];
-   allowSaveOnHistory: boolean = true;
 
-   constructor(props: ScreenStepperProps) {
-      super(props);
-      this.handleBackButton = this.handleBackButton.bind(this);
-   }
+   const scrollToScreen = (screenIndex: number, animated: boolean = false): void => {
+      ref.current.scrollTo({ x: screensWidth * screenIndex, animated });
+   };
 
-   componentDidMount(): void {
-      BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
-   }
+   const handleBackButton = (): boolean => {
+      const canGoBack = goBack();
+      // Returning true here disables the default behavior of the back button:
+      return canGoBack;
+   };
 
-   componentWillUnmount(): void {
-      BackHandler.removeEventListener("hardwareBackPress", this.handleBackButton);
-   }
-
-   render(): JSX.Element {
-      return (
-         <ScrollView
-            horizontal={true}
-            pagingEnabled={true}
-            scrollEnabled={this.props.swipeEnabled}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            onLayout={() => this.scrollToScreen(this.props.currentScreen)}
-            onMomentumScrollEnd={(event) => this.onMomentumScrollEnd(event)}
-            ref={component => this.ref = component}
-         >
-            {
-               React.Children.map(this.props.children, (child: React.ReactElement) => (
-                  <View style={{ width: this.props.screensWidth }}>
-                     {child}
-                  </View>
-               ))
-            }
-         </ScrollView>
-      );
-   }
-
-   public componentDidUpdate(prevProps: ScreenStepperProps): void {
-      if (prevProps.currentScreen !== this.props.currentScreen) {
-         this.scrollToScreen(this.props.currentScreen, this.props.animated);
-         this.saveOnBackButtonHistory(prevProps.currentScreen);
-      }
-   }
-
-   public onMomentumScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>): void {
-      const newScreenIndex: number = Math.round(event.nativeEvent.contentOffset.x / this.props.screensWidth);
-      // We should remove semi hardcoded this.props.screensWidth and replace it with stuff like this:
-      // const newScreenIndex: number = Math.round(Math.ceil(event.nativeEvent.contentOffset.x) / event.nativeEvent.layoutMeasurement.width)
-
-      if (newScreenIndex !== this.props.currentScreen) {
-         this.props.onScreenChange(newScreenIndex);
-      }
-   }
-
-   public scrollToScreen(screenIndex: number, animated: boolean = false): void {
-      this.ref.scrollTo({ x: this.props.screensWidth * screenIndex, animated });
-   }
-
-   public handleBackButton(): boolean {
-      if (this.history.length > 0) {
-         this.goBack();
-         return true;
-      } else {
-         return false;
-      }
-   }
-
-   public saveOnBackButtonHistory(screenIndex: number): void {
-      if (!this.allowSaveOnHistory) {
+   const addCurrentStepToHistory = (screenIndex: number): void => {
+      if (dontSaveHistoryNextTime.current) {
+         dontSaveHistoryNextTime.current = false;
          return;
       }
 
       // Remove history duplicates:
-      if (this.history.indexOf(screenIndex) !== -1) {
-         this.history.splice(this.history.indexOf(screenIndex), 1);
+      if (history.current.indexOf(screenIndex) !== -1) {
+         history.current.splice(history.current.indexOf(screenIndex), 1);
       }
 
-      this.history.push(screenIndex);
-   }
+      history.current.push(screenIndex);
+   };
 
-   public goBack(): void {
-      this.allowSaveOnHistory = false;
-      this.props.onScreenChange(this.history.pop());
-      this.allowSaveOnHistory = true;
-   }
-}
+   const removeLastStepFromHistory = () => {
+      history.current.pop();
+   };
+
+   /*
+    * The return value is true or false whether or not is possible to go back to a previous step
+    */
+   const goBack = (): boolean => {
+      if (historyContainsItemsToGoBack()) {
+         dontSaveHistoryNextTime.current = true; // Dont register the way back as somewhere to go back
+         removeLastStepFromHistory();
+         onScreenChange(history.current[history.current.length - 1]);
+         return true;
+      } else {
+         return false;
+      }
+   };
+
+   /*
+    * The history contains also the current step, so we have somewhere to go back when we have
+    * more than 1 element on the history.
+    */
+   const historyContainsItemsToGoBack = () => {
+      return history.current.length > 1;
+   };
+
+   const handleOnLayout = useCallback(
+      () => ref.current.scrollTo({ x: screensWidth * currentScreen, animated }),
+      [currentScreen, animated, screensWidth, ref.current]
+   );
+
+   const handleOnMomentumScrollEnd = useCallback(
+      (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+         const newScreenIndex: number = Math.round(
+            event.nativeEvent.contentOffset.x / screensWidth
+         );
+         if (newScreenIndex !== currentScreen) {
+            onScreenChange(newScreenIndex);
+         }
+      },
+      [screensWidth, currentScreen, onScreenChange]
+   );
+
+   return (
+      <ScrollView
+         horizontal={true}
+         pagingEnabled={true}
+         scrollEnabled={swipeEnabled}
+         showsHorizontalScrollIndicator={false}
+         showsVerticalScrollIndicator={false}
+         onLayout={handleOnLayout}
+         onMomentumScrollEnd={handleOnMomentumScrollEnd}
+         ref={ref}
+      >
+         {React.Children.map(children, (child: React.ReactElement) => (
+            <View style={{ width: screensWidth }}>{child}</View>
+         ))}
+      </ScrollView>
+   );
+};
+
+export default React.memo(ScreensStepper);
