@@ -17,7 +17,7 @@ const TitleText: FC<TitleTextProps> = props => {
          style={[
             styles.titleStyle,
             props.extraMarginLeft && { marginLeft: 10 },
-            props.extraSize && { fontSize: 20 },
+            props.extraSize && { fontSize: 23 },
             props.style
          ]}
       >
@@ -29,7 +29,7 @@ const TitleText: FC<TitleTextProps> = props => {
 const styles: Styles = StyleSheet.create({
    titleStyle: {
       fontFamily: currentTheme.font.light,
-      fontSize: 17,
+      fontSize: 21,
       marginBottom: 10,
       marginRight: 10
    }

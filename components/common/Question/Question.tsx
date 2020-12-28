@@ -126,7 +126,6 @@ const Question: FC<PropsQuestion> = props => {
 
 const styles: Styles = StyleSheet.create({
    question: {
-      fontSize: 21,
       paddingLeft: 10,
       marginBottom: 0
    },

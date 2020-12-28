@@ -107,9 +107,7 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange, 
    return (
       <>
          <View style={styles.topContainer}>
-            <TitleText extraMarginLeft extraSize>
-               Tus fotos
-            </TitleText>
+            <TitleText extraMarginLeft>Tus fotos</TitleText>
             <TitleSmallText style={styles.titleSmall}>
                Si irías acompañadx a las citas no olvides subir fotos de tus acompañantes.
             </TitleSmallText>

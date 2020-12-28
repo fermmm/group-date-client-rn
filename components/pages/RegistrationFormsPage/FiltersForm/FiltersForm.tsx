@@ -101,7 +101,6 @@ const styles: Styles = StyleSheet.create({
       paddingTop: 10
    },
    title: {
-      fontSize: 19,
       marginBottom: 20
    },
    titleSmall: {
