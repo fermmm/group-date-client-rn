@@ -6,7 +6,6 @@ import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { useServerProfileStatus } from "../../../api/server/user";
 import { useNavigation } from "@react-navigation/native";
 import { CenteredMethod, LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
@@ -17,19 +16,21 @@ import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user
 import PropAsQuestionForm from "../../common/PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
 
-// TODO: En useRequiredFormList deberiamos devolver una variable mas: unknownPropsRequired,
-// se puede meter en el mismo map
-
 // TODO: Implementar themes as questions
 
 const RegistrationFormsPage: FC = () => {
-   const { navigate }: StackNavigationProp<Record<string, {}>> = useNavigation();
+   const { navigate } = useNavigation();
    const [currentStep, setCurrentStep] = useState(0);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
    const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
-   const { formsRequired, formsRequiredWithPropsToChange } = useRequiredFormList(profileStatus);
+   const {
+      isLoading: requiredFormListLoading,
+      formsRequired,
+      formsRequiredWithPropsToChange,
+      otherQuestionProps
+   } = useRequiredFormList(profileStatus);
 
    const handleFormChange = useCallback(
       (formName: RegistrationFormName, newProps: EditableUserProps, error: string | null) => {
@@ -77,7 +78,7 @@ const RegistrationFormsPage: FC = () => {
    return (
       <>
          <AppBarHeader />
-         {profileStatusLoading ? (
+         {profileStatusLoading || requiredFormListLoading ? (
             <>
                <BasicScreenContainer />
                <LoadingAnimation centeredMethod={CenteredMethod.Relative} visible />
@@ -99,14 +100,14 @@ const RegistrationFormsPage: FC = () => {
                   >
                      {formName === "BasicInfoForm" && (
                         <BasicInfoForm
-                           formName={"BasicInfoForm"}
+                           formName={formName}
                            initialData={profileStatus.user}
                            onChange={handleFormChange}
                         />
                      )}
                      {formName === "FiltersForm" && (
                         <FiltersForm
-                           formName={"FiltersForm"}
+                           formName={formName}
                            initialData={profileStatus.user}
                            ageSelected={propsGathered?.current?.age as number}
                            onChange={handleFormChange}
@@ -114,37 +115,37 @@ const RegistrationFormsPage: FC = () => {
                      )}
                      {formName === "ProfileImagesForm" && (
                         <ProfileImagesForm
-                           formName={"ProfileImagesForm"}
+                           formName={formName}
                            initialData={profileStatus.user as User}
                            onChange={handleFormChange}
                         />
                      )}
                      {formName === "DateIdeaForm" && (
                         <DateIdeaForm
-                           formName={"DateIdeaForm"}
+                           formName={formName}
                            initialData={profileStatus.user}
                            onChange={handleFormChange}
                         />
                      )}
                      {formName === "ProfileDescriptionForm" && (
                         <ProfileDescriptionForm
-                           formName={"ProfileDescriptionForm"}
+                           formName={formName}
                            initialData={profileStatus.user}
                            onChange={handleFormChange}
                         />
                      )}
                      {formName === "GenderForm" && (
                         <PropAsQuestionForm
-                           formName={"GenderForm"}
-                           propNamesToChange={formsRequiredWithPropsToChange["GenderForm"]}
+                           formName={formName}
+                           propNamesToChange={formsRequiredWithPropsToChange[formName]}
                            initialData={profileStatus.user}
                            onChange={handleFormChange}
                         />
                      )}
                      {formName === "TargetGenderForm" && (
                         <PropAsQuestionForm
-                           formName={"TargetGenderForm"}
-                           propNamesToChange={formsRequiredWithPropsToChange["TargetGenderForm"]}
+                           formName={formName}
+                           propNamesToChange={formsRequiredWithPropsToChange[formName]}
                            defaultValueForNonSelectedAnswers={false}
                            initialData={profileStatus.user}
                            onChange={handleFormChange}
@@ -152,8 +153,16 @@ const RegistrationFormsPage: FC = () => {
                      )}
                      {formName === "CoupleProfileForm" && (
                         <PropAsQuestionForm
-                           formName={"CoupleProfileForm"}
-                           propNamesToChange={formsRequiredWithPropsToChange["CoupleProfileForm"]}
+                           formName={formName}
+                           propNamesToChange={formsRequiredWithPropsToChange[formName]}
+                           initialData={profileStatus.user}
+                           onChange={handleFormChange}
+                        />
+                     )}
+                     {otherQuestionProps.includes(formName) && (
+                        <PropAsQuestionForm
+                           formName={formName}
+                           propNamesToChange={formsRequiredWithPropsToChange[formName]}
                            initialData={profileStatus.user}
                            onChange={handleFormChange}
                         />

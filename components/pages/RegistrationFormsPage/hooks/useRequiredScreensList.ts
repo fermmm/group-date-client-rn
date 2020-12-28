@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import { ProfileStatusServerResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
+import {
+   ProfileStatusServerResponse,
+   UserPropAsQuestion
+} from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { EditableUserPropKey } from "../../../../api/server/shared-tools/validators/user";
+import { usePropsAsQuestions } from "../../../../api/server/user";
 
 /**
  * Get list of registration screens names to show, if the user has completed part of the registration
@@ -10,9 +14,12 @@ export const useRequiredFormList = (
    profileStatus: ProfileStatusServerResponse
 ): RequiredScreensResult => {
    const [formsRequired, setFormsRequired] = useState<RegistrationFormName[]>([]);
-   const [formsRequiredWithPropsToChange, setFormsRequiredWithPropsToChange] = useState<
-      Partial<Record<RegistrationFormName, EditableUserPropKey[]>>
-   >({});
+   const [
+      formsRequiredWithPropsToChange,
+      setFormsRequiredWithPropsToChange
+   ] = useState<FormsAndTheirProps>({});
+   const [otherQuestionProps, setOtherQuestionProps] = useState<string[]>([]);
+   const { data: allPropsAsQuestions, isLoading } = usePropsAsQuestions();
 
    useEffect(() => {
       // if (profileStatus?.notShowedThemeQuestions?.length > 0) {
@@ -25,7 +32,7 @@ export const useRequiredFormList = (
        * This determines which screen will be displayed based on the user props that are incomplete and
        * the user needs to provide information.
        */
-      const formsForProps: Partial<Record<RegistrationFormName, EditableUserPropKey[]>> = {
+      const formsForProps: FormsAndTheirProps = {
          GenderForm: ["gender"],
          TargetGenderForm: [
             "likesWoman",
@@ -50,29 +57,78 @@ export const useRequiredFormList = (
          ProfileDescriptionForm: ["profileDescription"]
       };
 
-      let formsWithPropsRequired: Partial<Record<RegistrationFormName, EditableUserPropKey[]>> = {};
+      let formsWithPropsRequired = getOnlyRequired(
+         formsForProps,
+         profileStatus.missingEditableUserProps
+      );
 
-      Object.keys(formsForProps).forEach(key => {
-         const propsOfForm = formsForProps[key] as EditableUserPropKey[];
-         const formIsRequired = propsOfForm.some(prop =>
-            profileStatus?.missingEditableUserProps?.includes(prop)
-         );
-         if (formIsRequired) {
-            formsWithPropsRequired[key] = propsOfForm;
-         }
-      });
+      // The server could return props that are not known and are probably questions to make to the user and return to the server
+      const unknownQuestionProps = profileStatus.missingEditableUserProps.filter(missingUserProp =>
+         isUnknownQuestionProp(missingUserProp, formsForProps, allPropsAsQuestions)
+      );
+
+      formsWithPropsRequired = mergeKnownWithUnknown(formsWithPropsRequired, unknownQuestionProps);
 
       setFormsRequired(Object.keys(formsWithPropsRequired) as RegistrationFormName[]);
       setFormsRequiredWithPropsToChange(formsWithPropsRequired);
-   }, [profileStatus]);
+      setOtherQuestionProps(unknownQuestionProps);
+   }, [profileStatus, allPropsAsQuestions]);
 
-   return { formsRequired, formsRequiredWithPropsToChange };
+   return {
+      isLoading,
+      formsRequired,
+      formsRequiredWithPropsToChange,
+      otherQuestionProps
+   };
 };
 
+function isUnknownQuestionProp(
+   prop: EditableUserPropKey,
+   formsForProps: FormsAndTheirProps,
+   allPropsAsQuestions: UserPropAsQuestion[]
+): boolean {
+   const isQuestionProp =
+      allPropsAsQuestions.filter(q => q.answers.find(a => a.propName === prop) != null).length > 0;
+   return Object.values(formsForProps).filter(p => p.includes(prop)).length === 0 && isQuestionProp;
+}
+
+function getOnlyRequired(
+   formsForProps: FormsAndTheirProps,
+   missingProps: EditableUserPropKey[]
+): FormsAndTheirProps {
+   let formsWithPropsRequired: FormsAndTheirProps = {};
+
+   Object.keys(formsForProps).forEach(key => {
+      const propsOfForm = formsForProps[key] as EditableUserPropKey[];
+      const formIsRequired = propsOfForm.some(prop => missingProps.includes(prop));
+      if (formIsRequired) {
+         formsWithPropsRequired[key] = propsOfForm;
+      }
+   });
+
+   return formsWithPropsRequired;
+}
+
+function mergeKnownWithUnknown(
+   known: FormsAndTheirProps,
+   unknown: EditableUserPropKey[]
+): FormsAndTheirProps {
+   const result = { ...known };
+   unknown.forEach(unknownProp => {
+      result[unknownProp] = [unknownProp];
+   });
+
+   return result;
+}
+
 export interface RequiredScreensResult {
+   isLoading: boolean;
    formsRequired: RegistrationFormName[];
    formsRequiredWithPropsToChange: Partial<Record<RegistrationFormName, EditableUserPropKey[]>>;
+   otherQuestionProps: string[];
 }
+
+export type FormsAndTheirProps = Partial<Record<RegistrationFormName, EditableUserPropKey[]>>;
 
 export type RegistrationFormName =
    | "BasicInfoForm"
