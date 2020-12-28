@@ -5,7 +5,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
-import QuestionForm from "../../common/QuestionForm/QuestionForm";
+import QuestionForm from "../../common/PropAsQuestionForm/PropAsQuestionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import DialogError from "../../common/DialogError/DialogError";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -86,12 +86,12 @@ const QuestionsPage: FC<QuestionsPageProps> = ({
                   <TitleSmallText style={styles.questionNumberIndicator}>
                      Pregunta {i + 1} de {questions.length}
                   </TitleSmallText>
-                  <QuestionForm
+                  {/* <QuestionForm
                      questionData={question}
                      onChange={selectedAnswers =>
                         (answeredQuestions[i] = selectedAnswers.length > 0)
                      }
-                  />
+                  /> */}
                </BasicScreenContainer>
             ))}
          </ScreensStepper>

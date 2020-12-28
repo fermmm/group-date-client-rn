@@ -25,21 +25,12 @@ export const currentTheme: ThemeExt = (WhiteTheme as unknown) as ThemeExt;
 export const PROFILE_IMAGES_AMOUNT = 6;
 
 /**
- * If this is true the target age is not prompted to the user and it's automatically set instead.
- * The user can manually set this value later after registration.
- */
-export const USE_AUTOMATIC_TARGET_AGE_AT_REGISTRATION: boolean = false;
-
-/**
  * If USE_AUTOMATIC_TARGET_AGE is true then the target age is the user age +- this value
  */
 export const AUTOMATIC_TARGET_AGE: number = 10;
 
-/**
- * If this is true the target distance is not prompt to the user and it's automatically set instead
- * The user can manually set this value later after registration.
- */
-export const USE_AUTOMATIC_TARGET_DISTANCE_AT_REGISTRATION: boolean = false;
+export const MIN_AGE_ALLOWED: number = 18;
+export const MAX_AGE_ALLOWED: number = 179;
 
 /**
  * Distances values available in KM

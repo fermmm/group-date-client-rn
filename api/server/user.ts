@@ -8,7 +8,8 @@ import { defaultRequestFunction, defaultErrorHandler } from "../tools/reactQuery
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import {
    FileUploadResponse,
-   ProfileStatusServerResponse
+   ProfileStatusServerResponse,
+   UserPropAsQuestion
 } from "./shared-tools/endpoints-interfaces/user";
 import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
@@ -29,6 +30,16 @@ export function useServerProfileStatus<T = ProfileStatusServerResponse>(
          ...options,
          ...extraOptions
       }
+   );
+
+   return defaultErrorHandler(query);
+}
+
+export function usePropsAsQuestions<T = UserPropAsQuestion[]>(options?: UseQueryOptions<T>) {
+   const query = useQuery<T>(
+      "user/props-as-questions",
+      () => defaultRequestFunction("user/props-as-questions", "GET"),
+      options
    );
 
    return defaultErrorHandler(query);

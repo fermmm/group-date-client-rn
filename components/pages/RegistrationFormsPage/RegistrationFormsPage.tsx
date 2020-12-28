@@ -1,4 +1,4 @@
-import React, { useState, FC } from "react";
+import React, { useState, FC, useRef, useCallback } from "react";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import ProfileDescriptionForm from "./ProfileDescriptionForm/ProfileDescriptionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
@@ -10,84 +10,42 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { useServerProfileStatus } from "../../../api/server/user";
 import { useNavigation } from "@react-navigation/native";
 import { CenteredMethod, LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
-import {
-   USE_AUTOMATIC_TARGET_AGE_AT_REGISTRATION,
-   USE_AUTOMATIC_TARGET_DISTANCE_AT_REGISTRATION
-} from "../../../config";
 import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
-import { RegistrationFormName, useRequiredScreensList } from "./hooks/useRequiredScreensList";
+import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredScreensList";
 import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import PropAsQuestionForm from "../../common/PropAsQuestionForm/PropAsQuestionForm";
+import FiltersForm from "./FiltersForm/FiltersForm";
 
-/*
-   [Hecho] name
-   [Hecho] age
-   [Hecho] height
-   [Hecho] targetAgeMin
-   [Hecho] targetAgeMax
-   [Hecho] targetDistance
-   [Hecho] locationLat
-   [Hecho] locationLon
-   [Hecho] cityName
-   [Hecho] country
+// TODO: En useRequiredFormList deberiamos devolver una variable mas: unknownPropsRequired,
+// se puede meter en el mismo map
 
-   [Hecho] images
-   [Hecho] dateIdea
-   [Hecho] profileDescription
-   
-   gender
-   likesWoman
-   likesMan
-   likesWomanTrans
-   likesManTrans
-   likesOtherGenders
-   isCoupleProfile
-
-   questionsShowed
-*/
+// TODO: Implementar themes as questions
 
 const RegistrationFormsPage: FC = () => {
-   const [currentStep, setCurrentStep] = useState(0);
-   const [showErrorDialog, setShowErrorDialog] = useState(false);
-   const [currentErrorOnForms, setCurrentErrorOnForms] = useState<
-      Partial<Record<RegistrationFormName, string>>
-   >({});
    const { navigate }: StackNavigationProp<Record<string, {}>> = useNavigation();
+   const [currentStep, setCurrentStep] = useState(0);
+   const [errorDialogVisible, setErrorDialogVisible] = useState(false);
+   const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
+   const propsGathered = useRef<EditableUserProps>({});
+   const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
+   const { formsRequired, formsRequiredWithPropsToChange } = useRequiredFormList(profileStatus);
 
-   /**
-    * Get which user prop is incomplete and requires user to provide information
-    */
-   const { data: profileStatus, isLoading } = useServerProfileStatus();
+   const handleFormChange = useCallback(
+      (formName: RegistrationFormName, newProps: EditableUserProps, error: string | null) => {
+         propsGathered.current = { ...propsGathered.current, ...newProps };
+         errorOnForms.current[formName] = error;
+      },
+      []
+   );
 
-   /**
-    * Get list of registration screens names to show, if the user has completed part of the registration
-    * in the past, then some screens are not showed so this list based on the profileStatus.
-    */
-   const formNamesToShow = useRequiredScreensList(profileStatus);
-
-   /**
-    * Props gathered from the user that will be sent
-    */
-   const [propsGathered, setPropsGathered] = useState<EditableUserProps>({});
-
-   const handleFormChange = (
-      formName: RegistrationFormName,
-      props: EditableUserProps,
-      error: string | null
-   ) => {
-      setPropsGathered({ ...propsGathered, ...props });
-      let newError = currentErrorOnForms;
-      newError[formName] = error;
-      setCurrentErrorOnForms({ ...currentErrorOnForms, ...newError });
-   };
-
-   const handleContinueButtonClick = (screenName: RegistrationFormName) => {
-      if (currentErrorOnForms && currentErrorOnForms[screenName] != null) {
-         setShowErrorDialog(true);
+   const handleContinueButtonClick = useCallback(() => {
+      if (getCurrentFormError()) {
+         showErrorDialog();
          return;
       }
 
-      if (currentStep < formNamesToShow.length - 1) {
+      if (currentStep < formsRequired.length - 1) {
          setCurrentStep(currentStep + 1);
       } else {
          // TODO:
@@ -95,75 +53,116 @@ const RegistrationFormsPage: FC = () => {
          // Como es el ultimo invalida el cache de profile status
          // Si profile status esta ok vamos a la siguiente pantalla (Configurable via props)
       }
-   };
+   }, [currentStep, formsRequired]);
 
-   const handleBackButtonClick = () => {
+   const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
+   const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
+
+   const handleBackButtonClick = useCallback(() => {
       if (currentStep > 0) {
          setCurrentStep(currentStep - 1);
       }
-   };
+   }, [currentStep]);
 
-   const getCurrentFormName = (): RegistrationFormName => formNamesToShow[currentStep];
-   const getCurrentFormError = (): string => currentErrorOnForms[getCurrentFormName()];
+   // Called by back button/gesture on android
+   const handleScreenChange = useCallback((newScreen: number) => {
+      setCurrentStep(newScreen);
+   }, []);
+
+   const getCurrentFormError = useCallback(
+      (): string => errorOnForms.current[formsRequired[currentStep]],
+      [formsRequired, currentStep]
+   );
 
    return (
       <>
          <AppBarHeader />
-         {isLoading ? (
+         {profileStatusLoading ? (
             <>
                <BasicScreenContainer />
-               <LoadingAnimation visible centeredMethod={CenteredMethod.ToWindow} />
+               <LoadingAnimation centeredMethod={CenteredMethod.Relative} visible />
             </>
          ) : (
-            <ScreensStepper currentScreen={currentStep} swipeEnabled={false}>
-               {formNamesToShow.map((screenName, i) => (
+            <ScreensStepper
+               currentScreen={currentStep}
+               swipeEnabled={false}
+               onScreenChange={handleScreenChange}
+            >
+               {formsRequired.map((formName, i) => (
                   <BasicScreenContainer
                      showBottomGradient={true}
-                     onContinuePress={() => handleContinueButtonClick(screenName)}
+                     onContinuePress={handleContinueButtonClick}
                      onBackPress={handleBackButtonClick}
                      showBackButton={i > 0}
                      showContinueButton
-                     key={screenName}
+                     key={formName}
                   >
-                     {screenName === "BasicInfoForm" && (
+                     {formName === "BasicInfoForm" && (
                         <BasicInfoForm
-                           askTargetAge={!USE_AUTOMATIC_TARGET_AGE_AT_REGISTRATION}
-                           askTargetDistance={!USE_AUTOMATIC_TARGET_DISTANCE_AT_REGISTRATION}
-                           initialFormData={profileStatus.user}
-                           onChange={(newData, error) =>
-                              handleFormChange("BasicInfoForm", newData, error)
-                           }
+                           formName={"BasicInfoForm"}
+                           initialData={profileStatus.user}
+                           onChange={handleFormChange}
                         />
                      )}
-                     {screenName === "ProfileImagesForm" && (
+                     {formName === "FiltersForm" && (
+                        <FiltersForm
+                           formName={"FiltersForm"}
+                           initialData={profileStatus.user}
+                           ageSelected={propsGathered?.current?.age as number}
+                           onChange={handleFormChange}
+                        />
+                     )}
+                     {formName === "ProfileImagesForm" && (
                         <ProfileImagesForm
+                           formName={"ProfileImagesForm"}
                            initialData={profileStatus.user as User}
-                           onChange={(newData, error) =>
-                              handleFormChange("ProfileImagesForm", newData, error)
-                           }
+                           onChange={handleFormChange}
                         />
                      )}
-                     {screenName === "DateIdeaForm" && (
+                     {formName === "DateIdeaForm" && (
                         <DateIdeaForm
-                           initialFormData={profileStatus.user}
-                           onChange={(newData, error) =>
-                              handleFormChange("DateIdeaForm", newData, error)
-                           }
+                           formName={"DateIdeaForm"}
+                           initialData={profileStatus.user}
+                           onChange={handleFormChange}
                         />
                      )}
-                     {screenName === "ProfileDescriptionForm" && (
+                     {formName === "ProfileDescriptionForm" && (
                         <ProfileDescriptionForm
-                           initialFormData={profileStatus.user}
-                           onChange={(newData, error) =>
-                              handleFormChange("ProfileDescriptionForm", newData, error)
-                           }
+                           formName={"ProfileDescriptionForm"}
+                           initialData={profileStatus.user}
+                           onChange={handleFormChange}
+                        />
+                     )}
+                     {formName === "GenderForm" && (
+                        <PropAsQuestionForm
+                           formName={"GenderForm"}
+                           propNamesToChange={formsRequiredWithPropsToChange["GenderForm"]}
+                           initialData={profileStatus.user}
+                           onChange={handleFormChange}
+                        />
+                     )}
+                     {formName === "TargetGenderForm" && (
+                        <PropAsQuestionForm
+                           formName={"TargetGenderForm"}
+                           propNamesToChange={formsRequiredWithPropsToChange["TargetGenderForm"]}
+                           defaultValueForNonSelectedAnswers={false}
+                           initialData={profileStatus.user}
+                           onChange={handleFormChange}
+                        />
+                     )}
+                     {formName === "CoupleProfileForm" && (
+                        <PropAsQuestionForm
+                           formName={"CoupleProfileForm"}
+                           propNamesToChange={formsRequiredWithPropsToChange["CoupleProfileForm"]}
+                           initialData={profileStatus.user}
+                           onChange={handleFormChange}
                         />
                      )}
                   </BasicScreenContainer>
                ))}
             </ScreensStepper>
          )}
-         <DialogError visible={showErrorDialog} onDismiss={() => setShowErrorDialog(false)}>
+         <DialogError visible={errorDialogVisible} onDismiss={hideErrorDialog}>
             {getCurrentFormError()}
          </DialogError>
       </>

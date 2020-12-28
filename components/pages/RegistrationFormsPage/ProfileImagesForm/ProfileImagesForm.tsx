@@ -6,13 +6,19 @@ import TitleText from "../../../common/TitleText/TitleText";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import ImagePlaceholder, { ImagePlaceholderState } from "./ImagePlaceholder/ImagePlaceholder";
 import { moveElementInArray } from "../../../../common-tools/js-tools/js-tools";
+import { RegistrationFormName } from "../hooks/useRequiredScreensList";
 
 export interface PropsProfileImagesForm {
+   formName: RegistrationFormName;
    initialData?: { images?: string[]; token: string };
-   onChange(formData: { images: string[] }, error: string | null): void;
+   onChange(
+      formName: RegistrationFormName,
+      formData: { images: string[] },
+      error: string | null
+   ): void;
 }
 
-const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }) => {
+const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange, formName }) => {
    const [placeholdersState, setPlaceholdersState] = useState<ImagePlaceholderState[]>(
       new Array(PROFILE_IMAGES_AMOUNT).fill(null).map((e, i) => ({
          uri: initialData?.images?.[i] || null,
@@ -23,8 +29,8 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange }
    const [imageToReposition, setImageToReposition] = useState<string>(null);
 
    useEffect(() => {
-      onChange({ images: getImagesArray() }, getErrors());
-   }, [placeholdersState]);
+      onChange(formName, { images: getImagesArray() }, getErrors());
+   }, [placeholdersState, formName]);
 
    const handlePlaceholderChange = (newState: ImagePlaceholderState) => {
       let newPlaceholdersState = [...placeholdersState];
@@ -137,4 +143,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default ProfileImagesForm;
+export default React.memo(ProfileImagesForm);

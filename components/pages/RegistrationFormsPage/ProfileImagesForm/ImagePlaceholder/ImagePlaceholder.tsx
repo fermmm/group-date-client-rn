@@ -160,7 +160,7 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
                   </ImageBackground>
                )}
                {isUploading && (
-                  <LoadingAnimation visible centeredMethod={CenteredMethod.ToContainer} />
+                  <LoadingAnimation visible centeredMethod={CenteredMethod.Absolute} />
                )}
                {!repositionMode && !uri && !isUploading && (
                   <Icon

@@ -6,17 +6,23 @@ import { currentTheme } from "../../../../config";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
+import { RegistrationFormName } from "../hooks/useRequiredScreensList";
 
 export interface PropsDateIdeaForm {
-   initialFormData?: { dateIdea?: string };
-   onChange(formData: { dateIdea: string }, error: string | null): void;
+   formName: RegistrationFormName;
+   initialData?: { dateIdea?: string };
+   onChange(
+      formName: RegistrationFormName,
+      formData: { dateIdea: string },
+      error: string | null
+   ): void;
 }
 
-const DateIdeaForm: FC<PropsDateIdeaForm> = ({ onChange, initialFormData }) => {
+const DateIdeaForm: FC<PropsDateIdeaForm> = ({ onChange, initialData, formName }) => {
    const maxCharactersAllowed: number = 300;
-   const [dateIdea, setDateIdea] = useState(initialFormData?.dateIdea);
+   const [dateIdea, setDateIdea] = useState(initialData?.dateIdea);
 
-   useEffect(() => onChange({ dateIdea }, getError()), [dateIdea]);
+   useEffect(() => onChange(formName, { dateIdea }, getError()), [dateIdea]);
 
    const getError = (): string => {
       if (!dateIdea || dateIdea.length < 3) {
@@ -74,4 +80,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default DateIdeaForm;
+export default React.memo(DateIdeaForm);

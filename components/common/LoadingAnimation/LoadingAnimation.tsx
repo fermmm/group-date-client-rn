@@ -13,8 +13,8 @@ interface PropsLoadingAnimation {
 
 export enum CenteredMethod {
    None,
-   ToWindow,
-   ToContainer
+   Relative,
+   Absolute
 }
 
 /**
@@ -44,16 +44,16 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
 
    let centeringStyle: StyleProp<ViewStyle> = {};
 
-   if (centeredMethod === CenteredMethod.ToWindow) {
-      centeringStyle = styles.centerToWindow;
+   if (centeredMethod === CenteredMethod.Relative) {
+      centeringStyle = styles.relativePosition;
    }
 
-   if (centeredMethod === CenteredMethod.ToContainer) {
-      centeringStyle = styles.centerToContainer;
+   if (centeredMethod === CenteredMethod.Absolute) {
+      centeringStyle = styles.absolutePosition;
    }
 
    return (
-      <View style={[styles.animationContainer, centeringStyle, style]}>
+      <View style={[styles.containerBase, centeringStyle, style]}>
          <Animated.View style={{ opacity: animValue }}>
             <LottieView
                source={require("./animation-loading.json")}
@@ -68,17 +68,16 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
 };
 
 const styles: Styles = StyleSheet.create({
-   animationContainer: {
-      position: "absolute",
-      flex: 0,
+   containerBase: {
       alignItems: "center",
       justifyContent: "center"
    },
-   centerToWindow: {
-      width: Dimensions.get("window").width,
-      height: "100%"
+   relativePosition: {
+      position: "relative",
+      width: "100%"
    },
-   centerToContainer: {
+   absolutePosition: {
+      position: "absolute",
       width: "100%",
       height: "100%"
    },

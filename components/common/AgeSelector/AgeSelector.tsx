@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View, Text, StyleProp, ViewStyle } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
+import { MAX_AGE_ALLOWED, MIN_AGE_ALLOWED } from "../../../config";
 
 export interface PropsAgeRangeSelector {
    min?: number;
@@ -11,7 +12,9 @@ export interface PropsAgeRangeSelector {
 }
 
 export const AgeRangeSelector: FC<PropsAgeRangeSelector> = ({ min, max, onChange, style }) => {
-   const [ageOptions] = useState(Array.from({ length: 179 }, (v, k) => ++k).slice(18 - 1));
+   const [ageOptions] = useState(
+      Array.from({ length: MAX_AGE_ALLOWED }, (v, k) => ++k).slice(MIN_AGE_ALLOWED - 1)
+   );
 
    return (
       <View style={[styles.mainContainer, style]}>
@@ -55,7 +58,7 @@ const styles: Styles = StyleSheet.create({
       fontSize: 18
    },
    picker: {
-      width: 85,
+      width: 90,
       height: 50
    }
 });

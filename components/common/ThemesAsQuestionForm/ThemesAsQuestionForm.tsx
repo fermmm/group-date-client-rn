@@ -5,10 +5,11 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import TitleText from "../TitleText/TitleText";
 import RadioButtonImproved from "../RadioButtonImproved/RadioButtonImproved";
 import { currentTheme } from "../../../config";
-import CheckboxButton from "../../common/CheckboxButton/CheckboxButton";
+import CheckboxButton from "../CheckboxButton/CheckboxButton";
 import ListItemImproved from "../ListItemImproved/ListItemImproved";
 import {
    QuestionAnswerData,
+   ThemeBasicInfo,
    ThemesAsQuestion
 } from "../../../api/server/shared-tools/endpoints-interfaces/themes";
 import { checkTypeByMember } from "../../../common-tools/ts-tools/common-ts-tools";
@@ -18,83 +19,28 @@ import {
    UserPropAsQuestionAnswer,
    UserPropsAsQuestionsTypes
 } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
+import { usePropsAsQuestions } from "../../../api/server/user";
+import { useThemesAsQuestions } from "../../../api/server/themes";
 
-export interface QuestionProps {
-   questionData: Question;
-   selectedAnswers?: Answer[];
-   itsImportantChecked?: boolean;
-   onChange?(selectedAnswers: Answer[], itsImportantSelected: boolean): void;
+/**
+ * This component can be used with questions that change props or themes depending on which is not null:
+ * propAsQuestionToShow or themeAsQuestionToShow
+ */
+export interface PropsThemesAsQuestionForm {
+   questionId: number;
+   initialDataThemesAsQuestions?: ThemesInfo;
+   onChange?: (updateInfo: ThemesToUpdate) => void;
 }
 
-const QuestionForm: FC<QuestionProps> = props => {
-   const { questionData, onChange } = props;
-   const [selectedAnswers, setSelectedAnswers] = useState(props.selectedAnswers ?? []);
-   const [itsImportantChecked, setItsImportantChecked] = useState(
-      props.itsImportantChecked ?? false
-   );
-   const { colors } = useTheme();
-
-   const incompatibilitiesBetweenAnswers =
-      "incompatibilitiesBetweenAnswers" in questionData
-         ? questionData.incompatibilitiesBetweenAnswers
-         : null;
-
-   const extraText = "extraText" in questionData ? questionData.extraText : null;
-   const multipleAnswersAllowed =
-      "multipleAnswersAllowed" in questionData ? questionData.multipleAnswersAllowed : null;
-
-   const answers: Array<UserPropAsQuestionAnswer<UserPropsAsQuestionsTypes> | QuestionAnswerData> =
-      questionData.answers;
-
-   const incompatibilitiesPresent: boolean =
-      incompatibilitiesBetweenAnswers != null && incompatibilitiesBetweenAnswers !== {};
-
-   useEffect(() => {
-      if (onChange != null) {
-         onChange(selectedAnswers, itsImportantChecked);
-      }
-   }, [selectedAnswers, itsImportantChecked]);
-
-   const getAnswerPositionOnList = (answersList: Answer[], answer: Answer) => {
-      if (answersList == null) {
-         return -1;
-      }
-
-      return answersList.findIndex(a => {
-         if (checkTypeByMember<QuestionAnswerData>(answer, "themeId")) {
-            return answer.themeId === (a as QuestionAnswerData).themeId;
-         } else {
-            if (answer.propName != null) {
-               return (
-                  answer.propName ===
-                  (a as UserPropAsQuestionAnswer<UserPropsAsQuestionsTypes>).propName
-               );
-            } else {
-               return (
-                  answer.value === (a as UserPropAsQuestionAnswer<UserPropsAsQuestionsTypes>).value
-               );
-            }
-         }
-      });
-   };
-
-   const addAnswersToList = (answersList: Answer[], answer: Answer) => {
-      return [...answersList, answer];
-   };
-
-   const removeAnswerFromList = (answersList: Answer[], answer: Answer) => {
-      const result = [...answersList];
-      result.splice(getAnswerPositionOnList(answersList, answer), 1);
-      return result;
-   };
-
-   const toggleAnswerFromList = (answersList: Answer[], answer: Answer) => {
-      if (getAnswerPositionOnList(answersList, answer) !== -1) {
-         return removeAnswerFromList(answersList, answer);
-      } else {
-         return addAnswersToList(answersList, answer);
-      }
-   };
+const ThemesAsQuestionForm: FC<PropsThemesAsQuestionForm> = props => {
+   // These 2 requests receive a list of all the questions with their texts to be used as required
+   const { data: propsAsQuestions, isLoading: propsAsQuestionLoading } = usePropsAsQuestions({
+      enabled: propAsQuestionToShow != null
+   });
+   const { data: themesAsQuestions, isLoading: themesAsQuestionsLoading } = useThemesAsQuestions({
+      enabled: themeAsQuestionToShow != null
+   });
 
    const getIsImportantDescriptionText = () => {
       const incompatibleAnswers: Answer[] = getIncompatibleResponses();
@@ -271,7 +217,24 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-type Question = ThemesAsQuestion | UserPropAsQuestion<UserPropsAsQuestionsTypes>;
-type Answer = QuestionAnswerData | UserPropAsQuestionAnswer<UserPropsAsQuestionsTypes>;
+interface ThemesInfo {
+   themesSubscribed?: ThemeBasicInfo[];
+   themesBlocked?: ThemeBasicInfo[];
+}
+
+interface ThemesToUpdate {
+   themesToUnsubscribe?: string[];
+   themesToSubscribe?: string[];
+   themesToBlock?: string[];
+   themesToUnblock?: string[];
+   questionsShowed?: number[]; //themeQuestion.questionId
+}
+
+enum QuestionType {
+   PropAsQuestion,
+   ThemeAsQuestion
+}
+
+type Answer = QuestionAnswerData | UserPropAsQuestionAnswer;
 
 export default QuestionForm;

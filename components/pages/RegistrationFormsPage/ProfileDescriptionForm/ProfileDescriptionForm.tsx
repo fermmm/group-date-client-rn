@@ -4,19 +4,26 @@ import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
+import { RegistrationFormName } from "../hooks/useRequiredScreensList";
 
 export interface DescriptionFormProps {
-   initialFormData?: { profileDescription?: string };
-   onChange(formData: { profileDescription: string }, error: string | null): void;
+   formName: RegistrationFormName;
+   initialData?: { profileDescription?: string };
+   onChange(
+      formName: RegistrationFormName,
+      formData: { profileDescription: string },
+      error: string | null
+   ): void;
 }
 
-const ProfileDescriptionForm: FC<DescriptionFormProps> = ({ initialFormData, onChange }) => {
+const ProfileDescriptionForm: FC<DescriptionFormProps> = ({ initialData, onChange, formName }) => {
    const maxCharactersAllowed: number = 4000;
-   const [profileDescription, setProfileDescription] = useState(
-      initialFormData?.profileDescription
-   );
+   const [profileDescription, setProfileDescription] = useState(initialData?.profileDescription);
 
-   useEffect(() => onChange({ profileDescription }, getError()), [profileDescription]);
+   useEffect(() => onChange(formName, { profileDescription }, getError()), [
+      profileDescription,
+      formName
+   ]);
 
    const getError = (): string => {
       if (profileDescription?.length > maxCharactersAllowed) {
@@ -57,4 +64,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default ProfileDescriptionForm;
+export default React.memo(ProfileDescriptionForm);
