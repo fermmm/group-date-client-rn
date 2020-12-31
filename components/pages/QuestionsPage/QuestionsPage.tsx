@@ -5,7 +5,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
-import QuestionForm from "../../common/PropAsQuestionForm/PropAsQuestionForm";
+import QuestionForm from "../RegistrationFormsPage/PropAsQuestionForm/PropAsQuestionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import DialogError from "../../common/DialogError/DialogError";
 import { StackNavigationProp } from "@react-navigation/stack";

@@ -19,13 +19,9 @@ export const useRequiredFormList = (
       setFormsRequiredWithPropsToChange
    ] = useState<FormsAndTheirProps>({});
    const [otherQuestionProps, setOtherQuestionProps] = useState<string[]>([]);
-   const { data: allPropsAsQuestions, isLoading } = usePropsAsQuestions();
+   const { data: allPropsAsQuestions, isLoading: propsAsQuestionsLoading } = usePropsAsQuestions();
 
    useEffect(() => {
-      // if (profileStatus?.notShowedThemeQuestions?.length > 0) {
-      //    screens.push("ThemeQuestionForm");
-      // }
-
       /**
        * The list contains the screens name with the user props that each screen provides.
        * Also this list determines the order in which the screens will be displayed.
@@ -42,6 +38,7 @@ export const useRequiredFormList = (
             "likesOtherGenders"
          ],
          CoupleProfileForm: ["isCoupleProfile"],
+         ThemeAsQuestionForm: [],
          DateIdeaForm: ["dateIdea"],
          BasicInfoForm: [
             "name",
@@ -59,7 +56,8 @@ export const useRequiredFormList = (
 
       let formsWithPropsRequired = getOnlyRequired(
          formsForProps,
-         profileStatus.missingEditableUserProps
+         profileStatus.missingEditableUserProps,
+         profileStatus.notShowedThemeQuestions
       );
 
       // The server could return props that are not known and are probably questions to make to the user and return to the server
@@ -75,7 +73,7 @@ export const useRequiredFormList = (
    }, [profileStatus, allPropsAsQuestions]);
 
    return {
-      isLoading,
+      isLoading: propsAsQuestionsLoading,
       formsRequired,
       formsRequiredWithPropsToChange,
       otherQuestionProps
@@ -94,11 +92,18 @@ function isUnknownQuestionProp(
 
 function getOnlyRequired(
    formsForProps: FormsAndTheirProps,
-   missingProps: EditableUserPropKey[]
+   missingProps: EditableUserPropKey[],
+   notShowedThemesAsQuestions: string[]
 ): FormsAndTheirProps {
    let formsWithPropsRequired: FormsAndTheirProps = {};
 
    Object.keys(formsForProps).forEach(key => {
+      if (key === "ThemeAsQuestionForm") {
+         if (notShowedThemesAsQuestions?.length > 0) {
+            formsWithPropsRequired["ThemeAsQuestionForm"] = notShowedThemesAsQuestions;
+         }
+         return;
+      }
       const propsOfForm = formsForProps[key] as EditableUserPropKey[];
       const formIsRequired = propsOfForm.some(prop => missingProps.includes(prop));
       if (formIsRequired) {
@@ -124,11 +129,13 @@ function mergeKnownWithUnknown(
 export interface RequiredScreensResult {
    isLoading: boolean;
    formsRequired: RegistrationFormName[];
-   formsRequiredWithPropsToChange: Partial<Record<RegistrationFormName, EditableUserPropKey[]>>;
+   formsRequiredWithPropsToChange: FormsAndTheirProps;
    otherQuestionProps: string[];
 }
 
-export type FormsAndTheirProps = Partial<Record<RegistrationFormName, EditableUserPropKey[]>>;
+export type FormsAndTheirProps = Partial<
+   Record<RegistrationFormName, Array<EditableUserPropKey | string>>
+>;
 
 export type RegistrationFormName =
    | "BasicInfoForm"
@@ -139,4 +146,5 @@ export type RegistrationFormName =
    | "ThemeQuestionForm"
    | "TargetGenderForm"
    | "GenderForm"
+   | "ThemeAsQuestionForm"
    | "CoupleProfileForm";

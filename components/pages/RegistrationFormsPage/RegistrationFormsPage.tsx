@@ -13,8 +13,9 @@ import { EditableUserProps } from "../../../api/server/shared-tools/validators/u
 import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredScreensList";
 import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
-import PropAsQuestionForm from "../../common/PropAsQuestionForm/PropAsQuestionForm";
+import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
+import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
 
 // TODO: Implementar themes as questions
 
@@ -24,6 +25,12 @@ const RegistrationFormsPage: FC = () => {
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
+   const themesToUpdate = useRef<ThemesToUpdate>({
+      themesToUnsubscribe: [],
+      themesToSubscribe: [],
+      themesToBlock: [],
+      themesToUnblock: []
+   });
    const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
    const {
       isLoading: requiredFormListLoading,
@@ -33,9 +40,31 @@ const RegistrationFormsPage: FC = () => {
    } = useRequiredFormList(profileStatus);
 
    const handleFormChange = useCallback(
-      (formName: RegistrationFormName, newProps: EditableUserProps, error: string | null) => {
+      (
+         formName: RegistrationFormName,
+         newProps: EditableUserProps,
+         error: string | null,
+         themes?: ThemesToUpdate
+      ) => {
          propsGathered.current = { ...propsGathered.current, ...newProps };
          errorOnForms.current[formName] = error;
+         if (themes != null) {
+            themesToUpdate.current = {
+               themesToUnsubscribe: [
+                  ...themesToUpdate.current.themesToUnsubscribe,
+                  ...themes.themesToUnsubscribe
+               ],
+               themesToSubscribe: [
+                  ...themesToUpdate.current.themesToSubscribe,
+                  ...themes.themesToSubscribe
+               ],
+               themesToBlock: [...themesToUpdate.current.themesToBlock, ...themes.themesToBlock],
+               themesToUnblock: [
+                  ...themesToUpdate.current.themesToUnblock,
+                  ...themes.themesToUnblock
+               ]
+            };
+         }
       },
       []
    );
@@ -167,6 +196,17 @@ const RegistrationFormsPage: FC = () => {
                            onChange={handleFormChange}
                         />
                      )}
+                     {formName === "ThemeAsQuestionForm" &&
+                        formsRequiredWithPropsToChange[formName].map(questionId => (
+                           <ThemesAsQuestionForm
+                              formName={formName}
+                              initialData={profileStatus.user}
+                              questionId={questionId}
+                              mandatoryQuestion={true}
+                              onChange={handleFormChange}
+                              key={questionId}
+                           />
+                        ))}
                   </BasicScreenContainer>
                ))}
             </ScreensStepper>
@@ -177,5 +217,12 @@ const RegistrationFormsPage: FC = () => {
       </>
    );
 };
+
+export interface ThemesToUpdate {
+   themesToUnsubscribe?: string[];
+   themesToSubscribe?: string[];
+   themesToBlock?: string[];
+   themesToUnblock?: string[];
+}
 
 export default RegistrationFormsPage;

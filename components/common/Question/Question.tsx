@@ -13,6 +13,7 @@ export interface PropsQuestion {
    questionText: string;
    answers: Answer[];
    initiallySelected?: string[];
+   initiallyItsImportantChecked?: boolean;
    onChange: (changes: QuestionOnChange) => void;
    questionExtraText?: string;
    multipleAnswersAllowed?: boolean;
@@ -40,14 +41,15 @@ const Question: FC<PropsQuestion> = props => {
       answers,
       onChange,
       incompatibilitiesBetweenAnswers,
-      initiallySelected
+      initiallySelected,
+      initiallyItsImportantChecked
    } = props;
    const { colors } = useTheme();
    const [selectedAnswer, setSelectedAnswer] = useState<string>(initiallySelected?.[0]);
    const [selectedAnswerMultiple, setSelectedAnswerMultiple] = useState<string[]>(
       initiallySelected
    );
-   const [itsImportantChecked, setItsImportantChecked] = useState(null);
+   const [itsImportantChecked, setItsImportantChecked] = useState(initiallyItsImportantChecked);
 
    useEffect(() => onChange({ selectedAnswer, selectedAnswerMultiple, itsImportantChecked }), [
       selectedAnswer,
