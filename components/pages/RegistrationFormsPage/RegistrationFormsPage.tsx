@@ -10,7 +10,7 @@ import { useServerProfileStatus } from "../../../api/server/user";
 import { useNavigation } from "@react-navigation/native";
 import { CenteredMethod, LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
-import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredScreensList";
+import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredFormList";
 import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";

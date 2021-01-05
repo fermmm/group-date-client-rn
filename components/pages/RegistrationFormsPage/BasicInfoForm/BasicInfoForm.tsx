@@ -6,7 +6,7 @@ import { formValidators } from "../../../../common-tools/formValidators/formVali
 import { currentTheme } from "../../../../config";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import { useGeolocation } from "../../../../common-tools/device-native-api/geolocation/getGeolocation";
-import { RegistrationFormName } from "../hooks/useRequiredScreensList";
+import { RegistrationFormName } from "../hooks/useRequiredFormList";
 
 export interface PropsBasicInfoForm {
    formName: RegistrationFormName;

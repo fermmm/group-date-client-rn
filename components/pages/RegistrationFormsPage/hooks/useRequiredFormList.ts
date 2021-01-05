@@ -19,9 +19,16 @@ export const useRequiredFormList = (
       setFormsRequiredWithPropsToChange
    ] = useState<FormsAndTheirProps>({});
    const [otherQuestionProps, setOtherQuestionProps] = useState<string[]>([]);
-   const { data: allPropsAsQuestions, isLoading: propsAsQuestionsLoading } = usePropsAsQuestions();
+   const {
+      data: allPropsAsQuestions = [],
+      isLoading: propsAsQuestionsLoading
+   } = usePropsAsQuestions();
 
    useEffect(() => {
+      if (profileStatus == null) {
+         return;
+      }
+
       /**
        * The list contains the screens name with the user props that each screen provides.
        * Also this list determines the order in which the screens will be displayed.

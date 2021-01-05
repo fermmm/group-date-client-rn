@@ -4,7 +4,7 @@ import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
-import { RegistrationFormName } from "../hooks/useRequiredScreensList";
+import { RegistrationFormName } from "../hooks/useRequiredFormList";
 
 export interface DescriptionFormProps {
    formName: RegistrationFormName;

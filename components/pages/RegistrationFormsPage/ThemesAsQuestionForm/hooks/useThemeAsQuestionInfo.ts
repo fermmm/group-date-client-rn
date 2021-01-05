@@ -13,7 +13,7 @@ export function useThemeAsQuestionInfo(
    itsImportantChecked?: boolean
 ): UseThemeInfoResponse {
    const { data: themesAsQuestions, isLoading } = useThemesAsQuestions();
-   const question = themesAsQuestions.find(q => q.questionId === questionId);
+   const question = themesAsQuestions?.find(q => q.questionId === questionId);
    const initiallySelectedAnswer = getInitiallySelectedAnswer(
       question,
       initialData.themesSubscribed
@@ -115,7 +115,11 @@ function getThemesToUpdate(props: {
 function getInitiallySelectedAnswer(
    question: ThemesAsQuestion,
    themesSubscribed: ThemeBasicInfo[]
-) {
+): string[] {
+   if (question == null || themesSubscribed == null) {
+      return [];
+   }
+
    // If the user is subscribed to any of the answers then that answer is considered selected
    const optionSelected = question.answers.find(
       answer => themesSubscribed?.find(subscribed => subscribed.themeId === answer.themeId) != null
@@ -133,7 +137,7 @@ function getInitiallyItsImportantChecked(
    themesBlocked: ThemeBasicInfo[],
    question: ThemesAsQuestion
 ) {
-   if (initiallySelectedAnswer == null) {
+   if (question == null || initiallySelectedAnswer == null) {
       return false;
    }
 
@@ -149,11 +153,7 @@ function getInitiallyItsImportantChecked(
 }
 
 function getIncompatibleAnswersOf(answerId: string, question: ThemesAsQuestion): string[] {
-   if (question.incompatibilitiesBetweenAnswers == null) {
-      return [];
-   }
-
-   if (answerId == null) {
+   if (answerId == null || question == null || question.incompatibilitiesBetweenAnswers == null) {
       return [];
    }
 
