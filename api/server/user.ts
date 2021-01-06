@@ -88,7 +88,7 @@ export async function uploadImage(
    } catch (error) {
       let retryResult = { isError: true };
       Alert.alert(
-         `ಠ_ಠ ${i18n.t("Error subiendo la imagen")}`,
+         `ಠ_ಠ ${i18n.t("Error when uploading the image")}`,
          i18n.t("There seems to be a connection problem"),
          [
             {

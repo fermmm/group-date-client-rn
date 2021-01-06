@@ -149,7 +149,7 @@ const LoginPage: FC = () => {
                   style={{ borderColor: colors.textLogin }}
                   onPress={handleLoginButtonClick}
                >
-                  Comenzar
+                  Iniciar sesión con Facebook
                </ButtonStyled>
             )}
          </View>
