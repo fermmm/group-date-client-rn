@@ -17,18 +17,15 @@ import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
 import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
 
+// TODO: Testear un poco todo y codear el envio al servidor
+
 const RegistrationFormsPage: FC = () => {
    const { navigate } = useNavigation();
    const [currentStep, setCurrentStep] = useState(0);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
-   const themesToUpdate = useRef<ThemesToUpdate>({
-      themesToUnsubscribe: [],
-      themesToSubscribe: [],
-      themesToBlock: [],
-      themesToUnblock: []
-   });
+   const themesToUpdate = useRef<Record<string, ThemesToUpdate>>({});
    const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
    const {
       isLoading: requiredFormListLoading,
@@ -43,26 +40,12 @@ const RegistrationFormsPage: FC = () => {
          formName: RegistrationFormName | string,
          newProps: EditableUserProps,
          error: string | null,
-         themes?: ThemesToUpdate
+         themesToUpdateReceived?: ThemesToUpdate
       ) => {
          propsGathered.current = { ...propsGathered.current, ...newProps };
          errorOnForms.current[formName] = error;
-         if (themes != null) {
-            themesToUpdate.current = {
-               themesToUnsubscribe: [
-                  ...themesToUpdate.current.themesToUnsubscribe,
-                  ...themes.themesToUnsubscribe
-               ],
-               themesToSubscribe: [
-                  ...themesToUpdate.current.themesToSubscribe,
-                  ...themes.themesToSubscribe
-               ],
-               themesToBlock: [...themesToUpdate.current.themesToBlock, ...themes.themesToBlock],
-               themesToUnblock: [
-                  ...themesToUpdate.current.themesToUnblock,
-                  ...themes.themesToUnblock
-               ]
-            };
+         if (themesToUpdateReceived != null) {
+            themesToUpdate.current[formName] = themesToUpdateReceived;
          }
       },
       []
