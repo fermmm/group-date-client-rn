@@ -33,7 +33,6 @@ export const useRequiredFormList = (
        * Also this list determines the order in which the screens will be displayed.
        */
       const formsForProps: FormsAndTheirProps = {
-         ThemesAsQuestionsForms: [],
          GenderForm: ["gender"],
          TargetGenderForm: [
             "likesWoman",
@@ -44,6 +43,7 @@ export const useRequiredFormList = (
          ],
          CoupleProfileForm: ["isCoupleProfile"],
          UnknownPropsQuestionForms: [],
+         ThemesAsQuestionsForms: [],
          DateIdeaForm: ["dateIdea"],
          BasicInfoForm: [
             "name",

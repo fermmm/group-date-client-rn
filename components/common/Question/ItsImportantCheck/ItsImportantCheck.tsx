@@ -16,8 +16,10 @@ interface PropsItsImportantCheck {
 const ItsImportantCheck: FC<PropsItsImportantCheck> = props => {
    const { checked, onChange, answers, selectedAnswer, incompatibilitiesBetweenAnswers } = props;
 
+   console.log(selectedAnswer);
+
    if (
-      !selectedAnswer ||
+      selectedAnswer == null ||
       selectedAnswer === -1 ||
       !incompatibilitiesBetweenAnswers ||
       Object.keys(incompatibilitiesBetweenAnswers).length === 0
@@ -28,11 +30,7 @@ const ItsImportantCheck: FC<PropsItsImportantCheck> = props => {
    const incompatibilities: number[] = incompatibilitiesBetweenAnswers?.[selectedAnswer] || null;
 
    if (!incompatibilities) {
-      return (
-         <Text style={styles.noFiltersText}>
-            Con esa respuesta nadie te va a filtrar ni tampoco podes filtrar
-         </Text>
-      );
+      return <Text style={styles.noFiltersText}>Esta respuesta no se puede usar como filtro</Text>;
    }
 
    const getIsImportantDescriptionText = () => {
