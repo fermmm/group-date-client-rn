@@ -2,12 +2,10 @@ import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
-import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import AgeRangeSelector from "../../../common/AgeSelector/AgeSelector";
 import {
    AUTOMATIC_TARGET_AGE,
    AUTOMATIC_TARGET_DISTANCE,
-   currentTheme,
    MAX_AGE_ALLOWED,
    MIN_AGE_ALLOWED
 } from "../../../../config";
@@ -46,12 +44,12 @@ export const FiltersForm: FC<PropsFiltersForm> = ({
          formName,
          {
             targetDistance,
-            targetAgeMin,
-            targetAgeMax
+            targetAgeMin: targetAgeMin ?? normalizeAge(ageSelected - AUTOMATIC_TARGET_AGE),
+            targetAgeMax: targetAgeMax ?? normalizeAge(ageSelected + AUTOMATIC_TARGET_AGE)
          },
          null
       );
-   }, [targetDistance, targetAgeMin, targetAgeMax, formName]);
+   }, [targetDistance, targetAgeMin, targetAgeMax, formName, ageSelected]);
 
    const normalizeAge = (num: number): number => {
       if (num < MIN_AGE_ALLOWED) {

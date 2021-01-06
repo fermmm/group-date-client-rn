@@ -16,8 +16,7 @@ import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user
 import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
 import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
-
-// TODO: Testear un poco todo y codear el envio al servidor
+import { useUnifiedThemesToUpdate } from "./hooks/useUnifiedThemesToUpdate";
 
 const RegistrationFormsPage: FC = () => {
    const { navigate } = useNavigation();
@@ -26,6 +25,7 @@ const RegistrationFormsPage: FC = () => {
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
    const themesToUpdate = useRef<Record<string, ThemesToUpdate>>({});
+   const unifiedThemesToUpdate = useUnifiedThemesToUpdate(themesToUpdate.current);
    const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
    const {
       isLoading: requiredFormListLoading,
@@ -34,6 +34,9 @@ const RegistrationFormsPage: FC = () => {
       unknownPropsQuestions,
       themesAsQuestionsToShow
    } = useRequiredFormList(profileStatus);
+
+   const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
+   const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
 
    const handleFormChange = useCallback(
       (
@@ -51,25 +54,6 @@ const RegistrationFormsPage: FC = () => {
       []
    );
 
-   const handleContinueButtonClick = useCallback(() => {
-      if (getCurrentFormError()) {
-         showErrorDialog();
-         return;
-      }
-
-      if (currentStep < formsRequired.length - 1) {
-         setCurrentStep(currentStep + 1);
-      } else {
-         // TODO:
-         // Enviar los datos
-         // Como es el ultimo invalida el cache de profile status
-         // Si profile status esta ok vamos a la siguiente pantalla (Configurable via props)
-      }
-   }, [currentStep, formsRequired]);
-
-   const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
-   const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
-
    const handleBackButtonClick = useCallback(() => {
       if (currentStep > 0) {
          setCurrentStep(currentStep - 1);
@@ -80,6 +64,34 @@ const RegistrationFormsPage: FC = () => {
    const handleScreenChange = useCallback((newScreen: number) => {
       setCurrentStep(newScreen);
    }, []);
+
+   const handleContinueButtonClick = useCallback(() => {
+      if (getCurrentFormError()) {
+         showErrorDialog();
+         return;
+      }
+
+      if (currentStep < formsRequired.length - 1) {
+         setCurrentStep(currentStep + 1);
+      } else {
+         sendDataToServer();
+      }
+   }, [currentStep, formsRequired]);
+
+   const sendDataToServer = () => {
+      // TODO:
+      // Enviar los datos
+      // Como es el ultimo invalida el cache de profile status
+      // Si profile status esta ok vamos a la siguiente pantalla
+      // propsGathered
+      // unifiedThemesToUpdate
+      console.log("/////////////////////");
+      console.log("Props gathered:");
+      console.log(propsGathered);
+      console.log("Themes to update:");
+      console.log(unifiedThemesToUpdate);
+      console.log("/////////////////////");
+   };
 
    const getCurrentFormError = useCallback(
       (): string => errorOnForms.current[formsRequired[currentStep]],

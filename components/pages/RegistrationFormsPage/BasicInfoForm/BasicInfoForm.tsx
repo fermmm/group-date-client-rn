@@ -42,7 +42,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
          {
             name,
             age,
-            height,
+            height: height ?? 0,
             locationLat: geolocation?.coords?.latitude,
             locationLon: geolocation?.coords?.longitude,
             country: geolocation?.info?.isoCountryCode,
@@ -59,7 +59,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
    }, [geolocation]);
 
    const getError = () => {
-      return getNameError() || getAgeError() || getCityNameError();
+      return getNameError() || getAgeError() || getCityNameError() || getHeightError();
    };
 
    const getNameError = () => {
@@ -90,11 +90,11 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
       }
 
       if (age < 12) {
-         return "Tu edad demasiado baja para lo que se permite en este tipo de apps, lo sentimos.";
+         return "Tu edad demasiado baja para lo que se permite en este tipo de apps, lo sentimos";
       }
 
       if (age >= 179) {
-         return "Tu edad es demasiado alta para ser la de un ser humano.";
+         return "Tu edad es demasiado alta para ser la de un ser humano";
       }
 
       return null;
@@ -113,6 +113,14 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
             (cityName.length - maxCharactersAllowed) +
             " caracteres"
          );
+      }
+
+      return null;
+   };
+
+   const getHeightError = () => {
+      if (height != null && height >= 300) {
+         return "Tu altura es demasiado alta para ser la de un ser humano";
       }
 
       return null;

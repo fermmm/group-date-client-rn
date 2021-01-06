@@ -18,7 +18,9 @@ export interface DescriptionFormProps {
 
 const ProfileDescriptionForm: FC<DescriptionFormProps> = ({ initialData, onChange, formName }) => {
    const maxCharactersAllowed: number = 4000;
-   const [profileDescription, setProfileDescription] = useState(initialData?.profileDescription);
+   const [profileDescription, setProfileDescription] = useState(
+      initialData?.profileDescription ?? ""
+   );
 
    useEffect(() => onChange(formName, { profileDescription }, getError()), [
       profileDescription,
