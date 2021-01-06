@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from "react";
 import { UserPropsAsQuestionsTypes } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { EditableUserProps } from "../../../../api/server/shared-tools/validators/user";
 import { usePropsAsQuestions } from "../../../../api/server/user";
-import { RegistrationFormName } from "../hooks/useRequiredFormList";
 import {
    CenteredMethod,
    LoadingAnimation
@@ -10,15 +9,11 @@ import {
 import Question, { QuestionOnChange } from "../../../common/Question/Question";
 
 export interface PropsPropAsQuestionForm {
-   formName: RegistrationFormName;
+   formName: string;
    initialData?: EditableUserProps;
    propNamesToChange: string[];
    defaultValueForNonSelectedAnswers?: UserPropsAsQuestionsTypes;
-   onChange: (
-      formName: RegistrationFormName,
-      newProps: EditableUserProps,
-      error: string | null
-   ) => void;
+   onChange: (formName: string, newProps: EditableUserProps, error: string | null) => void;
 }
 
 const PropAsQuestionForm: FC<PropsPropAsQuestionForm> = props => {

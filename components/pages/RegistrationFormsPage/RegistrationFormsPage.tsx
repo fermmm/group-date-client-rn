@@ -17,8 +17,6 @@ import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
 import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
 
-// TODO: Implementar themes as questions
-
 const RegistrationFormsPage: FC = () => {
    const { navigate } = useNavigation();
    const [currentStep, setCurrentStep] = useState(0);
@@ -35,13 +33,14 @@ const RegistrationFormsPage: FC = () => {
    const {
       isLoading: requiredFormListLoading,
       formsRequired,
-      formsRequiredWithPropsToChange,
-      otherQuestionProps
+      knownFormsWithPropsTheyChange,
+      unknownPropsQuestions,
+      themesAsQuestionsToShow
    } = useRequiredFormList(profileStatus);
 
    const handleFormChange = useCallback(
       (
-         formName: RegistrationFormName,
+         formName: RegistrationFormName | string,
          newProps: EditableUserProps,
          error: string | null,
          themes?: ThemesToUpdate
@@ -125,7 +124,7 @@ const RegistrationFormsPage: FC = () => {
                      onBackPress={handleBackButtonClick}
                      showBackButton={i > 0}
                      showContinueButton
-                     key={formName}
+                     key={i}
                   >
                      {formName === "BasicInfoForm" && (
                         <BasicInfoForm
@@ -166,7 +165,7 @@ const RegistrationFormsPage: FC = () => {
                      {formName === "GenderForm" && (
                         <PropAsQuestionForm
                            formName={formName}
-                           propNamesToChange={formsRequiredWithPropsToChange[formName]}
+                           propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            initialData={profileStatus.user}
                            onChange={handleFormChange}
                         />
@@ -174,7 +173,7 @@ const RegistrationFormsPage: FC = () => {
                      {formName === "TargetGenderForm" && (
                         <PropAsQuestionForm
                            formName={formName}
-                           propNamesToChange={formsRequiredWithPropsToChange[formName]}
+                           propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            defaultValueForNonSelectedAnswers={false}
                            initialData={profileStatus.user}
                            onChange={handleFormChange}
@@ -183,30 +182,28 @@ const RegistrationFormsPage: FC = () => {
                      {formName === "CoupleProfileForm" && (
                         <PropAsQuestionForm
                            formName={formName}
-                           propNamesToChange={formsRequiredWithPropsToChange[formName]}
+                           propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            initialData={profileStatus.user}
                            onChange={handleFormChange}
                         />
                      )}
-                     {otherQuestionProps.includes(formName) && (
+                     {unknownPropsQuestions.includes(formName) && (
                         <PropAsQuestionForm
                            formName={formName}
-                           propNamesToChange={formsRequiredWithPropsToChange[formName]}
+                           propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            initialData={profileStatus.user}
                            onChange={handleFormChange}
                         />
                      )}
-                     {formName === "ThemeAsQuestionForm" &&
-                        formsRequiredWithPropsToChange[formName].map(questionId => (
-                           <ThemesAsQuestionForm
-                              formName={formName}
-                              initialData={profileStatus.user}
-                              questionId={questionId}
-                              mandatoryQuestion={true}
-                              onChange={handleFormChange}
-                              key={questionId}
-                           />
-                        ))}
+                     {themesAsQuestionsToShow.includes(formName) && (
+                        <ThemesAsQuestionForm
+                           formName={formName}
+                           questionId={formName}
+                           initialData={profileStatus.user}
+                           mandatoryQuestion={true}
+                           onChange={handleFormChange}
+                        />
+                     )}
                   </BasicScreenContainer>
                ))}
             </ScreensStepper>
