@@ -109,7 +109,7 @@ const RegistrationFormsPage: FC = () => {
          {profileStatusLoading || requiredFormListLoading ? (
             <>
                <BasicScreenContainer />
-               <LoadingAnimation centeredMethod={CenteredMethod.Relative} visible />
+               <LoadingAnimation centeredMethod={CenteredMethod.Absolute} visible />
             </>
          ) : (
             <ScreensStepper

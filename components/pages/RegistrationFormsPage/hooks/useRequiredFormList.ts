@@ -42,8 +42,8 @@ export const useRequiredFormList = (
             "likesOtherGenders"
          ],
          CoupleProfileForm: ["isCoupleProfile"],
-         UnknownPropsQuestionForms: [],
          ThemesAsQuestionsForms: [],
+         UnknownPropsQuestionForms: [],
          DateIdeaForm: ["dateIdea"],
          BasicInfoForm: [
             "name",
