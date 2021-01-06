@@ -16,8 +16,6 @@ interface PropsItsImportantCheck {
 const ItsImportantCheck: FC<PropsItsImportantCheck> = props => {
    const { checked, onChange, answers, selectedAnswer, incompatibilitiesBetweenAnswers } = props;
 
-   console.log(selectedAnswer);
-
    if (
       selectedAnswer == null ||
       selectedAnswer === -1 ||
