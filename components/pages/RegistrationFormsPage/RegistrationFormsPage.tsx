@@ -1,4 +1,4 @@
-import React, { useState, FC, useRef, useCallback } from "react";
+import React, { useState, FC, useRef, useCallback, useEffect } from "react";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import ProfileDescriptionForm from "./ProfileDescriptionForm/ProfileDescriptionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
@@ -6,7 +6,7 @@ import DialogError from "../../common/DialogError/DialogError";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
-import { useServerProfileStatus } from "../../../api/server/user";
+import { useServerProfileStatus, useUserPropsMutation } from "../../../api/server/user";
 import { useNavigation } from "@react-navigation/native";
 import { CenteredMethod, LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
@@ -27,6 +27,8 @@ const RegistrationFormsPage: FC = () => {
    const themesToUpdate = useRef<Record<string, ThemesToUpdate>>({});
    const unifiedThemesToUpdate = useUnifiedThemesToUpdate(themesToUpdate.current);
    const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
+   const { mutate: mutateUser } = useUserPropsMutation();
+
    const {
       isLoading: requiredFormListLoading,
       formsRequired,
@@ -37,6 +39,12 @@ const RegistrationFormsPage: FC = () => {
 
    const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
    const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
+
+   // TODO: Aca si el profile statis esta ok deberiamos movernos a la siguiente pantalla
+   useEffect(() => {
+      console.log("NEW PROFILE STATUS:");
+      console.log(profileStatus);
+   }, [profileStatus]);
 
    const handleFormChange = useCallback(
       (
@@ -79,18 +87,7 @@ const RegistrationFormsPage: FC = () => {
    }, [currentStep, formsRequired]);
 
    const sendDataToServer = () => {
-      // TODO:
-      // Enviar los datos
-      // Como es el ultimo invalida el cache de profile status
-      // Si profile status esta ok vamos a la siguiente pantalla
-      // propsGathered
-      // unifiedThemesToUpdate
-      console.log("/////////////////////");
-      console.log("Props gathered:");
-      console.log(propsGathered);
-      console.log("Themes to update:");
-      console.log(unifiedThemesToUpdate);
-      console.log("/////////////////////");
+      mutateUser({ token: profileStatus.user.token, props: propsGathered.current });
    };
 
    const getCurrentFormError = useCallback(

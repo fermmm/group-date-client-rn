@@ -1,7 +1,8 @@
 import { Method } from "axios";
+import I18n from "i18n-js";
 import { Alert, LogBox } from "react-native";
-import { QueryClient, QueryObserverResult } from "react-query";
-import { AxiosRequestConfigExtended, httpRequest } from "./httpRequest";
+import { QueryClient, QueryObserverResult, UseMutationOptions } from "react-query";
+import { AxiosRequestConfigExtended, httpRequest, tryToGetErrorMessage } from "./httpRequest";
 
 export const queryClient = new QueryClient({
    defaultOptions: {
@@ -39,15 +40,14 @@ export function defaultErrorHandler<T>(
    if (!queryResult.isError) {
       return queryResult;
    }
-   const error = (queryResult as QueryObserverResult<T, { message: string; response: string }>)
-      .error;
+   const error = (queryResult as QueryObserverResult<T, RequestError>).error;
    if (error.response == null) {
       Alert.alert(
          "ಠ_ಠ",
-         "Parece que hay un problema de conexión",
+         I18n.t("There seems to be a connection problem"),
          [
             {
-               text: "Reintentar",
+               text: I18n.t("Try again"),
                onPress: async () => queryResult.refetch()
             }
          ],
@@ -55,11 +55,11 @@ export function defaultErrorHandler<T>(
       );
    } else {
       Alert.alert(
-         "Error",
-         error.message,
+         I18n.t("Error"),
+         tryToGetErrorMessage(error),
          [
             {
-               text: "Ok"
+               text: I18n.t("OK")
             }
          ],
          { cancelable: true }
@@ -67,4 +67,27 @@ export function defaultErrorHandler<T>(
    }
 
    return queryResult;
+}
+
+export function defaultErrorHandlerForMutations<T>(
+   options: UseMutationOptions<void, RequestError, T, unknown>
+): UseMutationOptions<void, RequestError, T, unknown> {
+   options.onError = error => {
+      Alert.alert(
+         I18n.t("Error"),
+         tryToGetErrorMessage(error),
+         [
+            {
+               text: I18n.t("OK")
+            }
+         ],
+         { cancelable: true }
+      );
+   };
+   return options;
+}
+
+export interface RequestError {
+   message: string;
+   response: any;
 }

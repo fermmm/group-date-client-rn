@@ -3,6 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { Alert } from "react-native";
 import { SERVER_URL } from "react-native-dotenv";
 import Constants from "expo-constants";
+import I18n from "i18n-js";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
    handleErrors?: boolean;
@@ -51,7 +52,7 @@ export async function httpRequest<T>(options: AxiosRequestConfigExtended): Promi
          if (!options.errorResponseSilent) {
             Alert.alert(
                `ಠ_ಠ ${error.response.status}`,
-               `${error.response.data?.error?.message}`,
+               tryToGetErrorMessage(error),
                [{ text: "OK" }],
                { cancelable: false }
             );
@@ -65,7 +66,7 @@ export async function httpRequest<T>(options: AxiosRequestConfigExtended): Promi
          if (!options.hideRetryAlertOnConnectionFail) {
             Alert.alert(
                "ಠ_ಠ",
-               "Parece que hay un problema de conexión",
+               I18n.t("There seems to be a connection problem"),
                [
                   {
                      text: "Reintentar",
@@ -98,4 +99,24 @@ export function prepareUrl(url: string): string {
    } else {
       return url;
    }
+}
+
+export function tryToGetErrorMessage(error: any): string {
+   if (error == null) {
+      return "";
+   }
+
+   if (error.response == null) {
+      return error.message ?? "";
+   }
+
+   if (error.response.data?.error?.message) {
+      return error.response.data.error.message;
+   }
+
+   if (error.response.data?.[0].message != null) {
+      return error.response.data[0].message;
+   }
+
+   return error.message;
 }

@@ -1,14 +1,21 @@
 import i18n from "i18n-js";
-import { useQuery, UseQueryOptions } from "react-query";
+import { useMutation, useQuery, UseQueryOptions } from "react-query";
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
 import { getServerUrl } from "../tools/httpRequest";
-import { defaultRequestFunction, defaultErrorHandler } from "../tools/reactQueryTools";
+import {
+   defaultRequestFunction,
+   defaultErrorHandler,
+   defaultErrorHandlerForMutations,
+   queryClient,
+   RequestError
+} from "../tools/reactQueryTools";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import {
    FileUploadResponse,
    ProfileStatusServerResponse,
+   UserPostParams,
    UserPropAsQuestion
 } from "./shared-tools/endpoints-interfaces/user";
 import { FileSystemUploadType } from "expo-file-system";
@@ -43,6 +50,18 @@ export function usePropsAsQuestions<T = UserPropAsQuestion[]>(options?: UseQuery
    );
 
    return defaultErrorHandler(query);
+}
+
+export function useUserPropsMutation<T = UserPostParams>() {
+   return useMutation<void, RequestError, T>(
+      data => defaultRequestFunction("user", "POST", data),
+      defaultErrorHandlerForMutations({
+         onSuccess: () => {
+            queryClient.invalidateQueries("user/profile-status");
+            queryClient.invalidateQueries("user");
+         }
+      })
+   );
 }
 
 export async function uploadImage(
