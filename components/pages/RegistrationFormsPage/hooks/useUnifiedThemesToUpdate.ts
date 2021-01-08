@@ -1,27 +1,43 @@
 import { ThemesToUpdate } from "./../RegistrationFormsPage";
 
 export function useUnifiedThemesToUpdate(
-   themesToUpdate: Record<string, ThemesToUpdate>
-): ThemesToUpdate | null {
-   if (themesToUpdate == null || Object.keys(themesToUpdate).length === 0) {
-      return null;
+   questionIdsWithThemes: Record<string, ThemesToUpdate>
+): UseUnifiedThemesToUpdate | null {
+   if (questionIdsWithThemes == null || Object.keys(questionIdsWithThemes).length === 0) {
+      return { unifiedThemesToUpdate: null, questionsShowed: null };
    }
 
-   let result: ThemesToUpdate = {
+   let unifiedThemesToUpdate: ThemesToUpdate = {
       themesToUnsubscribe: [],
       themesToSubscribe: [],
       themesToBlock: [],
       themesToUnblock: []
    };
 
-   Object.values(themesToUpdate).forEach((themes: ThemesToUpdate) => {
-      result = {
-         themesToUnsubscribe: [...result.themesToUnsubscribe, ...themes.themesToUnsubscribe],
-         themesToSubscribe: [...result.themesToSubscribe, ...themes.themesToSubscribe],
-         themesToBlock: [...result.themesToBlock, ...themes.themesToBlock],
-         themesToUnblock: [...result.themesToUnblock, ...themes.themesToUnblock]
+   let questionsShowed: string[] = [];
+
+   Object.keys(questionIdsWithThemes).forEach(questionId => {
+      const themes = questionIdsWithThemes[questionId];
+
+      questionsShowed = [...questionsShowed, questionId];
+      unifiedThemesToUpdate = {
+         themesToUnsubscribe: [
+            ...unifiedThemesToUpdate.themesToUnsubscribe,
+            ...themes.themesToUnsubscribe
+         ],
+         themesToSubscribe: [
+            ...unifiedThemesToUpdate.themesToSubscribe,
+            ...themes.themesToSubscribe
+         ],
+         themesToBlock: [...unifiedThemesToUpdate.themesToBlock, ...themes.themesToBlock],
+         themesToUnblock: [...unifiedThemesToUpdate.themesToUnblock, ...themes.themesToUnblock]
       };
    });
 
-   return result;
+   return { unifiedThemesToUpdate, questionsShowed };
+}
+
+export interface UseUnifiedThemesToUpdate {
+   unifiedThemesToUpdate: ThemesToUpdate;
+   questionsShowed?: string[];
 }

@@ -25,9 +25,11 @@ const RegistrationFormsPage: FC = () => {
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
    const themesToUpdate = useRef<Record<string, ThemesToUpdate>>({});
-   const unifiedThemesToUpdate = useUnifiedThemesToUpdate(themesToUpdate.current);
+   const { unifiedThemesToUpdate, questionsShowed } = useUnifiedThemesToUpdate(
+      themesToUpdate.current
+   );
    const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
-   const { mutate: mutateUser } = useUserPropsMutation();
+   const { mutate: mutateUser, isLoading: userMutationLoading } = useUserPropsMutation();
 
    const {
       isLoading: requiredFormListLoading,
@@ -40,10 +42,12 @@ const RegistrationFormsPage: FC = () => {
    const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
    const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
 
+   // TODO: Implementar el envio de los themes
    // TODO: Aca si el profile statis esta ok deberiamos movernos a la siguiente pantalla
    useEffect(() => {
-      console.log("NEW PROFILE STATUS:");
-      console.log(profileStatus);
+      if (profileStatus?.user?.profileCompleted) {
+         console.log("Profile completed!");
+      }
    }, [profileStatus]);
 
    const handleFormChange = useCallback(
@@ -87,7 +91,11 @@ const RegistrationFormsPage: FC = () => {
    }, [currentStep, formsRequired]);
 
    const sendDataToServer = () => {
-      mutateUser({ token: profileStatus.user.token, props: propsGathered.current });
+      let propsToSend: EditableUserProps = propsGathered.current;
+      if (questionsShowed?.length > 0) {
+         propsToSend.questionsShowed = questionsShowed;
+      }
+      mutateUser({ token: profileStatus.user.token, props: propsToSend });
    };
 
    const getCurrentFormError = useCallback(
@@ -98,10 +106,10 @@ const RegistrationFormsPage: FC = () => {
    return (
       <>
          <AppBarHeader />
-         {profileStatusLoading || requiredFormListLoading ? (
+         {profileStatusLoading || requiredFormListLoading || userMutationLoading ? (
             <>
                <BasicScreenContainer />
-               <LoadingAnimation centeredMethod={CenteredMethod.Absolute} visible />
+               <LoadingAnimation centeredMethod={CenteredMethod.Absolute} />
             </>
          ) : (
             <ScreensStepper
