@@ -89,7 +89,8 @@ export function defaultErrorHandler<T>(
 export function defaultErrorHandlerForMutations<T>(
    options: UseMutationOptions<void, RequestError, T, unknown>
 ): UseMutationOptions<void, RequestError, T, unknown> {
-   options.onError = error => {
+   const newOptions = { ...options };
+   newOptions.onError = error => {
       Alert.alert(
          I18n.t("Error"),
          tryToGetErrorMessage(error),
@@ -101,10 +102,50 @@ export function defaultErrorHandlerForMutations<T>(
          { cancelable: true }
       );
    };
-   return options;
+   return newOptions;
+}
+
+export function invalidateQueriesInOptions<T = void>(
+   queriesList: string[],
+   options: UseMutationOptions<void, RequestError, T>
+): UseMutationOptions<void, RequestError, T> {
+   const newOptions = { ...options };
+   if (queriesList == null || queriesList.length === 0) {
+      return newOptions;
+   }
+
+   newOptions.onSuccess = (data, variables, context) => {
+      if (newOptions?.onSuccess != null) {
+         newOptions.onSuccess(data, variables, context);
+      }
+      invalidateQueriesMultiple(queriesList);
+   };
+   return newOptions;
+}
+
+export function invalidateQueriesMultiple(queriesList: string[]) {
+   queriesList.forEach(query => queryClient.invalidateQueries(query));
+}
+
+export function defaultOptionsForMutations<T>(props: {
+   queriesToInvalidate?: string[];
+   extraOptions?: MutationExtraOptions;
+   options: UseMutationOptions<void, RequestError, T>;
+}): UseMutationOptions<void, RequestError, T> {
+   const { queriesToInvalidate, extraOptions, options = {} } = props;
+   let newOptions = defaultErrorHandlerForMutations(options);
+   newOptions =
+      extraOptions?.autoInvalidateQueries === false
+         ? options
+         : invalidateQueriesInOptions(queriesToInvalidate, newOptions);
+   return newOptions;
 }
 
 export interface RequestError {
    message: string;
    response: any;
+}
+
+export interface MutationExtraOptions {
+   autoInvalidateQueries?: boolean;
 }

@@ -1,8 +1,15 @@
-import { useQuery, UseQueryOptions } from "react-query";
-import { defaultErrorHandler, defaultRequestFunction } from "../tools/reactQueryTools";
-import { ThemesAsQuestion } from "./shared-tools/endpoints-interfaces/themes";
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "react-query";
+import {
+   defaultErrorHandler,
+   defaultOptionsForMutations,
+   defaultRequestFunction,
+   MutationExtraOptions,
+   RequestError
+} from "../tools/reactQueryTools";
+import { userQueries } from "./common/queryIds";
+import { BasicThemeParams, ThemesAsQuestion } from "./shared-tools/endpoints-interfaces/themes";
 
-export function useThemesAsQuestions<T = ThemesAsQuestion[]>(options?: UseQueryOptions<T>) {
+export function useThemesAsQuestions<T extends ThemesAsQuestion[]>(options?: UseQueryOptions<T>) {
    const query = useQuery<T>(
       "themes/questions",
       () => defaultRequestFunction("themes/questions", "GET"),
@@ -10,4 +17,31 @@ export function useThemesAsQuestions<T = ThemesAsQuestion[]>(options?: UseQueryO
    );
 
    return defaultErrorHandler(query);
+}
+
+export function useThemesMutation<T extends ThemeParams>(
+   options: UseMutationOptions<void, RequestError, T> = {},
+   extraOptions?: MutationExtraOptions
+) {
+   let newOptions = defaultOptionsForMutations({
+      queriesToInvalidate: ["user"],
+      extraOptions,
+      options
+   });
+
+   return useMutation<void, RequestError, T, unknown>(
+      data => defaultRequestFunction(data.action, "POST", data),
+      newOptions
+   );
+}
+
+export interface ThemeParams extends BasicThemeParams {
+   action: ThemeEditAction;
+}
+
+export enum ThemeEditAction {
+   Subscribe = "themes/subscribe",
+   Block = "themes/block",
+   RemoveSubscription = "themes/subscribe/remove",
+   RemoveBlock = "themes/block/remove"
 }

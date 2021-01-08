@@ -7,7 +7,7 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
 import { useServerProfileStatus, useUserPropsMutation } from "../../../api/server/user";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { CenteredMethod, LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
 import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredFormList";
@@ -17,9 +17,11 @@ import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
 import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
 import { useUnifiedThemesToUpdate } from "./hooks/useUnifiedThemesToUpdate";
+import { ThemeEditAction, useThemesMutation } from "../../../api/server/themes";
 
 const RegistrationFormsPage: FC = () => {
    const { navigate } = useNavigation();
+   const isFocused = useIsFocused();
    const [currentStep, setCurrentStep] = useState(0);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
@@ -30,7 +32,7 @@ const RegistrationFormsPage: FC = () => {
    );
    const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
    const { mutate: mutateUser, isLoading: userMutationLoading } = useUserPropsMutation();
-
+   const { mutate: mutateThemes, isLoading: themesMutationLoading } = useThemesMutation();
    const {
       isLoading: requiredFormListLoading,
       formsRequired,
@@ -38,15 +40,18 @@ const RegistrationFormsPage: FC = () => {
       unknownPropsQuestions,
       themesAsQuestionsToShow
    } = useRequiredFormList(profileStatus);
-
    const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
    const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
 
-   // TODO: Implementar el envio de los themes
-   // TODO: Aca si el profile statis esta ok deberiamos movernos a la siguiente pantalla
+   // TODO: Primero se tendrian que mandar los themes, si esta todo correcto se manda el resto de las cosas, por que si
+   // se corta la conexion y no puede mandar los temes pero ya mandamos questionsShowed cagamos por que no se manda
+   // lo que el usuario eligio
+
+   // TODO: Este useEffect que solo avanza si esta profileCompleted no tiene sentido si solo vamos a modificar los themes
+   // entonces deberia haber una prop que nos permita cambiar de pantalla sin hacer este checkeo de profileStatus
    useEffect(() => {
-      if (profileStatus?.user?.profileCompleted) {
-         console.log("Profile completed!");
+      if (profileStatus?.user?.profileCompleted && isFocused) {
+         navigate("Main");
       }
    }, [profileStatus]);
 
@@ -92,10 +97,41 @@ const RegistrationFormsPage: FC = () => {
 
    const sendDataToServer = () => {
       let propsToSend: EditableUserProps = propsGathered.current;
+
       if (questionsShowed?.length > 0) {
          propsToSend.questionsShowed = questionsShowed;
       }
-      mutateUser({ token: profileStatus.user.token, props: propsToSend });
+      if (Object.keys(propsToSend).length > 0) {
+         mutateUser({ token: profileStatus.user.token, props: propsToSend });
+      }
+      if (unifiedThemesToUpdate?.themesToSubscribe?.length > 0) {
+         mutateThemes({
+            action: ThemeEditAction.Subscribe,
+            themeIds: unifiedThemesToUpdate.themesToSubscribe,
+            token: profileStatus.user.token
+         });
+      }
+      if (unifiedThemesToUpdate?.themesToBlock?.length > 0) {
+         mutateThemes({
+            action: ThemeEditAction.Block,
+            themeIds: unifiedThemesToUpdate.themesToBlock,
+            token: profileStatus.user.token
+         });
+      }
+      if (unifiedThemesToUpdate?.themesToUnsubscribe?.length > 0) {
+         mutateThemes({
+            action: ThemeEditAction.RemoveSubscription,
+            themeIds: unifiedThemesToUpdate.themesToUnsubscribe,
+            token: profileStatus.user.token
+         });
+      }
+      if (unifiedThemesToUpdate?.themesToUnblock?.length > 0) {
+         mutateThemes({
+            action: ThemeEditAction.RemoveBlock,
+            themeIds: unifiedThemesToUpdate.themesToUnblock,
+            token: profileStatus.user.token
+         });
+      }
    };
 
    const getCurrentFormError = useCallback(
@@ -103,10 +139,16 @@ const RegistrationFormsPage: FC = () => {
       [formsRequired, currentStep]
    );
 
+   const isLoading: boolean =
+      profileStatusLoading ||
+      requiredFormListLoading ||
+      userMutationLoading ||
+      themesMutationLoading;
+
    return (
       <>
          <AppBarHeader />
-         {profileStatusLoading || requiredFormListLoading || userMutationLoading ? (
+         {isLoading ? (
             <>
                <BasicScreenContainer />
                <LoadingAnimation centeredMethod={CenteredMethod.Absolute} />

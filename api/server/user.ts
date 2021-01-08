@@ -1,5 +1,5 @@
 import i18n from "i18n-js";
-import { useMutation, useQuery, UseQueryOptions } from "react-query";
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "react-query";
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
@@ -7,9 +7,9 @@ import { getServerUrl } from "../tools/httpRequest";
 import {
    defaultRequestFunction,
    defaultErrorHandler,
-   defaultErrorHandlerForMutations,
-   queryClient,
-   RequestError
+   RequestError,
+   MutationExtraOptions,
+   defaultOptionsForMutations
 } from "../tools/reactQueryTools";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import {
@@ -21,8 +21,9 @@ import {
 import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
 import { Alert } from "react-native";
+import { userQueries } from "./common/queryIds";
 
-export function useServerProfileStatus<T = ProfileStatusServerResponse>(
+export function useServerProfileStatus<T extends ProfileStatusServerResponse>(
    requestParams?: TokenParameter,
    options?: UseQueryOptions<T>
 ) {
@@ -52,15 +53,19 @@ export function usePropsAsQuestions<T = UserPropAsQuestion[]>(options?: UseQuery
    return defaultErrorHandler(query);
 }
 
-export function useUserPropsMutation<T = UserPostParams>() {
+export function useUserPropsMutation<T extends UserPostParams>(
+   options: UseMutationOptions<void, RequestError, T> = {},
+   extraOptions?: MutationExtraOptions
+) {
+   let newOptions = defaultOptionsForMutations({
+      queriesToInvalidate: userQueries,
+      extraOptions,
+      options
+   });
+
    return useMutation<void, RequestError, T>(
       data => defaultRequestFunction("user", "POST", data),
-      defaultErrorHandlerForMutations({
-         onSuccess: () => {
-            queryClient.invalidateQueries("user/profile-status");
-            queryClient.invalidateQueries("user");
-         }
-      })
+      newOptions
    );
 }
 

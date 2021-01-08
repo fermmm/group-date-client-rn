@@ -17,7 +17,6 @@ import { useServerProfileStatus } from "../../../api/server/user";
 import { userFinishedRegistration } from "../../../api/tools/userTools";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { removeFromDeviceSecure } from "../../../common-tools/device-native-api/storage/storage";
-import { useIsMounted } from "../../../common-tools/hooks/useIsMounted";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
