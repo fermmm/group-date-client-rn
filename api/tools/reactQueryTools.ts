@@ -105,7 +105,7 @@ export function defaultErrorHandlerForMutations<T>(
    return newOptions;
 }
 
-export function invalidateQueriesInOptions<T = void>(
+export function invalidateCacheForOptions<T = void>(
    queriesList: string[],
    options: UseMutationOptions<void, RequestError, T>
 ): UseMutationOptions<void, RequestError, T> {
@@ -115,15 +115,15 @@ export function invalidateQueriesInOptions<T = void>(
    }
 
    newOptions.onSuccess = (data, variables, context) => {
-      if (newOptions?.onSuccess != null) {
-         newOptions.onSuccess(data, variables, context);
+      if (options?.onSuccess != null) {
+         options.onSuccess(data, variables, context);
       }
-      invalidateQueriesMultiple(queriesList);
+      invalidateCacheMultiple(queriesList);
    };
    return newOptions;
 }
 
-export function invalidateQueriesMultiple(queriesList: string[]) {
+export function invalidateCacheMultiple(queriesList: string[]) {
    queriesList.forEach(query => queryClient.invalidateQueries(query));
 }
 
@@ -137,7 +137,7 @@ export function defaultOptionsForMutations<T>(props: {
    newOptions =
       extraOptions?.autoInvalidateQueries === false
          ? options
-         : invalidateQueriesInOptions(queriesToInvalidate, newOptions);
+         : invalidateCacheForOptions(queriesToInvalidate, newOptions);
    return newOptions;
 }
 

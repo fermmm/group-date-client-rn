@@ -31,8 +31,8 @@ const RegistrationFormsPage: FC = () => {
       themesToUpdate.current
    );
    const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
-   const { mutate: mutateUser, isLoading: userMutationLoading } = useUserPropsMutation();
-   const { mutate: mutateThemes, isLoading: themesMutationLoading } = useThemesMutation();
+   const { mutateAsync: mutateUser, isLoading: userMutationLoading } = useUserPropsMutation();
+   const { mutateAsync: mutateThemes, isLoading: themesMutationLoading } = useThemesMutation();
    const {
       isLoading: requiredFormListLoading,
       formsRequired,
@@ -42,10 +42,6 @@ const RegistrationFormsPage: FC = () => {
    } = useRequiredFormList(profileStatus);
    const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
    const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
-
-   // TODO: Primero se tendrian que mandar los themes, si esta todo correcto se manda el resto de las cosas, por que si
-   // se corta la conexion y no puede mandar los temes pero ya mandamos questionsShowed cagamos por que no se manda
-   // lo que el usuario eligio
 
    // TODO: Este useEffect que solo avanza si esta profileCompleted no tiene sentido si solo vamos a modificar los themes
    // entonces deberia haber una prop que nos permita cambiar de pantalla sin hacer este checkeo de profileStatus
@@ -95,42 +91,43 @@ const RegistrationFormsPage: FC = () => {
       }
    }, [currentStep, formsRequired]);
 
-   const sendDataToServer = () => {
+   const sendDataToServer = async () => {
       let propsToSend: EditableUserProps = propsGathered.current;
 
       if (questionsShowed?.length > 0) {
          propsToSend.questionsShowed = questionsShowed;
       }
-      if (Object.keys(propsToSend).length > 0) {
-         mutateUser({ token: profileStatus.user.token, props: propsToSend });
-      }
       if (unifiedThemesToUpdate?.themesToSubscribe?.length > 0) {
-         mutateThemes({
+         await mutateThemes({
             action: ThemeEditAction.Subscribe,
             themeIds: unifiedThemesToUpdate.themesToSubscribe,
             token: profileStatus.user.token
          });
       }
       if (unifiedThemesToUpdate?.themesToBlock?.length > 0) {
-         mutateThemes({
+         await mutateThemes({
             action: ThemeEditAction.Block,
             themeIds: unifiedThemesToUpdate.themesToBlock,
             token: profileStatus.user.token
          });
       }
       if (unifiedThemesToUpdate?.themesToUnsubscribe?.length > 0) {
-         mutateThemes({
+         await mutateThemes({
             action: ThemeEditAction.RemoveSubscription,
             themeIds: unifiedThemesToUpdate.themesToUnsubscribe,
             token: profileStatus.user.token
          });
       }
       if (unifiedThemesToUpdate?.themesToUnblock?.length > 0) {
-         mutateThemes({
+         await mutateThemes({
             action: ThemeEditAction.RemoveBlock,
             themeIds: unifiedThemesToUpdate.themesToUnblock,
             token: profileStatus.user.token
          });
+      }
+      // We send user props last because it contains questionsShowed prop, which means that the themes were sent
+      if (Object.keys(propsToSend).length > 0) {
+         await mutateUser({ token: profileStatus.user.token, props: propsToSend });
       }
    };
 
