@@ -1,7 +1,7 @@
 import { Method } from "axios";
 import I18n from "i18n-js";
-import { Alert, LogBox } from "react-native";
-import { QueryClient, QueryObserverResult, UseMutationOptions } from "react-query";
+import { Alert, LogBox, AppState } from "react-native";
+import { QueryClient, QueryObserverResult, UseMutationOptions, focusManager } from "react-query";
 import { AxiosRequestConfigExtended, httpRequest, tryToGetErrorMessage } from "./httpRequest";
 
 export const queryClient = new QueryClient({
@@ -13,6 +13,23 @@ export const queryClient = new QueryClient({
    }
 });
 LogBox.ignoreLogs(["Setting a timer"]);
+
+/**
+ * This replaces the default focus manager (browser compatible) with a react native focus manager
+ */
+focusManager.setEventListener(setFocus => {
+   const handleAppStateChange = appState => {
+      if (appState === "active") {
+         setFocus();
+      }
+   };
+
+   AppState.addEventListener("change", handleAppStateChange);
+
+   return () => {
+      AppState.removeEventListener("change", handleAppStateChange);
+   };
+});
 
 export async function defaultRequestFunction<D = void, R = void>(
    url: string,

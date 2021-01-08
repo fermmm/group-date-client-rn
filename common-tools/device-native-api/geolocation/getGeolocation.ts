@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useQuery } from "react-query";
+import { useRef, useState } from "react";
 import * as Location from "expo-location";
 import {
    showLocationDisabledDialog,
@@ -7,7 +8,6 @@ import {
 import * as Permissions from "expo-permissions";
 import { usePermission } from "../permissions/askForPermissions";
 
-let geolocationFasterCache: LocationData = null;
 /**
  * Gets geolocation data, asks for permissions Permissions.LOCATION. If the geolocation
  * is disabled for a reason other than the permissions (airplane mode or something like that
@@ -17,20 +17,16 @@ let geolocationFasterCache: LocationData = null;
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 export function useGeolocation(settings?: GetGeolocationParams) {
-   const [geolocation, setGeolocation] = useState(geolocationFasterCache);
-   const [isLoading, setIsLoading] = useState(geolocation == null);
    const permissionGranted = usePermission(Permissions.LOCATION);
+   const enabled = settings?.enabled !== false && permissionGranted;
+   const { data: geolocation, isLoading } = useQuery(
+      "_geolocation_",
+      () => getGeolocation(settings),
+      { enabled }
+   );
 
-   if (settings?.enabled === false || !permissionGranted) {
+   if (!enabled) {
       return { isLoading: true, geolocation: null };
-   }
-
-   if (geolocation == null) {
-      getGeolocation(settings).then(geolocation => {
-         setIsLoading(false);
-         setGeolocation(geolocation);
-         geolocationFasterCache = geolocation;
-      });
    }
 
    return { isLoading, geolocation };

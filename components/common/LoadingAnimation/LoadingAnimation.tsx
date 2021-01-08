@@ -5,7 +5,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 
 interface PropsLoadingAnimation {
-   visible: boolean;
+   visible?: boolean;
    centeredMethod?: CenteredMethod;
    style?: StyleProp<ViewStyle>;
    animationStyle?: StyleProp<ViewStyle>;
@@ -22,7 +22,7 @@ export enum CenteredMethod {
  * https://lottiefiles.com/editor
  */
 export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
-   visible,
+   visible = true,
    centeredMethod,
    style,
    animationStyle

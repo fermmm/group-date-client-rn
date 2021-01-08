@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Permissions from "expo-permissions";
 import {
    showRejectedPermissionsDialog,
@@ -21,9 +21,17 @@ export function usePermission(
    settings?: AskPermissionSettings
 ) {
    const [granted, setGranted] = useState(false);
-   if (!granted) {
-      askForPermission(permissions, settings).then(() => setGranted(true));
-   }
+   const mounted = useRef(true);
+   useEffect(() => {
+      if (!granted) {
+         askForPermission(permissions, settings).then(() => {
+            if (mounted.current) {
+               setGranted(true);
+            }
+         });
+      }
+      return () => (mounted.current = false);
+   }, []);
    return granted;
 }
 

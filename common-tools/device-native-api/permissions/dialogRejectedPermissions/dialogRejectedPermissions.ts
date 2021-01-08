@@ -12,8 +12,7 @@ export async function showRejectedPermissionsDialog(
       dialogSettings.openSettingsButtonText || i18n.t("Open app settings");
    dialogSettings.exitAppButtonText = dialogSettings.exitAppButtonText || i18n.t("Exit app");
    dialogSettings.dialogText =
-      dialogSettings.dialogText ||
-      i18n.t("The app cannot continue without you accepting the required permissions");
+      dialogSettings.dialogText || i18n.t("The app cannot continue without");
    dialogSettings.instructionsToastText =
       dialogSettings.instructionsToastText || i18n.t("Touch on Permissions");
 
