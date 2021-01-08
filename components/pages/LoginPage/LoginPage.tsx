@@ -10,13 +10,14 @@ import {
    useFacebookTokenCheck
 } from "../../../api/third-party/facebook/facebook-login";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useServerInfo } from "../../../api/server/server-info";
 import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useServerProfileStatus } from "../../../api/server/user";
 import { userFinishedRegistration } from "../../../api/tools/userTools";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { removeFromDeviceSecure } from "../../../common-tools/device-native-api/storage/storage";
+import { useIsMounted } from "../../../common-tools/hooks/useIsMounted";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -26,6 +27,7 @@ const LoginPage: FC = () => {
    const [logoAnimCompleted, setLogoAnimCompleted] = useState(false);
    const { colors } = useTheme();
    const { navigate } = useNavigation();
+   const isFocused = useIsFocused();
    const { data: serverInfoData, isLoading: serverInfoLoading } = useServerInfo();
 
    // Get the user token
@@ -45,7 +47,7 @@ const LoginPage: FC = () => {
    // If the user has unfinished registration redirect to RegistrationForms otherwise redirect to Main
    useEffect(() => {
       const registrationFinished: boolean = userFinishedRegistration(profileStatusData);
-      if (profileStatusData != null && logoAnimCompleted) {
+      if (profileStatusData != null && logoAnimCompleted && isFocused) {
          navigate(registrationFinished ? "Main" : "RegistrationForms");
       }
    }, [profileStatusData, logoAnimCompleted]);
