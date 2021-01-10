@@ -47,7 +47,7 @@ export const useRequiredFormList = (
          DateIdeaForm: ["dateIdea"],
          BasicInfoForm: [
             "name",
-            "age",
+            "birthDate",
             "height",
             "locationLat",
             "locationLon",

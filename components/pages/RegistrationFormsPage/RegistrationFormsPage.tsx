@@ -24,6 +24,7 @@ const RegistrationFormsPage: FC = () => {
    const isFocused = useIsFocused();
    const [currentStep, setCurrentStep] = useState(0);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
+   const [sendingToServer, setSendingToServer] = useState(false);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
    const themesToUpdate = useRef<Record<string, ThemesToUpdate>>({});
@@ -48,6 +49,7 @@ const RegistrationFormsPage: FC = () => {
    useEffect(() => {
       if (profileStatus?.user?.profileCompleted && isFocused) {
          navigate("Main");
+         setSendingToServer(false);
       }
    }, [profileStatus]);
 
@@ -92,6 +94,7 @@ const RegistrationFormsPage: FC = () => {
    }, [currentStep, formsRequired]);
 
    const sendDataToServer = async () => {
+      setSendingToServer(true);
       let propsToSend: EditableUserProps = propsGathered.current;
 
       if (questionsShowed?.length > 0) {
@@ -140,7 +143,8 @@ const RegistrationFormsPage: FC = () => {
       profileStatusLoading ||
       requiredFormListLoading ||
       userMutationLoading ||
-      themesMutationLoading;
+      themesMutationLoading ||
+      sendingToServer;
 
    return (
       <>
@@ -176,7 +180,7 @@ const RegistrationFormsPage: FC = () => {
                         <FiltersForm
                            formName={formName}
                            initialData={profileStatus.user}
-                           ageSelected={propsGathered?.current?.age as number}
+                           birthDateSelected={propsGathered?.current?.birthDate as number}
                            onChange={handleFormChange}
                         />
                      )}

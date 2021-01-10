@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import moment from "moment";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import { formValidators } from "../../../../common-tools/formValidators/formValidators";
@@ -7,6 +8,8 @@ import { currentTheme } from "../../../../config";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import { useGeolocation } from "../../../../common-tools/device-native-api/geolocation/getGeolocation";
 import { RegistrationFormName } from "../hooks/useRequiredFormList";
+import { fromAgeToBirthDate } from "../../../../api/tools/date-tools";
+import MonthSelector from "../../../common/MonthSelector/MonthSelector";
 
 export interface PropsBasicInfoForm {
    formName: RegistrationFormName;
@@ -20,7 +23,7 @@ export interface PropsBasicInfoForm {
 
 export interface FormDataBasicInfo {
    name: string;
-   age: number;
+   birthDate: number;
    height: number;
    locationLat: number;
    locationLon: number;
@@ -31,7 +34,7 @@ export interface FormDataBasicInfo {
 export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, formName }) => {
    const { geolocation, isLoading } = useGeolocation();
    const [name, setName] = useState(initialData?.name);
-   const [age, setAge] = useState(initialData?.age);
+   const [birthDate, setBirthDate] = useState(initialData?.birthDate);
    const [height, setHeight] = useState(initialData?.height);
    const [cityName, setCityName] = useState(initialData?.cityName);
    const [cityNameModified, setCityNameModified] = useState(false);
@@ -41,7 +44,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
          formName,
          {
             name,
-            age,
+            birthDate,
             height: height ?? 0,
             locationLat: geolocation?.coords?.latitude,
             locationLon: geolocation?.coords?.longitude,
@@ -50,7 +53,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
          },
          getError()
       );
-   }, [name, age, height, cityName, geolocation, formName]);
+   }, [name, birthDate, height, cityName, geolocation, formName]);
 
    useEffect(() => {
       if (!cityName && !cityNameModified) {
@@ -61,7 +64,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
    const getError = () => {
       return (
          getNameError() ||
-         getAgeError() ||
+         getBirthDateError() ||
          getCityNameError() ||
          getHeightError() ||
          getGeolocationError()
@@ -90,16 +93,16 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
       return null;
    };
 
-   const getAgeError = () => {
-      if (!age) {
-         return "No has completado el campo de tu edad";
+   const getBirthDateError = () => {
+      if (!birthDate) {
+         return "No has completado el campo de tu año de nacimiento";
       }
 
-      if (age < 12) {
+      if (birthDate > fromAgeToBirthDate(18)) {
          return "Tu edad demasiado baja para lo que se permite en este tipo de apps, lo sentimos";
       }
 
-      if (age >= 179) {
+      if (birthDate < fromAgeToBirthDate(179)) {
          return "Tu edad es demasiado alta para ser la de un ser humano";
       }
 
@@ -155,12 +158,23 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
             onChangeText={t => setName(formValidators.name(t).result.text)}
          />
          <TextInputExtended
-            title="Tu edad"
-            errorText={getAgeError()}
+            title="Tu año de nacimiento"
+            errorText={getBirthDateError()}
             mode="outlined"
             keyboardType="number-pad"
-            value={age ? age.toString() : ""}
-            onChangeText={t => setAge(Number(formValidators.age(t).result.text))}
+            value={birthDate ? String(moment(birthDate).year()) : ""}
+            onChangeText={t =>
+               setBirthDate(
+                  moment(birthDate)
+                     .year(Number(formValidators.birthYear(t).result.text))
+                     .unix()
+               )
+            }
+         />
+         <TitleText style={styles.title}>Tu mes de nacimiento</TitleText>
+         <MonthSelector
+            value={moment(birthDate).month()}
+            onChange={newMonth => setBirthDate(moment(birthDate).month(newMonth).unix())}
          />
          <TextInputExtended
             title="¿Con qué nombre se conoce mejor tu ciudad o región?"

@@ -13,11 +13,12 @@ import DistanceSelector from "../../../common/DistanceSelector/DistanceSelector"
 import { RegistrationFormName } from "../hooks/useRequiredFormList";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
+import { fromAgeToBirthDate, fromBirthDateToAge } from "../../../../api/tools/date-tools";
 
 export interface PropsFiltersForm {
    formName: RegistrationFormName;
    initialData: Partial<FormDataFilters>;
-   ageSelected?: number;
+   birthDateSelected?: number;
    onChange(formName: RegistrationFormName, formData: FormDataFilters, error: string | null): void;
 }
 
@@ -31,7 +32,7 @@ export const FiltersForm: FC<PropsFiltersForm> = ({
    initialData,
    onChange,
    formName,
-   ageSelected = MIN_AGE_ALLOWED
+   birthDateSelected = fromAgeToBirthDate(MIN_AGE_ALLOWED)
 }) => {
    const [targetDistance, setTargetDistance] = useState(
       initialData?.targetDistance ?? AUTOMATIC_TARGET_DISTANCE
@@ -44,12 +45,16 @@ export const FiltersForm: FC<PropsFiltersForm> = ({
          formName,
          {
             targetDistance,
-            targetAgeMin: targetAgeMin ?? normalizeAge(ageSelected - AUTOMATIC_TARGET_AGE),
-            targetAgeMax: targetAgeMax ?? normalizeAge(ageSelected + AUTOMATIC_TARGET_AGE)
+            targetAgeMin:
+               targetAgeMin ??
+               normalizeAge(fromBirthDateToAge(birthDateSelected) - AUTOMATIC_TARGET_AGE),
+            targetAgeMax:
+               targetAgeMax ??
+               normalizeAge(fromBirthDateToAge(birthDateSelected) + AUTOMATIC_TARGET_AGE)
          },
          null
       );
-   }, [targetDistance, targetAgeMin, targetAgeMax, formName, ageSelected]);
+   }, [targetDistance, targetAgeMin, targetAgeMax, formName, birthDateSelected]);
 
    const normalizeAge = (num: number): number => {
       if (num < MIN_AGE_ALLOWED) {
@@ -70,8 +75,14 @@ export const FiltersForm: FC<PropsFiltersForm> = ({
             Esta funcionalidad no actúa de forma totalmente estricta.
          </TitleSmallText>
          <AgeRangeSelector
-            min={targetAgeMin ?? normalizeAge(ageSelected - AUTOMATIC_TARGET_AGE)}
-            max={targetAgeMax ?? normalizeAge(ageSelected + AUTOMATIC_TARGET_AGE)}
+            min={
+               targetAgeMin ??
+               normalizeAge(fromBirthDateToAge(birthDateSelected) - AUTOMATIC_TARGET_AGE)
+            }
+            max={
+               targetAgeMax ??
+               normalizeAge(fromBirthDateToAge(birthDateSelected) + AUTOMATIC_TARGET_AGE)
+            }
             style={styles.ageSelector}
             onChange={({ min, max }) => {
                setTargetAgeMin(min);
