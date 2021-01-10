@@ -8,17 +8,19 @@ import {
 } from "../../../common-tools/device-native-api/storage/storage";
 import { httpRequest } from "../../tools/httpRequest";
 import { useState } from "react";
-import { QueryConfig, useQuery } from "react-query";
+import { useQuery, UseQueryOptions } from "react-query";
+
+let fasterTokenCache: string = null;
 
 /**
- * This hook tries to get the facebook token, first from local storage, if it's null you should call
- * getNewTokenFromFacebook() function returned by this hook this shows an authorize screen from Facebook if necessary.
- * After calling getNewTokenFromFacebook() the token can be still null (user cancelled, API or connection problem)
+ * This hook tries to get the facebook token, first from the parameter, if not present tries from local storage, if it's
+ * still null you should call getNewTokenFromFacebook() function returned by this hook this shows an authorize screen from
+ * Facebook if necessary. After calling getNewTokenFromFacebook() the token can be still null (user cancelled, API or
+ * connection problem)
  */
-let fasterTokenCache: string = null;
-export function useFacebookToken(): UseFacebookTokenHook {
+export function useFacebookToken(externallyProvidedToken?: string): UseFacebookTokenHook {
    const [isLoading, setIsLoading] = useState<boolean>(true);
-   const [token, setToken] = useState<string>(null);
+   const [token, setToken] = useState<string>(externallyProvidedToken);
 
    const getNewTokenFromFacebook = () =>
       getTokenFromFacebook().then(t => {
@@ -26,6 +28,10 @@ export function useFacebookToken(): UseFacebookTokenHook {
          fasterTokenCache = t;
          setToken(t);
       });
+
+   if (token != null) {
+      return { token, isLoading: false, getNewTokenFromFacebook };
+   }
 
    if (fasterTokenCache != null) {
       return { token: fasterTokenCache, isLoading: false, getNewTokenFromFacebook };
@@ -80,7 +86,7 @@ async function getTokenFromFacebook(): Promise<string | null> {
  * server error is more complex. If the token is not valid then getTokenFromFacebook() should be called
  * to get a new token from Facebook.
  */
-export function useFacebookTokenCheck(token: string, config?: QueryConfig<boolean>) {
+export function useFacebookTokenCheck(token: string, config?: UseQueryOptions<boolean>) {
    const response = useQuery<boolean>(
       [`graph.facebook.com/me?access_token=${token}`, "GET"],
       async () => {

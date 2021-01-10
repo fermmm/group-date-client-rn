@@ -31,7 +31,7 @@ focusManager.setEventListener(setFocus => {
    };
 });
 
-export async function defaultRequestFunction<D = void, R = void>(
+export async function defaultHttpRequest<D = void, R = void>(
    url: string,
    method: Method,
    data?: D

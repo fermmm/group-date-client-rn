@@ -5,7 +5,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
 import { getServerUrl } from "../tools/httpRequest";
 import {
-   defaultRequestFunction,
+   defaultHttpRequest,
    defaultErrorHandler,
    RequestError,
    MutationExtraOptions,
@@ -15,6 +15,7 @@ import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import {
    FileUploadResponse,
    ProfileStatusServerResponse,
+   User,
    UserPostParams,
    UserPropAsQuestion
 } from "./shared-tools/endpoints-interfaces/user";
@@ -27,18 +28,30 @@ export function useServerProfileStatus<T extends ProfileStatusServerResponse>(
    requestParams?: TokenParameter,
    options?: UseQueryOptions<T>
 ) {
-   const storedToken = useFacebookToken();
-   const { token } = requestParams ?? storedToken;
-   const extraOptions: UseQueryOptions<T> = token == null ? { enabled: false } : {};
+   const { token } = useFacebookToken(requestParams?.token);
 
    const query = useQuery<T>(
       "user/profile-status",
-      () => defaultRequestFunction("user/profile-status", "GET", { token }),
+      () => defaultHttpRequest("user/profile-status", "GET", { token }),
       {
          ...options,
-         ...extraOptions
+         ...(!token ? { enabled: false } : {})
       }
    );
+
+   return defaultErrorHandler(query);
+}
+
+export function useUser<T extends User>(
+   requestParams?: TokenParameter,
+   options?: UseQueryOptions<T>
+) {
+   const { token } = useFacebookToken(requestParams?.token);
+
+   const query = useQuery<T>("user", () => defaultHttpRequest("user", "GET", { token }), {
+      ...options,
+      ...(!token ? { enabled: false } : {})
+   });
 
    return defaultErrorHandler(query);
 }
@@ -46,7 +59,7 @@ export function useServerProfileStatus<T extends ProfileStatusServerResponse>(
 export function usePropsAsQuestions<T = UserPropAsQuestion[]>(options?: UseQueryOptions<T>) {
    const query = useQuery<T>(
       "user/props-as-questions",
-      () => defaultRequestFunction("user/props-as-questions", "GET"),
+      () => defaultHttpRequest("user/props-as-questions", "GET"),
       options
    );
 
@@ -64,7 +77,7 @@ export function useUserPropsMutation<T extends UserPostParams>(
    });
 
    return useMutation<void, RequestError, T>(
-      data => defaultRequestFunction("user", "POST", data),
+      data => defaultHttpRequest("user", "POST", data),
       newOptions
    );
 }

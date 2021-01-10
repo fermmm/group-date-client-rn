@@ -2,17 +2,16 @@ import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "reac
 import {
    defaultErrorHandler,
    defaultOptionsForMutations,
-   defaultRequestFunction,
+   defaultHttpRequest,
    MutationExtraOptions,
    RequestError
 } from "../tools/reactQueryTools";
-import { userQueries } from "./common/queryIds";
 import { BasicThemeParams, ThemesAsQuestion } from "./shared-tools/endpoints-interfaces/themes";
 
 export function useThemesAsQuestions<T extends ThemesAsQuestion[]>(options?: UseQueryOptions<T>) {
    const query = useQuery<T>(
       "themes/questions",
-      () => defaultRequestFunction("themes/questions", "GET"),
+      () => defaultHttpRequest("themes/questions", "GET"),
       options
    );
 
@@ -30,7 +29,7 @@ export function useThemesMutation<T extends ThemeParams>(
    });
 
    return useMutation<void, RequestError, T, unknown>(
-      data => defaultRequestFunction(data.action, "POST", data),
+      data => defaultHttpRequest(data.action, "POST", data),
       newOptions
    );
 }
