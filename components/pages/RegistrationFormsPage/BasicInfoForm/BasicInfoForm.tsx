@@ -98,6 +98,10 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
          return "No has completado el campo de tu año de nacimiento";
       }
 
+      if (String(birthDate).split(" ").join("").length === 2) {
+         return "El formato del año debe ser AAAA. Ej: 1987";
+      }
+
       if (birthDate > fromAgeToBirthDate(18)) {
          return "Tu edad demasiado baja para lo que se permite en este tipo de apps, lo sentimos";
       }
