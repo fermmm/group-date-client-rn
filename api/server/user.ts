@@ -3,13 +3,13 @@ import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "reac
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
-import { getServerUrl } from "../tools/httpRequest";
 import {
    defaultHttpRequest,
    defaultErrorHandler,
    RequestError,
    MutationExtraOptions,
-   defaultOptionsForMutations
+   defaultOptionsForMutations,
+   getServerUrl
 } from "../tools/reactQueryTools";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import {

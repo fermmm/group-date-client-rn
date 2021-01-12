@@ -10,6 +10,8 @@ import { useGeolocation } from "../../../../common-tools/device-native-api/geolo
 import { RegistrationFormName } from "../hooks/useRequiredFormList";
 import { fromAgeToBirthDate } from "../../../../api/tools/date-tools";
 import MonthSelector from "../../../common/MonthSelector/MonthSelector";
+import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
+import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 
 export interface PropsBasicInfoForm {
    formName: RegistrationFormName;
@@ -34,7 +36,12 @@ export interface FormDataBasicInfo {
 export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, formName }) => {
    const { geolocation, isLoading } = useGeolocation();
    const [name, setName] = useState(initialData?.name);
-   const [birthDate, setBirthDate] = useState(initialData?.birthDate);
+   const [birthMonth, setBirthMonth] = useState<number>(
+      initialData?.birthDate ? moment(initialData.birthDate).month() : 0
+   );
+   const [birthYear, setBirthYear] = useState(
+      initialData?.birthDate ? moment(initialData.birthDate).year() : null
+   );
    const [height, setHeight] = useState(initialData?.height);
    const [cityName, setCityName] = useState(initialData?.cityName);
    const [cityNameModified, setCityNameModified] = useState(false);
@@ -44,7 +51,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
          formName,
          {
             name,
-            birthDate,
+            birthDate: birthYear ? moment().month(birthMonth).year(birthYear).unix() : null,
             height: height ?? 0,
             locationLat: geolocation?.coords?.latitude,
             locationLon: geolocation?.coords?.longitude,
@@ -53,7 +60,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
          },
          getError()
       );
-   }, [name, birthDate, height, cityName, geolocation, formName]);
+   }, [name, birthMonth, birthYear, height, cityName, geolocation, formName]);
 
    useEffect(() => {
       if (!cityName && !cityNameModified) {
@@ -64,7 +71,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
    const getError = () => {
       return (
          getNameError() ||
-         getBirthDateError() ||
+         getBirthYearError() ||
          getCityNameError() ||
          getHeightError() ||
          getGeolocationError()
@@ -93,20 +100,20 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
       return null;
    };
 
-   const getBirthDateError = () => {
-      if (!birthDate) {
+   const getBirthYearError = () => {
+      if (!birthYear) {
          return "No has completado el campo de tu año de nacimiento";
       }
 
-      if (String(birthDate).split(" ").join("").length === 2) {
+      if (String(birthYear).split(" ").join("").length < 4) {
          return "El formato del año debe ser AAAA. Ej: 1987";
       }
 
-      if (birthDate > fromAgeToBirthDate(18)) {
+      if (birthYear > moment(fromAgeToBirthDate(18), "X").year()) {
          return "Tu edad demasiado baja para lo que se permite en este tipo de apps, lo sentimos";
       }
 
-      if (birthDate < fromAgeToBirthDate(179)) {
+      if (birthYear < moment(fromAgeToBirthDate(179), "X").year()) {
          return "Tu edad es demasiado alta para ser la de un ser humano";
       }
 
@@ -163,23 +170,15 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
          />
          <TextInputExtended
             title="Tu año de nacimiento"
-            errorText={getBirthDateError()}
+            errorText={getBirthYearError()}
             mode="outlined"
             keyboardType="number-pad"
-            value={birthDate ? String(moment(birthDate).year()) : ""}
-            onChangeText={t =>
-               setBirthDate(
-                  moment(birthDate)
-                     .year(Number(formValidators.birthYear(t).result.text))
-                     .unix()
-               )
-            }
+            value={String(birthYear || "")}
+            onChangeText={t => setBirthYear(Number(formValidators.birthYear(t).result.text))}
          />
-         <TitleText style={styles.title}>Tu mes de nacimiento</TitleText>
-         <MonthSelector
-            value={moment(birthDate).month()}
-            onChange={newMonth => setBirthDate(moment(birthDate).month(newMonth).unix())}
-         />
+         <TitleMediumText style={styles.title}>Tu mes de nacimiento</TitleMediumText>
+         <MonthSelector value={birthMonth} onChange={newMonth => setBirthMonth(newMonth)} />
+         <EmptySpace />
          <TextInputExtended
             title="¿Con qué nombre se conoce mejor tu ciudad o región?"
             titleLine2="Este dato les servirá a lxs demás para saber más o menos de donde eres"

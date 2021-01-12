@@ -40,7 +40,7 @@ export async function defaultHttpRequest<D = void, R = void>(
 ): Promise<R> {
    const axiosObject: AxiosRequestConfigExtended = {
       headers: { "Accept-Language": I18n.locale },
-      baseURL: prepareUrl(SERVER_URL),
+      baseURL: getServerUrl(),
       url,
       method
    };
@@ -66,6 +66,10 @@ export function prepareUrl(url: string): string {
    } else {
       return url;
    }
+}
+
+export function getServerUrl(): string {
+   return prepareUrl(SERVER_URL);
 }
 
 export function defaultErrorHandler<T>(
