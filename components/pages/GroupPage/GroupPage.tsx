@@ -7,7 +7,7 @@ import { withNavigation } from "@react-navigation/compat";
 import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
-import AvatarTouchable from "../../common/AvatarTouchable/AvatarTouchable";
+import Avatar from "../../common/Avatar/Avatar";
 import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
@@ -76,11 +76,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                            }
                            titleStyle={styles.itemTitle}
                            left={props => (
-                              <AvatarTouchable
-                                 {...props}
-                                 size={50}
-                                 source={{ uri: user.images[0] }}
-                              />
+                              <Avatar {...props} size={50} source={{ uri: user.images[0] }} />
                            )}
                            key={i}
                         >
@@ -96,7 +92,7 @@ class GroupPage extends Component<GroupPageProps, GroupPageState> {
                                     key={u}
                                     onPress={() => navigate("Profile", { user: matchedUser })}
                                     left={props => (
-                                       <AvatarTouchable
+                                       <Avatar
                                           {...props}
                                           onPress={() => navigate("Profile", { user: matchedUser })}
                                           size={50}

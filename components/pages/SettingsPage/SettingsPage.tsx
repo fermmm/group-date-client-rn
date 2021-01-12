@@ -1,13 +1,14 @@
 import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { List, Avatar } from "react-native-paper";
+import { List } from "react-native-paper";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
 import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../../../api/server/user";
+import Avatar from "../../common/Avatar/Avatar";
 
 const SettingsPage: FC = () => {
    const { navigate } = useNavigation();
@@ -23,7 +24,7 @@ const SettingsPage: FC = () => {
             <List.Item
                title="Tu perfil y fotos"
                left={props => (
-                  <Avatar.Image
+                  <Avatar
                      {...props}
                      style={styles.profileIcon}
                      size={42}
