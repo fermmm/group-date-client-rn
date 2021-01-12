@@ -1,4 +1,6 @@
 import { Method } from "axios";
+import Constants from "expo-constants";
+import { SERVER_URL } from "@env";
 import I18n from "i18n-js";
 import { Alert, LogBox, AppState } from "react-native";
 import { QueryClient, QueryObserverResult, UseMutationOptions, focusManager } from "react-query";
@@ -37,6 +39,8 @@ export async function defaultHttpRequest<D = void, R = void>(
    data?: D
 ): Promise<R> {
    const axiosObject: AxiosRequestConfigExtended = {
+      headers: { "Accept-Language": I18n.locale },
+      baseURL: prepareUrl(SERVER_URL),
       url,
       method
    };
@@ -49,6 +53,19 @@ export async function defaultHttpRequest<D = void, R = void>(
    }
 
    return httpRequest<R>(axiosObject);
+}
+
+/**
+ * Currently this function only replaces the localhost part of the url by the local address of the development
+ * machine otherwise localhost will be the localhost of the phone and not the machine one, if the app is
+ * executing in production there is no localhost part on the url so it remains unchanged.
+ */
+export function prepareUrl(url: string): string {
+   if (url.includes("localhost")) {
+      return url.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
+   } else {
+      return url;
+   }
 }
 
 export function defaultErrorHandler<T>(

@@ -1,13 +1,9 @@
-import i18n from "i18n-js";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { Alert } from "react-native";
-import { SERVER_URL } from "react-native-dotenv";
-import Constants from "expo-constants";
 import I18n from "i18n-js";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
    handleErrors?: boolean;
-   addLanguageInHeader?: boolean;
    hideRetryAlertOnConnectionFail?: boolean;
    errorResponseSilent?: boolean;
 }
@@ -19,15 +15,7 @@ export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
  * @returns When there is an error in the request returns a string resolved promise with the error text.
  */
 export async function httpRequest<T>(options: AxiosRequestConfigExtended): Promise<T> {
-   options.addLanguageInHeader = options.addLanguageInHeader ?? true;
-
-   const client: AxiosInstance = axios.create({
-      baseURL: options.baseURL ?? getServerUrl()
-   });
-
-   if (options.addLanguageInHeader) {
-      options.headers = { ...options.headers, "Accept-Language": i18n.locale };
-   }
+   const client: AxiosInstance = axios.create(options);
 
    let promiseResolve: (value?: T | PromiseLike<T>) => void = null;
    const resultPromise: Promise<T> = new Promise(resolve => {
@@ -82,23 +70,6 @@ export async function httpRequest<T>(options: AxiosRequestConfigExtended): Promi
    }
 
    return resultPromise;
-}
-
-export function getServerUrl(): string {
-   return prepareUrl(SERVER_URL);
-}
-
-/**
- * Currently this function only replaces the localhost part of the url by the local address of the development
- * machine otherwise localhost will be the localhost of the phone and not the machine one, if the app is
- * executing in production there is no localhost part on the url so it remains unchanged.
- */
-export function prepareUrl(url: string): string {
-   if (url.includes("localhost")) {
-      return url.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
-   } else {
-      return url;
-   }
 }
 
 export function tryToGetErrorMessage(error: any): string {

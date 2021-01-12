@@ -1,7 +1,7 @@
 import { FacebookLoginResult, initializeAsync, logInWithReadPermissionsAsync } from "expo-facebook";
 import { Alert } from "react-native";
 import { Flatten } from "../../../common-tools/ts-tools/common-ts-tools";
-import { FACEBOOK_APP_ID, FACEBOOK_APP_NAME } from "react-native-dotenv";
+import { FACEBOOK_APP_ID, FACEBOOK_APP_NAME } from "@env";
 import {
    loadFromDeviceSecure,
    saveOnDeviceSecure
