@@ -60,15 +60,15 @@ const LoginPage: FC = () => {
       getNewTokenFromFacebook();
    };
 
-   const serverOperating: boolean = serverInfoData != null && serverInfoData.serverOperating;
+   const serverOperating: boolean = serverInfoData?.serverOperating ?? null;
 
    const showLoginButton: boolean =
+      forceShowConnectButton ||
       (serverOperating &&
          (token == null || tokenIsValid === false) &&
          !tokenCheckLoading &&
          !tokenLoading &&
-         !serverInfoLoading) ||
-      forceShowConnectButton;
+         !serverInfoLoading);
 
    const showLoadingAnimation: boolean =
       logoAnimCompleted &&
@@ -83,7 +83,7 @@ const LoginPage: FC = () => {
                   <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
                </LogoAnimator>
             </View>
-            {!serverOperating && (
+            {serverOperating === false && (
                <>
                   <Text
                      style={[
@@ -98,7 +98,7 @@ const LoginPage: FC = () => {
                            fontWeight: "bold"
                         }}
                      >
-                        Lo sentimos, la app no esta disponible en este momento
+                        Lo sentimos, la app no esta disponible en este momento, intenta más tarde
                      </Text>
                   </Text>
                   <Text
