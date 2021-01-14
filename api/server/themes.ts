@@ -1,4 +1,5 @@
 import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "react-query";
+import { useFacebookToken } from "../third-party/facebook/facebook-login";
 import {
    defaultErrorHandler,
    defaultOptionsForMutations,
@@ -6,7 +7,26 @@ import {
    MutationExtraOptions,
    RequestError
 } from "../tools/reactQueryTools";
-import { BasicThemeParams, ThemesAsQuestion } from "./shared-tools/endpoints-interfaces/themes";
+import {
+   BasicThemeParams,
+   Theme,
+   ThemeGetParams,
+   ThemesAsQuestion
+} from "./shared-tools/endpoints-interfaces/themes";
+
+export function useThemes<T extends Theme[]>(
+   requestParams?: ThemeGetParams,
+   options?: UseQueryOptions<T>
+) {
+   const { token } = useFacebookToken(requestParams?.token);
+
+   const query = useQuery<T>("themes", () => defaultHttpRequest("themes", "GET", { token }), {
+      ...options,
+      ...(!token ? { enabled: false } : {})
+   });
+
+   return defaultErrorHandler(query);
+}
 
 export function useThemesAsQuestions<T extends ThemesAsQuestion[]>(options?: UseQueryOptions<T>) {
    const query = useQuery<T>(

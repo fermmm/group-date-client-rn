@@ -16,7 +16,7 @@ const ButtonBack: FC = props => {
          underlayColor={color("white").alpha(0).string()}
          activeOpacity={1}
       >
-         <FAB style={styles.fab} icon="arrow-back" onPress={() => navigation.goBack()} small />
+         <FAB style={styles.fab} icon="arrow-left" onPress={() => navigation.goBack()} small />
       </TouchableHighlight>
    );
 };

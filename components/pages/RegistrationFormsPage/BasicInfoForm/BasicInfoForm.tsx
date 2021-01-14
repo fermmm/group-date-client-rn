@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import moment from "moment";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
-import { formValidators } from "../../../../common-tools/formValidators/formValidators";
+import { formValidators } from "../../../../common-tools/form-validators/formValidators";
 import { currentTheme } from "../../../../config";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import { useGeolocation } from "../../../../common-tools/device-native-api/geolocation/getGeolocation";

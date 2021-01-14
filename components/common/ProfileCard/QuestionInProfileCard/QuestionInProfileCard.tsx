@@ -6,6 +6,7 @@ import { ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import color from "color";
 import { Theme } from "../../../../api/server/shared-tools/endpoints-interfaces/themes";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
+import { currentTheme } from "../../../../config";
 
 export interface ThemeInProfileCardProps {
    theme: Theme;
@@ -26,13 +27,13 @@ const ThemeInProfileCard: FC<ThemeInProfileCardProps> = ({ theme }) => {
             !answerMatches && styles.border
          ]}
       >
-         <Text
+         {/* <Text
             style={{
                color: colors.text
             }}
          >
             {theme.category}
-         </Text>
+         </Text> */}
          <Caption
             style={{
                color: colors.text
@@ -48,7 +49,8 @@ const styles: Styles = StyleSheet.create({
       alignSelf: "flex-start",
       padding: 10,
       marginRight: 5,
-      marginBottom: 5
+      marginBottom: 5,
+      borderRadius: currentTheme.roundness
    },
    border: {
       borderBottomWidth: 1

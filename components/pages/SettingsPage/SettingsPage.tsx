@@ -17,19 +17,15 @@ const SettingsPage: FC = () => {
    return (
       <>
          <BasicScreenContainer>
-            <TitleText extraMarginLeft extraSize>
+            {/* <TitleText extraMarginLeft extraSize>
                Ajustes y otras cosas
-            </TitleText>
+            </TitleText> */}
             <EmptySpace height={25} />
             <List.Item
                title="Tu perfil y fotos"
+               titleStyle={styles.profileIconTitle}
                left={props => (
-                  <Avatar
-                     {...props}
-                     style={styles.profileIcon}
-                     size={42}
-                     source={{ uri: localUser?.images[0] }}
-                  />
+                  <Avatar {...props} size={48} source={{ uri: localUser?.images[0] }} />
                )}
                onPress={() => navigate("Profile", { user: localUser, editMode: true })}
             />
@@ -88,9 +84,8 @@ const SettingsPage: FC = () => {
 };
 
 const styles: Styles = StyleSheet.create({
-   profileIcon: {
-      marginLeft: 4,
-      marginRight: 9
+   profileIconTitle: {
+      marginLeft: 6
    },
    optionIcon: {
       marginLeft: 5,
