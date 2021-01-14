@@ -17,7 +17,7 @@ import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
 import ThemeInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
 import EditButton from "./EditButton/EditButton";
-import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { Gender, User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { Theme } from "../../../api/server/shared-tools/endpoints-interfaces/themes";
 import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../../../api/server/user";
@@ -53,6 +53,12 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       birthDate,
       cityName,
       height,
+      gender,
+      likesWoman,
+      likesMan,
+      likesWomanTrans,
+      likesManTrans,
+      likesOtherGenders,
       profileDescription,
       themesSubscribed,
       themesBlocked
@@ -86,6 +92,41 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       .filter(t => t != null);
 
    const finalImagesUri = images.map(uri => prepareUrl(serverInfo.imagesHost + uri));
+
+   const interestArray: string[] = [];
+   if (likesWoman) {
+      interestArray.push("Mujeres");
+   }
+   if (likesMan) {
+      interestArray.push("Varones");
+   }
+   if (likesWomanTrans) {
+      interestArray.push("Mujeres trans");
+   }
+   if (likesManTrans) {
+      interestArray.push("Varones trans");
+   }
+   if (likesOtherGenders) {
+      interestArray.push("Otrx / No binarix");
+   }
+
+   let genderText: string = "";
+
+   if (gender === Gender.Man) {
+      genderText = "Varón";
+   }
+   if (gender === Gender.Woman) {
+      genderText = "Mujer";
+   }
+   if (gender === Gender.TransgenderMan) {
+      genderText = "Varón trans";
+   }
+   if (gender === Gender.TransgenderWoman) {
+      genderText = "Mujer trans";
+   }
+   if (gender === Gender.Other) {
+      genderText = "Otrx / No binarix";
+   }
 
    return (
       <>
@@ -159,6 +200,9 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                            // </Text>
                            <EditButton onPress={() => navigate("ChangeBasicInfo")} />
                         )}
+                        <Paragraph style={[styles.interestParagraph, { color: colors.text }]}>
+                           {genderText} interesadx en: {interestArray.join(", ")}
+                        </Paragraph>
                      </View>
                      <Card.Content>
                         <Paragraph style={[styles.descriptionParagraph, { color: colors.text }]}>
@@ -232,8 +276,8 @@ const styles: Styles = StyleSheet.create({
       height: Dimensions.get("window").height * 0.5 // This controls the height of the images area.
    },
    titleAreaContainer: {
-      flexDirection: "row",
-      alignItems: "center"
+      flexDirection: "column",
+      alignItems: "flex-start"
    },
    compatibilityPercentage: {
       marginRight: 30,
@@ -244,8 +288,15 @@ const styles: Styles = StyleSheet.create({
       textAlign: "center",
       textAlignVertical: "center"
    },
+   interestParagraph: {
+      fontSize: 11,
+      marginBottom: 20,
+      marginTop: -7,
+      paddingLeft: 16
+   },
    descriptionParagraph: {
-      marginBottom: 5
+      marginBottom: 5,
+      fontSize: 15
    },
    questionsContainer: {
       paddingTop: 10,
