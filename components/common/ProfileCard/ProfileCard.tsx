@@ -28,7 +28,6 @@ import BasicScreenContainer from "../BasicScreenContainer/BasicScreenContainer";
 import { CenteredMethod, LoadingAnimation } from "../LoadingAnimation/LoadingAnimation";
 import { prepareUrl } from "../../../api/tools/reactQueryTools";
 import { useServerInfo } from "../../../api/server/server-info";
-import { IMAGE_QUALITY_WHEN_UPLOADING } from "../../../config";
 
 export interface ProfileCardProps {
    user: User;

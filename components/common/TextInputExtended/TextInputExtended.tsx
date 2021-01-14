@@ -1,22 +1,22 @@
-import React, { useState, FC, useCallback } from "react";
+import React, { useState, FC, useCallback, useRef } from "react";
 import {
    StyleSheet,
    View,
    TouchableHighlight,
    Keyboard,
-   StatusBar,
    TextStyle,
    StyleProp,
    KeyboardTypeOptions,
-   TextInput as NativeTextInput
+   TextInput as NativeTextInput,
+   Modal
 } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { TextInput, Portal } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import ButtonStyled from "../ButtonStyled/ButtonStyled";
 import color from "color";
 import { currentTheme } from "../../../config";
 import TitleMediumText from "../TitleMediumText/TitleMediumText";
-import KeyboardSpacer from "react-native-keyboard-spacer";
+// import KeyboardSpacer from "react-native-keyboard-spacer";
 
 export interface TextInputExtendedProps {
    title?: string;
@@ -46,16 +46,22 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
 
    const [fullScreenMode, setFullScreenMode] = useState(false);
    const [canShowError, setCanShowError] = useState(false);
+   const fullScreenInputRef = useRef<NativeTextInput>();
+
+   const disableEditMode = () => {
+      if (fullScreenMode) {
+         setCanShowError(true);
+         setFullScreenMode(false);
+      }
+   };
+
+   const onKeyboardClose = useCallback(disableEditMode, []);
 
    React.useEffect(() => {
       Keyboard.addListener("keyboardDidHide", onKeyboardClose);
       return () => {
          Keyboard.removeListener("keyboardDidHide", onKeyboardClose);
       };
-   }, []);
-
-   const onKeyboardClose = useCallback(() => {
-      setFullScreenMode(false);
    }, []);
 
    return (
@@ -104,7 +110,13 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
             )}
          </View>
          {fullScreenMode && (
-            <Portal>
+            <Modal
+               animationType="fade"
+               onShow={() => fullScreenInputRef?.current?.focus()}
+               onRequestClose={disableEditMode}
+               visible
+               transparent
+            >
                <View style={styles.modal}>
                   {title && <TitleMediumText style={styles.title}>{title}</TitleMediumText>}
                   {titleLine2 && (
@@ -112,23 +124,20 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                   )}
                   <TextInput
                      mode={mode}
-                     onBlur={() => setFullScreenMode(false)}
+                     onBlur={disableEditMode}
                      keyboardType={keyboardType}
                      value={value}
                      multiline={multiline}
                      onChangeText={onChangeText}
                      numberOfLines={200}
                      style={{ flex: multiline ? 1 : 0 }}
-                     autoFocus
+                     ref={fullScreenInputRef}
                   />
                   {errorText && canShowError && (
                      <TitleMediumText style={styles.errorText}>{errorText}</TitleMediumText>
                   )}
                   <ButtonStyled
-                     onPress={() => {
-                        setFullScreenMode(false);
-                        setCanShowError(true);
-                     }}
+                     onPress={disableEditMode}
                      style={styles.buttonSave}
                      color={currentTheme.colors.text2}
                   >
@@ -137,7 +146,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                </View>
                {/* This seemed to be required before but not anymore after updating expo, if there is any problem uncomment */}
                {/* <KeyboardSpacer /> */}
-            </Portal>
+            </Modal>
          )}
       </>
    );
@@ -164,7 +173,6 @@ const styles: Styles = StyleSheet.create({
       position: "absolute",
       backgroundColor: currentTheme.colors.background,
       padding: 10,
-      paddingTop: StatusBar.currentHeight + 15,
       paddingBottom: 0,
       zIndex: 100,
       top: 0,

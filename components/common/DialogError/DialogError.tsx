@@ -1,23 +1,20 @@
-import React, { Component } from "react";
-import { Portal, Dialog, Paragraph, Button, DialogProps } from "react-native-paper";
+import React, { FC } from "react";
+import { Modal } from "react-native";
+import { Dialog, Paragraph, Button } from "react-native-paper";
 
-class DialogError extends Component<DialogProps> {
-   render(): JSX.Element {
-      return (
-         <Portal>
-            <Dialog {...this.props}>
-               <Dialog.Content>
-                  <Paragraph>{this.props.children}</Paragraph>
-               </Dialog.Content>
-               <Dialog.Actions>
-                  <Button onPress={() => this.props.onDismiss()}>
-                     Aceptar
-                  </Button>
-               </Dialog.Actions>
-            </Dialog>
-         </Portal>
-      );
-   }
-}
+const DialogError: FC<React.ComponentProps<typeof Dialog>> = props => {
+   return (
+      <Modal animationType="fade" visible={props.visible} transparent>
+         <Dialog {...props}>
+            <Dialog.Content>
+               <Paragraph>{props.children}</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+               <Button onPress={() => props.onDismiss()}>Aceptar</Button>
+            </Dialog.Actions>
+         </Dialog>
+      </Modal>
+   );
+};
 
 export default DialogError;
