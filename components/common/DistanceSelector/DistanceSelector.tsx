@@ -2,7 +2,7 @@ import React, { FC, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { AUTOMATIC_TARGET_DISTANCE, AVAILABLE_DISTANCES } from "../../../config";
+import { DEFAULT_TARGET_DISTANCE, AVAILABLE_DISTANCES } from "../../../config";
 
 export interface PropsDistanceSelector {
    value: number;
@@ -13,7 +13,7 @@ const DistanceSelector: FC<PropsDistanceSelector> = props => {
    const [distanceOptions] = useState(AVAILABLE_DISTANCES);
 
    const distanceToString = (distance: number) => {
-      return `${distance} Km ${distance === AUTOMATIC_TARGET_DISTANCE ? " (Recomendado)" : ""}`;
+      return `${distance} Km ${distance === DEFAULT_TARGET_DISTANCE ? " (Recomendado)" : ""}`;
    };
 
    return (
@@ -38,7 +38,7 @@ const styles: Styles = StyleSheet.create({
       alignItems: "center"
    },
    picker: {
-      width: 240,
+      width: "100%",
       height: 45
    },
    text: {

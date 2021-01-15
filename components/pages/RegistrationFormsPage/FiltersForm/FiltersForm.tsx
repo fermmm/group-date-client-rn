@@ -5,7 +5,7 @@ import TitleText from "../../../common/TitleText/TitleText";
 import AgeRangeSelector from "../../../common/AgeSelector/AgeSelector";
 import {
    AUTOMATIC_TARGET_AGE,
-   AUTOMATIC_TARGET_DISTANCE,
+   DEFAULT_TARGET_DISTANCE,
    MAX_AGE_ALLOWED,
    MIN_AGE_ALLOWED
 } from "../../../../config";
@@ -35,7 +35,7 @@ export const FiltersForm: FC<PropsFiltersForm> = ({
    birthDateSelected = fromAgeToBirthDate(MIN_AGE_ALLOWED)
 }) => {
    const [targetDistance, setTargetDistance] = useState(
-      initialData?.targetDistance ?? AUTOMATIC_TARGET_DISTANCE
+      initialData?.targetDistance ?? DEFAULT_TARGET_DISTANCE
    );
    const [targetAgeMin, setTargetAgeMin] = useState(initialData?.targetAgeMin);
    const [targetAgeMax, setTargetAgeMax] = useState(initialData?.targetAgeMax);

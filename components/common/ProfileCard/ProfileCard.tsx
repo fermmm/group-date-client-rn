@@ -28,6 +28,8 @@ import BasicScreenContainer from "../BasicScreenContainer/BasicScreenContainer";
 import { CenteredMethod, LoadingAnimation } from "../LoadingAnimation/LoadingAnimation";
 import { prepareUrl } from "../../../api/tools/reactQueryTools";
 import { useServerInfo } from "../../../api/server/server-info";
+import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
+import { currentTheme } from "../../../config";
 
 export interface ProfileCardProps {
    user: User;
@@ -60,6 +62,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       likesManTrans,
       likesOtherGenders,
       profileDescription,
+      isCoupleProfile,
       themesSubscribed,
       themesBlocked
    }: Partial<User> = props.user;
@@ -181,13 +184,13 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                      </View>
                      <View style={styles.titleAreaContainer}>
                         <Card.Title
-                           title={name}
+                           title={`${toFirstUpperCase(name)}${isCoupleProfile ? " (Pareja)" : ""}`}
                            subtitle={`${fromBirthDateToAge(birthDate)} · ${cityName}${
                               height ? " · " + height + "cm" : ""
                            }`}
                            style={{ flex: 1 }}
-                           titleStyle={{ color: colors.text }}
-                           subtitleStyle={{ color: colors.text }}
+                           titleStyle={styles.nameText}
+                           subtitleStyle={styles.basicInfoText}
                         />
                         {!editMode ? (
                            <View />
@@ -200,12 +203,13 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                            // </Text>
                            <EditButton onPress={() => navigate("ChangeBasicInfo")} />
                         )}
-                        <Paragraph style={[styles.interestParagraph, { color: colors.text }]}>
-                           {genderText} interesadx en: {interestArray.join(", ")}
+                        <Paragraph style={styles.interestParagraph}>
+                           {isCoupleProfile ? "Pareja" : genderText} interesadx en{" "}
+                           {interestArray.join(", ")}
                         </Paragraph>
                      </View>
                      <Card.Content>
-                        <Paragraph style={[styles.descriptionParagraph, { color: colors.text }]}>
+                        <Paragraph style={styles.descriptionParagraph}>
                            {profileDescription}
                         </Paragraph>
                         {editMode && (
@@ -273,12 +277,13 @@ const styles: Styles = StyleSheet.create({
       paddingBottom: 90 // Padding in the content when scrolled to bottom to prevent like-dislike buttons from covering text.
    },
    galleryScroll: {
-      height: Dimensions.get("window").height * 0.5 // This controls the height of the images area.
+      height: Dimensions.get("window").height * 0.48 // This controls the height of the images area.
    },
    titleAreaContainer: {
       flexDirection: "column",
       alignItems: "flex-start"
    },
+   // Not used:
    compatibilityPercentage: {
       marginRight: 30,
       width: 50,
@@ -288,13 +293,25 @@ const styles: Styles = StyleSheet.create({
       textAlign: "center",
       textAlignVertical: "center"
    },
+   nameText: {
+      color: currentTheme.colors.text,
+      fontFamily: currentTheme.font.light
+   },
+   basicInfoText: {
+      color: currentTheme.colors.text,
+      fontFamily: currentTheme.font.light
+   },
    interestParagraph: {
+      color: currentTheme.colors.text,
+      fontFamily: currentTheme.font.light,
       fontSize: 11,
       marginBottom: 20,
       marginTop: -7,
       paddingLeft: 16
    },
    descriptionParagraph: {
+      color: currentTheme.colors.text,
+      fontFamily: currentTheme.font.light,
       marginBottom: 5,
       fontSize: 15
    },

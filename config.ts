@@ -41,7 +41,7 @@ export const AVAILABLE_DISTANCES: number[] = [50, 70, 90, 200, 600, 1000];
  * If USE_AUTOMATIC_TARGET_DISTANCE is true then the target distance is this value. It must be a value from
  * the previous setting array.
  */
-export const AUTOMATIC_TARGET_DISTANCE: number = 70;
+export const DEFAULT_TARGET_DISTANCE: number = 90;
 
 /**
  * Allow the user to change the aspect ratio of the images, bad for profile page design but the users
