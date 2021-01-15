@@ -146,7 +146,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                   bottomGradientColor={colors.background}
                   indicatorStyle={"white"}
                >
-                  <Card style={[styles.card, { backgroundColor: colors.background }]}>
+                  <Card style={styles.card}>
                      <View>
                         <ImagesScroll
                            images={finalImagesUri}
@@ -176,7 +176,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                         {editMode && (
                            <EditButton
                               showAtBottom
-                              style={{ marginBottom: 50, marginRight: -6 }}
+                              style={{ marginBottom: 60, marginRight: -6 }}
                               label={"Modificar fotos"}
                               onPress={() => navigate("ChangePictures")}
                            />
@@ -274,6 +274,7 @@ const styles: Styles = StyleSheet.create({
       flexGrow: 0
    },
    card: {
+      backgroundColor: currentTheme.colors.background,
       paddingBottom: 90 // Padding in the content when scrolled to bottom to prevent like-dislike buttons from covering text.
    },
    galleryScroll: {
@@ -281,7 +282,11 @@ const styles: Styles = StyleSheet.create({
    },
    titleAreaContainer: {
       flexDirection: "column",
-      alignItems: "flex-start"
+      alignItems: "flex-start",
+      position: "relative",
+      borderRadius: currentTheme.roundness,
+      transform: [{ translateY: -currentTheme.roundness }], // Border on top of image effect
+      backgroundColor: currentTheme.colors.background
    },
    // Not used:
    compatibilityPercentage: {
@@ -305,8 +310,7 @@ const styles: Styles = StyleSheet.create({
       color: currentTheme.colors.text,
       fontFamily: currentTheme.font.light,
       fontSize: 11,
-      marginBottom: 20,
-      marginTop: -7,
+      marginTop: -11,
       paddingLeft: 16
    },
    descriptionParagraph: {

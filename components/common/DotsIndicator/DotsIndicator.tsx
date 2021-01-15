@@ -1,36 +1,33 @@
-import React, { Component } from "react";
+import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
-import { withTheme } from "react-native-paper";
 import { Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 
-export interface DotsIndicatorProps extends Themed {
+export interface DotsIndicatorProps {
    activeDot: number;
    totalDots: number;
 }
 
-class DotsIndicator extends Component<DotsIndicatorProps> {
-   render(): JSX.Element {
-      const { activeDot, totalDots }: Partial<DotsIndicatorProps> = this.props;
+const DotsIndicator: FC<DotsIndicatorProps> = props => {
+   const { activeDot, totalDots }: Partial<DotsIndicatorProps> = props;
 
-      return (
-         <View style={styles.mainContainer}>
-            {
-               Array(totalDots).fill(1).map((item, i) => 
-                  <View style={[styles.dot, i === activeDot && styles.activeDot]} key={i}/>
-               )
-            }
-         </View>
-      );
-   }
-}
+   return (
+      <View style={styles.mainContainer}>
+         {Array(totalDots)
+            .fill(1)
+            .map((item, i) => (
+               <View style={[styles.dot, i === activeDot && styles.activeDot]} key={i} />
+            ))}
+      </View>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       position: "absolute",
       width: "100%",
       height: 30,
-      bottom: "4%",
+      bottom: "8%",
       alignItems: "center",
       justifyContent: "center",
       flexDirection: "row"
@@ -51,4 +48,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(DotsIndicator);
+export default DotsIndicator;
