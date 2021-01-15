@@ -37,10 +37,10 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
    const { geolocation, isLoading } = useGeolocation();
    const [name, setName] = useState(initialData?.name);
    const [birthMonth, setBirthMonth] = useState<number>(
-      initialData?.birthDate ? moment(initialData.birthDate).month() : 0
+      initialData?.birthDate ? moment(initialData.birthDate, "X").month() : 0
    );
    const [birthYear, setBirthYear] = useState(
-      initialData?.birthDate ? moment(initialData.birthDate).year() : null
+      initialData?.birthDate ? moment(initialData.birthDate, "X").year() : null
    );
    const [height, setHeight] = useState(initialData?.height);
    const [cityName, setCityName] = useState(initialData?.cityName);

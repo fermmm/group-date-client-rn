@@ -7,7 +7,7 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
 import { useServerProfileStatus, useUserPropsMutation } from "../../../api/server/user";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
 import { CenteredMethod, LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
 import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredFormList";
@@ -18,9 +18,18 @@ import FiltersForm from "./FiltersForm/FiltersForm";
 import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
 import { useUnifiedThemesToUpdate } from "./hooks/useUnifiedThemesToUpdate";
 import { ThemeEditAction, useThemesMutation } from "../../../api/server/themes";
+import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
+
+export interface ParamsRegistrationFormsPage {
+   formsToShow?: RegistrationFormName[];
+   themesAsQuestionsToShow?: string[];
+}
+
+// TODO: Que al apretar back pregunte si queres guardar o cancelar, tanto con boton como el back nativo
 
 const RegistrationFormsPage: FC = () => {
-   const { navigate } = useNavigation();
+   const { params } = useRoute<RouteProps<ParamsRegistrationFormsPage>>();
+   const { navigate, goBack } = useNavigation();
    const isFocused = useIsFocused();
    const [currentStep, setCurrentStep] = useState(0);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
@@ -44,11 +53,16 @@ const RegistrationFormsPage: FC = () => {
    const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
    const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
 
-   // TODO: Este useEffect que solo avanza si esta profileCompleted no tiene sentido si solo vamos a modificar los themes
-   // entonces deberia haber una prop que nos permita cambiar de pantalla sin hacer este checkeo de profileStatus
+   const {
+      formsToShow: formsToShowFromRoute,
+      // TODO: Ademas de llenar este array hay que setear el form name en formsToShow para que muestre la question
+      themesAsQuestionsToShow: themesAsQuestionsToShowFromRoute
+   } = params ?? {};
+   const formsToShow = formsToShowFromRoute ?? formsRequired;
+
    useEffect(() => {
-      if (profileStatus?.user?.profileCompleted && isFocused) {
-         navigate("Main");
+      if (isFocused && sendingToServer && profileStatus?.user?.profileCompleted) {
+         formsToShowFromRoute == null ? navigate("Main") : goBack();
          setSendingToServer(false);
       }
    }, [profileStatus]);
@@ -86,12 +100,12 @@ const RegistrationFormsPage: FC = () => {
          return;
       }
 
-      if (currentStep < formsRequired.length - 1) {
+      if (currentStep < formsToShow.length - 1) {
          setCurrentStep(currentStep + 1);
       } else {
          sendDataToServer();
       }
-   }, [currentStep, formsRequired]);
+   }, [currentStep, formsToShow]);
 
    const sendDataToServer = async () => {
       setSendingToServer(true);
@@ -135,8 +149,8 @@ const RegistrationFormsPage: FC = () => {
    };
 
    const getCurrentFormError = useCallback(
-      (): string => errorOnForms.current[formsRequired[currentStep]],
-      [formsRequired, currentStep]
+      (): string => errorOnForms.current[formsToShow[currentStep]],
+      [formsToShow, currentStep]
    );
 
    const isLoading: boolean =
@@ -160,12 +174,13 @@ const RegistrationFormsPage: FC = () => {
                swipeEnabled={false}
                onScreenChange={handleScreenChange}
             >
-               {formsRequired.map((formName, i) => (
+               {formsToShow.map((formName, i) => (
                   <BasicScreenContainer
                      showBottomGradient={true}
                      onContinuePress={handleContinueButtonClick}
                      onBackPress={handleBackButtonClick}
                      showBackButton={i > 0}
+                     continueButtonTextFinishMode={i === formsToShow.length - 1}
                      showContinueButton
                      key={i}
                   >

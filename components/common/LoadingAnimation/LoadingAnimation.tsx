@@ -2,11 +2,12 @@ import React, { FC, useEffect, useState } from "react";
 import { Animated, StyleProp, StyleSheet, View, ViewStyle, Dimensions } from "react-native";
 import LottieView from "lottie-react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { currentTheme } from "../../../config";
+import BasicScreenContainer from "../BasicScreenContainer/BasicScreenContainer";
 
 interface PropsLoadingAnimation {
    visible?: boolean;
    centeredMethod?: CenteredMethod;
+   renderMethod?: RenderMethod;
    style?: StyleProp<ViewStyle>;
    animationStyle?: StyleProp<ViewStyle>;
 }
@@ -17,6 +18,11 @@ export enum CenteredMethod {
    Absolute
 }
 
+export enum RenderMethod {
+   None,
+   FullScreen
+}
+
 /**
  * To edit the colors of the animation load the animation-loading.json into this tool:
  * https://lottiefiles.com/editor
@@ -24,6 +30,7 @@ export enum CenteredMethod {
 export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
    visible = true,
    centeredMethod,
+   renderMethod,
    style,
    animationStyle
 }) => {
@@ -44,6 +51,10 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
 
    let centeringStyle: StyleProp<ViewStyle> = {};
 
+   if (renderMethod === RenderMethod.FullScreen) {
+      centeredMethod = CenteredMethod.Absolute;
+   }
+
    if (centeredMethod === CenteredMethod.Relative) {
       centeringStyle = styles.relativePosition;
    }
@@ -53,17 +64,20 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
    }
 
    return (
-      <View style={[styles.containerBase, centeringStyle, style]}>
-         <Animated.View style={{ opacity: animValue }}>
-            <LottieView
-               source={require("./animation-loading.json")}
-               style={[styles.lottie, animationStyle]}
-               speed={0.5}
-               autoPlay
-               loop
-            />
-         </Animated.View>
-      </View>
+      <>
+         {renderMethod === RenderMethod.FullScreen && <BasicScreenContainer />}
+         <View style={[styles.containerBase, centeringStyle, style]}>
+            <Animated.View style={{ opacity: animValue }}>
+               <LottieView
+                  source={require("./animation-loading.json")}
+                  style={[styles.lottie, animationStyle]}
+                  speed={0.5}
+                  autoPlay
+                  loop
+               />
+            </Animated.View>
+         </View>
+      </>
    );
 };
 

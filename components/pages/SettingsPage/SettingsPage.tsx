@@ -27,7 +27,7 @@ const SettingsPage: FC = () => {
                left={props => (
                   <Avatar {...props} size={48} source={{ uri: localUser?.images[0] }} />
                )}
-               onPress={() => navigate("Profile", { user: localUser, editMode: true })}
+               onPress={() => navigate("Profile")}
             />
             <EmptySpace height={10} />
             <List.Item

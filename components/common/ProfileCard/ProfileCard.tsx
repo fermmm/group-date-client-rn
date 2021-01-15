@@ -24,12 +24,12 @@ import { useUser } from "../../../api/server/user";
 import { useThemes } from "../../../api/server/themes";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { fromBirthDateToAge } from "../../../api/tools/date-tools";
-import BasicScreenContainer from "../BasicScreenContainer/BasicScreenContainer";
-import { CenteredMethod, LoadingAnimation } from "../LoadingAnimation/LoadingAnimation";
+import { LoadingAnimation, RenderMethod } from "../LoadingAnimation/LoadingAnimation";
 import { prepareUrl } from "../../../api/tools/reactQueryTools";
 import { useServerInfo } from "../../../api/server/server-info";
 import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { currentTheme } from "../../../config";
+import { ParamsRegistrationFormsPage } from "../../pages/RegistrationFormsPage/RegistrationFormsPage";
 
 export interface ProfileCardProps {
    user: User;
@@ -76,12 +76,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    const { data: serverInfo, isLoading: serverInfoLoading } = useServerInfo();
 
    if (localUserLoading || themesLoading || serverInfoLoading) {
-      return (
-         <>
-            <BasicScreenContainer />
-            <LoadingAnimation centeredMethod={CenteredMethod.Absolute} />
-         </>
-      );
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 
    const themesSubscribedInCommon: Theme[] = themesSubscribed
@@ -178,7 +173,11 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               showAtBottom
                               style={{ marginBottom: 60, marginRight: -6 }}
                               label={"Modificar fotos"}
-                              onPress={() => navigate("ChangePictures")}
+                              onPress={() =>
+                                 navigate("RegistrationForms", {
+                                    formsToShow: ["ProfileImagesForm"]
+                                 } as ParamsRegistrationFormsPage)
+                              }
                            />
                         )}
                      </View>
@@ -201,7 +200,13 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                            // }]}>
                            //    99%
                            // </Text>
-                           <EditButton onPress={() => navigate("ChangeBasicInfo")} />
+                           <EditButton
+                              onPress={() =>
+                                 navigate("RegistrationForms", {
+                                    formsToShow: ["BasicInfoForm"]
+                                 } as ParamsRegistrationFormsPage)
+                              }
+                           />
                         )}
                         <Paragraph style={styles.interestParagraph}>
                            {isCoupleProfile ? "Pareja" : genderText} interesadx en{" "}
@@ -217,7 +222,11 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               showAtBottom
                               absolutePosition={false}
                               label={"Modificar texto"}
-                              onPress={() => navigate("ChangeProfileText")}
+                              onPress={() =>
+                                 navigate("RegistrationForms", {
+                                    formsToShow: ["ProfileDescriptionForm"]
+                                 } as ParamsRegistrationFormsPage)
+                              }
                            />
                         )}
                         <View style={styles.questionsContainer}>
@@ -230,14 +239,6 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               <ThemeInProfileCard theme={theme} key={theme.themeId} />
                            ))}
                         </View> */}
-                        {editMode && (
-                           <EditButton
-                              showAtBottom
-                              absolutePosition={false}
-                              label={"Modificar temáticas"}
-                              onPress={() => navigate("ChangeQuestions")}
-                           />
-                        )}
                      </Card.Content>
                   </Card>
                </ScrollViewExtended>

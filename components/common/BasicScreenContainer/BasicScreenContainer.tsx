@@ -12,12 +12,17 @@ import color from "color";
 export interface BasicScreenProps extends ScrollViewExtendedProps {
    showBackButton?: boolean;
    showContinueButton?: boolean;
+   continueButtonTextFinishMode?: boolean;
    onContinuePress?(): void;
    onBackPress?(): void;
 }
 
 const BasicScreenContainer: FC<BasicScreenProps> = props => {
-   const { showBackButton = false, showContinueButton = false }: Partial<BasicScreenProps> = props;
+   const {
+      showBackButton = false,
+      showContinueButton = false,
+      continueButtonTextFinishMode = false
+   }: Partial<BasicScreenProps> = props;
 
    return (
       <LinearGradient
@@ -58,7 +63,7 @@ const BasicScreenContainer: FC<BasicScreenProps> = props => {
                      color={currentTheme.colors.accent2}
                      style={styles.button}
                   >
-                     Continuar
+                     {continueButtonTextFinishMode ? "Guardar" : "Continuar"}
                   </Button>
                )}
             </View>
