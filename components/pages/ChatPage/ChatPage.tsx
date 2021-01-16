@@ -8,7 +8,7 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import color from "color";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
-import DialogError from "../../common/DialogError/DialogError";
+import Dialog from "../../common/Dialog/Dialog";
 import { withNavigation } from "@react-navigation/compat";
 import { Route } from "@react-navigation/native";
 
@@ -116,12 +116,12 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
                scrollToBottom
                alignTop
             />
-            <DialogError
+            <Dialog
                visible={showIntroDialog}
                onDismiss={() => this.setState({ showIntroDialog: false })}
             >
                {introDialogText}
-            </DialogError>
+            </Dialog>
             <KeyboardSpacer topSpacing={30} />
          </>
       );

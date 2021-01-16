@@ -4,9 +4,9 @@ import { Appbar } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 import ShadowBottom from "../ShadowBottom/ShadowBottom";
-import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { ThemeExt } from "../../../common-tools/themes/types/Themed";
+import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 
 export interface AppBarHeaderProps {
    title?: string;
@@ -14,12 +14,8 @@ export interface AppBarHeaderProps {
    onBackPress?(): void;
 }
 
-const AppBarHeader: FC<AppBarHeaderProps> = (
-   props = {
-      title: "",
-      showBackButton: true
-   }
-) => {
+const AppBarHeader: FC<AppBarHeaderProps> = props => {
+   const { title = "", showBackButton = true, onBackPress = () => {}, children } = props;
    const { goBack } = useNavigation();
    const theme: ThemeExt = useTheme();
 
@@ -28,10 +24,10 @@ const AppBarHeader: FC<AppBarHeaderProps> = (
          <ShadowBottom imageSource={theme.shadowBottom} />
          <Background useImageBackground={true}>
             <View style={styles.contentContainer}>
-               {props.showBackButton && (
+               {showBackButton && (
                   <Appbar.BackAction
                      color={theme.colors.text2}
-                     onPress={() => (props.onBackPress != null ? props.onBackPress() : goBack())}
+                     onPress={() => (onBackPress != null ? onBackPress() : goBack())}
                      style={{
                         marginRight: 25
                      }}
@@ -42,9 +38,9 @@ const AppBarHeader: FC<AppBarHeaderProps> = (
                      flex: 1
                   }}
                >
-                  <Text style={styles.titleText}>{props.title}</Text>
+                  <Text style={styles.titleText}>{title}</Text>
                </View>
-               {props.children}
+               {children}
             </View>
          </Background>
       </View>

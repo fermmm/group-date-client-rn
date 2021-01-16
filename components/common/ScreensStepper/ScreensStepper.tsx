@@ -58,11 +58,11 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
       ref.current.scrollTo({ x: screensWidth * screenIndex, animated });
    };
 
-   const handleBackButton = (): boolean => {
+   const handleBackButton = useCallback((): boolean => {
       const canGoBack = goBack();
       // Returning true here disables the default behavior of the back button:
       return canGoBack;
-   };
+   }, []);
 
    const addCurrentStepToHistory = (screenIndex: number): void => {
       if (dontSaveHistoryNextTime.current) {

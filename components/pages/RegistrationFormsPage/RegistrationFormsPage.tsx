@@ -2,12 +2,12 @@ import React, { useState, FC, useRef, useCallback, useEffect } from "react";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import ProfileDescriptionForm from "./ProfileDescriptionForm/ProfileDescriptionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
-import DialogError from "../../common/DialogError/DialogError";
+import Dialog from "../../common/Dialog/Dialog";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
 import { useServerProfileStatus, useUserPropsMutation } from "../../../api/server/user";
-import { useIsFocused, useRoute } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused, useRoute } from "@react-navigation/native";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
 import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredFormList";
@@ -20,13 +20,13 @@ import { useUnifiedThemesToUpdate } from "./hooks/useUnifiedThemesToUpdate";
 import { ThemeEditAction, useThemesMutation } from "../../../api/server/themes";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
+import { BackHandler } from "react-native";
+import { objectsContentIsEqual } from "../../../common-tools/js-tools/js-tools";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
    themesAsQuestionsToShow?: string[];
 }
-
-// TODO: Que al apretar back pregunte si queres guardar o cancelar, tanto con boton como el back nativo
 
 /**
  * This component shows one or more registration forms, is by both the registration process and also when
@@ -39,6 +39,7 @@ const RegistrationFormsPage: FC = () => {
    const isFocused = useIsFocused();
    const [currentStep, setCurrentStep] = useState(0);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
+   const [exitDialogVisible, setExitDialogVisible] = useState(false);
    const [sendingToServer, setSendingToServer] = useState(false);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
@@ -70,6 +71,15 @@ const RegistrationFormsPage: FC = () => {
       }
    }, [profileStatus]);
 
+   useFocusEffect(
+      React.useCallback(() => {
+         BackHandler.addEventListener("hardwareBackPress", handleBackButton);
+         return () => {
+            BackHandler.removeEventListener("hardwareBackPress", handleBackButton);
+         };
+      }, [])
+   );
+
    const handleChangeOnForm = useCallback(
       (
          formName: RegistrationFormName | string,
@@ -88,16 +98,32 @@ const RegistrationFormsPage: FC = () => {
 
    const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
    const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
+   const showExitDialog = useCallback(() => setExitDialogVisible(true), []);
+   const hideExitDialog = useCallback(() => setExitDialogVisible(false), []);
 
+   // Called when clicking the back button rendered on the bottom of the screen
    const handleBackButtonClick = useCallback(() => {
       if (currentStep > 0) {
          setCurrentStep(currentStep - 1);
       }
    }, [currentStep]);
 
-   // Called by back button/gesture on android
+   // Called by back button/gesture when there are multiple steps
    const handleScreenChange = useCallback((newScreen: number) => {
       setCurrentStep(newScreen);
+   }, []);
+
+   // Called when the back button/gesture on the device is pressed before leaving the screen
+   const handleBackButton = useCallback(() => {
+      if (canGoBack() && userChangedSomething()) {
+         showExitDialog();
+      } else {
+         if (canGoBack()) {
+            goBack();
+         }
+      }
+
+      return true;
    }, []);
 
    const handleContinueButtonClick = useCallback(() => {
@@ -159,6 +185,12 @@ const RegistrationFormsPage: FC = () => {
       [formsRequired, currentStep]
    );
 
+   const userChangedSomething = (): boolean => {
+      return !objectsContentIsEqual(propsGathered.current, profileStatus.user, {
+         object2CanHaveMoreProps: true
+      });
+   };
+
    const isLoading: boolean =
       profileStatus == null ||
       formsRequired?.length === 0 ||
@@ -170,7 +202,7 @@ const RegistrationFormsPage: FC = () => {
 
    return (
       <>
-         <AppBarHeader />
+         <AppBarHeader onBackPress={handleBackButton} showBackButton={params != null} />
          {isLoading ? (
             <LoadingAnimation renderMethod={RenderMethod.FullScreen} />
          ) : (
@@ -271,9 +303,19 @@ const RegistrationFormsPage: FC = () => {
                ))}
             </ScreensStepper>
          )}
-         <DialogError visible={errorDialogVisible} onDismiss={hideErrorDialog}>
+         <Dialog visible={errorDialogVisible} onDismiss={hideErrorDialog}>
             {getCurrentFormError()}
-         </DialogError>
+         </Dialog>
+         <Dialog
+            visible={exitDialogVisible}
+            onDismiss={hideExitDialog}
+            buttons={[
+               { label: "Descartar", onTouch: goBack },
+               { label: "Guardar", onTouch: handleContinueButtonClick }
+            ]}
+         >
+            ¿Guardar cambios?
+         </Dialog>
       </>
    );
 };
