@@ -12,6 +12,7 @@ import { fromAgeToBirthDate } from "../../../../api/tools/date-tools";
 import MonthSelector from "../../../common/MonthSelector/MonthSelector";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
+import { LoadingAnimation, RenderMethod } from "../../../common/LoadingAnimation/LoadingAnimation";
 
 export interface PropsBasicInfoForm {
    formName: RegistrationFormName;
@@ -157,6 +158,10 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
 
       return null;
    };
+
+   if (isLoading) {
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
+   }
 
    return (
       <View style={styles.mainContainer}>

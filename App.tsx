@@ -15,11 +15,6 @@ import { currentTheme } from "./config";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import DateVotingPage from "./components/pages/DateVotingPage/DateVotingPage";
-import ChangePicturesPage from "./components/pages/SettingsPage/ChangePicturesPage/ChangePicturesPage";
-import ChangeProfileTextPage from "./components/pages/SettingsPage/ChangeProfileTextPage/ChangeProfileTextPage";
-import ChangeBasicInfoPage from "./components/pages/SettingsPage/ChangeBasicInfoPage/ChangeBasicInfoPage";
-import ChangeDateIdeaPage from "./components/pages/SettingsPage/ChangeDateIdeaPage/ChangeDateIdeaPage";
-import ChangeQuestionsPage from "./components/pages/SettingsPage/ChangeQuestionsPage/ChangeQuestionsPage";
 import ChatPage from "./components/pages/ChatPage/ChatPage";
 import AboutPage from "./components/pages/AboutPage/AboutPage";
 import { en } from "./texts/en/en";
@@ -73,18 +68,13 @@ export default class App extends Component<{}, PageBasicWrapperState> {
                <NavigationContainer theme={TestTheme}>
                   <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
                      <Stack.Screen name="Login" component={LoginPage} />
+                     <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
                      <Stack.Screen name="Main" component={MainPage} />
+                     <Stack.Screen name="Profile" component={ProfilePage} />
+                     <Stack.Screen name="About" component={AboutPage} />
                      <Stack.Screen name="Group" component={GroupPage} />
                      <Stack.Screen name="Chat" component={ChatPage} />
                      <Stack.Screen name="DateVoting" component={DateVotingPage} />
-                     <Stack.Screen name="Profile" component={ProfilePage} />
-                     <Stack.Screen name="About" component={AboutPage} />
-                     <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
-                     <Stack.Screen name="ChangePictures" component={ChangePicturesPage} />
-                     <Stack.Screen name="ChangeProfileText" component={ChangeProfileTextPage} />
-                     <Stack.Screen name="ChangeBasicInfo" component={ChangeBasicInfoPage} />
-                     <Stack.Screen name="ChangeDateIdea" component={ChangeDateIdeaPage} />
-                     <Stack.Screen name="ChangeQuestions" component={ChangeQuestionsPage} />
                   </Stack.Navigator>
                </NavigationContainer>
             </PaperProvider>

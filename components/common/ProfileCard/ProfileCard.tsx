@@ -19,7 +19,6 @@ import ThemeInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
 import EditButton from "./EditButton/EditButton";
 import { Gender, User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { Theme } from "../../../api/server/shared-tools/endpoints-interfaces/themes";
-import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../../../api/server/user";
 import { useThemes } from "../../../api/server/themes";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
@@ -30,6 +29,7 @@ import { useServerInfo } from "../../../api/server/server-info";
 import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { currentTheme } from "../../../config";
 import { ParamsRegistrationFormsPage } from "../../pages/RegistrationFormsPage/RegistrationFormsPage";
+import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 
 export interface ProfileCardProps {
    user: User;
@@ -67,10 +67,10 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       themesBlocked
    }: Partial<User> = props.user;
 
+   const { navigate } = useNavigation();
    const [renderImageModal, setRenderImageModal] = useState(false);
    const [imageSelected, setImageSelected] = useState(0);
    const { colors } = useTheme();
-   const { navigate } = useNavigation();
    const { data: localUser, isLoading: localUserLoading } = useUser();
    const { data: allThemes, isLoading: themesLoading } = useThemes();
    const { data: serverInfo, isLoading: serverInfoLoading } = useServerInfo();
@@ -174,9 +174,9 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               style={{ marginBottom: 60, marginRight: -6 }}
                               label={"Modificar fotos"}
                               onPress={() =>
-                                 navigate("RegistrationForms", {
+                                 navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
                                     formsToShow: ["ProfileImagesForm"]
-                                 } as ParamsRegistrationFormsPage)
+                                 })
                               }
                            />
                         )}
@@ -202,9 +202,9 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                            // </Text>
                            <EditButton
                               onPress={() =>
-                                 navigate("RegistrationForms", {
+                                 navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
                                     formsToShow: ["BasicInfoForm"]
-                                 } as ParamsRegistrationFormsPage)
+                                 })
                               }
                            />
                         )}
@@ -223,9 +223,9 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               absolutePosition={false}
                               label={"Modificar texto"}
                               onPress={() =>
-                                 navigate("RegistrationForms", {
+                                 navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
                                     formsToShow: ["ProfileDescriptionForm"]
-                                 } as ParamsRegistrationFormsPage)
+                                 })
                               }
                            />
                         )}

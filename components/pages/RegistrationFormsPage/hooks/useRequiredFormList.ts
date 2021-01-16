@@ -6,58 +6,63 @@ import {
 import { EditableUserPropKey } from "../../../../api/server/shared-tools/validators/user";
 import { usePropsAsQuestions } from "../../../../api/server/user";
 import { mergeArraysAt } from "../../../../common-tools/js-tools/js-tools";
+import { ParamsRegistrationFormsPage } from "../RegistrationFormsPage";
 
 /**
- * Get list of registration screens names to show, if the user has completed part of the registration
- * in the past, then some screens are not showed so this list based on the profileStatus.
+ * Get list of registration screens names to show based on a requirements list (requirements source).
  */
 export const useRequiredFormList = (
-   profileStatus: ProfileStatusServerResponse
+   requirementSource: {
+      fromProfileStatus?: ProfileStatusServerResponse;
+      fromParams?: ParamsRegistrationFormsPage;
+   } = {}
 ): RequiredScreensResult => {
+   /**
+    * The list contains the screens name with the user props that each screen is related with (if any).
+    * Also this list determines the order in which the screens will be displayed.
+    */
+   const formsForProps: FormsAndTheirProps = {
+      GenderForm: ["gender"],
+      TargetGenderForm: [
+         "likesWoman",
+         "likesMan",
+         "likesWomanTrans",
+         "likesManTrans",
+         "likesOtherGenders"
+      ],
+      CoupleProfileForm: ["isCoupleProfile"],
+      ThemesAsQuestionsForms: [],
+      UnknownPropsQuestionForms: [],
+      DateIdeaForm: ["dateIdea"],
+      BasicInfoForm: [
+         "name",
+         "birthDate",
+         "height",
+         "locationLat",
+         "locationLon",
+         "cityName",
+         "country"
+      ],
+      FiltersForm: ["targetAgeMin", "targetAgeMax", "targetDistance"],
+      ProfileImagesForm: ["images"],
+      ProfileDescriptionForm: ["profileDescription"]
+   };
+
    const [formsRequired, setFormsRequired] = useState<string[]>([]);
-   const [
-      knownFormsWithPropsTheyChange,
-      setKnownFormsWithPropsTheyChange
-   ] = useState<FormsAndTheirProps>({});
-   const { data: allPropsAsQuestions, isLoading: propsAsQuestionsLoading } = usePropsAsQuestions();
+   const { data: allPropsAsQuestions, isLoading: propsAsQuestionsLoading } = usePropsAsQuestions({
+      enabled: requirementSource.fromParams == null
+   });
    const [unknownPropsQuestions, setUnknownPropsQuestions] = useState<string[]>([]);
    const [themesAsQuestionsToShow, setThemesAsQuestionsToShow] = useState<string[]>([]);
 
    useEffect(() => {
-      if (profileStatus == null || allPropsAsQuestions == null) {
+      if (
+         requirementSource.fromParams != null ||
+         requirementSource.fromProfileStatus == null ||
+         allPropsAsQuestions == null
+      ) {
          return;
       }
-
-      /**
-       * The list contains the screens name with the user props that each screen is related with (if any).
-       * Also this list determines the order in which the screens will be displayed.
-       */
-      const formsForProps: FormsAndTheirProps = {
-         GenderForm: ["gender"],
-         TargetGenderForm: [
-            "likesWoman",
-            "likesMan",
-            "likesWomanTrans",
-            "likesManTrans",
-            "likesOtherGenders"
-         ],
-         CoupleProfileForm: ["isCoupleProfile"],
-         ThemesAsQuestionsForms: [],
-         UnknownPropsQuestionForms: [],
-         DateIdeaForm: ["dateIdea"],
-         BasicInfoForm: [
-            "name",
-            "birthDate",
-            "height",
-            "locationLat",
-            "locationLon",
-            "cityName",
-            "country"
-         ],
-         FiltersForm: ["targetAgeMin", "targetAgeMax", "targetDistance"],
-         ProfileImagesForm: ["images"],
-         ProfileDescriptionForm: ["profileDescription"]
-      };
 
       /**
        * Only include the required elements (user may have an already started registration
@@ -66,7 +71,7 @@ export const useRequiredFormList = (
       let _formsRequired: string[] = getOnlyRequired(
          Object.keys(formsForProps) as RegistrationFormName[],
          formsForProps,
-         profileStatus.missingEditableUserProps
+         requirementSource.fromProfileStatus.missingEditableUserProps
       );
 
       /*
@@ -75,7 +80,7 @@ export const useRequiredFormList = (
        * that are questions.
        */
       const unknownProps = getUnknownQuestionsProps(
-         profileStatus.missingEditableUserProps,
+         requirementSource.fromProfileStatus.missingEditableUserProps,
          formsForProps,
          allPropsAsQuestions
       );
@@ -97,21 +102,23 @@ export const useRequiredFormList = (
        */
       _formsRequired = mergeArraysAt(
          _formsRequired.indexOf("ThemesAsQuestionsForms"),
-         profileStatus?.notShowedThemeQuestions,
+         requirementSource.fromProfileStatus.notShowedThemeQuestions,
          _formsRequired,
          { replace: true }
       );
 
       setFormsRequired(_formsRequired);
-      setKnownFormsWithPropsTheyChange(formsForProps);
       setUnknownPropsQuestions(unknownProps);
-      setThemesAsQuestionsToShow(profileStatus?.notShowedThemeQuestions ?? []);
-   }, [profileStatus, allPropsAsQuestions]);
+      setThemesAsQuestionsToShow(requirementSource.fromProfileStatus.notShowedThemeQuestions ?? []);
+   }, [requirementSource.fromProfileStatus, allPropsAsQuestions]);
 
    return {
       isLoading: propsAsQuestionsLoading,
-      formsRequired,
-      knownFormsWithPropsTheyChange,
+      formsRequired:
+         requirementSource.fromParams != null
+            ? requirementSource.fromParams?.formsToShow
+            : formsRequired,
+      knownFormsWithPropsTheyChange: formsForProps,
       unknownPropsQuestions,
       themesAsQuestionsToShow
    };

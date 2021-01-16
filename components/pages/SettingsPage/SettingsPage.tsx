@@ -6,9 +6,10 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
-import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../../../api/server/user";
 import Avatar from "../../common/Avatar/Avatar";
+import { ParamsRegistrationFormsPage } from "../RegistrationFormsPage/RegistrationFormsPage";
+import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 
 const SettingsPage: FC = () => {
    const { navigate } = useNavigation();
@@ -31,18 +32,50 @@ const SettingsPage: FC = () => {
             />
             <EmptySpace height={10} />
             <List.Item
-               title="Preguntas y filtros"
-               description="Modifica la información sobre tu sexualidad y preferencias"
+               title="Filtros de distancia y edad"
+               description="Modifica filtros de distancia y edad"
                left={props => (
                   <List.Icon {...props} style={styles.optionIcon} icon="account-heart" />
                )}
-               onPress={() => navigate("ChangeQuestions")}
+               onPress={() =>
+                  navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                     formsToShow: ["FiltersForm"]
+                  })
+               }
+            />
+            <List.Item
+               title="Perfil de pareja"
+               description="Especifica si irías con alguien a una cita grupal"
+               left={props => (
+                  <List.Icon {...props} style={styles.optionIcon} icon="account-heart" />
+               )}
+               onPress={() =>
+                  navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                     formsToShow: ["CoupleProfileForm"]
+                  })
+               }
+            />
+            <List.Item
+               title="Preferencias de género"
+               description="Modifica tus preferencias de genero"
+               left={props => (
+                  <List.Icon {...props} style={styles.optionIcon} icon="account-heart" />
+               )}
+               onPress={() =>
+                  navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                     formsToShow: ["TargetGenderForm"]
+                  })
+               }
             />
             <List.Item
                title="Tu lugar recomendado"
                description="Modifica tu lugar recomendado para citas grupales"
                left={props => <List.Icon {...props} style={styles.optionIcon} icon="terrain" />}
-               onPress={() => navigate("ChangeDateIdea")}
+               onPress={() =>
+                  navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                     formsToShow: ["DateIdeaForm"]
+                  })
+               }
             />
             <List.Item
                title="Sobre la app y más"

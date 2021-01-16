@@ -4,7 +4,8 @@ import { EditableUserProps } from "../../../../api/server/shared-tools/validator
 import { usePropsAsQuestions } from "../../../../api/server/user";
 import {
    CenteredMethod,
-   LoadingAnimation
+   LoadingAnimation,
+   RenderMethod
 } from "../../../common/LoadingAnimation/LoadingAnimation";
 import Question, { QuestionOnChange } from "../../../common/Question/Question";
 
@@ -77,7 +78,7 @@ const PropAsQuestionForm: FC<PropsPropAsQuestionForm> = props => {
    };
 
    if (isLoading) {
-      return <LoadingAnimation centeredMethod={CenteredMethod.Relative} visible />;
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 
    if (!question) {

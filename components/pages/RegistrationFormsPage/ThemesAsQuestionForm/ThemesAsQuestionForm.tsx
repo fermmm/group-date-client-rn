@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { ThemeBasicInfo } from "../../../../api/server/shared-tools/endpoints-interfaces/themes";
 import { EditableUserProps } from "../../../../api/server/shared-tools/validators/user";
+import { LoadingAnimation, RenderMethod } from "../../../common/LoadingAnimation/LoadingAnimation";
 import Question from "../../../common/Question/Question";
 import { ThemesToUpdate } from "../RegistrationFormsPage";
 import { useThemeAsQuestionInfo } from "./hooks/useThemeAsQuestionInfo";
@@ -52,8 +53,8 @@ const ThemesAsQuestionForm: FC<PropsThemesAsQuestionForm> = props => {
       return null;
    };
 
-   if (question == null) {
-      return null;
+   if (isLoading) {
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 
    return (

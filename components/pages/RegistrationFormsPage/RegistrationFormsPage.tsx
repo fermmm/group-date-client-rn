@@ -7,8 +7,8 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
 import { useServerProfileStatus, useUserPropsMutation } from "../../../api/server/user";
-import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
-import { CenteredMethod, LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
+import { useIsFocused, useRoute } from "@react-navigation/native";
+import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
 import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredFormList";
 import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
@@ -19,6 +19,7 @@ import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
 import { useUnifiedThemesToUpdate } from "./hooks/useUnifiedThemesToUpdate";
 import { ThemeEditAction, useThemesMutation } from "../../../api/server/themes";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
+import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -27,9 +28,14 @@ export interface ParamsRegistrationFormsPage {
 
 // TODO: Que al apretar back pregunte si queres guardar o cancelar, tanto con boton como el back nativo
 
+/**
+ * This component shows one or more registration forms, is by both the registration process and also when
+ * changing the profile. It can receive a list of required forms to show from the params (when modifying
+ * profile) or from server (on registration)
+ */
 const RegistrationFormsPage: FC = () => {
    const { params } = useRoute<RouteProps<ParamsRegistrationFormsPage>>();
-   const { navigate, goBack } = useNavigation();
+   const { navigateWithoutHistory, goBack, canGoBack } = useNavigation();
    const isFocused = useIsFocused();
    const [currentStep, setCurrentStep] = useState(0);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
@@ -41,6 +47,7 @@ const RegistrationFormsPage: FC = () => {
       themesToUpdate.current
    );
    const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
+
    const { mutateAsync: mutateUser, isLoading: userMutationLoading } = useUserPropsMutation();
    const { mutateAsync: mutateThemes, isLoading: themesMutationLoading } = useThemesMutation();
    const {
@@ -49,25 +56,21 @@ const RegistrationFormsPage: FC = () => {
       knownFormsWithPropsTheyChange,
       unknownPropsQuestions,
       themesAsQuestionsToShow
-   } = useRequiredFormList(profileStatus);
-   const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
-   const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
-
-   const {
-      formsToShow: formsToShowFromRoute,
-      // TODO: Ademas de llenar este array hay que setear el form name en formsToShow para que muestre la question
-      themesAsQuestionsToShow: themesAsQuestionsToShowFromRoute
-   } = params ?? {};
-   const formsToShow = formsToShowFromRoute ?? formsRequired;
+   } = useRequiredFormList(
+      params != null ? { fromParams: params } : { fromProfileStatus: profileStatus }
+   );
 
    useEffect(() => {
-      if (isFocused && sendingToServer && profileStatus?.user?.profileCompleted) {
-         formsToShowFromRoute == null ? navigate("Main") : goBack();
-         setSendingToServer(false);
+      if (
+         isFocused &&
+         sendingToServer &&
+         (profileStatus?.user?.profileCompleted || params != null)
+      ) {
+         params == null ? navigateWithoutHistory("Main") : goBack();
       }
    }, [profileStatus]);
 
-   const handleFormChange = useCallback(
+   const handleChangeOnForm = useCallback(
       (
          formName: RegistrationFormName | string,
          newProps: EditableUserProps,
@@ -82,6 +85,9 @@ const RegistrationFormsPage: FC = () => {
       },
       []
    );
+
+   const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
+   const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
 
    const handleBackButtonClick = useCallback(() => {
       if (currentStep > 0) {
@@ -100,12 +106,12 @@ const RegistrationFormsPage: FC = () => {
          return;
       }
 
-      if (currentStep < formsToShow.length - 1) {
+      if (currentStep < formsRequired.length - 1) {
          setCurrentStep(currentStep + 1);
       } else {
          sendDataToServer();
       }
-   }, [currentStep, formsToShow]);
+   }, [currentStep, formsRequired]);
 
    const sendDataToServer = async () => {
       setSendingToServer(true);
@@ -149,11 +155,13 @@ const RegistrationFormsPage: FC = () => {
    };
 
    const getCurrentFormError = useCallback(
-      (): string => errorOnForms.current[formsToShow[currentStep]],
-      [formsToShow, currentStep]
+      (): string => errorOnForms.current[formsRequired[currentStep]],
+      [formsRequired, currentStep]
    );
 
    const isLoading: boolean =
+      profileStatus == null ||
+      formsRequired?.length === 0 ||
       profileStatusLoading ||
       requiredFormListLoading ||
       userMutationLoading ||
@@ -164,23 +172,20 @@ const RegistrationFormsPage: FC = () => {
       <>
          <AppBarHeader />
          {isLoading ? (
-            <>
-               <BasicScreenContainer />
-               <LoadingAnimation centeredMethod={CenteredMethod.Absolute} />
-            </>
+            <LoadingAnimation renderMethod={RenderMethod.FullScreen} />
          ) : (
             <ScreensStepper
                currentScreen={currentStep}
                swipeEnabled={false}
                onScreenChange={handleScreenChange}
             >
-               {formsToShow.map((formName, i) => (
+               {formsRequired.map((formName, i) => (
                   <BasicScreenContainer
                      showBottomGradient={true}
                      onContinuePress={handleContinueButtonClick}
                      onBackPress={handleBackButtonClick}
                      showBackButton={i > 0}
-                     continueButtonTextFinishMode={i === formsToShow.length - 1}
+                     continueButtonTextFinishMode={i === formsRequired.length - 1}
                      showContinueButton
                      key={i}
                   >
@@ -188,7 +193,7 @@ const RegistrationFormsPage: FC = () => {
                         <BasicInfoForm
                            formName={formName}
                            initialData={profileStatus.user}
-                           onChange={handleFormChange}
+                           onChange={handleChangeOnForm}
                         />
                      )}
                      {formName === "FiltersForm" && (
@@ -196,28 +201,28 @@ const RegistrationFormsPage: FC = () => {
                            formName={formName}
                            initialData={profileStatus.user}
                            birthDateSelected={propsGathered?.current?.birthDate as number}
-                           onChange={handleFormChange}
+                           onChange={handleChangeOnForm}
                         />
                      )}
                      {formName === "ProfileImagesForm" && (
                         <ProfileImagesForm
                            formName={formName}
                            initialData={profileStatus.user as User}
-                           onChange={handleFormChange}
+                           onChange={handleChangeOnForm}
                         />
                      )}
                      {formName === "DateIdeaForm" && (
                         <DateIdeaForm
                            formName={formName}
                            initialData={profileStatus.user}
-                           onChange={handleFormChange}
+                           onChange={handleChangeOnForm}
                         />
                      )}
                      {formName === "ProfileDescriptionForm" && (
                         <ProfileDescriptionForm
                            formName={formName}
                            initialData={profileStatus.user}
-                           onChange={handleFormChange}
+                           onChange={handleChangeOnForm}
                         />
                      )}
                      {formName === "GenderForm" && (
@@ -225,7 +230,7 @@ const RegistrationFormsPage: FC = () => {
                            formName={formName}
                            propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            initialData={profileStatus.user}
-                           onChange={handleFormChange}
+                           onChange={handleChangeOnForm}
                         />
                      )}
                      {formName === "TargetGenderForm" && (
@@ -234,7 +239,7 @@ const RegistrationFormsPage: FC = () => {
                            propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            defaultValueForNonSelectedAnswers={false}
                            initialData={profileStatus.user}
-                           onChange={handleFormChange}
+                           onChange={handleChangeOnForm}
                         />
                      )}
                      {formName === "CoupleProfileForm" && (
@@ -242,7 +247,7 @@ const RegistrationFormsPage: FC = () => {
                            formName={formName}
                            propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            initialData={profileStatus.user}
-                           onChange={handleFormChange}
+                           onChange={handleChangeOnForm}
                         />
                      )}
                      {unknownPropsQuestions.includes(formName) && (
@@ -250,7 +255,7 @@ const RegistrationFormsPage: FC = () => {
                            formName={formName}
                            propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            initialData={profileStatus.user}
-                           onChange={handleFormChange}
+                           onChange={handleChangeOnForm}
                         />
                      )}
                      {themesAsQuestionsToShow.includes(formName) && (
@@ -259,7 +264,7 @@ const RegistrationFormsPage: FC = () => {
                            questionId={formName}
                            initialData={profileStatus.user}
                            mandatoryQuestion={true}
-                           onChange={handleFormChange}
+                           onChange={handleChangeOnForm}
                         />
                      )}
                   </BasicScreenContainer>

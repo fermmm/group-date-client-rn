@@ -10,13 +10,14 @@ import {
    useFacebookTokenCheck
 } from "../../../api/third-party/facebook/facebook-login";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { useServerInfo } from "../../../api/server/server-info";
 import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useServerProfileStatus } from "../../../api/server/user";
 import { userFinishedRegistration } from "../../../api/tools/userTools";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { removeFromDeviceSecure } from "../../../common-tools/device-native-api/storage/storage";
+import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -25,7 +26,7 @@ const LoginPage: FC = () => {
 
    const [logoAnimCompleted, setLogoAnimCompleted] = useState(false);
    const { colors } = useTheme();
-   const { navigate } = useNavigation();
+   const { navigateWithoutHistory, navigate } = useNavigation();
    const isFocused = useIsFocused();
    const { data: serverInfoData, isLoading: serverInfoLoading } = useServerInfo();
 
@@ -47,7 +48,7 @@ const LoginPage: FC = () => {
    useEffect(() => {
       const registrationFinished: boolean = userFinishedRegistration(profileStatusData);
       if (profileStatusData != null && logoAnimCompleted && isFocused) {
-         navigate(registrationFinished ? "Main" : "RegistrationForms");
+         navigateWithoutHistory(registrationFinished ? "Main" : "RegistrationForms");
       }
    }, [profileStatusData, logoAnimCompleted]);
 
