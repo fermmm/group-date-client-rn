@@ -22,6 +22,7 @@ import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { BackHandler } from "react-native";
 import { objectsContentIsEqual } from "../../../common-tools/js-tools/js-tools";
+import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -35,8 +36,7 @@ export interface ParamsRegistrationFormsPage {
  */
 const RegistrationFormsPage: FC = () => {
    const { params } = useRoute<RouteProps<ParamsRegistrationFormsPage>>();
-   const { navigateWithoutHistory, goBack, canGoBack } = useNavigation();
-   const isFocused = useIsFocused();
+   const { navigateWithoutHistory, goBack, canGoBack, isFocused } = useNavigation();
    const [currentStep, setCurrentStep] = useState(0);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
    const [exitDialogVisible, setExitDialogVisible] = useState(false);
@@ -60,6 +60,7 @@ const RegistrationFormsPage: FC = () => {
    } = useRequiredFormList(
       params != null ? { fromParams: params } : { fromProfileStatus: profileStatus }
    );
+   const { token } = useFacebookToken(profileStatus?.user?.token);
 
    useEffect(() => {
       if (
@@ -115,7 +116,7 @@ const RegistrationFormsPage: FC = () => {
 
    // Called when the back button/gesture on the device is pressed before leaving the screen
    const handleBackButton = useCallback(() => {
-      if (canGoBack() && userChangedSomething()) {
+      if (canGoBack() && userChangedSomething() && isFocused()) {
          showExitDialog();
       } else {
          if (canGoBack()) {
@@ -150,33 +151,33 @@ const RegistrationFormsPage: FC = () => {
          await mutateThemes({
             action: ThemeEditAction.Subscribe,
             themeIds: unifiedThemesToUpdate.themesToSubscribe,
-            token: profileStatus.user.token
+            token
          });
       }
       if (unifiedThemesToUpdate?.themesToBlock?.length > 0) {
          await mutateThemes({
             action: ThemeEditAction.Block,
             themeIds: unifiedThemesToUpdate.themesToBlock,
-            token: profileStatus.user.token
+            token
          });
       }
       if (unifiedThemesToUpdate?.themesToUnsubscribe?.length > 0) {
          await mutateThemes({
             action: ThemeEditAction.RemoveSubscription,
             themeIds: unifiedThemesToUpdate.themesToUnsubscribe,
-            token: profileStatus.user.token
+            token
          });
       }
       if (unifiedThemesToUpdate?.themesToUnblock?.length > 0) {
          await mutateThemes({
             action: ThemeEditAction.RemoveBlock,
             themeIds: unifiedThemesToUpdate.themesToUnblock,
-            token: profileStatus.user.token
+            token
          });
       }
       // We send user props last because it contains questionsShowed prop, which means that the themes were sent
       if (Object.keys(propsToSend).length > 0) {
-         await mutateUser({ token: profileStatus.user.token, props: propsToSend });
+         await mutateUser({ token, props: propsToSend });
       }
    };
 
@@ -186,6 +187,10 @@ const RegistrationFormsPage: FC = () => {
    );
 
    const userChangedSomething = (): boolean => {
+      if (profileStatus == null) {
+         return false;
+      }
+
       return !objectsContentIsEqual(propsGathered.current, profileStatus.user, {
          object2CanHaveMoreProps: true
       });

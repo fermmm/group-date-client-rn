@@ -15,7 +15,7 @@ export interface AppBarHeaderProps {
 }
 
 const AppBarHeader: FC<AppBarHeaderProps> = props => {
-   const { title = "", showBackButton = true, onBackPress = () => {}, children } = props;
+   const { title = "", showBackButton = true, onBackPress, children } = props;
    const { goBack } = useNavigation();
    const theme: ThemeExt = useTheme();
 

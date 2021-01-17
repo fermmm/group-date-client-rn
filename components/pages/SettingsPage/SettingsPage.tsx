@@ -32,10 +32,10 @@ const SettingsPage: FC = () => {
             />
             <EmptySpace height={10} />
             <List.Item
-               title="Filtros de distancia y edad"
-               description="Modifica filtros de distancia y edad"
+               title="Edad y distancia"
+               description="Configurar las preferencias de edad y distancia"
                left={props => (
-                  <List.Icon {...props} style={styles.optionIcon} icon="account-heart" />
+                  <List.Icon {...props} style={styles.optionIcon} icon="arrow-left-right-bold" />
                )}
                onPress={() =>
                   navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
@@ -45,9 +45,9 @@ const SettingsPage: FC = () => {
             />
             <List.Item
                title="Perfil de pareja"
-               description="Especifica si irías con alguien a una cita grupal"
+               description="Especificar si irías con alguien a una cita grupal"
                left={props => (
-                  <List.Icon {...props} style={styles.optionIcon} icon="account-heart" />
+                  <List.Icon {...props} style={styles.optionIcon} icon="account-multiple" />
                )}
                onPress={() =>
                   navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
@@ -59,7 +59,7 @@ const SettingsPage: FC = () => {
                title="Preferencias de género"
                description="Modifica tus preferencias de genero"
                left={props => (
-                  <List.Icon {...props} style={styles.optionIcon} icon="account-heart" />
+                  <List.Icon {...props} style={styles.optionIcon} icon="gender-transgender" />
                )}
                onPress={() =>
                   navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
@@ -78,8 +78,8 @@ const SettingsPage: FC = () => {
                }
             />
             <List.Item
-               title="Sobre la app y más"
-               description="Te contamos sobre la app, la gente detras de su creación y más"
+               title="Leer sobre la app"
+               description="Respuestas a dudas comunes y la filosofía detrás del proyecto"
                left={props => (
                   <List.Icon {...props} style={styles.optionIcon} icon="all-inclusive" />
                )}

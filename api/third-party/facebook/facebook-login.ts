@@ -29,8 +29,8 @@ export function useFacebookToken(externallyProvidedToken?: string): UseFacebookT
          setToken(t);
       });
 
-   if (token != null) {
-      return { token, isLoading: false, getNewTokenFromFacebook };
+   if (externallyProvidedToken != null || token != null) {
+      return { token: externallyProvidedToken ?? token, isLoading: false, getNewTokenFromFacebook };
    }
 
    if (fasterTokenCache != null) {

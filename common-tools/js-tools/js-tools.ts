@@ -91,11 +91,16 @@ export function objectsContentIsEqual<T>(
       }
    }
 
+   if (Array.isArray(object1) && Array.isArray(object2)) {
+      return object1.join() === object2.join();
+   }
+
    for (const key of object1Keys) {
       if (!object2.hasOwnProperty(key)) {
          return false;
       }
-      if (!equalityWithArray(object1[key], object2[key])) {
+
+      if (object1[key] !== object2[key]) {
          return false;
       }
    }
@@ -105,14 +110,4 @@ export function objectsContentIsEqual<T>(
 
 export interface ObjectsContentIsEqualOptions {
    object2CanHaveMoreProps?: boolean;
-}
-
-/**
- * Checks for equality with 2 elements, if the elements are arrays converts them to strings and compares
- */
-function equalityWithArray(obj1: any, obj2: any): boolean {
-   if (Array.isArray(obj1) && Array.isArray(obj2)) {
-      return obj1.join() === obj2.join();
-   }
-   return obj1 === obj2;
 }
