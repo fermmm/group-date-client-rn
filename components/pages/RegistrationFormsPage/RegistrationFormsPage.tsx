@@ -7,7 +7,7 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
 import { useServerProfileStatus, useUserPropsMutation } from "../../../api/server/user";
-import { useFocusEffect, useIsFocused, useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
 import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredFormList";
@@ -48,7 +48,6 @@ const RegistrationFormsPage: FC = () => {
       themesToUpdate.current
    );
    const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
-
    const { mutateAsync: mutateUser, isLoading: userMutationLoading } = useUserPropsMutation();
    const { mutateAsync: mutateThemes, isLoading: themesMutationLoading } = useThemesMutation();
    const {
@@ -192,7 +191,8 @@ const RegistrationFormsPage: FC = () => {
       }
 
       return !objectsContentIsEqual(propsGathered.current, profileStatus.user, {
-         object2CanHaveMoreProps: true
+         object2CanHaveMoreProps: true,
+         limitDigitsInNumberComparison: 5
       });
    };
 

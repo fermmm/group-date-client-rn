@@ -64,7 +64,11 @@ export function objectsContentIsEqual<T>(
    object2: T,
    options?: ObjectsContentIsEqualOptions
 ): boolean {
-   const { object2CanHaveMoreProps = false } = options ?? {};
+   const {
+      object2CanHaveMoreProps = false,
+      limitDigitsInNumberComparison,
+      convertToAbsoluteOnNumberComparison
+   } = options ?? {};
 
    // If the reference is the same the objects are equal.
    if (object1 === object2) {
@@ -91,17 +95,41 @@ export function objectsContentIsEqual<T>(
       }
    }
 
-   if (Array.isArray(object1) && Array.isArray(object2)) {
-      return object1.join() === object2.join();
-   }
-
    for (const key of object1Keys) {
       if (!object2.hasOwnProperty(key)) {
          return false;
       }
 
-      if (object1[key] !== object2[key]) {
-         return false;
+      const value1 = object1[key];
+      const value2 = object2[key];
+
+      if (Array.isArray(value1) && Array.isArray(value2)) {
+         if (value1.join() !== value2.join()) {
+            return false;
+         }
+      } else if (
+         limitDigitsInNumberComparison != null &&
+         typeof value1 === "number" &&
+         typeof value2 === "number"
+      ) {
+         let numberValue1 = value1;
+         let numberValue2 = value2;
+
+         if (convertToAbsoluteOnNumberComparison) {
+            numberValue1 = Math.abs(numberValue1);
+            numberValue2 = Math.abs(numberValue2);
+         }
+
+         if (
+            String(numberValue1).substring(0, limitDigitsInNumberComparison) !==
+            String(numberValue2).substring(0, limitDigitsInNumberComparison)
+         ) {
+            return false;
+         }
+      } else {
+         if (value1 !== value2) {
+            return false;
+         }
       }
    }
 
@@ -110,4 +138,6 @@ export function objectsContentIsEqual<T>(
 
 export interface ObjectsContentIsEqualOptions {
    object2CanHaveMoreProps?: boolean;
+   limitDigitsInNumberComparison?: number;
+   convertToAbsoluteOnNumberComparison?: boolean;
 }

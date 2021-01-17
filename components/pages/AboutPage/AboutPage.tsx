@@ -56,12 +56,13 @@ const AboutPage: FC = () => {
                al dar likes y por eso también aumentan las posibilidades de una coincidencia grupal.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Ésta aplicación es gratis?
+               ¿Hay que pagar algo?
             </TitleText>
             <Text>
-               Es y será siempre gratis, sin fines comerciales. Financiada con donaciones a
-               voluntad, el único fin es hacer que iniciarse en el poliamor sea mas fácil en la
-               práctica y ayudar a modificar la idea de que las citas son únicamente de a dos.
+               Esta app es y será siempre gratis, sin fines comerciales y próximamente de código
+               abierto. Financiada con donaciones a voluntad, el único fin es hacer que iniciarse en
+               el poliamor sea mas fácil en la práctica y ayudar a modificar la idea de que las
+               citas son únicamente de a dos.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Quién hizo la aplicación?
@@ -70,8 +71,8 @@ const AboutPage: FC = () => {
                Un programador argentino interesado en sexualidad y poliamor es quien tuvo la idea,
                realizó el desarrollo de software y el diseño gráfico, pero las diferentes partes y
                los detalles que la hacen viable son el producto de ideas de varias personas
-               interesadas en el proyecto, gente perteneciente a organizaciones de amor libre en
-               Argentina y otros profesionales de diferentes disciplinas: desde ciencias sociales
+               interesadas en el proyecto, gente perteneciente a organizaciones de amor libre,
+               feminismo y otros profesionales de diferentes disciplinas: desde ciencias sociales
                hasta otros ingenieros de software.
             </Text>
             <TitleText extraSize style={styles.title}>
@@ -86,7 +87,7 @@ const AboutPage: FC = () => {
             <EmptySpace height={15} />
             <Text>
                El ser humano primitivo (cazador recolector) vivía en tribus donde se compartía la
-               comida, la crianza de los hijos y el sexo, los padres de los hijos eran todxs. El
+               comida, la crianza de lxs hijxs y el sexo, los padres de lxs hijxs eran todxs. El
                sexo era variado y/o grupal con mucho mas frecuencia de lo que tienen sexo las
                personas mas sexuales en nuestra sociedad. La comida se obtenía principalmente de
                forma auto suficiente, la vida en comunidad mejoraba la existencia pero para comer y
@@ -118,7 +119,7 @@ const AboutPage: FC = () => {
             <Text>
                En nuestra cultura cuando se instala la monogamia, no sucede por que esta tenga
                alguna ventaja emocional o sea mas profunda en las relaciones afectivas o sexuales,
-               si no solo por cuestiones comerciales, casar hijos como contrato comercial, acumular
+               si no solo por cuestiones comerciales, casar hijxs como contrato comercial, acumular
                riqueza de forma personal sin compartir con la tribu, etc. Surge durante la abolición
                de lo colectivo en favor de la propiedad privada, específicamente en la revolución
                neolítica.
