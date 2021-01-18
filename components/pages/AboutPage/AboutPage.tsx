@@ -18,62 +18,83 @@ const AboutPage: FC = () => {
             <Text>
                El mínimo de personas necesario para que se genere una cita son 3 personas y 4 para
                grupos que sean 100% heterosexuales. El máximo es de 20. Las citas tradicionales de 2
-               personas no son posibles en esta app.
+               personas no son posibles en esta app. La primera coincidencia grupal es probable que
+               sea entre pocos usuarios y las siguientes con más, ya que se necesita mas tiempo para
+               que se den más coincidencias.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Si solo me gusta un género, significa que en la cita grupal van a ser todxs de ese
                género?
             </TitleText>
             <Text>
-               No necesariamente. Para estar en una cita grupal te tienes que gustar con un mínimo
-               de 2 de sus integrantes, es probable que haya algunas personas en una cita con
-               quienes no te gustas, que pueden ser de cualquier género y sexualidad.
+               No. Para estar en una cita grupal te tienes que gustar con un mínimo de 2 de sus
+               integrantes y no necesariamente con la totalidad, asi que es muy probable que haya
+               algunas personas en tus citas con quienes no te gustes, que pueden ser de cualquier
+               género y sexualidad.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Se pueden generar citas desequilibradas? (Ej: 1 persona se gusta con 5 que no se
                gustan entre ellxs)
             </TitleText>
             <Text>
-               No, un requisito para que se forme una cita grupal es que sean grupos mas o menos
-               equilibrados y razonables
+               No. Un requisito para que se forme una cita grupal es que sean grupos mas o menos
+               equilibrados. Esto lleva a que por ejemplo en un grupo 100% heterosexual la cantidad
+               de mujeres y varones siempre va a ser mas o menos la misma.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es fácil que se genere una cita grupal?
             </TitleText>
             <Text>
                Es igual o más fácil que se genere una cita en esta app que en las de monogamia (como
-               Tinder y OKCupid). Esto es así por varios motivos que se suman, uno de ellos es que
-               en las apps de monogamia los usuarios que reciben una buena cantidad de likes dejan
-               de usar la app, consiguen lo que quieren y dejan su perfil visible pero inactivo. En
-               esta app puedes recibir muchos likes pero eso no tiene por que hacer que consigas una
-               cita más rápido que los demás, tiene que haber una coincidencia grupal, por lo que
-               hay mas gente activa viendo perfiles y dando sus likes, lo que aumenta las
-               posibilidades de una coincidencia grupal. Otro motivo es que en las apps de monogamia
-               se busca "la persona ideal", que va a ser la única en la cita por lo que tiene que
-               tener una buena cantidad de características deseadas por la otra persona, esto hace
-               escasear los likes para una buena cantidad de usuarios, en cambio en una cita grupal
-               nadie tiene que "tenerlo todo", por lo que en esta app se tiende a ser mas flexible
-               al dar likes y por eso también aumentan las posibilidades de una coincidencia grupal.
+               Tinder y OKCupid). Esto es así por varios motivos que se suman, a continuación vamos
+               a mencionar 3:
+            </Text>
+            <Text>
+               Uno de ellos es que en las apps de monogamia los usuarios que reciben una buena
+               cantidad de likes dejan de usar la app, consiguen rápido lo que quieren y dejan su
+               perfil visible pero inactivo. En esta app puedes recibir muchos likes pero eso no
+               tiene por que hacer que consigas una cita más rápido que los demás, por que tiene que
+               haber una coincidencia grupal, por lo que hay mas usuarios activos evaluando perfiles
+               y dando sus likes, lo que aumenta las posibilidades de una coincidencia grupal.
+            </Text>
+            <Text>
+               Otro motivo es que en las "citas de monogamia" se pasa horas con una sola persona por
+               lo que esta tiene que tener una buena cantidad de características deseadas por la
+               persona, esto hace escasear los likes, en cambio en una cita grupal nadie tiene que
+               "tenerlo todo", por lo que en esta app se tiende a ser mas flexible al dar likes y
+               por eso también aumentan las posibilidades de una coincidencia grupal.
+            </Text>
+            <Text>
+               Otro motivo es que no existe ninguna app de citas de monogamia que no este concebida
+               para generar dinero. Para esto es necesario que algunxs usuarixs paguen
+               funcionalidades premium, el problema es que los usuarios si consiguen lo que quieren
+               dejan de usar la app. La solución a la que recurren es no funcionar de la mejor
+               manera intencionalmente, para perder mas lento a los usuarios y generar mas la
+               necesidad de que algunos paguen funciones premium. Este fenómeno esta bien detallado
+               en el libro "El algoritmo del amor" de "Judith Duportail", una investigación donde la
+               autora muestra como acceder y difunde el contenido de la patente de Tinder donde se
+               explica cómo esta app funciona internamente, asi como otras de la misma empresa
+               llamada "Match Group" como OkCupid.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
             </TitleText>
             <Text>
-               Esta app es y será siempre gratis, sin fines comerciales y próximamente de código
+               Esta app es y será siempre gratis, sin fines comerciales y muy pronto de código
                abierto. Financiada con donaciones a voluntad, el único fin es hacer que iniciarse en
                el poliamor sea mas fácil en la práctica y ayudar a modificar la idea de que las
                citas son únicamente de a dos.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Quién hizo la aplicación?
+               ¿Quién hizo esta aplicación?
             </TitleText>
             <Text>
-               Un programador argentino interesado en sexualidad y poliamor es quien tuvo la idea,
-               realizó el desarrollo de software y el diseño gráfico, pero las diferentes partes y
-               los detalles que la hacen viable son el producto de ideas de varias personas
+               Un desarrollador de software argentino interesado en la historia de la sexualidad es
+               quien tuvo la idea, realizó el desarrollo de software y el diseño gráfico, pero las
+               diferentes partes y detalles que lo hacen viable son ideas de varias personas
                interesadas en el proyecto, gente perteneciente a organizaciones de amor libre,
-               feminismo y otros profesionales de diferentes disciplinas: desde ciencias sociales
-               hasta otros ingenieros de software.
+               feminismo y otrxs profesionales de diferentes disciplinas: desde ciencias sociales
+               hasta otrxs ingenieros de software.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Cómo surgió la idea?
@@ -81,48 +102,49 @@ const AboutPage: FC = () => {
             <Text>
                Si se sabe la historia de la sexualidad humana, la idea de esta aplicación suena muy
                viable y mas natural que las de monogamia. Hay grandes libros para recomendar como
-               los de "Christopher Ryan" en primer lugar o algunos de "Engels" (El origen de la
-               familia, la propiedad privada y el estado). Aquí vamos con un resumen:
+               los de "Christopher Ryan" en primer lugar o algunos de "Engels" como "El origen de la
+               familia, la propiedad privada y el estado". Aquí vamos con un resumen:
             </Text>
             <EmptySpace height={15} />
             <Text>
-               El ser humano primitivo (cazador recolector) vivía en tribus donde se compartía la
-               comida, la crianza de lxs hijxs y el sexo, los padres de lxs hijxs eran todxs. El
-               sexo era variado y/o grupal con mucho mas frecuencia de lo que tienen sexo las
-               personas mas sexuales en nuestra sociedad. La comida se obtenía principalmente de
-               forma auto suficiente, la vida en comunidad mejoraba la existencia pero para comer y
-               sobrevivir no era obligatorio recurrir a nadie, por lo que no podían producirse
-               estructuras de poder verticales (division del trabajo).
+               El ser humano primitivo inteligente (cazador recolector) vivía en tribus donde se
+               compartía la comida, la crianza de lxs hijxs y el sexo, lxs padres de lxs hijxs eran
+               todxs. El sexo era variado y/o grupal con mucho mas frecuencia de lo que tienen sexo
+               las personas mas sexuales en nuestra sociedad, así como el nivel de sociabilidad
+               tampoco tenía punto de comparación. La comida todxs sabían obtenerla, no era
+               obligatorio recurrir a nadie en particular para sobrevivir si no a toda la tribu, por
+               lo que no podían producirse estructuras de poder verticales como las de hoy en día:
+               patriarcado, explotación, etc.
             </Text>
             <EmptySpace height={15} />
             <Text>
                También es así la vida del primate más genéticamente similar al humano: el poco
-               conocido y pacífico "Bonobo", un primate hyper sexual con una sociedad levemente
-               matriarcal. Los antropólogos y primatólogos manejan muchas pruebas de que la vida del
-               ser humano inteligente (cazador recolector) era muy similar y somos físicamente muy
-               similares, incluidos los genitales, cuyas características tienen mucho protagonismo
-               en la intensidad de nuestro deseo sexual.
+               conocido y pacífico "bonobo", un primate hyper sexual con una sociedad levemente
+               matriarcal. Lxs antropólogos y primatólogos manejan muchas pruebas de que la forma de
+               vida del ser humano inteligente (cazador recolector) era muy similar y somos
+               físicamente muy similares, incluidos los genitales, cuyas características tienen
+               mucho protagonismo en la intensidad de nuestro deseo sexual.
             </Text>
             <EmptySpace height={15} />
             <Text>
                Que hayamos evolucionado siendo como los bonobos, significa que nuestro cuerpo nos
                pide una sexualidad acorde, por ejemplo cuando vemos porno: No vemos siempre a una
                persona preferida (sería aburrido) si no que buscamos contenido nuevo con personas
-               nuevas, esto muestra que nuestro deseo sexual pide variedad. Los gemidos aparecen en
-               nuestro instinto para llamar a los que están cerca a que se unan a nuestra
-               experiencia sexual y se convierta en una experiencia grupal (por diferentes motivos,
-               al igual que en los bonobos). El pene es un instrumento con una forma específica para
-               succionar alejando del útero el semen de un "competidor" que estuvo ahí poco tiempo
-               antes y favorecer el propio, nada muy monógamo.
+               nuevas, esto muestra que la sexualidad de todxs pide variedad. Los gemidos aparecen
+               en nuestro instinto para llamar a los que están cerca a que se unan a la experiencia
+               sexual y se convierta en una experiencia grupal (al igual que en los bonobos). El
+               pene es un instrumento con una forma específica para succionar alejando del útero el
+               semen de un competidor reproductivo que estuvo ahí poco tiempo antes y favorecer el
+               propio, nada muy monógamo.
             </Text>
             <EmptySpace height={15} />
             <Text>
                En nuestra cultura cuando se instala la monogamia, no sucede por que esta tenga
                alguna ventaja emocional o sea mas profunda en las relaciones afectivas o sexuales,
-               si no solo por cuestiones comerciales, casar hijxs como contrato comercial, acumular
-               riqueza de forma personal sin compartir con la tribu, etc. Surge durante la abolición
-               de lo colectivo en favor de la propiedad privada, específicamente en la revolución
-               neolítica.
+               al contrario, fue solo por cuestiones comerciales: casar hijxs como contrato
+               comercial, acumular riqueza de forma personal sin compartir con la tribu, etc. Surge
+               al mismo tiempo que se da la abolición de lo colectivo en favor de la propiedad
+               privada, específicamente en la revolución neolítica.
             </Text>
             <EmptySpace height={80} />
          </BasicScreenContainer>

@@ -4,23 +4,24 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { List } from "react-native-paper";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
-import TitleText from "../../common/TitleText/TitleText";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
 import { useUser } from "../../../api/server/user";
 import Avatar from "../../common/Avatar/Avatar";
 import { ParamsRegistrationFormsPage } from "../RegistrationFormsPage/RegistrationFormsPage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
+import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 
 const SettingsPage: FC = () => {
    const { navigate } = useNavigation();
-   const { data: localUser, isLoading } = useUser();
+   const { data: localUser } = useUser();
+
+   if (!localUser) {
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
+   }
 
    return (
       <>
          <BasicScreenContainer>
-            {/* <TitleText extraMarginLeft extraSize>
-               Ajustes y otras cosas
-            </TitleText> */}
             <EmptySpace height={25} />
             <List.Item
                title="Tu perfil y fotos"
