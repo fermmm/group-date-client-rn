@@ -91,39 +91,25 @@ const ProfileCard: FC<ProfileCardProps> = props => {
 
    const finalImagesUri = images.map(uri => prepareUrl(serverInfo.imagesHost + uri));
 
-   const interestArray: string[] = [];
-   if (likesWoman) {
-      interestArray.push("Mujeres");
-   }
-   if (likesMan) {
-      interestArray.push("Varones");
-   }
-   if (likesWomanTrans) {
-      interestArray.push("Mujeres trans");
-   }
-   if (likesManTrans) {
-      interestArray.push("Varones trans");
-   }
-   if (likesOtherGenders) {
-      interestArray.push("Otrx / No binarix");
-   }
-
    let genderText: string = "";
 
    if (gender === Gender.Man) {
-      genderText = "Varón";
+      genderText = "Hombre";
    }
    if (gender === Gender.Woman) {
       genderText = "Mujer";
    }
    if (gender === Gender.TransgenderMan) {
-      genderText = "Varón trans";
+      genderText = "Hombre trans";
    }
    if (gender === Gender.TransgenderWoman) {
       genderText = "Mujer trans";
    }
    if (gender === Gender.Other) {
       genderText = "Otrx / No binarix";
+   }
+   if (isCoupleProfile) {
+      genderText = "";
    }
 
    return (
@@ -208,10 +194,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               }
                            />
                         )}
-                        <Paragraph style={styles.interestParagraph}>
-                           {isCoupleProfile ? "Pareja" : genderText} interesadx en{" "}
-                           {interestArray.join(", ")}
-                        </Paragraph>
+                        <Paragraph style={styles.interestParagraph}>{genderText}</Paragraph>
                      </View>
                      <Card.Content>
                         <Paragraph style={styles.descriptionParagraph}>
@@ -309,8 +292,8 @@ const styles: Styles = StyleSheet.create({
    },
    interestParagraph: {
       color: currentTheme.colors.text,
-      fontFamily: currentTheme.font.light,
-      fontSize: 11,
+      fontFamily: currentTheme.font.regular,
+      fontSize: 12,
       marginTop: -11,
       paddingLeft: 16
    },

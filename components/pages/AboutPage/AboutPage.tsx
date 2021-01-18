@@ -49,14 +49,16 @@ const AboutPage: FC = () => {
                Tinder y OKCupid). Esto es así por varios motivos que se suman, a continuación vamos
                a mencionar 3:
             </Text>
+            <EmptySpace height={15} />
             <Text>
                Uno de ellos es que en las apps de monogamia los usuarios que reciben una buena
                cantidad de likes dejan de usar la app, consiguen rápido lo que quieren y dejan su
                perfil visible pero inactivo. En esta app puedes recibir muchos likes pero eso no
-               tiene por que hacer que consigas una cita más rápido que los demás, por que tiene que
-               haber una coincidencia grupal, por lo que hay mas usuarios activos evaluando perfiles
-               y dando sus likes, lo que aumenta las posibilidades de una coincidencia grupal.
+               tiene por que hacer que conozcas gente más rápido que los demás por que tiene que
+               haber una coincidencia grupal, por lo que no faltan usuarios activos evaluando
+               perfiles hasta que se dan las coincidencias.
             </Text>
+            <EmptySpace height={15} />
             <Text>
                Otro motivo es que en las "citas de monogamia" se pasa horas con una sola persona por
                lo que esta tiene que tener una buena cantidad de características deseadas por la
@@ -64,17 +66,16 @@ const AboutPage: FC = () => {
                "tenerlo todo", por lo que en esta app se tiende a ser mas flexible al dar likes y
                por eso también aumentan las posibilidades de una coincidencia grupal.
             </Text>
+            <EmptySpace height={15} />
             <Text>
                Otro motivo es que no existe ninguna app de citas de monogamia que no este concebida
-               para generar dinero. Para esto es necesario que algunxs usuarixs paguen
-               funcionalidades premium, el problema es que los usuarios si consiguen lo que quieren
-               dejan de usar la app. La solución a la que recurren es no funcionar de la mejor
-               manera intencionalmente, para perder mas lento a los usuarios y generar mas la
-               necesidad de que algunos paguen funciones premium. Este fenómeno esta bien detallado
-               en el libro "El algoritmo del amor" de "Judith Duportail", una investigación donde la
-               autora muestra como acceder y difunde el contenido de la patente de Tinder donde se
-               explica cómo esta app funciona internamente, asi como otras de la misma empresa
-               llamada "Match Group" como OkCupid.
+               para enriquecer a sus dueños y esto frustra a sus usuarios. Si los usuarios consiguen
+               lo que quieren se van de la app, por lo que sus dueños hacen que la app no funcione
+               de la mejor manera, generando mas necesidad de pagar funciones premium. Este fenómeno
+               esta detallado en el libro "El algoritmo del amor" de "Judith Duportail", una
+               investigación donde la autora muestra como acceder a las patentes de Tinder y difunde
+               su información la cual revela cómo esta app funciona internamente, asi como otras de
+               la misma empresa llamada "Match Group" como OkCupid.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
@@ -89,12 +90,12 @@ const AboutPage: FC = () => {
                ¿Quién hizo esta aplicación?
             </TitleText>
             <Text>
-               Un desarrollador de software argentino interesado en la historia de la sexualidad es
-               quien tuvo la idea, realizó el desarrollo de software y el diseño gráfico, pero las
-               diferentes partes y detalles que lo hacen viable son ideas de varias personas
-               interesadas en el proyecto, gente perteneciente a organizaciones de amor libre,
-               feminismo y otrxs profesionales de diferentes disciplinas: desde ciencias sociales
-               hasta otrxs ingenieros de software.
+               La idea viene de un desarrollador de software argentino interesado en la opresión en
+               nuestra sociedad y la historia de la sexualidad. Realizó el desarrollo de software y
+               el diseño gráfico, pero las diferentes partes y detalles que lo hacen viable son
+               ideas de varias personas interesadas en el proyecto, gente perteneciente a
+               organizaciones de poliamor, amor libre, feminismo, profesionales de diferentes
+               disciplinas: desde ciencias sociales hasta otrxs ingenieros de software.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Cómo surgió la idea?
