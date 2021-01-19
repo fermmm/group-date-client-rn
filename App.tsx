@@ -19,6 +19,7 @@ import ChatPage from "./components/pages/ChatPage/ChatPage";
 import AboutPage from "./components/pages/AboutPage/AboutPage";
 import { en } from "./texts/en/en";
 import { es } from "./texts/es/es";
+import AdminPage from "./components/pages/AdminPage/AdminPage";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -75,6 +76,7 @@ export default class App extends Component<{}, PageBasicWrapperState> {
                      <Stack.Screen name="Group" component={GroupPage} />
                      <Stack.Screen name="Chat" component={ChatPage} />
                      <Stack.Screen name="DateVoting" component={DateVotingPage} />
+                     <Stack.Screen name="Admin" component={AdminPage} />
                   </Stack.Navigator>
                </NavigationContainer>
             </PaperProvider>
