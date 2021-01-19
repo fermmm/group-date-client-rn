@@ -86,7 +86,7 @@ const ScrollViewExtended: FC<ScrollViewExtendedProps> = props => {
 
    const onLayout = (event: LayoutChangeEvent) => {
       const vh: number = event.nativeEvent.layout.height;
-      const scrollingActivated: boolean = contentHeight > vh;
+      const scrollingActivated: boolean = contentHeight > vh + vh * 0.25;
 
       setViewportHeight(vh);
 
