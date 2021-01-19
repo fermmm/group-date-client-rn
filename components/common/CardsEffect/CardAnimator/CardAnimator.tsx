@@ -1,82 +1,75 @@
-import React, { Component } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Animated, View } from "react-native";
-import { withTheme } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { LogoSvg } from "../../../../assets/LogoSvg";
 import color from "color";
 import { currentTheme } from "../../../../config";
 import { CardAnimation, CardAnimatedStyles } from "./animations/interface/CardAnimation";
+import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 
-export interface CardAnimatorProps extends Themed {
-   // tslint:disable-next-line: no-any
-   ref?: any;
+export interface CardAnimatorProps {
+   onMount: (compFunctions: FunctionsCardAnimator) => void;
 }
-export interface CardAnimatorState {
-   containerAnimValue: Animated.Value;
-   logoAnimValue: Animated.Value;
-   cardAnimation: CardAnimation;
-}
+
+export type FunctionsCardAnimator = {
+   animate: (cardAnimation: CardAnimation, onComplete: () => void) => void;
+};
 
 /**
  * This component performs the animations on the child
  */
-class CardAnimator extends Component<CardAnimatorProps, CardAnimatorState> {
-   static defaultProps: Partial<CardAnimatorProps> = {};
+const CardAnimator: FC<CardAnimatorProps> = props => {
+   const [containerAnimValue, setContainerAnimValue] = useState(new Animated.Value(0));
+   const [logoAnimValue, setLogoAnimValue] = useState(new Animated.Value(0));
+   const [cardAnimation, setCardAnimation] = useState<CardAnimation>(null);
+   const animStyles = useRef<CardAnimatedStyles>(null);
+   const { colors } = useTheme();
 
-   state: CardAnimatorState = {
-      containerAnimValue: new Animated.Value(0),
-      logoAnimValue: new Animated.Value(0),
-      cardAnimation: null,
-   };
-   animStyles: CardAnimatedStyles;
-
-   render(): React.ReactNode {
-      const { containerAnimValue, logoAnimValue, cardAnimation }: Partial<CardAnimatorState> = this.state;
-      const { colors }: ThemeExt = this.props.theme as unknown as ThemeExt;
-
-      if (cardAnimation != null) {
-         this.animStyles = cardAnimation.interpolation(containerAnimValue, logoAnimValue);
-      }
-
-      if (this.animStyles == null) {
-         this.animStyles = {cardStyle: null, logoStyle: null};
-      }
-
-      return (
-         <Animated.View style={[{ flex: 1 }, this.animStyles.cardStyle]}>
-            {this.props.children}
-            {
-               this.animStyles.logoStyle != null &&
-                  <Animated.View style={[styles.logoAnimationContainer, this.animStyles.logoStyle]}>
-                     <View style={styles.logoContainer}>
-                        <LogoSvg color={colors.primary2} style={styles.logo}/>
-                     </View>
-                  </Animated.View>
-            }      
-         </Animated.View>
-      );
+   if (cardAnimation != null) {
+      animStyles.current = cardAnimation.interpolation(containerAnimValue, logoAnimValue);
    }
 
-   animate(cardAnimation: CardAnimation, onComplete: () => void = null): void {
-      this.setState({cardAnimation});
+   if (animStyles.current == null) {
+      animStyles.current = { cardStyle: null, logoStyle: null };
+   }
 
-      cardAnimation.trigger(
-         this.state.containerAnimValue, 
-         this.state.logoAnimValue, 
-         () => {      
-            this.setState({
-               containerAnimValue: new Animated.Value(0),
-               logoAnimValue: new Animated.Value(0),
-               cardAnimation: null
-            });
-            
+   const animate = useCallback(
+      (cardAnimation: CardAnimation, onComplete: () => void = null): void => {
+         setCardAnimation(cardAnimation);
+         cardAnimation.trigger(containerAnimValue, logoAnimValue, () => {
+            setCardAnimation(null);
+            // setContainerAnimValue(new Animated.Value(0));
+            // setLogoAnimValue(new Animated.Value(0));
+            // TODO: Esto antes era como arriba pero podria ser asi, ver si anda
+            containerAnimValue.setValue(0);
+            logoAnimValue.setValue(0);
             if (onComplete != null) {
                onComplete();
             }
-      });
-   }
-}
+         });
+      },
+      []
+   );
+
+   useEffect(() => {
+      if (props.onMount != null) {
+         props.onMount({ animate });
+      }
+   }, []);
+
+   return (
+      <Animated.View style={[{ flex: 1 }, animStyles.current.cardStyle]}>
+         {props.children}
+         {animStyles.current.logoStyle != null && (
+            <Animated.View style={[styles.logoAnimationContainer, animStyles.current.logoStyle]}>
+               <View style={styles.logoContainer}>
+                  <LogoSvg color={colors.primary2} style={styles.logo} />
+               </View>
+            </Animated.View>
+         )}
+      </Animated.View>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    logoAnimationContainer: {
@@ -86,7 +79,7 @@ const styles: Styles = StyleSheet.create({
       top: 0,
       bottom: 0,
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "center"
    },
    logoContainer: {
       width: "65%",
@@ -100,4 +93,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(CardAnimator);
+export default CardAnimator;

@@ -14,23 +14,21 @@ export interface CardsOptimizationState {
 
 /**
  * Renders only 2 of the children. currentCard prop is the child index to render, the next one
- * will also be rendered to be able to implement animations.  
+ * will also be rendered to be able to implement animations.
  */
 class CardsOptimization extends Component<CardsOptimizationProps, CardsOptimizationState> {
    state: CardsOptimizationState = {
       childA: null,
       childB: null,
-      centerChild: null,
+      centerChild: null
    };
-   
+
    componentDidMount(): void {
       const { currentCard }: Partial<CardsOptimizationProps> = this.props;
-      
+
       const children: React.ReactNode[] = React.Children.toArray(this.props.children);
-      const nextChildren: React.ReactNode = currentCard + 1 < children.length ? 
-         children[currentCard + 1] 
-      :
-         null;
+      const nextChildren: React.ReactNode =
+         currentCard + 1 < children.length ? children[currentCard + 1] : null;
 
       this.setState({
          childA: nextChildren,
@@ -39,14 +37,14 @@ class CardsOptimization extends Component<CardsOptimizationProps, CardsOptimizat
       });
    }
 
-   render(): JSX.Element {
+   render() {
       const { childA, childB, centerChild }: Partial<CardsOptimizationState> = this.state;
       return (
          <>
-            <View style={[styles.childrenWrapper, {zIndex: centerChild === childB ? 1 : 0}]}>
+            <View style={[styles.childrenWrapper, { zIndex: centerChild === childB ? 1 : 0 }]}>
                {childB}
             </View>
-            <View style={[styles.childrenWrapper, {zIndex: centerChild === childA ? 1 : 0}]}>
+            <View style={[styles.childrenWrapper, { zIndex: centerChild === childA ? 1 : 0 }]}>
                {childA}
             </View>
          </>
@@ -60,7 +58,10 @@ class CardsOptimization extends Component<CardsOptimizationProps, CardsOptimizat
          this.loadNextChild();
       }
 
-      if (React.Children.toArray(this.props.children).length !== React.Children.toArray(prevProps.children).length) {
+      if (
+         React.Children.toArray(this.props.children).length !==
+         React.Children.toArray(prevProps.children).length
+      ) {
          // If we are in the last position without any next child and then children are added we need to refresh:
          if (childA == null || childB == null) {
             this.loadNextChild();
@@ -88,11 +89,9 @@ class CardsOptimization extends Component<CardsOptimizationProps, CardsOptimizat
       const { currentCard }: Partial<CardsOptimizationProps> = this.props;
       const { centerChild, childA, childB }: Partial<CardsOptimizationState> = this.state;
       const children: React.ReactNode[] = React.Children.toArray(this.props.children);
-         
-      const nextChildren: React.ReactNode = currentCard + 1 < children.length ? 
-            children[currentCard + 1] 
-         :
-             null;
+
+      const nextChildren: React.ReactNode =
+         currentCard + 1 < children.length ? children[currentCard + 1] : null;
 
       /*
          This childB == null is here to make sure a new child goes to the null holder when it's neccesary.
@@ -101,12 +100,12 @@ class CardsOptimization extends Component<CardsOptimizationProps, CardsOptimizat
       if (centerChild === childB || childB == null) {
          this.setState({
             childB: nextChildren,
-            centerChild: childA,
+            centerChild: childA
          });
       } else {
          this.setState({
             childA: nextChildren,
-            centerChild: childB,
+            centerChild: childB
          });
       }
    }
@@ -118,8 +117,8 @@ const styles: Styles = StyleSheet.create({
       left: 0,
       right: 0,
       top: 0,
-      bottom: 0,
-   },
+      bottom: 0
+   }
 });
 
 export default CardsOptimization;

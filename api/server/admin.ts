@@ -11,6 +11,10 @@ export function useTestEndpoint2Mutation<
    T extends TokenParameter & { text: string },
    R extends string
 >(options: UseMutationOptions<R, RequestError, T> = {}, extraOptions?: MutationExtraOptions) {
-   let newOptions = defaultOptionsForMutations({ extraOptions, options });
+   let newOptions = defaultOptionsForMutations({
+      extraOptions,
+      options,
+      queriesToInvalidate: ["cards-game/recommendations"]
+   });
    return useMutation(data => defaultHttpRequest("testing2", "GET", data), newOptions);
 }
