@@ -38,8 +38,8 @@ export function useThemesAsQuestions<T extends ThemesAsQuestion[]>(options?: Use
    return defaultErrorHandler(query);
 }
 
-export function useThemesMutation<T extends ThemeParams>(
-   options: UseMutationOptions<void, RequestError, T> = {},
+export function useThemesMutation<T extends ThemeParams, R = void>(
+   options: UseMutationOptions<R, RequestError, T> = {},
    extraOptions?: MutationExtraOptions
 ) {
    let newOptions = defaultOptionsForMutations({
@@ -47,11 +47,7 @@ export function useThemesMutation<T extends ThemeParams>(
       extraOptions,
       options
    });
-
-   return useMutation<void, RequestError, T, unknown>(
-      data => defaultHttpRequest(data.action, "POST", data),
-      newOptions
-   );
+   return useMutation(data => defaultHttpRequest(data.action, "POST", data), newOptions);
 }
 
 export interface ThemeParams extends BasicThemeParams {

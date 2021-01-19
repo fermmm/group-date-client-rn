@@ -107,9 +107,9 @@ export function defaultErrorHandler<T>(
    return queryResult;
 }
 
-export function defaultErrorHandlerForMutations<T>(
-   options: UseMutationOptions<void, RequestError, T, unknown>
-): UseMutationOptions<void, RequestError, T, unknown> {
+export function defaultErrorHandlerForMutations<T, R = void>(
+   options: UseMutationOptions<R, RequestError, T, unknown>
+): UseMutationOptions<R, RequestError, T, unknown> {
    const newOptions = { ...options };
    newOptions.onError = error => {
       Alert.alert(
@@ -126,10 +126,10 @@ export function defaultErrorHandlerForMutations<T>(
    return newOptions;
 }
 
-export function invalidateCacheForOptions<T = void>(
+export function invalidateCacheForOptions<T = void, R = void>(
    queriesList: string[],
-   options: UseMutationOptions<void, RequestError, T>
-): UseMutationOptions<void, RequestError, T> {
+   options: UseMutationOptions<R, RequestError, T>
+): UseMutationOptions<R, RequestError, T> {
    const newOptions = { ...options };
    if (queriesList == null || queriesList.length === 0) {
       return newOptions;
@@ -148,11 +148,11 @@ export function invalidateCacheMultiple(queriesList: string[]) {
    queriesList.forEach(query => queryClient.invalidateQueries(query));
 }
 
-export function defaultOptionsForMutations<T>(props: {
+export function defaultOptionsForMutations<T, R = void>(props: {
    queriesToInvalidate?: string[];
    extraOptions?: MutationExtraOptions;
-   options: UseMutationOptions<void, RequestError, T>;
-}): UseMutationOptions<void, RequestError, T> {
+   options: UseMutationOptions<R, RequestError, T>;
+}): UseMutationOptions<R, RequestError, T> {
    const { queriesToInvalidate, extraOptions, options = {} } = props;
    let newOptions = defaultErrorHandlerForMutations(options);
    newOptions =

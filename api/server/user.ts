@@ -66,8 +66,8 @@ export function usePropsAsQuestions<T = UserPropAsQuestion[]>(options?: UseQuery
    return defaultErrorHandler(query);
 }
 
-export function useUserPropsMutation<T extends UserPostParams>(
-   options: UseMutationOptions<void, RequestError, T> = {},
+export function useUserPropsMutation<T extends UserPostParams, R = void>(
+   options: UseMutationOptions<R, RequestError, T> = {},
    extraOptions?: MutationExtraOptions
 ) {
    let newOptions = defaultOptionsForMutations({
@@ -75,11 +75,7 @@ export function useUserPropsMutation<T extends UserPostParams>(
       extraOptions,
       options
    });
-
-   return useMutation<void, RequestError, T>(
-      data => defaultHttpRequest("user", "POST", data),
-      newOptions
-   );
+   return useMutation(data => defaultHttpRequest("user", "POST", data), newOptions);
 }
 
 export async function uploadImage(
