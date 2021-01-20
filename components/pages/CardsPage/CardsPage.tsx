@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useCallback, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import ProfileCard from "../../common/ProfileCard/ProfileCard";
@@ -15,8 +15,8 @@ import { useCardsRecommendations } from "../../../api/server/cards-game";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { currentTheme } from "../../../config";
 import { __String } from "typescript";
+import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
-// TODO: El array de Users viene con todos los usuarios repetidos
 // TODO: Aveces useUser no responde
 // TODO: El animator no estaria andando, pero hay que probar primero resolviendo lo anterior
 // TODO: Cuando users.length es 0 hay que pedir de vuelta al server y si sigue siendo 0 mostrar el mensaje de que no hay usuarios
@@ -28,17 +28,18 @@ const CardsPage: FC = () => {
    const { data: users, isLoading } = useCardsRecommendations();
 
    const handleLikeOrDislike = async (liked: boolean, userId: string) => {
-      console.log(userId, liked);
       if (animating) {
          return;
       }
 
+      const positionInList = users.findIndex(u => u.userId === userId);
+      console.log("positionInList", positionInList);
       // This animation flips the current card so the one behind is revealed (if present)
       // await animateCards(liked);
 
-      if (thereIsANextCard()) {
+      if (thereIsANextCard(positionInList, users)) {
          // If present this loads the next card and renders it hidden behind the current one
-         setCurrentUser(currentUser + 1);
+         setCurrentUser(positionInList + 1);
       } else {
          // Here show a loading indicator and request new cards, if there are no new cards execute this:
          setNoMoreUsersOnServer(true);
@@ -77,8 +78,8 @@ const CardsPage: FC = () => {
       });
    };
 
-   const thereIsANextCard = (): boolean => {
-      return currentUser + 1 < users.length;
+   const thereIsANextCard = (currentPosition: number, usersList: User[]): boolean => {
+      return currentPosition + 1 < users.length;
    };
 
    if (isLoading) {
@@ -90,7 +91,7 @@ const CardsPage: FC = () => {
          {noMoreUsersOnServer ? (
             <NoMoreUsersMessage />
          ) : (
-            <CardsOptimization currentCard={currentUser}>
+            <CardsOptimization currentCard={currentUser} disableOptimization={false}>
                {users.map((user, i) => (
                   // <CardAnimator
                   //    onMount={compFunctions => (animRefs.current[i] = compFunctions)}
