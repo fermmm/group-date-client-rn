@@ -1,115 +1,81 @@
-import React, { Component } from "react";
+import React, { FC, ReactElement, ReactNode, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { useEffectExceptOnMount } from "../../../common-tools/common-hooks/useEffectExceptoOnMount";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 
 export interface CardsOptimizationProps {
    currentCard: number;
-   children?: React.ReactNode[] | React.ReactNode;
-}
-export interface CardsOptimizationState {
-   childA: React.ReactNode;
-   childB: React.ReactNode;
-   centerChild: React.ReactNode;
+   disableOptimization?: boolean;
 }
 
 /**
- * Renders only 2 of the children. currentCard prop is the child index to render, the next one
- * will also be rendered to be able to implement animations.
+ * Renders only 2 of the children: The currentCard prop is the child index to render, the next one
+ * will also be rendered with a lower z-index in order to be able to implement animations or to pre
+ * load images. So this works only when the next child to render is the next one on the list, jumping
+ * is not recommended. This z-index switch approach is a solution to switch components without re rendering.
  */
-class CardsOptimization extends Component<CardsOptimizationProps, CardsOptimizationState> {
-   state: CardsOptimizationState = {
-      childA: null,
-      childB: null,
-      centerChild: null
-   };
+const CardsOptimization: FC<CardsOptimizationProps> = props => {
+   const [childA, setChildA] = useState<ReactNode>(null);
+   const [childB, setChildB] = useState<ReactNode>(null);
+   const [childAtFront, setChildAtFront] = useState<ReactNode>(null);
+   const childrenAsArray: ReactElement[] = React.Children.toArray(props.children) as ReactElement[];
 
-   componentDidMount(): void {
-      const { currentCard }: Partial<CardsOptimizationProps> = this.props;
-
-      const children: React.ReactNode[] = React.Children.toArray(this.props.children);
+   useEffect(() => {
       const nextChildren: React.ReactNode =
-         currentCard + 1 < children.length ? children[currentCard + 1] : null;
+         props.currentCard + 1 < childrenAsArray.length
+            ? childrenAsArray[props.currentCard + 1]
+            : null;
 
-      this.setState({
-         childA: nextChildren,
-         childB: children[currentCard],
-         centerChild: children[currentCard]
-      });
-   }
+      setChildA(nextChildren);
+      setChildB(childrenAsArray[props.currentCard]);
+      setChildAtFront(childrenAsArray[props.currentCard]);
+   }, []);
 
-   render() {
-      const { childA, childB, centerChild }: Partial<CardsOptimizationState> = this.state;
-      return (
-         <>
-            <View style={[styles.childrenWrapper, { zIndex: centerChild === childB ? 1 : 0 }]}>
-               {childB}
-            </View>
-            <View style={[styles.childrenWrapper, { zIndex: centerChild === childA ? 1 : 0 }]}>
-               {childA}
-            </View>
-         </>
-      );
-   }
+   useEffectExceptOnMount(() => {
+      showNextChildAndPreloadFollowing();
+   }, [props.currentCard]);
 
-   componentDidUpdate(prevProps: CardsOptimizationProps): void {
-      const { childA, childB }: Partial<CardsOptimizationState> = this.state;
-
-      if (this.props.currentCard !== prevProps.currentCard) {
-         this.loadNextChild();
+   useEffectExceptOnMount(() => {
+      // If we are in the last position without any next child and then children are added we need to refresh:
+      if (childA == null || childB == null) {
+         showNextChildAndPreloadFollowing();
       }
+   }, [childrenAsArray.length]);
 
-      if (
-         React.Children.toArray(this.props.children).length !==
-         React.Children.toArray(prevProps.children).length
-      ) {
-         // If we are in the last position without any next child and then children are added we need to refresh:
-         if (childA == null || childB == null) {
-            this.loadNextChild();
-         }
-      }
-   }
-
-   /*
-      We need 2 cards visible at the same time, for transition animation, we need the  current visible
-      one and the next one. This is implemented in a way that also is optimized to not trigger 
-      re renderings, this is how it works:
-
-      To load a new card we assign the new card in the same variable than the card being unloaded,
-      so we only need 2 variables for the 2 children being rendered at the same time, zIndex is 
-      used to render the corresponding children on top (instead of using the component three for that).
-      All this approach doesn't trigger unnecessary render calls because it does not change the structure
-      of the component three.
-      More details:
-      Variables: childB and childA, when the child to unload is childA the next time will be childB
-      so this variable replacement approach switches back and forth with these 2 variables.  
-      We also need to store which variable is currently the front card to be able to assign the
-      correct zIndex value, the variable for that is centerChild.
-   */
-   loadNextChild(): void {
-      const { currentCard }: Partial<CardsOptimizationProps> = this.props;
-      const { centerChild, childA, childB }: Partial<CardsOptimizationState> = this.state;
-      const children: React.ReactNode[] = React.Children.toArray(this.props.children);
-
+   const showNextChildAndPreloadFollowing = () => {
       const nextChildren: React.ReactNode =
-         currentCard + 1 < children.length ? children[currentCard + 1] : null;
+         props.currentCard + 1 < childrenAsArray.length
+            ? childrenAsArray[props.currentCard + 1]
+            : null;
 
       /*
-         This childB == null is here to make sure a new child goes to the null holder when it's neccesary.
+         This childB == null is here to make sure a new child goes to the null holder when it's necessary.
          New children meaning when new elements are added to the props.children
       */
-      if (centerChild === childB || childB == null) {
-         this.setState({
-            childB: nextChildren,
-            centerChild: childA
-         });
+      if (childAtFront === childB || childB == null) {
+         setChildAtFront(childA);
+         setChildB(nextChildren);
       } else {
-         this.setState({
-            childA: nextChildren,
-            centerChild: childB
-         });
+         setChildAtFront(childB);
+         setChildA(nextChildren);
       }
+   };
+
+   if (props.disableOptimization) {
+      return childrenAsArray[props.currentCard];
    }
-}
+
+   return (
+      <>
+         <View style={[styles.childrenWrapper, { zIndex: childAtFront === childB ? 1 : 0 }]}>
+            {childB}
+         </View>
+         <View style={[styles.childrenWrapper, { zIndex: childAtFront === childA ? 1 : 0 }]}>
+            {childA}
+         </View>
+      </>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    childrenWrapper: {
