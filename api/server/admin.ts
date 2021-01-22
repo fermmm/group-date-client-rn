@@ -16,5 +16,5 @@ export function useTestEndpoint2Mutation<
       options,
       queriesToInvalidate: ["cards-game/recommendations"]
    });
-   return useMutation(data => defaultHttpRequest("testing2", "GET", data), newOptions);
+   return useMutation(data => defaultHttpRequest("createFakeUsers", "GET", data), newOptions);
 }

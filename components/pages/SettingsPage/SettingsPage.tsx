@@ -112,14 +112,16 @@ const SettingsPage: FC = () => {
                )}
                onPress={() => navigate("Chat", { contactChat: true })}
             />
-            <List.Item
-               title="Panel de admins"
-               description="Panel solo para admins"
-               left={props => (
-                  <List.Icon {...props} style={styles.optionIcon} icon="shield-account" />
-               )}
-               onPress={() => navigate("Admin")}
-            />
+            {localUser.isAdmin && (
+               <List.Item
+                  title="Panel de admins"
+                  description="Panel solo para admins"
+                  left={props => (
+                     <List.Icon {...props} style={styles.optionIcon} icon="shield-account" />
+                  )}
+                  onPress={() => navigate("Admin")}
+               />
+            )}
          </BasicScreenContainer>
       </>
    );
