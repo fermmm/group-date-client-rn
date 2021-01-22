@@ -6,14 +6,21 @@ import color from "color";
 import { currentTheme } from "../../../../config";
 import { CardAnimation, CardAnimatedStyles } from "./animations/interface/CardAnimation";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
+import { LikeAnimation } from "./animations/LikeAnimation";
+import { DislikeAnimation } from "./animations/DislikeAnimation";
+import { BackCardSlowAnimation } from "./animations/BackCardSlow";
 
 export interface CardAnimatorProps {
-   onMount: (compFunctions: FunctionsCardAnimator) => void;
+   animate?: CardAnimationType;
+   onAnimationFinish?: () => void;
 }
 
-export type FunctionsCardAnimator = {
-   animate: (cardAnimation: CardAnimation, onComplete: () => void) => void;
-};
+export enum CardAnimationType {
+   Like,
+   Dislike,
+   Appear,
+   AppearFast
+}
 
 /**
  * This component performs the animations on the child
@@ -33,29 +40,40 @@ const CardAnimator: FC<CardAnimatorProps> = props => {
       animStyles.current = { cardStyle: null, logoStyle: null };
    }
 
-   const animate = useCallback(
-      (cardAnimation: CardAnimation, onComplete: () => void = null): void => {
-         setCardAnimation(cardAnimation);
-         cardAnimation.trigger(containerAnimValue, logoAnimValue, () => {
-            setCardAnimation(null);
-            // setContainerAnimValue(new Animated.Value(0));
-            // setLogoAnimValue(new Animated.Value(0));
-            // TODO: Esto antes era como arriba pero podria ser asi, ver si anda
-            containerAnimValue.setValue(0);
-            logoAnimValue.setValue(0);
-            if (onComplete != null) {
-               onComplete();
-            }
-         });
-      },
-      []
-   );
+   const getAnimationInstance = (animation: CardAnimationType): CardAnimation => {
+      switch (animation) {
+         case CardAnimationType.Like:
+            return new LikeAnimation();
+            break;
+         case CardAnimationType.Dislike:
+            return new DislikeAnimation();
+            break;
+         case CardAnimationType.Appear:
+            return new BackCardSlowAnimation();
+            break;
+         case CardAnimationType.AppearFast:
+            return new BackCardSlowAnimation();
+            break;
+      }
+   };
+
+   const animate = async (animation: CardAnimationType, onComplete: () => void = null) => {
+      const anim = getAnimationInstance(animation);
+      setCardAnimation(anim);
+      await anim.trigger(containerAnimValue, logoAnimValue);
+      setCardAnimation(null);
+      setContainerAnimValue(new Animated.Value(0));
+      setLogoAnimValue(new Animated.Value(0));
+      if (onComplete != null) {
+         onComplete();
+      }
+   };
 
    useEffect(() => {
-      if (props.onMount != null) {
-         props.onMount({ animate });
+      if (props.animate != null) {
+         animate(props.animate, props.onAnimationFinish);
       }
-   }, []);
+   }, [props.animate]);
 
    return (
       <Animated.View style={[{ flex: 1 }, animStyles.current.cardStyle]}>

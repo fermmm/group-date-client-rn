@@ -30,6 +30,8 @@ import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { currentTheme } from "../../../config";
 import { ParamsRegistrationFormsPage } from "../../pages/RegistrationFormsPage/RegistrationFormsPage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
+import CardAnimator, { CardAnimationType } from "../CardsEffect/CardAnimator/CardAnimator";
+import { getGenderName } from "../../../common-tools/strings/gender";
 
 export interface ProfileCardProps {
    user: User;
@@ -61,18 +63,17 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       themesSubscribed,
       themesBlocked
    }: Partial<User> = props.user;
+   const genderText: string = getGenderName(gender, isCoupleProfile);
 
    const { navigate } = useNavigation();
    const [renderImageModal, setRenderImageModal] = useState(false);
    const [imageSelected, setImageSelected] = useState(0);
+   const [animate, setAnimate] = useState<CardAnimationType>(null);
+   const [onAnimationFinish, setOnAnimationFinish] = useState<{ func: () => void }>(null);
    const { colors } = useTheme();
    const { data: localUser, isLoading: localUserLoading } = useUser();
    const { data: allThemes, isLoading: themesLoading } = useThemes();
    const { data: serverInfo, isLoading: serverInfoLoading } = useServerInfo();
-
-   if (localUserLoading || themesLoading || serverInfoLoading) {
-      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
-   }
 
    const themesSubscribedInCommon: Theme[] = themesSubscribed
       ?.filter(t => localUser.themesSubscribed.find(ut => ut.themeId === t.themeId) != null)
@@ -86,149 +87,146 @@ const ProfileCard: FC<ProfileCardProps> = props => {
 
    const finalImagesUri = images.map(uri => prepareUrl(serverInfo.imagesHost + uri));
 
-   let genderText: string = "";
+   const handleLikeClick = () => {
+      setOnAnimationFinish({ func: onLikeClick });
+      setAnimate(CardAnimationType.Like);
+   };
 
-   if (gender === Gender.Man) {
-      genderText = "Hombre";
-   }
-   if (gender === Gender.Woman) {
-      genderText = "Mujer";
-   }
-   if (gender === Gender.TransgenderMan) {
-      genderText = "Hombre trans";
-   }
-   if (gender === Gender.TransgenderWoman) {
-      genderText = "Mujer trans";
-   }
-   if (gender === Gender.Other) {
-      genderText = "Otrx / No binarix";
-   }
-   if (isCoupleProfile) {
-      genderText = "";
+   const handleDislikeClick = () => {
+      setOnAnimationFinish({ func: onDislikeClick });
+      setAnimate(CardAnimationType.Dislike);
+   };
+
+   if (localUserLoading || themesLoading || serverInfoLoading) {
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 
    return (
       <>
-         <View
-            style={[
-               styles.mainContainer,
-               { paddingBottom: showLikeDislikeButtons ? styles.mainContainer.paddingBottom : 0 }
-            ]}
-         >
-            <View>
-               <ScrollViewExtended
-                  style={[styles.scrollView]}
-                  showBottomGradient={true}
-                  bottomGradientColor={colors.background}
-                  indicatorStyle={"white"}
-               >
-                  <Card style={styles.card}>
-                     <View>
-                        <ImagesScroll
-                           images={finalImagesUri}
-                           style={[
-                              styles.galleryScroll,
-                              statusBarPadding && { marginTop: StatusBar.currentHeight }
-                           ]}
-                           onImageClick={(i: number) => {
-                              setImageSelected(i);
-                              setRenderImageModal(true);
-                           }}
-                           renderImage={(uri: string, imageProps: ImageProps) => (
-                              <ImageBackground
-                                 style={{ width: "100%", height: "100%" }}
-                                 source={{ uri }}
-                                 blurRadius={Platform.OS === "ios" ? 120 : 60}
-                              >
-                                 <Image
-                                    {...imageProps}
-                                    resizeMethod={"resize"}
-                                    resizeMode={"contain"}
-                                    key={uri}
-                                 />
-                              </ImageBackground>
+         <CardAnimator animate={animate} onAnimationFinish={onAnimationFinish?.func}>
+            <View
+               style={[
+                  styles.mainContainer,
+                  { paddingBottom: showLikeDislikeButtons ? styles.mainContainer.paddingBottom : 0 }
+               ]}
+            >
+               <View>
+                  <ScrollViewExtended
+                     style={[styles.scrollView]}
+                     showBottomGradient={true}
+                     bottomGradientColor={colors.background}
+                     indicatorStyle={"white"}
+                  >
+                     <Card style={styles.card}>
+                        <View>
+                           <ImagesScroll
+                              images={finalImagesUri}
+                              style={[
+                                 styles.galleryScroll,
+                                 statusBarPadding && { marginTop: StatusBar.currentHeight }
+                              ]}
+                              onImageClick={(i: number) => {
+                                 setImageSelected(i);
+                                 setRenderImageModal(true);
+                              }}
+                              renderImage={(uri: string, imageProps: ImageProps) => (
+                                 <ImageBackground
+                                    style={{ width: "100%", height: "100%" }}
+                                    source={{ uri }}
+                                    blurRadius={Platform.OS === "ios" ? 120 : 60}
+                                 >
+                                    <Image
+                                       {...imageProps}
+                                       resizeMethod={"resize"}
+                                       resizeMode={"contain"}
+                                       key={uri}
+                                    />
+                                 </ImageBackground>
+                              )}
+                           />
+                           {editMode && (
+                              <EditButton
+                                 showAtBottom
+                                 style={{ marginBottom: 60, marginRight: -6 }}
+                                 label={"Modificar fotos"}
+                                 onPress={() =>
+                                    navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                                       formsToShow: ["ProfileImagesForm"]
+                                    })
+                                 }
+                              />
                            )}
-                        />
-                        {editMode && (
-                           <EditButton
-                              showAtBottom
-                              style={{ marginBottom: 60, marginRight: -6 }}
-                              label={"Modificar fotos"}
-                              onPress={() =>
-                                 navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
-                                    formsToShow: ["ProfileImagesForm"]
-                                 })
-                              }
-                           />
-                        )}
-                     </View>
-                     <View style={styles.titleAreaContainer}>
-                        <Card.Title
-                           title={`${toFirstUpperCase(name)}${isCoupleProfile ? " (Pareja)" : ""}`}
-                           subtitle={`${fromBirthDateToAge(birthDate)} · ${cityName}${
-                              height ? " · " + height + "cm" : ""
-                           }`}
-                           style={{ flex: 1 }}
-                           titleStyle={styles.nameText}
-                           subtitleStyle={styles.basicInfoText}
-                        />
-                        {!editMode ? (
-                           <View />
-                        ) : (
-                           // <Text style={[styles.compatibilityPercentage, {
-                           //    borderColor: color(colors.statusOk).alpha(0.5).string(),
-                           //    backgroundColor: color(colors.statusOk).alpha(0.5).string(),
-                           // }]}>
-                           //    99%
-                           // </Text>
-                           <EditButton
-                              onPress={() =>
-                                 navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
-                                    formsToShow: ["BasicInfoForm"]
-                                 })
-                              }
-                           />
-                        )}
-                        <Paragraph style={styles.interestParagraph}>{genderText}</Paragraph>
-                     </View>
-                     <Card.Content>
-                        <Paragraph style={styles.descriptionParagraph}>
-                           {profileDescription}
-                        </Paragraph>
-                        {editMode && (
-                           <EditButton
-                              showAtBottom
-                              absolutePosition={false}
-                              label={"Modificar texto"}
-                              onPress={() =>
-                                 navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
-                                    formsToShow: ["ProfileDescriptionForm"]
-                                 })
-                              }
-                           />
-                        )}
-                        <View style={styles.questionsContainer}>
-                           {themesSubscribedInCommon?.map(theme => (
-                              <ThemeInProfileCard theme={theme} key={theme.themeId} />
-                           ))}
                         </View>
-                        {/* <View style={styles.questionsContainer}>
+                        <View style={styles.titleAreaContainer}>
+                           <Card.Title
+                              title={`${toFirstUpperCase(name)}${
+                                 isCoupleProfile ? " (Pareja)" : ""
+                              }`}
+                              subtitle={`${fromBirthDateToAge(birthDate)} · ${cityName}${
+                                 height ? " · " + height + "cm" : ""
+                              }`}
+                              style={{ flex: 1 }}
+                              titleStyle={styles.nameText}
+                              subtitleStyle={styles.basicInfoText}
+                           />
+                           {!editMode ? (
+                              <View />
+                           ) : (
+                              // <Text style={[styles.compatibilityPercentage, {
+                              //    borderColor: color(colors.statusOk).alpha(0.5).string(),
+                              //    backgroundColor: color(colors.statusOk).alpha(0.5).string(),
+                              // }]}>
+                              //    99%
+                              // </Text>
+                              <EditButton
+                                 onPress={() =>
+                                    navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                                       formsToShow: ["BasicInfoForm"]
+                                    })
+                                 }
+                              />
+                           )}
+                           <Paragraph style={styles.interestParagraph}>{genderText}</Paragraph>
+                        </View>
+                        <Card.Content>
+                           <Paragraph style={styles.descriptionParagraph}>
+                              {profileDescription}
+                           </Paragraph>
+                           {editMode && (
+                              <EditButton
+                                 showAtBottom
+                                 absolutePosition={false}
+                                 label={"Modificar texto"}
+                                 onPress={() =>
+                                    navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                                       formsToShow: ["ProfileDescriptionForm"]
+                                    })
+                                 }
+                              />
+                           )}
+                           <View style={styles.questionsContainer}>
+                              {themesSubscribedInCommon?.map(theme => (
+                                 <ThemeInProfileCard theme={theme} key={theme.themeId} />
+                              ))}
+                           </View>
+                           {/* <View style={styles.questionsContainer}>
                            {themesBlockedInCommon?.map(theme => (
                               <ThemeInProfileCard theme={theme} key={theme.themeId} />
                            ))}
                         </View> */}
-                     </Card.Content>
-                  </Card>
-               </ScrollViewExtended>
-               {showLikeDislikeButtons && (
-                  <LikeDislikeButtons
-                     style={styles.likeDislikeButtons}
-                     onLikeClick={() => onLikeClick()}
-                     onDislikeClick={() => onDislikeClick()}
-                  />
-               )}
+                        </Card.Content>
+                     </Card>
+                  </ScrollViewExtended>
+                  {showLikeDislikeButtons && (
+                     <LikeDislikeButtons
+                        style={styles.likeDislikeButtons}
+                        onLikeClick={handleLikeClick}
+                        onDislikeClick={handleDislikeClick}
+                     />
+                  )}
+               </View>
             </View>
-         </View>
+         </CardAnimator>
          {renderImageModal === true && (
             <ImagesModal
                visible={renderImageModal}

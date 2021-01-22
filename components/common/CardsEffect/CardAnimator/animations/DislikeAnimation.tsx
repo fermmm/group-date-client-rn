@@ -2,24 +2,29 @@ import { CardAnimation, CardAnimatedStyles } from "./interface/CardAnimation";
 import { Animated, Easing, Dimensions } from "react-native";
 
 export class DislikeAnimation implements CardAnimation {
-   trigger(containerAnimValue: Animated.Value, logoAnimValue: Animated.Value, onAnimationFinish: Animated.EndCallback = null): void {
-      Animated.timing(logoAnimValue, {
-         toValue: 1,
-         duration: 300,
-         easing: Easing.out(Easing.exp),
-         useNativeDriver: true
-      }).start();
+   async trigger(containerAnimValue: Animated.Value, logoAnimValue: Animated.Value): Promise<void> {
+      return new Promise(resolve => {
+         Animated.timing(logoAnimValue, {
+            toValue: 1,
+            duration: 300,
+            easing: Easing.out(Easing.exp),
+            useNativeDriver: true
+         }).start();
 
-      Animated.timing(containerAnimValue, {
-         toValue: 1,
-         delay: 0,
-         duration: 300,
-         easing: Easing.in(Easing.ease),
-         useNativeDriver: true
-      }).start(onAnimationFinish);
+         Animated.timing(containerAnimValue, {
+            toValue: 1,
+            delay: 0,
+            duration: 300,
+            easing: Easing.in(Easing.ease),
+            useNativeDriver: true
+         }).start(() => resolve());
+      });
    }
-   
-   interpolation(containerAnimValue: Animated.Value, logoAnimValue: Animated.Value): CardAnimatedStyles {
+
+   interpolation(
+      containerAnimValue: Animated.Value,
+      logoAnimValue: Animated.Value
+   ): CardAnimatedStyles {
       const moveValue: Animated.AnimatedInterpolation = containerAnimValue.interpolate({
          inputRange: [0, 1],
          outputRange: [0, Dimensions.get("window").height * 0.85]
@@ -37,18 +42,14 @@ export class DislikeAnimation implements CardAnimation {
          outputRange: [0, 0]
       });
 
-      return { 
+      return {
          cardStyle: {
             opacity: opacityValue,
-            transform: [
-               { translateY: moveValue },
-            ]
+            transform: [{ translateY: moveValue }]
          },
          logoStyle: {
             opacity: logoOpacity,
-            transform: [
-               { translateY: logoMoveValue },
-            ]
+            transform: [{ translateY: logoMoveValue }]
          }
       };
    }
