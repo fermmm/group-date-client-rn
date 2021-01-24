@@ -8,7 +8,7 @@ import { useCardsRecommendations } from "../../../api/server/cards-game";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { currentTheme } from "../../../config";
 import { __String } from "typescript";
-import { EvaluationShouldBeSentReason, useCardsDataManager } from "./hooks/useCardsDataManager";
+import { AttractionsShouldBeSentReason, useCardsDataManager } from "./hooks/useCardsDataManager";
 import { useAttractionMutation } from "../../../api/server/user";
 import { queryClient } from "../../../api/tools/reactQueryTools";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
@@ -19,11 +19,11 @@ const CardsPage: FC = () => {
    const [userDisplaying, setUserDisplaying] = useState(0);
    const { token } = useFacebookToken();
    const { data: usersFromServer } = useCardsRecommendations();
-   const { mutate: sendEvaluationsToServer, isError } = useAttractionMutation();
+   const { mutate: sendAttractionsToServer, isError } = useAttractionMutation();
    const manager = useCardsDataManager(usersFromServer, userDisplaying);
 
    const handleLikeOrDislike = (attractionType: AttractionType, userId: string) => {
-      manager.addEvaluationToQueue({ userId, attractionType });
+      manager.addAttractionToQueue({ userId, attractionType });
       showNextUser(userId);
    };
 
@@ -32,32 +32,32 @@ const CardsPage: FC = () => {
       setUserDisplaying(positionInList + 1);
    };
 
-   // This effect sends the evaluations to the server if it's required
+   // This effect sends the attractions to the server if it's required
    useEffect(() => {
-      const reason = manager.evaluationsShouldBeSentReason;
+      const reason = manager.attractionsShouldBeSentReason;
 
-      if (reason === EvaluationShouldBeSentReason.None) {
+      if (reason === AttractionsShouldBeSentReason.None) {
          return;
       }
 
       if (
-         manager.evaluationsQueue.current == null ||
-         manager.evaluationsQueue.current.length === 0
+         manager.attractionsQueue.current == null ||
+         manager.attractionsQueue.current.length === 0
       ) {
          return;
       }
 
-      console.log("Sending evaluations, reason: ", manager.evaluationsShouldBeSentReason);
+      console.log("Sending attractions, reason: ", manager.attractionsShouldBeSentReason);
 
-      const evaluationsToSend = [...manager.evaluationsQueue.current];
-      sendEvaluationsToServer(
-         { attractions: evaluationsToSend, token },
+      const attractions = [...manager.attractionsQueue.current];
+      sendAttractionsToServer(
+         { attractions, token },
          {
             onSuccess: () => {
-               manager.removeFromEvaluationQueue(evaluationsToSend);
+               manager.removeFromAttractionsQueue(attractions);
                if (
-                  reason === EvaluationShouldBeSentReason.NoMoreUsersButServerMayHave ||
-                  reason === EvaluationShouldBeSentReason.NearlyRunningOutOfUsers
+                  reason === AttractionsShouldBeSentReason.NoMoreUsersButServerMayHave ||
+                  reason === AttractionsShouldBeSentReason.NearlyRunningOutOfUsers
                ) {
                   if (usersFromServer == null || usersFromServer?.length > 0) {
                      // In this case we want to add the new cards to the end of the list, not replace the list.
@@ -69,7 +69,7 @@ const CardsPage: FC = () => {
             }
          }
       );
-   }, [manager.evaluationsShouldBeSentReason]);
+   }, [manager.attractionsShouldBeSentReason]);
 
    const showNoMoreUsersMessage =
       userDisplaying >= manager.usersToRender.length && usersFromServer?.length === 0;

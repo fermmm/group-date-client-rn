@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useEffectExceptOnMount } from "./../../../../common-tools/common-hooks/useEffectExceptoOnMount";
 import { Attraction, User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import {
-   MAX_USER_EVALUATIONS_QUEUE_SIZE,
+   MAX_ATTRACTIONS_QUEUE_SIZE,
    REQUEST_MORE_CARDS_AFTER_TIME,
    REQUEST_MORE_CARDS_ANTICIPATION
 } from "../../../../config";
@@ -17,17 +17,14 @@ export function useCardsDataManager(
 ): UseCardsDataManager {
    const isFocused = useIsFocused();
    const { isActive } = useAppState();
-   const { value: evaluationsFromStorage, setValue: saveOnStorage } = useLocalStorage(
-      "_evalQueue",
-      true
-   );
+   const { value: attractionsFromStorage, setValue: saveOnStorage } = useLocalStorage("_attrQueue");
    const [usersToRender, setUsersToRender] = useState([]);
-   const evaluationsQueue = useRef<Attraction[]>([]);
+   const attractionsQueue = useRef<Attraction[]>([]);
    const appendMode = useRef(false);
    const [
-      evaluationsShouldBeSentReason,
-      setEvaluationsShouldBeSentReason
-   ] = useState<EvaluationShouldBeSentReason>(EvaluationShouldBeSentReason.None);
+      attractionsShouldBeSentReason,
+      setAttractionsShouldBeSentReason
+   ] = useState<AttractionsShouldBeSentReason>(AttractionsShouldBeSentReason.None);
 
    /**
     * If more users are coming from server replace usersToRender or add them at the end of it
@@ -50,80 +47,83 @@ export function useCardsDataManager(
    }, [usersFromServer]);
 
    /**
-    * Get the evaluations queue from local storage. This is here because the user may have
-    * evaluations not sent in previous session. This executes only once because evaluationsFromStorage
-    * updates only once (unless refresh() is called after saving but it's not).
+    * Get the attraction queue from local storage. This is here because the user may have
+    * attractions not sent in previous session. This executes only once because
+    * attractionsFromStorage updates only once (unless refresh() is called after saving
+    * but it's not).
     */
    useEffectExceptOnMount(() => {
-      if (evaluationsFromStorage != null) {
-         evaluationsQueue.current = JSON.parse(evaluationsFromStorage);
-         setEvaluationsShouldBeSentReason(
-            EvaluationShouldBeSentReason.PendingEvaluationsToSendFromPreviousSession
+      if (attractionsFromStorage != null) {
+         attractionsQueue.current = JSON.parse(attractionsFromStorage);
+         setAttractionsShouldBeSentReason(
+            AttractionsShouldBeSentReason.PendingAttractionsToSendFromPreviousSession
          );
       }
-   }, [evaluationsFromStorage]);
+   }, [attractionsFromStorage]);
 
    /**
-    * An effect to check whether the evaluations queue should be sent and the reasons
+    * An effect to check whether the attractions queue should be sent and the reasons
     */
    useEffect(() => {
       // Users to render are depleted but last time server returned users
-      if (evaluationsQueue.current.length > MAX_USER_EVALUATIONS_QUEUE_SIZE) {
-         setEvaluationsShouldBeSentReason(
-            EvaluationShouldBeSentReason.EvaluationsQueueSizeReachedMaximum
+      if (attractionsQueue.current.length > MAX_ATTRACTIONS_QUEUE_SIZE) {
+         setAttractionsShouldBeSentReason(
+            AttractionsShouldBeSentReason.AttractionsQueueSizeReachedMaximum
          );
          return;
       }
 
       if (userDisplaying >= usersToRender.length && usersToRender.length > 0) {
-         setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.NoMoreUsersButServerMayHave);
+         setAttractionsShouldBeSentReason(
+            AttractionsShouldBeSentReason.NoMoreUsersButServerMayHave
+         );
          return;
       }
 
       if (userDisplaying > usersToRender.length - 1 - REQUEST_MORE_CARDS_ANTICIPATION) {
-         setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.NearlyRunningOutOfUsers);
+         setAttractionsShouldBeSentReason(AttractionsShouldBeSentReason.NearlyRunningOutOfUsers);
          return;
       }
    }, [userDisplaying]);
 
    /**
-    * An effect to check whether the evaluations queue should be sent based on the section is focused or not
+    * An effect to check whether the attractions queue should be sent based on the section is focused or not
     */
    useEffect(() => {
       if (!isFocused) {
-         setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.UserMovedToOtherScreen);
+         setAttractionsShouldBeSentReason(AttractionsShouldBeSentReason.UserMovedToOtherScreen);
       }
    }, [isFocused]);
 
    /**
-    * An effect to check whether the evaluations queue should be sent based on the app is minimized or not
+    * An effect to check whether the attractions queue should be sent based on the app is minimized or not
     */
    useEffect(() => {
       if (!isActive) {
-         setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.AppMinimized);
+         setAttractionsShouldBeSentReason(AttractionsShouldBeSentReason.AppMinimized);
       }
    }, [isActive]);
 
    /**
-    * An effect to check whether the evaluations queue should be sent based on a time interval
+    * An effect to check whether the attractions queue should be sent based on a time interval
     */
    useInterval(() => {
-      setEvaluationsShouldBeSentReason(
-         EvaluationShouldBeSentReason.TooMuchTimePassedWithoutSending
+      setAttractionsShouldBeSentReason(
+         AttractionsShouldBeSentReason.TooMuchTimePassedWithoutSending
       );
    }, REQUEST_MORE_CARDS_AFTER_TIME);
 
-   const addEvaluationToQueue = useCallback((evaluation: Attraction) => {
-      evaluationsQueue.current.push(evaluation);
-      saveOnStorage(JSON.stringify(evaluationsQueue.current));
+   const addAttractionToQueue = useCallback((attraction: Attraction) => {
+      attractionsQueue.current.push(attraction);
+      saveOnStorage(JSON.stringify(attractionsQueue.current));
    }, []);
 
-   const removeFromEvaluationQueue = useCallback((toRemove: Attraction[]) => {
-      evaluationsQueue.current = evaluationsQueue.current.filter(
+   const removeFromAttractionsQueue = useCallback((toRemove: Attraction[]) => {
+      attractionsQueue.current = attractionsQueue.current.filter(
          el => toRemove.find(tr => tr.userId === el.userId) == null
       );
-      saveOnStorage(JSON.stringify(evaluationsQueue.current));
-      setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.None);
+      saveOnStorage(JSON.stringify(attractionsQueue.current));
+      setAttractionsShouldBeSentReason(AttractionsShouldBeSentReason.None);
    }, []);
 
    const appendUsersFromServerInNextUpdate = useCallback(() => {
@@ -132,10 +132,10 @@ export function useCardsDataManager(
 
    return {
       usersToRender,
-      evaluationsQueue,
-      evaluationsShouldBeSentReason,
-      addEvaluationToQueue,
-      removeFromEvaluationQueue,
+      attractionsQueue,
+      attractionsShouldBeSentReason,
+      addAttractionToQueue,
+      removeFromAttractionsQueue,
       appendUsersFromServerInNextUpdate
    };
 }
@@ -163,20 +163,20 @@ function mergeUsersList(list1: User[], list2: User[]): User[] {
 
 export interface UseCardsDataManager {
    usersToRender: User[];
-   evaluationsQueue: React.MutableRefObject<Attraction[]>;
-   evaluationsShouldBeSentReason: EvaluationShouldBeSentReason;
-   addEvaluationToQueue: (ev: Attraction) => void;
-   removeFromEvaluationQueue: (toRemove: Attraction[]) => void;
+   attractionsQueue: React.MutableRefObject<Attraction[]>;
+   attractionsShouldBeSentReason: AttractionsShouldBeSentReason;
+   addAttractionToQueue: (attraction: Attraction) => void;
+   removeFromAttractionsQueue: (toRemove: Attraction[]) => void;
    appendUsersFromServerInNextUpdate: () => void;
 }
 
-export enum EvaluationShouldBeSentReason {
+export enum AttractionsShouldBeSentReason {
    None = "None",
    NearlyRunningOutOfUsers = "NearlyRunningOutOfUsers",
    NoMoreUsersButServerMayHave = "NoMoreUsersButServerMayHave",
-   EvaluationsQueueSizeReachedMaximum = "EvaluationsQueueSizeReachedMaximum",
+   AttractionsQueueSizeReachedMaximum = "AttractionsQueueSizeReachedMaximum",
    UserMovedToOtherScreen = "UserMovedToOtherScreen",
    AppMinimized = "AppMinimized",
    TooMuchTimePassedWithoutSending = "TooMuchTimePassedWithoutSending",
-   PendingEvaluationsToSendFromPreviousSession = "PendingEvaluationsToSendFromPreviousSession"
+   PendingAttractionsToSendFromPreviousSession = "PendingAttractionsToSendFromPreviousSession"
 }

@@ -66,4 +66,4 @@ export const REQUEST_MORE_CARDS_ANTICIPATION: number = 10;
 // How often in time the user evaluations are sent to the server in milliseconds
 export const REQUEST_MORE_CARDS_AFTER_TIME: number = 60 * 1000;
 // The maximum amount of user evaluations pending to send before sending them
-export const MAX_USER_EVALUATIONS_QUEUE_SIZE: number = 35;
+export const MAX_ATTRACTIONS_QUEUE_SIZE: number = 35;
