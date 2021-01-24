@@ -114,11 +114,11 @@ const AboutPage: FC = () => {
             <Text>
                Cuando se instala la monogamia en nuestra cultura, no sucede por que esta tenga mas
                sentido, alguna ventaja emocional, ni por ser mas profunda o duradera en las
-               relaciones afectivas o sexuales, sucede por cuestiones comerciales: casar hijxs como
-               contrato comercial entre familias, acumular riqueza de forma personal sin compartir
-               con la tribu, etc. La monogamia y la familia nuclear son dos de los muchos fenómenos
-               de la revolución neolítica, la misma que trajo por primera vez a las clases sociales,
-               patriarcado y otras opresiones de la humanidad.
+               relaciones afectivas o sexuales ya que no lo es, aparece por necesidades comerciales:
+               casar hijxs como contrato comercial entre familias, acumular riqueza de forma
+               personal sin compartir con la tribu, etc. La monogamia y la familia nuclear son dos
+               de los muchos fenómenos de la revolución neolítica, la misma que trajo por primera
+               vez a las clases sociales, patriarcado y otras opresiones de la humanidad.
             </Text>
             <EmptySpace height={80} />
          </BasicScreenContainer>
