@@ -8,13 +8,14 @@ import { useCardsRecommendations } from "../../../api/server/cards-game";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { currentTheme } from "../../../config";
 import { __String } from "typescript";
-import { AttractionsShouldBeSentReason, useCardsDataManager } from "./hooks/useCardsDataManager";
+import { AttractionsSendReason, useCardsDataManager } from "./hooks/useCardsDataManager";
 import { useAttractionMutation } from "../../../api/server/user";
 import { queryClient } from "../../../api/tools/reactQueryTools";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { AttractionType } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
 // TODO: Falta la pantalla de que no hay mas usuarios, que envíe el request con eso
+// TODO: Falta el botón de repasar usuarios
 const CardsPage: FC = () => {
    const [userDisplaying, setUserDisplaying] = useState(0);
    const { token } = useFacebookToken();
@@ -36,7 +37,7 @@ const CardsPage: FC = () => {
    useEffect(() => {
       const reason = manager.attractionsShouldBeSentReason;
 
-      if (reason === AttractionsShouldBeSentReason.None) {
+      if (reason === AttractionsSendReason.None) {
          return;
       }
 
@@ -56,8 +57,8 @@ const CardsPage: FC = () => {
             onSuccess: () => {
                manager.removeFromAttractionsQueue(attractions);
                if (
-                  reason === AttractionsShouldBeSentReason.NoMoreUsersButServerMayHave ||
-                  reason === AttractionsShouldBeSentReason.NearlyRunningOutOfUsers
+                  reason === AttractionsSendReason.NoMoreUsersButServerMayHave ||
+                  reason === AttractionsSendReason.NearlyRunningOutOfUsers
                ) {
                   if (usersFromServer == null || usersFromServer?.length > 0) {
                      // In this case we want to add the new cards to the end of the list, not replace the list.

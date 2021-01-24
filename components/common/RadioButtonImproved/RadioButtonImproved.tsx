@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { FC, useState } from "react";
 import { StyleSheet, View, StyleProp, ViewStyle, LayoutChangeEvent } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { RadioButton, TouchableRipple } from "react-native-paper";
@@ -10,69 +10,56 @@ export interface RadioButtonImprovedProps {
    iconElement?(checked: boolean): JSX.Element;
 }
 
-interface RadioButtonImprovedState {
-   margin: number;
-}
+const RadioButtonImproved: FC<RadioButtonImprovedProps> = props => {
+   const [margin, setMargin] = useState<number>(null);
 
-class RadioButtonImproved extends Component<RadioButtonImprovedProps, RadioButtonImprovedState> {
-   state: RadioButtonImprovedState = {
-      margin: null
-   };
-
-   render(): JSX.Element {
-      const { margin }: Partial<RadioButtonImprovedState> = this.state;
-
-      return (
-         <TouchableRipple onPress={() => this.props.onPress()}>
-            <View
-               pointerEvents={"none"}
-               style={[
-                  this.props.style,
-                  styles.mainContainer,
-                  margin != null && {
-                     marginBottom: margin,
-                     marginTop: margin
-                  }
-               ]}
-            >
-               <View>
-                  {this.props.iconElement != null ? (
-                     this.props.iconElement(this.props.checked)
-                  ) : (
-                     <RadioButton
-                        value={""}
-                        status={this.props.checked ? "checked" : "unchecked"}
-                     />
-                  )}
-               </View>
-               <View style={styles.childrenContainer} onLayout={e => this.measureView(e)}>
-                  {this.props.children}
-               </View>
-            </View>
-         </TouchableRipple>
-      );
-   }
-
-   measureView(event: LayoutChangeEvent): void {
-      const responseHeight: number = event.nativeEvent.layout.height;
-      if (this.state.margin == null) {
-         this.setState({ margin: this.translateBetweenRanges(responseHeight, 20, 64, 0, 9) });
-      }
-   }
-
-   translateBetweenRanges(
+   const translateBetweenRanges = (
       valueToTranslate: number,
       range1Min: number,
       range1Max: number,
       range2Min: number,
       range2Max: number
-   ): number {
+   ): number => {
       return (
          ((valueToTranslate - range1Min) * (range2Max - range2Min)) / (range1Max - range1Min) +
          range2Min
       );
-   }
-}
+   };
+
+   const measureView = (event: LayoutChangeEvent) => {
+      const responseHeight: number = event.nativeEvent.layout.height;
+      if (margin == null) {
+         setMargin(translateBetweenRanges(responseHeight, 20, 64, 0, 9));
+      }
+   };
+
+   return (
+      <TouchableRipple onPress={() => props.onPress()}>
+         <View
+            pointerEvents={"none"}
+            style={[
+               props.style,
+               styles.mainContainer,
+               margin != null && {
+                  marginBottom: margin,
+                  marginTop: margin
+               }
+            ]}
+         >
+            <View>
+               {props.iconElement != null ? (
+                  props.iconElement(props.checked)
+               ) : (
+                  <RadioButton value={""} status={props.checked ? "checked" : "unchecked"} />
+               )}
+            </View>
+            <View style={styles.childrenContainer} onLayout={e => measureView(e)}>
+               {props.children}
+            </View>
+         </View>
+      </TouchableRipple>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {

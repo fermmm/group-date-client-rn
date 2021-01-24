@@ -24,7 +24,7 @@ export function useCardsDataManager(
    const [
       attractionsShouldBeSentReason,
       setAttractionsShouldBeSentReason
-   ] = useState<AttractionsShouldBeSentReason>(AttractionsShouldBeSentReason.None);
+   ] = useState<AttractionsSendReason>(AttractionsSendReason.None);
 
    /**
     * If more users are coming from server replace usersToRender or add them at the end of it
@@ -56,7 +56,7 @@ export function useCardsDataManager(
       if (attractionsFromStorage != null) {
          attractionsQueue.current = JSON.parse(attractionsFromStorage);
          setAttractionsShouldBeSentReason(
-            AttractionsShouldBeSentReason.PendingAttractionsToSendFromPreviousSession
+            AttractionsSendReason.PendingAttractionsToSendFromPreviousSession
          );
       }
    }, [attractionsFromStorage]);
@@ -67,21 +67,17 @@ export function useCardsDataManager(
    useEffect(() => {
       // Users to render are depleted but last time server returned users
       if (attractionsQueue.current.length > MAX_ATTRACTIONS_QUEUE_SIZE) {
-         setAttractionsShouldBeSentReason(
-            AttractionsShouldBeSentReason.AttractionsQueueSizeReachedMaximum
-         );
+         setAttractionsShouldBeSentReason(AttractionsSendReason.AttractionsQueueSizeReachedMaximum);
          return;
       }
 
       if (userDisplaying >= usersToRender.length && usersToRender.length > 0) {
-         setAttractionsShouldBeSentReason(
-            AttractionsShouldBeSentReason.NoMoreUsersButServerMayHave
-         );
+         setAttractionsShouldBeSentReason(AttractionsSendReason.NoMoreUsersButServerMayHave);
          return;
       }
 
       if (userDisplaying > usersToRender.length - 1 - REQUEST_MORE_CARDS_ANTICIPATION) {
-         setAttractionsShouldBeSentReason(AttractionsShouldBeSentReason.NearlyRunningOutOfUsers);
+         setAttractionsShouldBeSentReason(AttractionsSendReason.NearlyRunningOutOfUsers);
          return;
       }
    }, [userDisplaying]);
@@ -91,7 +87,7 @@ export function useCardsDataManager(
     */
    useEffect(() => {
       if (!isFocused) {
-         setAttractionsShouldBeSentReason(AttractionsShouldBeSentReason.UserMovedToOtherScreen);
+         setAttractionsShouldBeSentReason(AttractionsSendReason.UserMovedToOtherScreen);
       }
    }, [isFocused]);
 
@@ -100,7 +96,7 @@ export function useCardsDataManager(
     */
    useEffect(() => {
       if (!isActive) {
-         setAttractionsShouldBeSentReason(AttractionsShouldBeSentReason.AppMinimized);
+         setAttractionsShouldBeSentReason(AttractionsSendReason.AppMinimized);
       }
    }, [isActive]);
 
@@ -108,9 +104,7 @@ export function useCardsDataManager(
     * An effect to check whether the attractions queue should be sent based on a time interval
     */
    useInterval(() => {
-      setAttractionsShouldBeSentReason(
-         AttractionsShouldBeSentReason.TooMuchTimePassedWithoutSending
-      );
+      setAttractionsShouldBeSentReason(AttractionsSendReason.TooMuchTimePassedWithoutSending);
    }, REQUEST_MORE_CARDS_AFTER_TIME);
 
    const addAttractionToQueue = useCallback((attraction: Attraction) => {
@@ -123,7 +117,7 @@ export function useCardsDataManager(
          el => toRemove.find(tr => tr.userId === el.userId) == null
       );
       saveOnStorage(JSON.stringify(attractionsQueue.current));
-      setAttractionsShouldBeSentReason(AttractionsShouldBeSentReason.None);
+      setAttractionsShouldBeSentReason(AttractionsSendReason.None);
    }, []);
 
    const appendUsersFromServerInNextUpdate = useCallback(() => {
@@ -164,13 +158,13 @@ function mergeUsersList(list1: User[], list2: User[]): User[] {
 export interface UseCardsDataManager {
    usersToRender: User[];
    attractionsQueue: React.MutableRefObject<Attraction[]>;
-   attractionsShouldBeSentReason: AttractionsShouldBeSentReason;
+   attractionsShouldBeSentReason: AttractionsSendReason;
    addAttractionToQueue: (attraction: Attraction) => void;
    removeFromAttractionsQueue: (toRemove: Attraction[]) => void;
    appendUsersFromServerInNextUpdate: () => void;
 }
 
-export enum AttractionsShouldBeSentReason {
+export enum AttractionsSendReason {
    None = "None",
    NearlyRunningOutOfUsers = "NearlyRunningOutOfUsers",
    NoMoreUsersButServerMayHave = "NoMoreUsersButServerMayHave",

@@ -1,19 +1,18 @@
-import React, { PureComponent } from "react";
+import React, { FC } from "react";
 import { View } from "react-native";
 
-export interface EmptySpaceProps {
+export interface PropsEmptySpace {
    height?: number;
 }
 
-class EmptySpace extends PureComponent<EmptySpaceProps> {
-   render(): JSX.Element {
-      return (
-         <View style={{
-               height: this.props.height == null ? 25 : this.props.height
-            }}
-         />
-      );
-   }
-}
+const EmptySpace: FC<PropsEmptySpace> = props => {
+   return (
+      <View
+         style={{
+            height: props.height == null ? 25 : props.height
+         }}
+      />
+   );
+};
 
 export default EmptySpace;

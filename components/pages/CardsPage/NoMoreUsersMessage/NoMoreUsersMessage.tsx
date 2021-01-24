@@ -1,66 +1,50 @@
-import React, { Component } from "react";
+import React, { FC, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { withTheme, Text, Button } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../../common-tools/themes/types/Themed";
+import { Text, Button } from "react-native-paper";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 import NewUsersNotificationSelector from "../../../common/NewUsersNotificationSelector/NewUsersNotificationSelector";
 import { currentTheme } from "../../../../config";
 import { LinearGradient } from "expo-linear-gradient";
 import color from "color";
+import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 
-export interface NoMoreUsersProps extends Themed {}
-export interface NoMoreUsersState {
-   sendNotification: boolean;
-   amountNotification: number;
-}
+const NoMoreUsersMessage: FC = () => {
+   const [sendNotification, setSendNotification] = useState(true);
+   const [amountNotification, setAmountNotification] = useState(3);
+   const { colors } = useTheme();
 
-class NoMoreUsersMessage extends Component<NoMoreUsersProps, NoMoreUsersState> {
-   static defaultProps: Partial<NoMoreUsersProps> = {};
-   state: NoMoreUsersState = {
-      sendNotification: true,
-      amountNotification: 3
-   };
-
-   render(): JSX.Element {
-      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-      const {
-         sendNotification,
-         amountNotification: amountNotification
-      }: Partial<NoMoreUsersState> = this.state;
-
-      return (
-         <LinearGradient
-            style={{ flex: 1 }}
-            locations={[0.7, 1]}
-            colors={[
-               color(currentTheme.colors.background).string(),
-               color(currentTheme.colors.backgroundBottomGradient).alpha(1).string()
-            ]}
-         >
-            <View style={styles.mainContainer}>
-               <Text style={styles.text}>
-                  En poco tiempo vas a ver más gente acá, todos los días hay usuaries nuevos.
-               </Text>
-               <EmptySpace />
-               <NewUsersNotificationSelector
-                  checked={sendNotification}
-                  amountSelected={amountNotification}
-                  onAmountChange={v => this.setState({ amountNotification: v })}
-                  onCheckChange={() => this.setState({ sendNotification: !sendNotification })}
-               />
-               <EmptySpace />
-               <Text style={styles.text}>
-                  Si te sirve podes repasar a les usuaries que dejaste de lado:
-               </Text>
-               <Button mode="text" onPress={() => console.log("press")}>
-                  Repasar usuaries
-               </Button>
-            </View>
-         </LinearGradient>
-      );
-   }
-}
+   return (
+      <LinearGradient
+         style={{ flex: 1 }}
+         locations={[0.7, 1]}
+         colors={[
+            color(colors.background).string(),
+            color(colors.backgroundBottomGradient).alpha(1).string()
+         ]}
+      >
+         <View style={styles.mainContainer}>
+            <Text style={styles.text}>
+               En poco tiempo vas a ver más gente aquí, todos los días hay usuarixs nuevxs.
+            </Text>
+            <EmptySpace />
+            <NewUsersNotificationSelector
+               checked={sendNotification}
+               amountSelected={amountNotification}
+               onAmountChange={v => setAmountNotification(v)}
+               onCheckChange={() => setSendNotification(!sendNotification)}
+            />
+            <EmptySpace />
+            <Text style={styles.text}>
+               Si te sirve podes repasar a lxs usuarixs que dejaste de lado:
+            </Text>
+            <Button mode="text" onPress={() => console.log("press")}>
+               Repasar usuarixs
+            </Button>
+         </View>
+      </LinearGradient>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
@@ -76,4 +60,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(NoMoreUsersMessage);
+export default NoMoreUsersMessage;
