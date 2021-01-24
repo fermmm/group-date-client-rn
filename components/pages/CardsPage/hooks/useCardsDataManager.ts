@@ -57,7 +57,9 @@ export function useCardsDataManager(
    useEffectExceptOnMount(() => {
       if (evaluationsFromStorage != null) {
          evaluationsQueue.current = JSON.parse(evaluationsFromStorage);
-         setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.QueueFromPreviousSession);
+         setEvaluationsShouldBeSentReason(
+            EvaluationShouldBeSentReason.PendingEvaluationsToSendFromPreviousSession
+         );
       }
    }, [evaluationsFromStorage]);
 
@@ -67,17 +69,19 @@ export function useCardsDataManager(
    useEffect(() => {
       // Users to render are depleted but last time server returned users
       if (evaluationsQueue.current.length > MAX_USER_EVALUATIONS_QUEUE_SIZE) {
-         setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.QueueSizeReachedMaximum);
+         setEvaluationsShouldBeSentReason(
+            EvaluationShouldBeSentReason.EvaluationsQueueSizeReachedMaximum
+         );
          return;
       }
 
       if (userDisplaying >= usersToRender.length && usersToRender.length > 0) {
-         setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.NoMoreCardsButServerMayHave);
+         setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.NoMoreUsersButServerMayHave);
          return;
       }
 
       if (userDisplaying > usersToRender.length - 1 - REQUEST_MORE_CARDS_ANTICIPATION) {
-         setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.NearlyRunningOutOfCards);
+         setEvaluationsShouldBeSentReason(EvaluationShouldBeSentReason.NearlyRunningOutOfUsers);
          return;
       }
    }, [userDisplaying]);
@@ -168,11 +172,11 @@ export interface UseCardsDataManager {
 
 export enum EvaluationShouldBeSentReason {
    None = "None",
-   NearlyRunningOutOfCards = "NearlyRunningOutOfCards",
-   NoMoreCardsButServerMayHave = "NoMoreCardsButServerMayHave",
-   QueueSizeReachedMaximum = "QueueSizeReachedMaximum",
+   NearlyRunningOutOfUsers = "NearlyRunningOutOfUsers",
+   NoMoreUsersButServerMayHave = "NoMoreUsersButServerMayHave",
+   EvaluationsQueueSizeReachedMaximum = "EvaluationsQueueSizeReachedMaximum",
    UserMovedToOtherScreen = "UserMovedToOtherScreen",
    AppMinimized = "AppMinimized",
    TooMuchTimePassedWithoutSending = "TooMuchTimePassedWithoutSending",
-   QueueFromPreviousSession = "QueueFromPreviousSession"
+   PendingEvaluationsToSendFromPreviousSession = "PendingEvaluationsToSendFromPreviousSession"
 }

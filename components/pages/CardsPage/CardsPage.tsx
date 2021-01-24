@@ -22,17 +22,20 @@ const CardsPage: FC = () => {
    const { mutate: sendEvaluationsToServer, isError } = useAttractionMutation();
    const manager = useCardsDataManager(usersFromServer, userDisplaying);
 
-   const handleLikeOrDislike = (liked: boolean, userId: string) => {
-      manager.addEvaluationToQueue({
-         userId,
-         attractionType: liked ? AttractionType.Like : AttractionType.Dislike
-      });
-      const positionInList = manager.usersToRender.findIndex(u => u.userId === userId);
+   const handleLikeOrDislike = (attractionType: AttractionType, userId: string) => {
+      manager.addEvaluationToQueue({ userId, attractionType });
+      showNextUser(userId);
+   };
+
+   const showNextUser = (currentUserId: string) => {
+      const positionInList = manager.usersToRender.findIndex(u => u.userId === currentUserId);
       setUserDisplaying(positionInList + 1);
    };
 
+   // This effect sends the evaluations to the server if it's required
    useEffect(() => {
       const reason = manager.evaluationsShouldBeSentReason;
+
       if (reason === EvaluationShouldBeSentReason.None) {
          return;
       }
@@ -46,15 +49,15 @@ const CardsPage: FC = () => {
 
       console.log("Sending evaluations, reason: ", manager.evaluationsShouldBeSentReason);
 
-      const evaluations = [...manager.evaluationsQueue.current];
+      const evaluationsToSend = [...manager.evaluationsQueue.current];
       sendEvaluationsToServer(
-         { attractions: evaluations, token },
+         { attractions: evaluationsToSend, token },
          {
             onSuccess: () => {
-               manager.removeFromEvaluationQueue(evaluations);
+               manager.removeFromEvaluationQueue(evaluationsToSend);
                if (
-                  reason === EvaluationShouldBeSentReason.NoMoreCardsButServerMayHave ||
-                  reason === EvaluationShouldBeSentReason.NearlyRunningOutOfCards
+                  reason === EvaluationShouldBeSentReason.NoMoreUsersButServerMayHave ||
+                  reason === EvaluationShouldBeSentReason.NearlyRunningOutOfUsers
                ) {
                   if (usersFromServer == null || usersFromServer?.length > 0) {
                      // In this case we want to add the new cards to the end of the list, not replace the list.
@@ -89,8 +92,8 @@ const CardsPage: FC = () => {
                   <ProfileCard
                      showLikeDislikeButtons
                      user={user}
-                     onLikeClick={() => handleLikeOrDislike(true, user.userId)}
-                     onDislikeClick={() => handleLikeOrDislike(false, user.userId)}
+                     onLikeClick={() => handleLikeOrDislike(AttractionType.Like, user.userId)}
+                     onDislikeClick={() => handleLikeOrDislike(AttractionType.Dislike, user.userId)}
                      key={user.userId}
                   />
                ))}
