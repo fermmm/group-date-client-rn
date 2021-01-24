@@ -17,7 +17,7 @@ import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
 import ThemeInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
 import EditButton from "./EditButton/EditButton";
-import { Gender, User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { Theme } from "../../../api/server/shared-tools/endpoints-interfaces/themes";
 import { useUser } from "../../../api/server/user";
 import { useThemes } from "../../../api/server/themes";
@@ -30,7 +30,7 @@ import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { currentTheme } from "../../../config";
 import { ParamsRegistrationFormsPage } from "../../pages/RegistrationFormsPage/RegistrationFormsPage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
-import CardAnimator, { CardAnimationType } from "../CardsEffect/CardAnimator/CardAnimator";
+import CardAnimator, { CardAnimationType } from "./CardAnimator/CardAnimator";
 import { getGenderName } from "../../../common-tools/strings/gender";
 
 export interface ProfileCardProps {
@@ -77,12 +77,12 @@ const ProfileCard: FC<ProfileCardProps> = props => {
 
    const themesSubscribedInCommon: Theme[] = themesSubscribed
       ?.filter(t => localUser.themesSubscribed.find(ut => ut.themeId === t.themeId) != null)
-      .map(t => allThemes.find(at => at.themeId === t.themeId))
+      .map(t => allThemes?.find(at => at.themeId === t.themeId))
       .filter(t => t != null);
 
    const themesBlockedInCommon: Theme[] = themesBlocked
       ?.filter(t => localUser.themesBlocked.find(ut => ut.themeId === t.themeId) != null)
-      .map(t => allThemes.find(at => at.themeId === t.themeId))
+      .map(t => allThemes?.find(at => at.themeId === t.themeId))
       .filter(t => t != null);
 
    const finalImagesUri = images.map(uri => prepareUrl(serverInfo.imagesHost + uri));

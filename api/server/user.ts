@@ -15,6 +15,7 @@ import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import {
    FileUploadResponse,
    ProfileStatusServerResponse,
+   SetAttractionParams,
    User,
    UserPostParams,
    UserPropAsQuestion
@@ -76,6 +77,17 @@ export function useUserPropsMutation<T extends UserPostParams, R = void>(
       options
    });
    return useMutation(data => defaultHttpRequest("user", "POST", data), newOptions);
+}
+
+export function useAttractionMutation<T extends SetAttractionParams, R = void>(
+   options: UseMutationOptions<R, RequestError, T> = {},
+   extraOptions?: MutationExtraOptions
+) {
+   let newOptions = defaultOptionsForMutations({
+      extraOptions,
+      options
+   });
+   return useMutation(data => defaultHttpRequest("user/set-attraction", "POST", data), newOptions);
 }
 
 export async function uploadImage(

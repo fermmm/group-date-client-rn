@@ -14,8 +14,7 @@ import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 import {
    CenteredMethod,
-   LoadingAnimation,
-   RenderMethod
+   LoadingAnimation
 } from "../../../common/LoadingAnimation/LoadingAnimation";
 
 export interface PropsBasicInfoForm {

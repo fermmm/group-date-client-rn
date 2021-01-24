@@ -61,3 +61,9 @@ export const IMAGES_ASPECT_RATIO: [number, number] = [4, 4];
 
 export const RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH: number = 512;
 export const IMAGE_QUALITY_WHEN_UPLOADING: number = 0.9;
+// How many cards left for evaluation before calling for more cards in the background
+export const REQUEST_MORE_CARDS_ANTICIPATION: number = 10;
+// How often in time the user evaluations are sent to the server in milliseconds
+export const REQUEST_MORE_CARDS_AFTER_TIME: number = 60 * 1000;
+// The maximum amount of user evaluations pending to send before sending them
+export const MAX_USER_EVALUATIONS_QUEUE_SIZE: number = 35;

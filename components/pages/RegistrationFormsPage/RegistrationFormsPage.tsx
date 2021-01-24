@@ -9,7 +9,10 @@ import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
 import { useServerProfileStatus, useUserPropsMutation } from "../../../api/server/user";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
-import { EditableUserProps } from "../../../api/server/shared-tools/validators/user";
+import {
+   EditableUserPropKey,
+   EditableUserProps
+} from "../../../api/server/shared-tools/validators/user";
 import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredFormList";
 import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
@@ -21,8 +24,8 @@ import { ThemeEditAction, useThemesMutation } from "../../../api/server/themes";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { BackHandler } from "react-native";
-import { objectsContentIsEqual } from "../../../common-tools/js-tools/js-tools";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
+import { queryClient } from "../../../api/tools/reactQueryTools";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -87,7 +90,14 @@ const RegistrationFormsPage: FC = () => {
          error: string | null,
          themesToUpdateReceived?: ThemesToUpdate
       ) => {
-         propsGathered.current = { ...propsGathered.current, ...newProps };
+         propsGathered.current = {
+            ...propsGathered.current,
+            ...newProps
+         };
+         propsGathered.current = filterNotReallyChangedProps(
+            propsGathered.current,
+            profileStatus.user
+         );
          errorOnForms.current[formName] = error;
          if (themesToUpdateReceived != null) {
             themesToUpdate.current[formName] = themesToUpdateReceived;
@@ -115,7 +125,7 @@ const RegistrationFormsPage: FC = () => {
 
    // Called when the back button/gesture on the device is pressed before leaving the screen
    const handleBackButton = useCallback(() => {
-      if (canGoBack() && userChangedSomething() && isFocused()) {
+      if (canGoBack() && Object.keys(propsGathered.current).length > 0 && isFocused()) {
          showExitDialog();
       } else {
          if (canGoBack()) {
@@ -135,18 +145,26 @@ const RegistrationFormsPage: FC = () => {
       if (currentStep < formsRequired.length - 1) {
          setCurrentStep(currentStep + 1);
       } else {
-         sendDataToServer();
+         if (userChangedSomething(propsGathered.current, unifiedThemesToUpdate, questionsShowed)) {
+            sendDataToServer();
+         } else {
+            if (canGoBack()) {
+               goBack();
+            }
+         }
       }
-   }, [currentStep, formsRequired]);
+   }, [currentStep, formsRequired, propsGathered.current, unifiedThemesToUpdate, questionsShowed]);
 
    const sendDataToServer = async () => {
-      setSendingToServer(true);
       let propsToSend: EditableUserProps = propsGathered.current;
+      let themesWereChanged: boolean = false;
 
       if (questionsShowed?.length > 0) {
          propsToSend.questionsShowed = questionsShowed;
       }
       if (unifiedThemesToUpdate?.themesToSubscribe?.length > 0) {
+         setSendingToServer(true);
+         themesWereChanged = true;
          await mutateThemes({
             action: ThemeEditAction.Subscribe,
             themeIds: unifiedThemesToUpdate.themesToSubscribe,
@@ -154,6 +172,8 @@ const RegistrationFormsPage: FC = () => {
          });
       }
       if (unifiedThemesToUpdate?.themesToBlock?.length > 0) {
+         setSendingToServer(true);
+         themesWereChanged = true;
          await mutateThemes({
             action: ThemeEditAction.Block,
             themeIds: unifiedThemesToUpdate.themesToBlock,
@@ -161,13 +181,18 @@ const RegistrationFormsPage: FC = () => {
          });
       }
       if (unifiedThemesToUpdate?.themesToUnsubscribe?.length > 0) {
+         setSendingToServer(true);
+         themesWereChanged = true;
          await mutateThemes({
             action: ThemeEditAction.RemoveSubscription,
             themeIds: unifiedThemesToUpdate.themesToUnsubscribe,
             token
          });
       }
+
       if (unifiedThemesToUpdate?.themesToUnblock?.length > 0) {
+         setSendingToServer(true);
+         themesWereChanged = true;
          await mutateThemes({
             action: ThemeEditAction.RemoveBlock,
             themeIds: unifiedThemesToUpdate.themesToUnblock,
@@ -176,8 +201,47 @@ const RegistrationFormsPage: FC = () => {
       }
       // We send user props last because it contains questionsShowed prop, which means that the themes were sent
       if (Object.keys(propsToSend).length > 0) {
+         setSendingToServer(true);
          await mutateUser({ token, props: propsToSend });
       }
+
+      /**
+       * Check if the user changed a prop that affects cards recommendation, in that case invalidate the query
+       */
+      const recommendationsRelatedKeys: EditableUserPropKey[] = [
+         "gender",
+         "likesMan",
+         "likesWoman",
+         "likesManTrans",
+         "likesWomanTrans",
+         "likesOtherGenders",
+         "targetDistance",
+         "targetAgeMin",
+         "targetAgeMax",
+         "birthDate"
+      ];
+      const keysMutated = Object.keys(propsToSend) as EditableUserPropKey[];
+      const recommendationsRelatedChanges = keysMutated.filter(key =>
+         recommendationsRelatedKeys.includes(key)
+      );
+      if (recommendationsRelatedChanges.length > 0 || themesWereChanged) {
+         queryClient.invalidateQueries("cards-game/recommendations");
+      }
+   };
+
+   const userChangedSomething = (
+      propsToSend: EditableUserProps,
+      unifiedThemesToUpdate: ThemesToUpdate,
+      questionsShowed: string[]
+   ) => {
+      return (
+         questionsShowed?.length > 0 ||
+         unifiedThemesToUpdate?.themesToSubscribe?.length > 0 ||
+         unifiedThemesToUpdate?.themesToBlock?.length > 0 ||
+         unifiedThemesToUpdate?.themesToUnsubscribe?.length > 0 ||
+         unifiedThemesToUpdate?.themesToUnblock?.length > 0 ||
+         Object.keys(propsToSend).length > 0
+      );
    };
 
    const getCurrentFormError = useCallback(
@@ -185,15 +249,37 @@ const RegistrationFormsPage: FC = () => {
       [formsRequired, currentStep]
    );
 
-   const userChangedSomething = (): boolean => {
-      if (profileStatus == null) {
-         return false;
-      }
+   /**
+    * Some props like location coordinates are slightly different numbers each time they are retrieved, the difference
+    * is not relevant and equality check it's not useful anymore. This special comparator is required then to know when
+    * the user made real changes.
+    */
+   const filterNotReallyChangedProps = (
+      propsGathered: EditableUserProps,
+      user: Partial<User>
+   ): EditableUserProps => {
+      const result: EditableUserProps = {};
+      const keysToKeep: string[] = Object.keys(propsGathered ?? {}).filter(key => {
+         if (user[key] == null) {
+            return true;
+         }
 
-      return !objectsContentIsEqual(propsGathered.current, profileStatus.user, {
-         object2CanHaveMoreProps: true,
-         limitDigitsInNumberComparison: 5
+         if (propsGathered[key] == null) {
+            return false;
+         }
+
+         if (Array.isArray(propsGathered[key])) {
+            return propsGathered[key].join() !== user[key].join();
+         }
+         if (typeof propsGathered[key] === "number") {
+            let reducedNumber1 = String(Math.abs(propsGathered[key])).substring(0, 5);
+            let reducedNumber2 = String(Math.abs(user[key])).substring(0, 5);
+            return reducedNumber1 !== reducedNumber2;
+         }
+         return propsGathered[key] !== user[key];
       });
+      keysToKeep.forEach(key => (result[key] = propsGathered[key]));
+      return result;
    };
 
    const isLoading: boolean =
