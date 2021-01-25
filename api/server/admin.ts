@@ -13,8 +13,8 @@ export function useCreateFakeUsersMutation<
 >(options: UseMutationOptions<R, RequestError, T> = {}, extraOptions?: MutationExtraOptions) {
    let newOptions = defaultOptionsForMutations({
       extraOptions,
-      options
-      // queriesToInvalidate: ["cards-game/recommendations"]
+      options,
+      queriesToInvalidate: ["cards-game/recommendations"]
    });
    return useMutation(data => defaultHttpRequest("createFakeUsers", "GET", data), newOptions);
 }

@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, Button } from "react-native-paper";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
@@ -8,11 +8,48 @@ import { currentTheme } from "../../../../config";
 import { LinearGradient } from "expo-linear-gradient";
 import color from "color";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
+import { useUser, useUserPropsMutation } from "../../../../api/server/user";
+import { useFacebookToken } from "../../../../api/third-party/facebook/facebook-login";
 
 const NoMoreUsersMessage: FC = () => {
-   const [sendNotification, setSendNotification] = useState(true);
-   const [amountNotification, setAmountNotification] = useState(3);
+   const [sendNotificationChecked, setSendNotificationChecked] = useState(true);
    const { colors } = useTheme();
+   const { token } = useFacebookToken();
+   const { data: user } = useUser();
+   const { mutate: mutateUser } = useUserPropsMutation();
+   const [sendNewUsersNotification, setSendNewUsersNotification] = useState(
+      user?.sendNewUsersNotification ?? 1
+   );
+
+   // Effect to mutate the server when the UI changes
+   useEffect(() => {
+      if (user == null) {
+         return;
+      }
+
+      if (!sendNotificationChecked && user.sendNewUsersNotification !== 0) {
+         mutateUser({ props: { sendNewUsersNotification: 0 }, token });
+         return;
+      }
+
+      if (sendNotificationChecked && user.sendNewUsersNotification != sendNewUsersNotification) {
+         mutateUser({ props: { sendNewUsersNotification }, token });
+      }
+   }, [sendNewUsersNotification, sendNotificationChecked]);
+
+   // Effect to update the UI when the server changes
+   useEffect(() => {
+      if (user == null || user.sendNewUsersNotification == null) {
+         return;
+      }
+
+      if (user.sendNewUsersNotification === 0) {
+         setSendNotificationChecked(false);
+         return;
+      }
+
+      setSendNewUsersNotification(user.sendNewUsersNotification);
+   }, [user]);
 
    return (
       <LinearGradient
@@ -29,10 +66,10 @@ const NoMoreUsersMessage: FC = () => {
             </Text>
             <EmptySpace />
             <NewUsersNotificationSelector
-               checked={sendNotification}
-               amountSelected={amountNotification}
-               onAmountChange={v => setAmountNotification(v)}
-               onCheckChange={() => setSendNotification(!sendNotification)}
+               checked={sendNotificationChecked}
+               amountSelected={sendNewUsersNotification}
+               onAmountChange={v => setSendNewUsersNotification(v)}
+               onCheckChange={() => setSendNotificationChecked(!sendNotificationChecked)}
             />
             <EmptySpace />
             <Text style={styles.text}>

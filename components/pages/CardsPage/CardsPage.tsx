@@ -14,9 +14,6 @@ import { queryClient } from "../../../api/tools/reactQueryTools";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { AttractionType } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
-// TODO: Falta la pantalla de que no hay mas usuarios, que envíe el request con eso:
-// Solo hay que setear la prop del usuario: sendNewUsersNotification con la cantidad de usuarios
-// necesarios para que envie la notificacion. Se setea con el mutator de usuario useUserPropsMutation
 // TODO: Falta el botón de repasar usuarios y unos estilos que avisen que estas viendo una version diferente
 const CardsPage: FC = () => {
    const { token } = useFacebookToken();
@@ -44,8 +41,6 @@ const CardsPage: FC = () => {
          return;
       }
 
-      console.log("Sending attractions, reason: ", manager.attractionsShouldBeSentReason);
-
       const attractions = [...manager.attractionsQueue.current];
       sendAttractionsToServer(
          { attractions, token },
@@ -56,6 +51,7 @@ const CardsPage: FC = () => {
                   reason === AttractionsSendReason.NoMoreUsersButServerMayHave ||
                   reason === AttractionsSendReason.NearlyRunningOutOfUsers
                ) {
+                  // If last time the server returned no users then there is no need to request again
                   if (usersFromServer?.length === 0) {
                      return;
                   }
