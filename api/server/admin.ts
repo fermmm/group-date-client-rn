@@ -7,14 +7,14 @@ import {
 } from "../tools/reactQueryTools";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 
-export function useTestEndpoint2Mutation<
+export function useCreateFakeUsersMutation<
    T extends TokenParameter & { text: string },
    R extends string
 >(options: UseMutationOptions<R, RequestError, T> = {}, extraOptions?: MutationExtraOptions) {
    let newOptions = defaultOptionsForMutations({
       extraOptions,
-      options,
-      queriesToInvalidate: ["cards-game/recommendations"]
+      options
+      // queriesToInvalidate: ["cards-game/recommendations"]
    });
    return useMutation(data => defaultHttpRequest("createFakeUsers", "GET", data), newOptions);
 }

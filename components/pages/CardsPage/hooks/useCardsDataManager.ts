@@ -11,12 +11,10 @@ import { useIsFocused } from "@react-navigation/native";
 import { useAppState } from "../../../../common-tools/device-native-api/state/useAppState";
 import { useInterval } from "../../../../common-tools/common-hooks/useInterval";
 
-export function useCardsDataManager(
-   usersFromServer: User[],
-   userDisplaying: number
-): UseCardsDataManager {
+export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManager {
    const isFocused = useIsFocused();
    const { isActive } = useAppState();
+   const [userDisplaying, setUserDisplaying] = useState(0);
    const { value: attractionsFromStorage, setValue: saveOnStorage } = useLocalStorage("_attrQueue");
    const [usersToRender, setUsersToRender] = useState([]);
    const attractionsQueue = useRef<Attraction[]>([]);
@@ -41,6 +39,7 @@ export function useCardsDataManager(
          appendMode.current = false;
       } else {
          newUsersToRender = usersFromServer;
+         setUserDisplaying(0);
       }
 
       setUsersToRender(newUsersToRender);
@@ -65,7 +64,6 @@ export function useCardsDataManager(
     * An effect to check whether the attractions queue should be sent and the reasons
     */
    useEffect(() => {
-      // Users to render are depleted but last time server returned users
       if (attractionsQueue.current.length > MAX_ATTRACTIONS_QUEUE_SIZE) {
          setAttractionsShouldBeSentReason(AttractionsSendReason.AttractionsQueueSizeReachedMaximum);
          return;
@@ -76,7 +74,7 @@ export function useCardsDataManager(
          return;
       }
 
-      if (userDisplaying > usersToRender.length - 1 - REQUEST_MORE_CARDS_ANTICIPATION) {
+      if (userDisplaying === usersToRender.length - 1 - REQUEST_MORE_CARDS_ANTICIPATION) {
          setAttractionsShouldBeSentReason(AttractionsSendReason.NearlyRunningOutOfUsers);
          return;
       }
@@ -124,10 +122,17 @@ export function useCardsDataManager(
       appendMode.current = true;
    }, []);
 
+   const showNextUser = (currentUserId: string) => {
+      const positionInList = usersToRender.findIndex(u => u.userId === currentUserId);
+      setUserDisplaying(positionInList + 1);
+   };
+
    return {
       usersToRender,
+      userDisplaying,
       attractionsQueue,
       attractionsShouldBeSentReason,
+      showNextUser,
       addAttractionToQueue,
       removeFromAttractionsQueue,
       appendUsersFromServerInNextUpdate
@@ -157,8 +162,10 @@ function mergeUsersList(list1: User[], list2: User[]): User[] {
 
 export interface UseCardsDataManager {
    usersToRender: User[];
+   userDisplaying: number;
    attractionsQueue: React.MutableRefObject<Attraction[]>;
    attractionsShouldBeSentReason: AttractionsSendReason;
+   showNextUser: (currentUserId: string) => void;
    addAttractionToQueue: (attraction: Attraction) => void;
    removeFromAttractionsQueue: (toRemove: Attraction[]) => void;
    appendUsersFromServerInNextUpdate: () => void;

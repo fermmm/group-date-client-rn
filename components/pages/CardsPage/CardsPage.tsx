@@ -14,23 +14,19 @@ import { queryClient } from "../../../api/tools/reactQueryTools";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { AttractionType } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
-// TODO: Falta la pantalla de que no hay mas usuarios, que envíe el request con eso
-// TODO: Falta el botón de repasar usuarios
+// TODO: Falta la pantalla de que no hay mas usuarios, que envíe el request con eso:
+// Solo hay que setear la prop del usuario: sendNewUsersNotification con la cantidad de usuarios
+// necesarios para que envie la notificacion. Se setea con el mutator de usuario useUserPropsMutation
+// TODO: Falta el botón de repasar usuarios y unos estilos que avisen que estas viendo una version diferente
 const CardsPage: FC = () => {
-   const [userDisplaying, setUserDisplaying] = useState(0);
    const { token } = useFacebookToken();
    const { data: usersFromServer } = useCardsRecommendations();
    const { mutate: sendAttractionsToServer, isError } = useAttractionMutation();
-   const manager = useCardsDataManager(usersFromServer, userDisplaying);
+   const manager = useCardsDataManager(usersFromServer);
 
    const handleLikeOrDislike = (attractionType: AttractionType, userId: string) => {
       manager.addAttractionToQueue({ userId, attractionType });
-      showNextUser(userId);
-   };
-
-   const showNextUser = (currentUserId: string) => {
-      const positionInList = manager.usersToRender.findIndex(u => u.userId === currentUserId);
-      setUserDisplaying(positionInList + 1);
+      manager.showNextUser(userId);
    };
 
    // This effect sends the attractions to the server if it's required
@@ -60,12 +56,14 @@ const CardsPage: FC = () => {
                   reason === AttractionsSendReason.NoMoreUsersButServerMayHave ||
                   reason === AttractionsSendReason.NearlyRunningOutOfUsers
                ) {
-                  if (usersFromServer == null || usersFromServer?.length > 0) {
-                     // In this case we want to add the new cards to the end of the list, not replace the list.
-                     manager.appendUsersFromServerInNextUpdate();
-                     // If we ran out of cards we want new cards not the cache, but if the server already returned empty it's not necessary:
-                     queryClient.invalidateQueries("cards-game/recommendations");
+                  if (usersFromServer?.length === 0) {
+                     return;
                   }
+
+                  // In this case we want to add the new cards to the end of the list, not replace the list.
+                  manager.appendUsersFromServerInNextUpdate();
+                  // If we ran out of cards we want new cards not the cache, but if the server already returned empty it's not necessary:
+                  queryClient.invalidateQueries("cards-game/recommendations");
                }
             }
          }
@@ -73,11 +71,11 @@ const CardsPage: FC = () => {
    }, [manager.attractionsShouldBeSentReason]);
 
    const showNoMoreUsersMessage =
-      userDisplaying >= manager.usersToRender.length && usersFromServer?.length === 0;
+      manager.userDisplaying >= manager.usersToRender.length && usersFromServer?.length === 0;
 
    const isLoading =
       usersFromServer == null ||
-      (userDisplaying >= manager.usersToRender.length && !showNoMoreUsersMessage);
+      (manager.userDisplaying >= manager.usersToRender.length && !showNoMoreUsersMessage);
 
    if (isLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
@@ -88,7 +86,7 @@ const CardsPage: FC = () => {
          {showNoMoreUsersMessage ? (
             <NoMoreUsersMessage />
          ) : (
-            <LimitedChildrenRenderer childrenToDisplay={userDisplaying}>
+            <LimitedChildrenRenderer childrenToDisplay={manager.userDisplaying}>
                {manager.usersToRender.map(user => (
                   <ProfileCard
                      showLikeDislikeButtons

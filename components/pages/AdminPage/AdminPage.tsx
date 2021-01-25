@@ -6,14 +6,14 @@ import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import TextInputExtended from "../../common/TextInputExtended/TextInputExtended";
 import { Button } from "react-native-paper";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
-import { useTestEndpoint2Mutation } from "../../../api/server/admin";
+import { useCreateFakeUsersMutation } from "../../../api/server/admin";
 import { useUser } from "../../../api/server/user";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 
 const AdminPage: FC = () => {
    const { colors } = useTheme();
    const { data: localUser, isLoading: userIsLoading } = useUser();
-   const { mutateAsync, isLoading: testEndpointLoading } = useTestEndpoint2Mutation();
+   const { mutateAsync, isLoading: testEndpointLoading } = useCreateFakeUsersMutation();
    const [fakeUsersAmount, setFakeUsersAmount] = useState<string>();
 
    const handleSend = async () => {

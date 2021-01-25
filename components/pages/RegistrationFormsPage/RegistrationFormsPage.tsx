@@ -96,7 +96,7 @@ const RegistrationFormsPage: FC = () => {
          };
          propsGathered.current = filterNotReallyChangedProps(
             propsGathered.current,
-            profileStatus.user
+            profileStatus?.user
          );
          errorOnForms.current[formName] = error;
          if (themesToUpdateReceived != null) {
@@ -258,6 +258,9 @@ const RegistrationFormsPage: FC = () => {
       propsGathered: EditableUserProps,
       user: Partial<User>
    ): EditableUserProps => {
+      if (user == null) {
+         return propsGathered;
+      }
       const result: EditableUserProps = {};
       const keysToKeep: string[] = Object.keys(propsGathered ?? {}).filter(key => {
          if (user[key] == null) {
