@@ -59,12 +59,7 @@ function CustomTabBar({
 }: MaterialTopTabBarProps & { badgeNumbers: Record<string, number> }) {
    return (
       <View>
-         <ShadowBottom
-            imageSource={currentTheme.shadowBottom}
-            style={{
-               opacity: state.index === 0 ? 0.35 : 1
-            }}
-         />
+         <ShadowBottom imageSource={currentTheme.shadowBottom} />
          <Background useImageBackground={true}>
             <View style={styles.tabBar}>
                {state.routes.map((route, index) => {
@@ -170,7 +165,7 @@ function Background(props: {
 const styles: Styles = StyleSheet.create({
    tabBar: {
       flexDirection: "row",
-      height: 80,
+      height: 78,
       paddingTop: StatusBar.currentHeight,
       zIndex: 1
    },
