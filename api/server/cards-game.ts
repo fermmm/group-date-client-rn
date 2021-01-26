@@ -21,3 +21,21 @@ export function useCardsRecommendations<T extends User[]>(
 
    return defaultErrorHandler(query);
 }
+
+export function useCardsDisliked<T extends User[]>(
+   requestParams?: TokenParameter,
+   options?: UseQueryOptions<T>
+) {
+   const { token } = useFacebookToken(requestParams?.token);
+
+   const query = useQuery<T>(
+      "cards-game/disliked-users",
+      () => defaultHttpRequest("cards-game/disliked-users", "GET", { token }),
+      {
+         ...options,
+         ...(!token ? { enabled: false } : {})
+      }
+   );
+
+   return defaultErrorHandler(query);
+}
