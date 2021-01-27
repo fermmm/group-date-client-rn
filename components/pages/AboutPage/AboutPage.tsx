@@ -121,7 +121,7 @@ const AboutPage: FC = () => {
                detalles que multiplican su calidad son ideas de varias personas interesadas en el
                proyecto, gente perteneciente a organizaciones de poliamor, amor libre, feminismo,
                profesionales de diferentes disciplinas: desde ciencias sociales hasta otrxs
-               informáticoxs.
+               informáticxs.
             </Text>
             <EmptySpace height={80} />
          </BasicScreenContainer>
