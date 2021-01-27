@@ -16,7 +16,6 @@ import ButtonStyled from "../ButtonStyled/ButtonStyled";
 import color from "color";
 import { currentTheme } from "../../../config";
 import TitleMediumText from "../TitleMediumText/TitleMediumText";
-// import KeyboardSpacer from "react-native-keyboard-spacer";
 
 export interface TextInputExtendedProps {
    title?: string;
@@ -48,21 +47,19 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
    const [canShowError, setCanShowError] = useState(false);
    const fullScreenInputRef = useRef<NativeTextInput>();
 
-   const disableEditMode = () => {
+   const disableEditMode = useCallback(() => {
       if (fullScreenMode) {
          setCanShowError(true);
          setFullScreenMode(false);
       }
-   };
-
-   const onKeyboardClose = useCallback(disableEditMode, []);
+   }, [fullScreenMode]);
 
    React.useEffect(() => {
-      Keyboard.addListener("keyboardDidHide", onKeyboardClose);
+      Keyboard.addListener("keyboardDidHide", disableEditMode);
       return () => {
-         Keyboard.removeListener("keyboardDidHide", onKeyboardClose);
+         Keyboard.removeListener("keyboardDidHide", disableEditMode);
       };
-   }, []);
+   }, [fullScreenMode]);
 
    return (
       <>
@@ -144,8 +141,6 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                      Guardar
                   </ButtonStyled>
                </View>
-               {/* This seemed to be required before but not anymore after updating expo, if there is any problem uncomment */}
-               {/* <KeyboardSpacer /> */}
             </Modal>
          )}
       </>
