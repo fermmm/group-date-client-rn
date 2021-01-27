@@ -157,7 +157,7 @@ export function defaultOptionsForMutations<T, R = void>(props: {
    let newOptions = defaultErrorHandlerForMutations(options);
    newOptions =
       extraOptions?.autoInvalidateQueries === false
-         ? options
+         ? newOptions
          : invalidateCacheForOptions(queriesToInvalidate, newOptions);
    return newOptions;
 }

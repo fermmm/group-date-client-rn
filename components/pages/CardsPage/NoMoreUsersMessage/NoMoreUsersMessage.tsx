@@ -10,30 +10,40 @@ import color from "color";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { useUser, useUserPropsMutation } from "../../../../api/server/user";
 import { useFacebookToken } from "../../../../api/third-party/facebook/facebook-login";
+import {
+   CenteredMethod,
+   LoadingAnimation,
+   RenderMethod
+} from "../../../common/LoadingAnimation/LoadingAnimation";
+import {
+   loadFromDevice,
+   saveOnDevice
+} from "../../../../common-tools/device-native-api/storage/storage";
 
 const NoMoreUsersMessage: FC = () => {
+   const defaultValue = 1;
    const [sendNotificationChecked, setSendNotificationChecked] = useState(true);
    const { colors } = useTheme();
    const { token } = useFacebookToken();
-   const { data: user } = useUser();
-   const { mutate: mutateUser } = useUserPropsMutation();
-   const [sendNewUsersNotification, setSendNewUsersNotification] = useState(
-      user?.sendNewUsersNotification ?? 1
-   );
+   const { data: user, isLoading: userLoading } = useUser();
+   const { mutate: mutateUser } = useUserPropsMutation(null, { autoInvalidateQueries: false });
+   const [sendNewUsersNotification, setSendNewUsersNotification] = useState<number>(null);
 
    // Effect to mutate the server when the UI changes
    useEffect(() => {
-      if (user == null) {
+      if (user == null || sendNewUsersNotification == null) {
          return;
       }
 
       if (!sendNotificationChecked && user.sendNewUsersNotification !== 0) {
          mutateUser({ props: { sendNewUsersNotification: 0 }, token });
+         saveOnDevice("noUsersLastSelected", "0");
          return;
       }
 
       if (sendNotificationChecked && user.sendNewUsersNotification != sendNewUsersNotification) {
          mutateUser({ props: { sendNewUsersNotification }, token });
+         saveOnDevice("noUsersLastSelected", String(sendNewUsersNotification));
       }
    }, [sendNewUsersNotification, sendNotificationChecked]);
 
@@ -48,8 +58,21 @@ const NoMoreUsersMessage: FC = () => {
          return;
       }
 
+      if (user.sendNewUsersNotification === -1) {
+         loadFromDevice("noUsersLastSelected").then(value => {
+            setSendNotificationChecked(true);
+            setSendNewUsersNotification(value != null ? Number(value) : defaultValue);
+         });
+         return;
+      }
+
+      setSendNotificationChecked(true);
       setSendNewUsersNotification(user.sendNewUsersNotification);
    }, [user]);
+
+   if (userLoading) {
+      return <LoadingAnimation centeredMethod={CenteredMethod.Absolute} />;
+   }
 
    return (
       <LinearGradient

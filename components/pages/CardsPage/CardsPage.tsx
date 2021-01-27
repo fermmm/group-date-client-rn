@@ -4,7 +4,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import ProfileCard from "../../common/ProfileCard/ProfileCard";
 import NoMoreUsersMessage from "./NoMoreUsersMessage/NoMoreUsersMessage";
 import LimitedChildrenRenderer from "../../common/LimitedChildrenRenderer/LimitedChildrenRenderer";
-import { useCardsRecommendations } from "../../../api/server/cards-game";
+import { useCardsDisliked, useCardsRecommendations } from "../../../api/server/cards-game";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { currentTheme } from "../../../config";
 import { __String } from "typescript";
@@ -13,11 +13,25 @@ import { useAttractionMutation } from "../../../api/server/user";
 import { queryClient } from "../../../api/tools/reactQueryTools";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { AttractionType } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { useRoute } from "@react-navigation/native";
+import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
+
+export interface ParamsCardsPage {
+   specialCardsSource?: CardsSource;
+   themeId?: string;
+}
 
 // TODO: Falta el botón de repasar usuarios y unos estilos que avisen que estas viendo una version diferente
 const CardsPage: FC = () => {
    const { token } = useFacebookToken();
-   const { data: usersFromServer } = useCardsRecommendations();
+   const { params } = useRoute<RouteProps<ParamsCardsPage>>();
+   const [cardsSource, setCardsSource] = useState<CardsSource>(CardsSource.Recommendations);
+   const { data: usersFromServer } = useCardsRecommendations(null, {
+      enabled: cardsSource === CardsSource.Recommendations
+   });
+   const { data: dislikedUsersFromServer } = useCardsDisliked(null, {
+      enabled: cardsSource === CardsSource.DislikedUsers
+   });
    const { mutate: sendAttractionsToServer, isError } = useAttractionMutation();
    const manager = useCardsDataManager(usersFromServer);
 
@@ -105,5 +119,11 @@ const styles: Styles = StyleSheet.create({
       padding: 0
    }
 });
+
+export enum CardsSource {
+   Recommendations,
+   Theme,
+   DislikedUsers
+}
 
 export default CardsPage;

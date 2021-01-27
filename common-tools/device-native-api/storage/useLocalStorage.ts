@@ -17,8 +17,8 @@ export function useLocalStorage(key: string, secure: boolean = true): UseLocalSt
 
       promise
          .then(v => {
-            setIsLoading(false);
             setValueState(v);
+            setIsLoading(false);
          })
          .catch(() => {
             setIsLoading(false);
