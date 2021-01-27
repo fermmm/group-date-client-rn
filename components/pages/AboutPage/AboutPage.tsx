@@ -46,32 +46,60 @@ const AboutPage: FC = () => {
                mujeres y hombres siempre va a ser mas o menos la misma.
             </Text>
             <TitleText extraSize style={styles.title}>
+               ¿Hay diferencias importantes entre las relaciones grupales y las tradicionales de 2
+               personas?
+            </TitleText>
+            <Text>
+               Las relaciones afectivas y sexuales entre varias personas son la manera original en
+               la que se relacionaba el ser humano y definen la familia. Hace miles de años la
+               crianza era una actividad poco exigente por que los padres de lxs hijxs eran todas
+               las personas del grupo afectivo o tribu, las responsabilidades estaban muy
+               repartidas. A nivel sexual lo tenemos todxs presente en nuestro cuerpo, por ejemplo:
+               Los "gemidos sexuales" son un instinto que las otras especies que lo tienen
+               (primates) lo usan para llamar a los que están cerca, de la misma manera funcionaba
+               originalmente en nuestra especie, la sexualidad que podemos experimentar en nuestra
+               cultura esta muy reprimida y alejada del tipo de sexualidad que nos pide nuestro
+               cuerpo y su evolución, este es el trasfondo de muchas dificultades que surgen en
+               nuestra cultura a la hora de conocernos e incentivarnos sexualmente. Hay grandes
+               libros de divulgación científica sobre el tema para recomendar, algunos muy conocidos
+               y comentados por la comunidad científica como los de Christopher Ryan en primer lugar
+               o también el de Friedrich Engels: "El origen de la familia, la propiedad privada y el
+               estado".
+            </Text>
+            <EmptySpace height={15} />
+            <Text>
+               Cuando se instala la monogamia en nuestra cultura, no sucede por que esta tenga
+               alguna ventaja emocional, aparece por necesidades comerciales: casar hijxs como
+               contrato comercial entre familias, acumular riqueza de forma personal sin compartir
+               con la tribu, etc. La monogamia y la familia nuclear son dos de los muchos fenómenos
+               de la revolución neolítica, la misma que trajo por primera vez a las clases sociales,
+               patriarcado y otras opresiones de la humanidad.
+            </Text>
+            <TitleText extraSize style={styles.title}>
                ¿Es fácil que se genere una cita grupal?
             </TitleText>
             <Text>
-               Es igual o más fácil que se genere una cita en esta app que en las de monogamia (como
-               Tinder y OKCupid). Esto es así por varios motivos que se suman, a continuación vamos
-               a explicar 2:
+               Es igual o más fácil que se genere una cita en esta app que en las de monogamia. Esto
+               es así por varios motivos que se suman, a continuación vamos a explicar 2:
             </Text>
             <EmptySpace height={15} />
             <Text>
                En las "citas de monogamia" unx pasa el tiempo con otra persona durante al menos
-               muchas horas, por lo que la persona buscada debería reunir todas las características
-               deseadas en una sola, ya que no va a haber otra. Esto hace escasear los likes en esas
+               varias horas, por lo que la persona buscada debería reunir muchas características
+               deseadas ella sola, ya que no va a haber otra. Esto hace escasear los likes en esas
                apps, en una cita grupal en cambio, nadie tiene que "tenerlo todo en uno", por lo que
                en esta app se tiende a ser mas flexible al dar likes y por eso también aumentan las
                posibilidades de una coincidencia grupal.
             </Text>
             <EmptySpace height={15} />
             <Text>
-               Otro motivo es que no existe ninguna app de citas popular de monogamia que no este
-               concebida para enriquecer a sus dueños frustrando a sus usuarios intencionalmente. Si
-               los usuarios consiguen lo que quieren se van de la app, por lo que sus dueños hacen
-               que la app no funcione de la mejor manera, generando mas necesidad de pagar funciones
-               premium. Este fenómeno esta detallado en el libro "El algoritmo del amor" de "Judith
-               Duportail", una investigación donde la autora muestra como acceder a las patentes de
-               Tinder y difunde su información la cual revela cómo esta app funciona internamente,
-               asi como otras de la misma empresa llamada "Match Group" como OkCupid.
+               Otro motivo es que las apps de citas populares de monogamia no funcionan muy bien,
+               frustran a sus usuarios intencionalmente. Si los usuarios consiguen lo que quieren se
+               van de la app, por lo que estas deben generar mas necesidad de pagar funciones
+               premium y asi satisfacer a sus accionistas. Este fenómeno esta detallado en el libro
+               "El algoritmo del amor" de "Judith Duportail", una investigación donde la autora
+               difunde las patentes de Tinder, su información revela cómo esta app funciona
+               internamente, asi como otras de la misma empresa llamada "Match Group" como OkCupid.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
@@ -92,33 +120,7 @@ const AboutPage: FC = () => {
                diferentes partes y detalles que multiplican su calidad son ideas de varias personas
                interesadas en el proyecto, gente perteneciente a organizaciones de poliamor, amor
                libre, feminismo, profesionales de diferentes disciplinas: desde ciencias sociales
-               hasta otrxs ingenieros de software.
-            </Text>
-            <TitleText extraSize style={styles.title}>
-               ¿Tienen sentido las citas grupales?
-            </TitleText>
-            <Text>
-               El afecto puede tomar cualquier forma, pero si hablamos de sexualidad, el sexo grupal
-               es a menudo una experiencia sorprendente-mente cómoda y fluida, se siente normal a
-               pesar de que no lo sea en nuestra cultura. Sin embargo esta muy presente en la
-               historia de la sexualidad y en nuestro cuerpo, por ejemplo: Los "gemidos sexuales"
-               son un instinto que las otras especies que también lo tienen (primates) lo usan para
-               llamar a los que están cerca, de la misma manera funcionaba originalmente en nuestra
-               especie, la sexualidad que podemos experimentar en nuestra cultura esta muy alejada
-               del tipo de sexualidad que nos pide nuestro cuerpo y su evolución. Hay grandes libros
-               de divulgación científica sobre el tema para recomendar, algunos muy conocidos como
-               los de Christopher Ryan en primer lugar o también el de Friedrich Engels: "El origen
-               de la familia, la propiedad privada y el estado".
-            </Text>
-            <EmptySpace height={15} />
-            <Text>
-               Cuando se instala la monogamia en nuestra cultura, no sucede por que esta tenga mas
-               sentido, alguna ventaja emocional, ni por ser mas profunda o duradera en las
-               relaciones afectivas o sexuales ya que no lo es, aparece por necesidades comerciales:
-               casar hijxs como contrato comercial entre familias, acumular riqueza de forma
-               personal sin compartir con la tribu, etc. La monogamia y la familia nuclear son dos
-               de los muchos fenómenos de la revolución neolítica, la misma que trajo por primera
-               vez a las clases sociales, patriarcado y otras opresiones de la humanidad.
+               hasta otrxs informáticoxs.
             </Text>
             <EmptySpace height={80} />
          </BasicScreenContainer>
