@@ -16,7 +16,7 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
    const { isActive } = useAppState();
    const [userDisplaying, setUserDisplaying] = useState(0);
    const { value: attractionsFromStorage, setValue: saveOnStorage } = useLocalStorage("_attrQueue");
-   const [usersToRender, setUsersToRender] = useState([]);
+   const [usersToRender, setUsersToRender] = useState<User[]>([]);
    const attractionsQueue = useRef<Attraction[]>([]);
    const appendMode = useRef(false);
    const [
@@ -41,6 +41,12 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
          newUsersToRender = usersFromServer;
          setUserDisplaying(0);
       }
+
+      // The server may return users that are still pending to send the attraction, these users should not be displayed
+      newUsersToRender = removeUsersFromPendingAttractions(
+         newUsersToRender,
+         attractionsQueue.current
+      );
 
       setUsersToRender(newUsersToRender);
    }, [usersFromServer]);
@@ -122,7 +128,7 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
       appendMode.current = true;
    }, []);
 
-   const showNextUser = (currentUserId: string) => {
+   const moveToNextUser = (currentUserId: string) => {
       const positionInList = usersToRender.findIndex(u => u.userId === currentUserId);
       setUserDisplaying(positionInList + 1);
    };
@@ -132,7 +138,7 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
       userDisplaying,
       attractionsQueue,
       attractionsShouldBeSentReason,
-      showNextUser,
+      moveToNextUser,
       addAttractionToQueue,
       removeFromAttractionsQueue,
       appendUsersFromServerInNextUpdate
@@ -160,14 +166,25 @@ function mergeUsersList(list1: User[], list2: User[]): User[] {
    return result;
 }
 
+function removeUsersFromPendingAttractions(usersList: User[], attractions: Attraction[]): User[] {
+   return usersList.filter(
+      user => attractions.find(attraction => attraction.userId === user.userId) == null
+   );
+}
+
 export interface UseCardsDataManager {
    usersToRender: User[];
    userDisplaying: number;
    attractionsQueue: React.MutableRefObject<Attraction[]>;
    attractionsShouldBeSentReason: AttractionsSendReason;
-   showNextUser: (currentUserId: string) => void;
+   moveToNextUser: (currentUserId: string) => void;
    addAttractionToQueue: (attraction: Attraction) => void;
    removeFromAttractionsQueue: (toRemove: Attraction[]) => void;
+   /**
+    * After calling this the next time new cards are received will be appended into the usersToRender
+    * list instead of replacing it. This is disabled after receiving more cards and need to be called
+    * again when needed.
+    */
    appendUsersFromServerInNextUpdate: () => void;
 }
 

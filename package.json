@@ -48,7 +48,7 @@
     "react-native-tab-view": "^2.15.2",
     "react-native-vector-icons": "^6.4.2",
     "react-native-web": "~0.13.7",
-    "react-query": "^3.5.1",
+    "react-query": "^3.6.0",
     "react-timer-mixin": "^0.13.4",
     "simple-validator-js": "^1.8.0",
     "ts-essentials": "^7.0.1"

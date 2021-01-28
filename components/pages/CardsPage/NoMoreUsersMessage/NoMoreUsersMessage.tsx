@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, Button } from "react-native-paper";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
@@ -12,15 +12,20 @@ import { useUser, useUserPropsMutation } from "../../../../api/server/user";
 import { useFacebookToken } from "../../../../api/third-party/facebook/facebook-login";
 import {
    CenteredMethod,
-   LoadingAnimation,
-   RenderMethod
+   LoadingAnimation
 } from "../../../common/LoadingAnimation/LoadingAnimation";
 import {
    loadFromDevice,
    saveOnDevice
 } from "../../../../common-tools/device-native-api/storage/storage";
+import { useNavigation } from "../../../../common-tools/navigation/useNavigation";
+import { CardsSource, ParamsCardsPage } from "../CardsPage";
 
-const NoMoreUsersMessage: FC = () => {
+interface PropsNoMoreUsersMessage {
+   onDislikedUsersClick: () => void;
+}
+
+const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onDislikedUsersClick }) => {
    const defaultValue = 1;
    const [sendNotificationChecked, setSendNotificationChecked] = useState(true);
    const { colors } = useTheme();
@@ -28,6 +33,7 @@ const NoMoreUsersMessage: FC = () => {
    const { data: user, isLoading: userLoading } = useUser();
    const { mutate: mutateUser } = useUserPropsMutation(null, { autoInvalidateQueries: false });
    const [sendNewUsersNotification, setSendNewUsersNotification] = useState<number>(null);
+   const { navigate } = useNavigation();
 
    // Effect to mutate the server when the UI changes
    useEffect(() => {
@@ -98,7 +104,7 @@ const NoMoreUsersMessage: FC = () => {
             <Text style={styles.text}>
                Si te sirve podes repasar a lxs usuarixs que dejaste de lado:
             </Text>
-            <Button mode="text" onPress={() => console.log("press")}>
+            <Button mode="text" onPress={onDislikedUsersClick}>
                Repasar usuarixs
             </Button>
          </View>
