@@ -29,7 +29,7 @@ const CardsPage: FC = () => {
    const { data: recommendations } = useCardsRecommendations(null, {
       enabled: cardsSource === CardsSource.Recommendations
    });
-   const { data: dislikedUsers, refetch } = useCardsDisliked(null, {
+   const { data: dislikedUsers } = useCardsDisliked(null, {
       enabled: cardsSource === CardsSource.DislikedUsers
    });
    const usersFromServer =
