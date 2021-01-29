@@ -98,19 +98,6 @@ const CardsPage: FC = () => {
                   // This requests new users by invalidating the cache:
                   queryClient.invalidateQueries("cards-game/recommendations");
                   queryClient.invalidateQueries("cards-game/disliked-users");
-
-                  /**
-                   * This is a workaround for this react-query bug:
-                   * https://github.com/tannerlinsley/react-query/issues/1657
-                   * When the bug is fixed remove this code below:
-                   */
-                  if (cardsSource === CardsSource.DislikedUsers) {
-                     refetch().then(users => {
-                        if (users.data === usersFromServer) {
-                           refetch();
-                        }
-                     });
-                  }
                }
             }
          }

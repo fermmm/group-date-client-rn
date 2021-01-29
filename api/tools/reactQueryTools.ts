@@ -9,7 +9,8 @@ import { AxiosRequestConfigExtended, httpRequest, tryToGetErrorMessage } from ".
 export const queryClient = new QueryClient({
    defaultOptions: {
       queries: {
-         staleTime: Infinity
+         staleTime: Infinity,
+         structuralSharing: false
       },
       mutations: {}
    }
