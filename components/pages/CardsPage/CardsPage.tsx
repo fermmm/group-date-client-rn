@@ -22,6 +22,7 @@ export interface ParamsCardsPage {
    themeId?: string;
 }
 
+// TODO: Poner un mensaje cuando apretas en ver usuarios disliked y no hay
 const CardsPage: FC = () => {
    const { token } = useFacebookToken();
    const { params } = useRoute<RouteProps<ParamsCardsPage>>();
@@ -104,12 +105,19 @@ const CardsPage: FC = () => {
       );
    }, [manager.attractionsShouldBeSentReason]);
 
-   const handleLikeOrDislikeTouch = (attractionType: AttractionType, userId: string) => {
+   const handleLikeOrDislikePress = (attractionType: AttractionType, userId: string) => {
       manager.addAttractionToQueue({ userId, attractionType });
       manager.moveToNextUser(userId);
    };
 
-   const handleDislikedUsersTouch = useCallback(() => {
+   const handleUndoPress = (userId: string) => {
+      const positionInList = manager.usersToRender.findIndex(u => u.userId === userId);
+      const previousUserId: string = manager.usersToRender[positionInList - 1].userId;
+      manager.removeFromAttractionsQueue([{ userId: previousUserId }]);
+      manager.goBackToPreviousUser(userId);
+   };
+
+   const handleViewDislikedUsersPress = useCallback(() => {
       setCardsSource(CardsSource.DislikedUsers);
    }, []);
 
@@ -124,20 +132,21 @@ const CardsPage: FC = () => {
    return (
       <View style={styles.mainContainer}>
          {noMoreUsersLeft ? (
-            <NoMoreUsersMessage onDislikedUsersClick={handleDislikedUsersTouch} />
+            <NoMoreUsersMessage onViewDislikedUsersPress={handleViewDislikedUsersPress} />
          ) : (
             <>
                <LimitedChildrenRenderer childrenToDisplay={manager.userDisplaying}>
-                  {manager.usersToRender.map(user => (
+                  {manager.usersToRender.map((user, i) => (
                      <ProfileCard
                         showLikeDislikeButtons
                         user={user}
-                        onLikeClick={() =>
-                           handleLikeOrDislikeTouch(AttractionType.Like, user.userId)
+                        onLikePress={() =>
+                           handleLikeOrDislikePress(AttractionType.Like, user.userId)
                         }
-                        onDislikeClick={() =>
-                           handleLikeOrDislikeTouch(AttractionType.Dislike, user.userId)
+                        onDislikePress={() =>
+                           handleLikeOrDislikePress(AttractionType.Dislike, user.userId)
                         }
+                        onUndoPress={i > 0 ? () => handleUndoPress(user.userId) : null}
                         key={user.userId}
                      />
                   ))}

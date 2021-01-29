@@ -116,7 +116,7 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
       saveOnStorage(JSON.stringify(attractionsQueue.current));
    }, []);
 
-   const removeFromAttractionsQueue = useCallback((toRemove: Attraction[]) => {
+   const removeFromAttractionsQueue = useCallback((toRemove: Array<{ userId: string }>) => {
       attractionsQueue.current = attractionsQueue.current.filter(
          el => toRemove.find(tr => tr.userId === el.userId) == null
       );
@@ -133,12 +133,18 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
       setUserDisplaying(positionInList + 1);
    };
 
+   const goBackToPreviousUser = (currentUserId: string) => {
+      const positionInList = usersToRender.findIndex(u => u.userId === currentUserId);
+      setUserDisplaying(positionInList - 1);
+   };
+
    return {
       usersToRender,
       userDisplaying,
       attractionsQueue,
       attractionsShouldBeSentReason,
       moveToNextUser,
+      goBackToPreviousUser,
       addAttractionToQueue,
       removeFromAttractionsQueue,
       appendUsersFromServerInNextUpdate
@@ -178,8 +184,9 @@ export interface UseCardsDataManager {
    attractionsQueue: React.MutableRefObject<Attraction[]>;
    attractionsShouldBeSentReason: AttractionsSendReason;
    moveToNextUser: (currentUserId: string) => void;
+   goBackToPreviousUser: (currentUserId: string) => void;
    addAttractionToQueue: (attraction: Attraction) => void;
-   removeFromAttractionsQueue: (toRemove: Attraction[]) => void;
+   removeFromAttractionsQueue: (toRemove: Array<{ userId: string }>) => void;
    /**
     * After calling this the next time new cards are received will be appended into the usersToRender
     * list instead of replacing it. This is disabled after receiving more cards and need to be called

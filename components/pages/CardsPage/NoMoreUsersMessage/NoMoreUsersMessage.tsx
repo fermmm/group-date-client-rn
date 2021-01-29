@@ -19,20 +19,19 @@ import {
    saveOnDevice
 } from "../../../../common-tools/device-native-api/storage/storage";
 import { useNavigation } from "../../../../common-tools/navigation/useNavigation";
-import { CardsSource, ParamsCardsPage } from "../CardsPage";
 
 interface PropsNoMoreUsersMessage {
-   onDislikedUsersClick: () => void;
+   onViewDislikedUsersPress: () => void;
 }
 
-const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onDislikedUsersClick }) => {
+const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPress }) => {
    const defaultValue = 1;
    const [sendNotificationChecked, setSendNotificationChecked] = useState(true);
+   const [sendNewUsersNotification, setSendNewUsersNotification] = useState<number>(null);
    const { colors } = useTheme();
    const { token } = useFacebookToken();
    const { data: user, isLoading: userLoading } = useUser();
    const { mutate: mutateUser } = useUserPropsMutation(null, { autoInvalidateQueries: false });
-   const [sendNewUsersNotification, setSendNewUsersNotification] = useState<number>(null);
    const { navigate } = useNavigation();
 
    // Effect to mutate the server when the UI changes
@@ -104,7 +103,7 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onDislikedUsersClick 
             <Text style={styles.text}>
                Si te sirve podes repasar a lxs usuarixs que dejaste de lado:
             </Text>
-            <Button mode="text" onPress={onDislikedUsersClick}>
+            <Button mode="text" onPress={onViewDislikedUsersPress}>
                Repasar usuarixs
             </Button>
          </View>

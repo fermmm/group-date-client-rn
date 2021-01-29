@@ -19,40 +19,45 @@ const LimitedChildrenRenderer: FC<LimitedChildrenRendererProps> = props => {
    const [childA, setChildA] = useState<ReactNode>(null);
    const [childB, setChildB] = useState<ReactNode>(null);
    const [childAtFront, setChildAtFront] = useState<ReactNode>(null);
+   const childrenToDisplayLastValue = useRef<number>(null);
    const childrenAsArray: ReactElement[] = React.Children.toArray(props.children) as ReactElement[];
    const initialized = useRef(false);
 
-   useEffect(() => {
-      if (initialized.current || childrenAsArray == null || childrenAsArray.length === 0) {
+   const reset = () => {
+      if (childrenAsArray == null || childrenAsArray.length === 0) {
          return;
       }
-
+      setChildB(childrenAsArray[props.childrenToDisplay]);
+      setChildAtFront(childrenAsArray[props.childrenToDisplay]);
       const nextChildren: React.ReactNode =
          props.childrenToDisplay + 1 < childrenAsArray.length
             ? childrenAsArray[props.childrenToDisplay + 1]
             : null;
       setChildA(nextChildren);
-      setChildB(childrenAsArray[props.childrenToDisplay]);
-      setChildAtFront(childrenAsArray[props.childrenToDisplay]);
+   };
+
+   useEffect(() => {
+      if (initialized.current) {
+         return;
+      }
+
+      reset();
+
+      childrenToDisplayLastValue.current = props.childrenToDisplay;
       initialized.current = true;
    }, [childrenAsArray.length]);
 
    useEffectExceptOnMount(() => {
-      showNextChildAndPreloadFollowing();
+      // If the change is the next element we can do the swipe trick
+      if (props.childrenToDisplay - 1 === childrenToDisplayLastValue.current) {
+         showNextChildAndPreloadFollowing();
+      } else {
+         // Otherwise there is no trick we reset the swipe
+         reset();
+      }
+
+      childrenToDisplayLastValue.current = props.childrenToDisplay;
    }, [props.childrenToDisplay]);
-
-   // TODO: Esto hay que ver como se resuelve cuando llegue el momento pero asi bugea
-   // useEffectExceptOnMount(() => {
-   //    if (!initialized.current) {   // esto no esta evitando que se ejecute al inicio
-   //       return;
-   //    }
-
-   //    // If we are in the last position without any next child and then children are added we need to refresh:
-   //    if (childA == null || childB == null) {
-   //       console.log("se ejecuta al inicio y no deberia");
-   //       showNextChildAndPreloadFollowing();
-   //    }
-   // }, [childrenAsArray.length]);
 
    const showNextChildAndPreloadFollowing = () => {
       const nextChildren: React.ReactNode =

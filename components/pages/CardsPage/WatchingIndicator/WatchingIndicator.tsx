@@ -29,7 +29,7 @@ const styles: Styles = StyleSheet.create({
       alignItems: "center",
       zIndex: 20,
       backgroundColor: color(currentTheme.colors.accent).alpha(0.7).string(),
-      alignSelf: "flex-start",
+      alignSelf: "flex-end",
       marginTop: 15,
       marginLeft: 10,
       marginRight: 10,

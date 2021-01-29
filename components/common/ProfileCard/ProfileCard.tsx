@@ -38,15 +38,17 @@ export interface ProfileCardProps {
    showLikeDislikeButtons?: boolean;
    editMode?: boolean;
    statusBarPadding?: boolean;
-   onLikeClick?: () => void;
-   onDislikeClick?: () => void;
+   onLikePress?: () => void;
+   onDislikePress?: () => void;
+   onUndoPress?: () => void;
 }
 
 const ProfileCard: FC<ProfileCardProps> = props => {
    const {
       showLikeDislikeButtons,
-      onLikeClick,
-      onDislikeClick,
+      onLikePress,
+      onDislikePress,
+      onUndoPress,
       statusBarPadding,
       editMode
    }: Partial<ProfileCardProps> = props;
@@ -88,12 +90,12 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    const finalImagesUri = images.map(uri => prepareUrl(serverInfo.imagesHost + uri));
 
    const handleLikeClick = () => {
-      setOnAnimationFinish({ func: onLikeClick });
+      setOnAnimationFinish({ func: onLikePress });
       setAnimate(CardAnimationType.Like);
    };
 
    const handleDislikeClick = () => {
-      setOnAnimationFinish({ func: onDislikeClick });
+      setOnAnimationFinish({ func: onDislikePress });
       setAnimate(CardAnimationType.Dislike);
    };
 
@@ -220,8 +222,9 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                   {showLikeDislikeButtons && (
                      <LikeDislikeButtons
                         style={styles.likeDislikeButtons}
-                        onLikeClick={handleLikeClick}
-                        onDislikeClick={handleDislikeClick}
+                        onLikePress={handleLikeClick}
+                        onDislikePress={handleDislikeClick}
+                        onUndoPress={onUndoPress}
                      />
                   )}
                </View>
@@ -245,7 +248,7 @@ const styles: Styles = StyleSheet.create({
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      paddingBottom: 47 // The bottom padding under the like-dislike buttons (only applied when buttons are present).
+      paddingBottom: 0 // The bottom padding under the like-dislike buttons (only applied when buttons are present).
    },
    scrollView: {
       flexGrow: 0
@@ -303,7 +306,7 @@ const styles: Styles = StyleSheet.create({
    },
    likeDislikeButtons: {
       alignSelf: "center", // This controls the horizontal position of the buttons.
-      bottom: -28 // This controls the vertical position of the buttons.
+      bottom: 17 // This controls the vertical position of the buttons.
    }
 });
 
