@@ -30,7 +30,7 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
    const [sendNewUsersNotification, setSendNewUsersNotification] = useState<number>(null);
    const { colors } = useTheme();
    const { token } = useFacebookToken();
-   const { data: user, isLoading: userLoading } = useUser();
+   const { data: user } = useUser();
    const { mutate: mutateUser } = useUserPropsMutation(null, { autoInvalidateQueries: false });
    const { navigate } = useNavigation();
 
@@ -75,7 +75,7 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
       setSendNewUsersNotification(user.sendNewUsersNotification);
    }, [user]);
 
-   if (userLoading) {
+   if (!user) {
       return <LoadingAnimation centeredMethod={CenteredMethod.Absolute} />;
    }
 
@@ -101,7 +101,7 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
             />
             <EmptySpace />
             <Text style={styles.text}>
-               Si te sirve podes repasar a lxs usuarixs que dejaste de lado:
+               Si te sirve puedes repasar a lxs usuarixs que dejaste de lado:
             </Text>
             <Button mode="text" onPress={onViewDislikedUsersPress}>
                Repasar usuarixs
