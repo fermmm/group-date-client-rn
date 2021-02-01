@@ -1,12 +1,6 @@
-import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "react-query";
+import { revalidate, useCache, UseCacheOptions } from "./../tools/useCache";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
-import {
-   defaultErrorHandler,
-   defaultOptionsForMutations,
-   defaultHttpRequest,
-   MutationExtraOptions,
-   RequestError
-} from "../tools/reactQueryTools";
+import { defaultHttpRequest } from "../tools/httpRequest";
 import {
    BasicThemeParams,
    Theme,
@@ -14,40 +8,38 @@ import {
    ThemesAsQuestion
 } from "./shared-tools/endpoints-interfaces/themes";
 
-export function useThemes<T extends Theme[]>(
-   requestParams?: ThemeGetParams,
-   options?: UseQueryOptions<T>
-) {
-   const { token } = useFacebookToken(requestParams?.token);
+export function useThemes<T extends Theme[]>(props?: {
+   requestParams?: ThemeGetParams;
+   config?: UseCacheOptions<T>;
+}) {
+   const { token } = useFacebookToken(props?.requestParams?.token);
 
-   const query = useQuery<T>("themes", () => defaultHttpRequest("themes", "GET", { token }), {
-      ...options,
-      ...(!token ? { enabled: false } : {})
-   });
-
-   return defaultErrorHandler(query);
+   return useCache<T>(
+      "themes",
+      () => defaultHttpRequest("themes", "GET", { ...(props?.requestParams ?? {}), token }),
+      {
+         ...(props?.config ?? {}),
+         enabled: token != null && props?.config?.enabled !== false
+      }
+   );
 }
 
-export function useThemesAsQuestions<T extends ThemesAsQuestion[]>(options?: UseQueryOptions<T>) {
-   const query = useQuery<T>(
+export function useThemesAsQuestions<T extends ThemesAsQuestion[]>(props?: {
+   config?: UseCacheOptions<T>;
+}) {
+   return useCache<T>(
       "themes/questions",
       () => defaultHttpRequest("themes/questions", "GET"),
-      options
+      props?.config
    );
-
-   return defaultErrorHandler(query);
 }
 
-export function useThemesMutation<T extends ThemeParams, R = void>(
-   options: UseMutationOptions<R, RequestError, T> = {},
-   extraOptions?: MutationExtraOptions
-) {
-   let newOptions = defaultOptionsForMutations({
-      queriesToInvalidate: ["user"],
-      extraOptions,
-      options
-   });
-   return useMutation(data => defaultHttpRequest(data.action, "POST", data), newOptions);
+export async function sendThemes(params: ThemeParams, autoRevalidateRelated: boolean = true) {
+   const resp = await defaultHttpRequest(params.action, "POST", params);
+   if (autoRevalidateRelated) {
+      revalidate("user");
+   }
+   return resp;
 }
 
 export interface ThemeParams extends BasicThemeParams {

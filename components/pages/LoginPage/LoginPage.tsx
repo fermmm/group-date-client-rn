@@ -39,10 +39,9 @@ const LoginPage: FC = () => {
    });
 
    // If we have the user token we check if there is any user property missing (unfinished registration or not registered)
-   const { data: profileStatusData, isLoading: profileStatusLoading } = useServerProfileStatus(
-      { token },
-      { enabled: tokenIsValid }
-   );
+   const { data: profileStatusData } = useServerProfileStatus({
+      config: { enabled: tokenIsValid != null }
+   });
 
    // If the user has unfinished registration redirect to RegistrationForms otherwise redirect to Main
    useEffect(() => {
@@ -73,7 +72,7 @@ const LoginPage: FC = () => {
 
    const showLoadingAnimation: boolean =
       logoAnimCompleted &&
-      (tokenLoading || tokenCheckLoading || serverInfoLoading || profileStatusLoading);
+      (tokenLoading || tokenCheckLoading || serverInfoLoading || !profileStatusData);
 
    return (
       <Background useImageBackground={true}>

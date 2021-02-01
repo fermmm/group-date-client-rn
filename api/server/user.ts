@@ -1,16 +1,8 @@
+import { revalidate, useCache, UseCacheOptions } from "./../tools/useCache";
 import i18n from "i18n-js";
-import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "react-query";
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
-import {
-   defaultHttpRequest,
-   defaultErrorHandler,
-   RequestError,
-   MutationExtraOptions,
-   defaultOptionsForMutations,
-   getServerUrl
-} from "../tools/reactQueryTools";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import {
    FileUploadResponse,
@@ -24,70 +16,53 @@ import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
 import { Alert } from "react-native";
 import { userQueries } from "./common/queryIds";
+import { defaultHttpRequest, getServerUrl } from "../tools/httpRequest";
 
-export function useServerProfileStatus<T extends ProfileStatusServerResponse>(
-   requestParams?: TokenParameter,
-   options?: UseQueryOptions<T>
-) {
-   const { token } = useFacebookToken(requestParams?.token);
+export function useServerProfileStatus<T extends ProfileStatusServerResponse>(props?: {
+   requestParams?: TokenParameter;
+   config?: UseCacheOptions<T>;
+}) {
+   const { token } = useFacebookToken(props?.requestParams?.token);
 
-   const query = useQuery<T>(
+   return useCache<T>(
       "user/profile-status",
       () => defaultHttpRequest("user/profile-status", "GET", { token }),
-      {
-         ...options,
-         ...(!token ? { enabled: false } : {})
-      }
+      { ...(props?.config ?? {}), enabled: token != null && props?.config?.enabled !== false }
    );
-
-   return defaultErrorHandler(query);
 }
 
-export function useUser<T extends User>(
-   requestParams?: TokenParameter,
-   options?: UseQueryOptions<T>
-) {
-   const { token } = useFacebookToken(requestParams?.token);
+export function useUser<T extends User>(props?: {
+   requestParams?: TokenParameter;
+   config?: UseCacheOptions<T>;
+}) {
+   const { token } = useFacebookToken(props?.requestParams?.token);
 
-   const query = useQuery<T>("user", () => defaultHttpRequest("user", "GET", { token }), {
-      ...options,
-      ...(!token ? { enabled: false } : {})
+   return useCache<T>("user", () => defaultHttpRequest("user", "GET", { token }), {
+      ...(props?.config ?? {}),
+      enabled: token != null && props?.config?.enabled !== false
    });
-
-   return defaultErrorHandler(query);
 }
 
-export function usePropsAsQuestions<T = UserPropAsQuestion[]>(options?: UseQueryOptions<T>) {
-   const query = useQuery<T>(
+export function usePropsAsQuestions<T = UserPropAsQuestion[]>(props?: {
+   config?: UseCacheOptions<T>;
+}) {
+   return useCache<T>(
       "user/props-as-questions",
       () => defaultHttpRequest("user/props-as-questions", "GET"),
-      options
+      props?.config
    );
-
-   return defaultErrorHandler(query);
 }
 
-export function useUserPropsMutation<T extends UserPostParams, R = void>(
-   options: UseMutationOptions<R, RequestError, T> = {},
-   extraOptions?: MutationExtraOptions
-) {
-   let newOptions = defaultOptionsForMutations({
-      queriesToInvalidate: userQueries,
-      extraOptions,
-      options
-   });
-   return useMutation(data => defaultHttpRequest("user", "POST", data), newOptions);
+export async function sendUserProps(params: UserPostParams, autoRevalidateRelated: boolean = true) {
+   const resp = await defaultHttpRequest("user", "POST", params);
+   if (autoRevalidateRelated) {
+      revalidate(userQueries);
+   }
+   return resp;
 }
 
-export function useAttractionMutation<T extends SetAttractionParams, R = void>(
-   options: UseMutationOptions<R, RequestError, T> = {},
-   extraOptions?: MutationExtraOptions
-) {
-   let newOptions = defaultOptionsForMutations({
-      extraOptions,
-      options
-   });
-   return useMutation(data => defaultHttpRequest("user/set-attraction", "POST", data), newOptions);
+export async function sendAttraction(params: SetAttractionParams) {
+   return await defaultHttpRequest("user/set-attraction", "POST", params);
 }
 
 export async function uploadImage(

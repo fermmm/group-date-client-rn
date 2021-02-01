@@ -1,17 +1,18 @@
 import { ServerInfoResponse } from "./shared-tools/endpoints-interfaces/server-info";
-import { useQuery, UseQueryOptions } from "react-query";
 import Constants from "expo-constants";
-import { defaultHttpRequest, defaultErrorHandler } from "../tools/reactQueryTools";
+import { defaultHttpRequest } from "../tools/httpRequest";
+import { useCache, UseCacheOptions } from "../tools/useCache";
 
 /**
  * This request sends the version of the client to the server and gets information about possible updates
  * needed in the client, service status and other important information.
  */
-export function useServerInfo<T = ServerInfoResponse>(options?: UseQueryOptions<T>) {
-   const response = useQuery<T>(
+export function useServerInfo<T extends ServerInfoResponse>(props?: {
+   config?: UseCacheOptions<T>;
+}) {
+   return useCache<T>(
       "server-info",
       () => defaultHttpRequest("server-info", "GET", { version: Constants.manifest.version }),
-      options
+      props?.config
    );
-   return defaultErrorHandler(response);
 }

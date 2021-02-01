@@ -1,5 +1,4 @@
-import { useQuery } from "react-query";
-import { useRef, useState } from "react";
+import { useCache } from "./../../../api/tools/useCache";
 import * as Location from "expo-location";
 import {
    showLocationDisabledDialog,
@@ -19,7 +18,7 @@ import { usePermission } from "../permissions/askForPermissions";
 export function useGeolocation(settings?: GetGeolocationParams) {
    const permissionGranted = usePermission(Permissions.LOCATION);
    const enabled = settings?.enabled !== false && permissionGranted;
-   const { data: geolocation, isLoading } = useQuery(
+   const { data: geolocation, isLoading } = useCache(
       "_geolocation_",
       () => getGeolocation(settings),
       { enabled }

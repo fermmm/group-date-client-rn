@@ -49,8 +49,10 @@ export const useRequiredFormList = (
    };
 
    const [formsRequired, setFormsRequired] = useState<string[]>([]);
-   const { data: allPropsAsQuestions, isLoading: propsAsQuestionsLoading } = usePropsAsQuestions({
-      enabled: requirementSource.fromParams == null
+   const { data: allPropsAsQuestions, isLoading } = usePropsAsQuestions({
+      config: {
+         enabled: requirementSource.fromParams == null
+      }
    });
    const [unknownPropsQuestions, setUnknownPropsQuestions] = useState<string[]>([]);
    const [themesAsQuestionsToShow, setThemesAsQuestionsToShow] = useState<string[]>([]);
@@ -59,7 +61,7 @@ export const useRequiredFormList = (
       if (
          requirementSource.fromParams != null ||
          requirementSource.fromProfileStatus == null ||
-         allPropsAsQuestions == null
+         !allPropsAsQuestions
       ) {
          return;
       }
@@ -113,7 +115,7 @@ export const useRequiredFormList = (
    }, [requirementSource.fromProfileStatus, allPropsAsQuestions]);
 
    return {
-      isLoading: propsAsQuestionsLoading,
+      isLoading,
       formsRequired:
          requirementSource.fromParams != null
             ? requirementSource.fromParams?.formsToShow

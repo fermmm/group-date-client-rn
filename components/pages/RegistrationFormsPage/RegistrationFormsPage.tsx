@@ -6,7 +6,7 @@ import Dialog from "../../common/Dialog/Dialog";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
-import { useServerProfileStatus, useUserPropsMutation } from "../../../api/server/user";
+import { sendUserProps, useServerProfileStatus } from "../../../api/server/user";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import {
@@ -20,12 +20,12 @@ import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
 import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
 import { useUnifiedThemesToUpdate } from "./hooks/useUnifiedThemesToUpdate";
-import { ThemeEditAction, useThemesMutation } from "../../../api/server/themes";
+import { sendThemes, ThemeEditAction } from "../../../api/server/themes";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { BackHandler } from "react-native";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
-import { queryClient } from "../../../api/tools/reactQueryTools";
+import { revalidate } from "../../../api/tools/useCache";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -50,9 +50,7 @@ const RegistrationFormsPage: FC = () => {
    const { unifiedThemesToUpdate, questionsShowed } = useUnifiedThemesToUpdate(
       themesToUpdate.current
    );
-   const { data: profileStatus, isLoading: profileStatusLoading } = useServerProfileStatus();
-   const { mutateAsync: mutateUser, isLoading: userMutationLoading } = useUserPropsMutation();
-   const { mutateAsync: mutateThemes, isLoading: themesMutationLoading } = useThemesMutation();
+   const { data: profileStatus } = useServerProfileStatus();
    const {
       isLoading: requiredFormListLoading,
       formsRequired,
@@ -165,7 +163,7 @@ const RegistrationFormsPage: FC = () => {
       if (unifiedThemesToUpdate?.themesToSubscribe?.length > 0) {
          setSendingToServer(true);
          themesWereChanged = true;
-         await mutateThemes({
+         await sendThemes({
             action: ThemeEditAction.Subscribe,
             themeIds: unifiedThemesToUpdate.themesToSubscribe,
             token
@@ -174,7 +172,7 @@ const RegistrationFormsPage: FC = () => {
       if (unifiedThemesToUpdate?.themesToBlock?.length > 0) {
          setSendingToServer(true);
          themesWereChanged = true;
-         await mutateThemes({
+         await sendThemes({
             action: ThemeEditAction.Block,
             themeIds: unifiedThemesToUpdate.themesToBlock,
             token
@@ -183,7 +181,7 @@ const RegistrationFormsPage: FC = () => {
       if (unifiedThemesToUpdate?.themesToUnsubscribe?.length > 0) {
          setSendingToServer(true);
          themesWereChanged = true;
-         await mutateThemes({
+         await sendThemes({
             action: ThemeEditAction.RemoveSubscription,
             themeIds: unifiedThemesToUpdate.themesToUnsubscribe,
             token
@@ -193,16 +191,17 @@ const RegistrationFormsPage: FC = () => {
       if (unifiedThemesToUpdate?.themesToUnblock?.length > 0) {
          setSendingToServer(true);
          themesWereChanged = true;
-         await mutateThemes({
+         await sendThemes({
             action: ThemeEditAction.RemoveBlock,
             themeIds: unifiedThemesToUpdate.themesToUnblock,
             token
          });
       }
+
       // We send user props last because it contains questionsShowed prop, which means that the themes were sent
       if (Object.keys(propsToSend).length > 0) {
          setSendingToServer(true);
-         await mutateUser({ token, props: propsToSend });
+         await sendUserProps({ token, props: propsToSend });
       }
 
       /**
@@ -225,7 +224,7 @@ const RegistrationFormsPage: FC = () => {
          recommendationsRelatedKeys.includes(key)
       );
       if (recommendationsRelatedChanges.length > 0 || themesWereChanged) {
-         queryClient.invalidateQueries("cards-game/recommendations");
+         revalidate("cards-game/recommendations");
       }
    };
 
@@ -286,13 +285,7 @@ const RegistrationFormsPage: FC = () => {
    };
 
    const isLoading: boolean =
-      profileStatus == null ||
-      formsRequired?.length === 0 ||
-      profileStatusLoading ||
-      requiredFormListLoading ||
-      userMutationLoading ||
-      themesMutationLoading ||
-      sendingToServer;
+      !profileStatus || formsRequired?.length === 0 || requiredFormListLoading || sendingToServer;
 
    return (
       <>

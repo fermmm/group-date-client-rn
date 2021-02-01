@@ -1,7 +1,5 @@
 import * as Localization from "expo-localization";
 import i18n from "i18n-js";
-import { QueryClientProvider } from "react-query";
-import { queryClient } from "./api/tools/reactQueryTools";
 import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
@@ -20,6 +18,7 @@ import AboutPage from "./components/pages/AboutPage/AboutPage";
 import { en } from "./texts/en/en";
 import { es } from "./texts/es/es";
 import AdminPage from "./components/pages/AdminPage/AdminPage";
+import { CacheConfigProvider } from "./api/tools/useCache";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -64,7 +63,7 @@ export default class App extends Component<{}, PageBasicWrapperState> {
       }
 
       return (
-         <QueryClientProvider client={queryClient}>
+         <CacheConfigProvider>
             <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
                <NavigationContainer theme={TestTheme}>
                   <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
@@ -80,7 +79,7 @@ export default class App extends Component<{}, PageBasicWrapperState> {
                   </Stack.Navigator>
                </NavigationContainer>
             </PaperProvider>
-         </QueryClientProvider>
+         </CacheConfigProvider>
       );
    }
 }

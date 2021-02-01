@@ -24,7 +24,6 @@ import { useThemes } from "../../../api/server/themes";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { fromBirthDateToAge } from "../../../api/tools/date-tools";
 import { LoadingAnimation, RenderMethod } from "../LoadingAnimation/LoadingAnimation";
-import { prepareUrl } from "../../../api/tools/reactQueryTools";
 import { useServerInfo } from "../../../api/server/server-info";
 import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { currentTheme } from "../../../config";
@@ -32,6 +31,7 @@ import { ParamsRegistrationFormsPage } from "../../pages/RegistrationFormsPage/R
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import CardAnimator, { CardAnimationType } from "./CardAnimator/CardAnimator";
 import { getGenderName } from "../../../common-tools/strings/gender";
+import { prepareUrl } from "../../../api/tools/httpRequest";
 
 export interface ProfileCardProps {
    user: User;
@@ -73,7 +73,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    const [animate, setAnimate] = useState<CardAnimationType>(null);
    const [onAnimationFinish, setOnAnimationFinish] = useState<{ func: () => void }>(null);
    const { colors } = useTheme();
-   const { data: localUser, isLoading: localUserLoading } = useUser();
+   const { data: localUser } = useUser();
    const { data: allThemes, isLoading: themesLoading } = useThemes();
    const { data: serverInfo, isLoading: serverInfoLoading } = useServerInfo();
 
@@ -99,7 +99,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       setAnimate(CardAnimationType.Dislike);
    };
 
-   if (localUserLoading || themesLoading || serverInfoLoading) {
+   if (!localUser || themesLoading || serverInfoLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 

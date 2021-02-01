@@ -9,29 +9,33 @@ import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/Lo
 import { currentTheme } from "../../../config";
 import { __String } from "typescript";
 import { AttractionsSendReason, useCardsDataManager } from "./hooks/useCardsDataManager";
-import { useAttractionMutation } from "../../../api/server/user";
-import { queryClient } from "../../../api/tools/reactQueryTools";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { AttractionType } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useRoute } from "@react-navigation/native";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import WatchingIndicator from "./WatchingIndicator/WatchingIndicator";
+import { sendAttraction } from "../../../api/server/user";
+import { revalidate } from "../../../api/tools/useCache";
 
 export interface ParamsCardsPage {
    specialCardsSource?: CardsSource;
    themeId?: string;
 }
 
-// TODO: Poner un mensaje cuando apretas en ver usuarios disliked y no hay
+// TODO: Poner un mensaje cuando aprietas en ver usuarios disliked y no hay
 const CardsPage: FC = () => {
    const { token } = useFacebookToken();
    const { params } = useRoute<RouteProps<ParamsCardsPage>>();
    const [cardsSource, setCardsSource] = useState<CardsSource>(CardsSource.Recommendations);
-   const { data: recommendations } = useCardsRecommendations(null, {
-      enabled: cardsSource === CardsSource.Recommendations
+   const { data: recommendations } = useCardsRecommendations({
+      config: {
+         enabled: cardsSource === CardsSource.Recommendations
+      }
    });
-   const { data: dislikedUsers } = useCardsDisliked(null, {
-      enabled: cardsSource === CardsSource.DislikedUsers
+   const { data: dislikedUsers } = useCardsDisliked({
+      config: {
+         enabled: cardsSource === CardsSource.DislikedUsers
+      }
    });
    const usersFromServer =
       cardsSource === CardsSource.Recommendations
@@ -40,7 +44,6 @@ const CardsPage: FC = () => {
          ? dislikedUsers
          : recommendations;
    const manager = useCardsDataManager(usersFromServer);
-   const { mutate: sendAttractionsToServer } = useAttractionMutation();
 
    const noMoreUsersLeft =
       manager.userDisplaying >= manager.usersToRender.length && usersFromServer?.length === 0;
@@ -50,59 +53,57 @@ const CardsPage: FC = () => {
       (manager.userDisplaying >= manager.usersToRender.length && !noMoreUsersLeft);
 
    // This effect sends the attractions to the server if it's required
-   useEffect(() => {
-      const reason = manager.attractionsShouldBeSentReason;
+   React.useEffect(() => {
+      (async () => {
+         const reason = manager.attractionsShouldBeSentReason;
 
-      if (reason === AttractionsSendReason.None) {
-         return;
-      }
-
-      if (
-         manager.attractionsQueue.current == null ||
-         manager.attractionsQueue.current.length === 0
-      ) {
-         return;
-      }
-
-      const attractions = [...manager.attractionsQueue.current];
-      sendAttractionsToServer(
-         { attractions, token },
-         {
-            onSuccess: () => {
-               manager.removeFromAttractionsQueue(attractions);
-               if (
-                  reason === AttractionsSendReason.NoMoreUsersButServerMayHave ||
-                  reason === AttractionsSendReason.NearlyRunningOutOfUsers
-               ) {
-                  // Load more while reviewing the users is not possible with disliked users list because contains repetitions
-                  if (
-                     cardsSource === CardsSource.DislikedUsers &&
-                     reason === AttractionsSendReason.NearlyRunningOutOfUsers
-                  ) {
-                     return;
-                  }
-
-                  // If last time the server returned no users then there is no need to request again
-                  if (usersFromServer?.length === 0) {
-                     return;
-                  }
-
-                  /**
-                   * It's required to add the new cards to the end of the list, and not replace the list,
-                   * because when new cards arrive the user is probably still finishing the previous ones.
-                   * Disliked users list contains repetitions so in that case we always replace the current list.
-                   */
-                  if (cardsSource !== CardsSource.DislikedUsers) {
-                     manager.appendUsersFromServerInNextUpdate();
-                  }
-
-                  // This requests new users by invalidating the cache:
-                  queryClient.invalidateQueries("cards-game/recommendations");
-                  queryClient.invalidateQueries("cards-game/disliked-users");
-               }
-            }
+         if (reason === AttractionsSendReason.None) {
+            return;
          }
-      );
+
+         if (
+            manager.attractionsQueue.current == null ||
+            manager.attractionsQueue.current.length === 0
+         ) {
+            return;
+         }
+
+         const attractions = [...manager.attractionsQueue.current];
+
+         await sendAttraction({ attractions, token });
+
+         manager.removeFromAttractionsQueue(attractions);
+
+         if (
+            reason === AttractionsSendReason.NoMoreUsersButServerMayHave ||
+            reason === AttractionsSendReason.NearlyRunningOutOfUsers
+         ) {
+            // Load more while reviewing the users is not possible with disliked users list because contains repetitions
+            if (
+               cardsSource === CardsSource.DislikedUsers &&
+               reason === AttractionsSendReason.NearlyRunningOutOfUsers
+            ) {
+               return;
+            }
+
+            // If last time the server returned no users then there is no need to request again
+            if (usersFromServer?.length === 0) {
+               return;
+            }
+
+            /**
+             * It's required to add the new cards to the end of the list, and not replace the list,
+             * because when new cards arrive the user is probably still finishing the previous ones.
+             * Disliked users list contains repetitions so in that case we always replace the current list.
+             */
+            if (cardsSource !== CardsSource.DislikedUsers) {
+               manager.appendUsersFromServerInNextUpdate();
+            }
+
+            // This triggers the request of new users by invalidating the cache:
+            revalidate(["cards-game/recommendations", "cards-game/disliked-users"]);
+         }
+      })();
    }, [manager.attractionsShouldBeSentReason]);
 
    const handleLikeOrDislikePress = (attractionType: AttractionType, userId: string) => {

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, Button } from "react-native-paper";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
@@ -8,7 +8,7 @@ import { currentTheme } from "../../../../config";
 import { LinearGradient } from "expo-linear-gradient";
 import color from "color";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
-import { useUser, useUserPropsMutation } from "../../../../api/server/user";
+import { sendUserProps, useUser } from "../../../../api/server/user";
 import { useFacebookToken } from "../../../../api/third-party/facebook/facebook-login";
 import {
    CenteredMethod,
@@ -18,7 +18,6 @@ import {
    loadFromDevice,
    saveOnDevice
 } from "../../../../common-tools/device-native-api/storage/storage";
-import { useNavigation } from "../../../../common-tools/navigation/useNavigation";
 
 interface PropsNoMoreUsersMessage {
    onViewDislikedUsersPress: () => void;
@@ -31,8 +30,6 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
    const { colors } = useTheme();
    const { token } = useFacebookToken();
    const { data: user } = useUser();
-   const { mutate: mutateUser } = useUserPropsMutation(null, { autoInvalidateQueries: false });
-   const { navigate } = useNavigation();
 
    // Effect to mutate the server when the UI changes
    useEffect(() => {
@@ -41,13 +38,13 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
       }
 
       if (!sendNotificationChecked && user.sendNewUsersNotification !== 0) {
-         mutateUser({ props: { sendNewUsersNotification: 0 }, token });
+         sendUserProps({ props: { sendNewUsersNotification: 0 }, token }, false);
          saveOnDevice("noUsersLastSelected", "0");
          return;
       }
 
       if (sendNotificationChecked && user.sendNewUsersNotification != sendNewUsersNotification) {
-         mutateUser({ props: { sendNewUsersNotification }, token });
+         sendUserProps({ props: { sendNewUsersNotification }, token }, false);
          saveOnDevice("noUsersLastSelected", String(sendNewUsersNotification));
       }
    }, [sendNewUsersNotification, sendNotificationChecked]);

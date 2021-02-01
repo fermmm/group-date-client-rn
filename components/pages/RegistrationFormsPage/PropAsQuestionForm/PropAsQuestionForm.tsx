@@ -19,7 +19,7 @@ export interface PropsPropAsQuestionForm {
 const PropAsQuestionForm: FC<PropsPropAsQuestionForm> = props => {
    const { initialData, propNamesToChange, defaultValueForNonSelectedAnswers, onChange } = props;
    const [newProps, setNewProps] = useState<EditableUserProps>(null);
-   const { data: allPropsAsQuestions, isLoading } = usePropsAsQuestions();
+   const { data: allPropsAsQuestions } = usePropsAsQuestions();
    useEffect(() => onChange(props.formName, newProps, getError()), [newProps, props.formName]);
 
    // Use the first propNamesToChange to find which question object will be used
@@ -76,7 +76,7 @@ const PropAsQuestionForm: FC<PropsPropAsQuestionForm> = props => {
          .map(a => a.text);
    };
 
-   if (isLoading) {
+   if (!allPropsAsQuestions) {
       return <LoadingAnimation centeredMethod={CenteredMethod.Relative} />;
    }
 

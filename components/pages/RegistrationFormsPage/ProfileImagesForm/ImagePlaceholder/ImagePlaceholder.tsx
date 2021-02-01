@@ -22,7 +22,7 @@ import { callCameraPicture } from "../../../../../common-tools/device-native-api
 import { callImagePicker } from "../../../../../common-tools/device-native-api/files/files";
 import { useServerInfo } from "../../../../../api/server/server-info";
 import { useTheme } from "../../../../../common-tools/themes/useTheme/useTheme";
-import { prepareUrl } from "../../../../../api/tools/reactQueryTools";
+import { prepareUrl } from "../../../../../api/tools/httpRequest";
 
 interface PropsImagePlaceholder {
    initialUri: string;

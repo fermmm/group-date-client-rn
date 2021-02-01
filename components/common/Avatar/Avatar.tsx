@@ -10,8 +10,8 @@ import {
 import { Avatar as PaperAvatar } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import color from "color";
-import { prepareUrl } from "../../../api/tools/reactQueryTools";
 import { useServerInfo } from "../../../api/server/server-info";
+import { prepareUrl } from "../../../api/tools/httpRequest";
 
 export interface PropsAvatar {
    source: ImageURISource;

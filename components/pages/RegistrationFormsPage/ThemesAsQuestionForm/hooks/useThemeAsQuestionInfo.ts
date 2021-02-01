@@ -13,6 +13,7 @@ export function useThemeAsQuestionInfo(
    itsImportantChecked?: boolean
 ): UseThemeInfoResponse {
    const { data: themesAsQuestions, isLoading } = useThemesAsQuestions();
+
    const question = themesAsQuestions?.find(q => q.questionId === questionId);
    const initiallySelectedAnswer = getInitiallySelectedAnswer(
       question,

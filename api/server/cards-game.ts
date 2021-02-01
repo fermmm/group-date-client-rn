@@ -1,41 +1,37 @@
-import { UseQueryOptions, useQuery } from "react-query";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
-import { defaultErrorHandler, defaultHttpRequest } from "../tools/reactQueryTools";
+import { defaultHttpRequest } from "../tools/httpRequest";
+import { useCache, UseCacheOptions } from "../tools/useCache";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import { User } from "./shared-tools/endpoints-interfaces/user";
 
-export function useCardsRecommendations<T extends User[]>(
-   requestParams?: TokenParameter,
-   options?: UseQueryOptions<T>
-) {
-   const { token } = useFacebookToken(requestParams?.token);
+export function useCardsRecommendations<T extends User[]>(props?: {
+   requestParams?: TokenParameter;
+   config?: UseCacheOptions<T>;
+}) {
+   const { token } = useFacebookToken(props?.requestParams?.token);
 
-   const query = useQuery<T>(
+   return useCache<T>(
       "cards-game/recommendations",
       () => defaultHttpRequest("cards-game/recommendations", "GET", { token }),
       {
-         ...options,
-         ...(!token ? { enabled: false } : {})
+         ...(props?.config ?? {}),
+         enabled: token != null && props?.config?.enabled !== false
       }
    );
-
-   return defaultErrorHandler(query);
 }
 
-export function useCardsDisliked<T extends User[]>(
-   requestParams?: TokenParameter,
-   options?: UseQueryOptions<T>
-) {
-   const { token } = useFacebookToken(requestParams?.token);
+export function useCardsDisliked<T extends User[]>(props?: {
+   requestParams?: TokenParameter;
+   config?: UseCacheOptions<T>;
+}) {
+   const { token } = useFacebookToken(props?.requestParams?.token);
 
-   const query = useQuery<T>(
+   return useCache<T>(
       "cards-game/disliked-users",
       () => defaultHttpRequest("cards-game/disliked-users", "GET", { token }),
       {
-         ...options,
-         ...(!token ? { enabled: false } : {})
+         ...(props?.config ?? {}),
+         enabled: token != null && props?.config?.enabled !== false
       }
    );
-
-   return defaultErrorHandler(query);
 }

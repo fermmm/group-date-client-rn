@@ -3,8 +3,6 @@ import { StyleSheet, Modal, TouchableOpacity, Image, ImageProps } from "react-na
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Gallery from "./Gallery/Gallery";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { prepareUrl } from "../../../api/tools/reactQueryTools";
-import { useServerInfo } from "../../../api/server/server-info";
 
 export interface ImagesModalProps {
    images: string[];

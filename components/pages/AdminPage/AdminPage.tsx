@@ -6,22 +6,21 @@ import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import TextInputExtended from "../../common/TextInputExtended/TextInputExtended";
 import { Button } from "react-native-paper";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
-import { useCreateFakeUsersMutation } from "../../../api/server/admin";
 import { useUser } from "../../../api/server/user";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
+import { sendCreateFakeUsers } from "../../../api/server/admin";
 
 const AdminPage: FC = () => {
    const { colors } = useTheme();
-   const { data: localUser, isLoading: userIsLoading } = useUser();
-   const { mutateAsync, isLoading: testEndpointLoading } = useCreateFakeUsersMutation();
+   const { data: localUser } = useUser();
    const [fakeUsersAmount, setFakeUsersAmount] = useState<string>();
 
    const handleSend = async () => {
-      const response = await mutateAsync({ token: localUser.token, text: fakeUsersAmount });
+      const response = await sendCreateFakeUsers({ token: localUser.token, text: fakeUsersAmount });
       Alert.alert("Hecho, respuesta:", response);
    };
 
-   if (userIsLoading || testEndpointLoading) {
+   if (!localUser) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 

@@ -1,6 +1,8 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import { Alert } from "react-native";
 import I18n from "i18n-js";
+import Constants from "expo-constants";
+import { SERVER_URL } from "@env";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
    handleErrors?: boolean;
@@ -14,22 +16,24 @@ export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
  * @param showAlertOnError Shows a native alert to the user when the request has a network error
  * @returns When there is an error in the request returns a string resolved promise with the error text.
  */
-export async function httpRequest<T>(options: AxiosRequestConfigExtended): Promise<T> {
+export async function httpRequest<Response>(
+   options: AxiosRequestConfigExtended
+): Promise<Response> {
    const client: AxiosInstance = axios.create(options);
 
-   let promiseResolve: (value?: T | PromiseLike<T>) => void = null;
-   const resultPromise: Promise<T> = new Promise(resolve => {
+   let promiseResolve: (value?: Response | PromiseLike<Response>) => void = null;
+   const resultPromise: Promise<Response> = new Promise(resolve => {
       promiseResolve = resolve;
    });
 
    if (!options.handleErrors) {
-      const response: AxiosResponse<T> = await client(options);
+      const response: AxiosResponse<Response> = await client(options);
       promiseResolve(response?.data);
       return resultPromise;
    }
 
    try {
-      const response: AxiosResponse<T> = await client(options);
+      const response: AxiosResponse<Response> = await client(options);
       promiseResolve(response.data);
    } catch (error) {
       if (error.response) {
@@ -90,4 +94,48 @@ export function tryToGetErrorMessage(error: any): string {
    }
 
    return error.message;
+}
+
+export async function defaultHttpRequest<Params = void, Response = void>(
+   url: string,
+   method: Method,
+   data?: Params
+): Promise<Response> {
+   const axiosObject: AxiosRequestConfigExtended = {
+      headers: { "Accept-Language": I18n.locale },
+      baseURL: getServerUrl(),
+      url,
+      method
+   };
+
+   // Get requests does not support data object, only params
+   if (method.toLowerCase() === "get") {
+      axiosObject.params = data;
+   } else {
+      axiosObject.data = data;
+   }
+
+   return httpRequest<Response>(axiosObject);
+}
+
+/**
+ * Currently this function only replaces the localhost part of the url by the local address of the development
+ * machine otherwise localhost will be the localhost of the phone and not the machine one, if the app is
+ * executing in production there is no localhost part on the url so it remains unchanged.
+ */
+export function prepareUrl(url: string): string {
+   if (url.includes("localhost")) {
+      return url.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
+   } else {
+      return url;
+   }
+}
+
+export function getServerUrl(): string {
+   return prepareUrl(SERVER_URL);
+}
+
+export interface RequestError {
+   message: string;
+   response: any;
 }

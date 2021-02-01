@@ -1,3 +1,4 @@
+import { useCache, UseCacheOptions } from "./../../tools/useCache";
 import { FacebookLoginResult, initializeAsync, logInWithReadPermissionsAsync } from "expo-facebook";
 import { Alert } from "react-native";
 import { Flatten } from "../../../common-tools/ts-tools/common-ts-tools";
@@ -8,7 +9,6 @@ import {
 } from "../../../common-tools/device-native-api/storage/storage";
 import { httpRequest } from "../../tools/httpRequest";
 import { useState } from "react";
-import { useQuery, UseQueryOptions } from "react-query";
 
 let fasterTokenCache: string = null;
 
@@ -82,13 +82,13 @@ async function getTokenFromFacebook(): Promise<string | null> {
 
 /**
  * Uses the token to get some user information from Facebook and if the information is returned it means
- * the token is valid. It's better to check this on th client than on the server, dealing with an extra
+ * the token is valid. It's better to check this on the client than on the server, dealing with an extra
  * server error is more complex. If the token is not valid then getTokenFromFacebook() should be called
  * to get a new token from Facebook.
  */
-export function useFacebookTokenCheck(token: string, config?: UseQueryOptions<boolean>) {
-   const response = useQuery<boolean>(
-      [`graph.facebook.com/me?access_token=${token}`, "GET"],
+export function useFacebookTokenCheck(token: string, config?: UseCacheOptions<boolean>) {
+   return useCache<boolean>(
+      `graph.facebook.com/me?access_token=${token}`,
       async () => {
          const response: { id: string; name: string } = await httpRequest({
             baseURL: `https://graph.facebook.com/me?access_token=${token}`,
@@ -98,9 +98,8 @@ export function useFacebookTokenCheck(token: string, config?: UseQueryOptions<bo
 
          return response?.name != null;
       },
-      { staleTime: 0, ...config }
+      { ...config }
    );
-   return response;
 }
 
 export interface UseFacebookTokenHook {

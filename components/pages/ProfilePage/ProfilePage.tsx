@@ -13,7 +13,7 @@ export interface ParamsProfilePage {
 
 const ProfilePage: FC = () => {
    const { params } = useRoute<RouteProps<ParamsProfilePage>>();
-   const { data: localUser, isLoading } = useUser();
+   const { data: localUser } = useUser();
 
    const { user: UserFromParams } = params ?? {};
    const user = UserFromParams ?? localUser;
@@ -22,7 +22,7 @@ const ProfilePage: FC = () => {
    return (
       <>
          <ButtonBack />
-         {isLoading ? (
+         {!localUser ? (
             <LoadingAnimation renderMethod={RenderMethod.FullScreen} />
          ) : (
             <ProfileCard user={user} editMode={editMode} statusBarPadding />
