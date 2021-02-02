@@ -1,4 +1,4 @@
-import { ThemesToUpdate } from "./../RegistrationFormsPage";
+import { ThemesToUpdate } from "../RegistrationFormsPage";
 
 export function useUnifiedThemesToUpdate(
    questionIdsWithThemes: Record<string, ThemesToUpdate>

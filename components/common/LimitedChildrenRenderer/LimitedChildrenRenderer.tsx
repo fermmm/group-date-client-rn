@@ -4,7 +4,7 @@ import { useEffectExceptOnMount } from "../../../common-tools/common-hooks/useEf
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 
 export interface LimitedChildrenRendererProps {
-   childrenToDisplay: number;
+   childToFocus: number;
    singleChildrenMode?: boolean;
 }
 
@@ -27,11 +27,11 @@ const LimitedChildrenRenderer: FC<LimitedChildrenRendererProps> = props => {
       if (childrenAsArray == null || childrenAsArray.length === 0) {
          return;
       }
-      setChildB(childrenAsArray[props.childrenToDisplay]);
-      setChildAtFront(childrenAsArray[props.childrenToDisplay]);
+      setChildB(childrenAsArray[props.childToFocus]);
+      setChildAtFront(childrenAsArray[props.childToFocus]);
       const nextChildren: React.ReactNode =
-         props.childrenToDisplay + 1 < childrenAsArray.length
-            ? childrenAsArray[props.childrenToDisplay + 1]
+         props.childToFocus + 1 < childrenAsArray.length
+            ? childrenAsArray[props.childToFocus + 1]
             : null;
       setChildA(nextChildren);
    };
@@ -43,26 +43,26 @@ const LimitedChildrenRenderer: FC<LimitedChildrenRendererProps> = props => {
 
       reset();
 
-      childrenToDisplayLastValue.current = props.childrenToDisplay;
+      childrenToDisplayLastValue.current = props.childToFocus;
       initialized.current = true;
    }, [childrenAsArray.length]);
 
    useEffectExceptOnMount(() => {
       // If the change is the next element we can do the swipe trick
-      if (props.childrenToDisplay - 1 === childrenToDisplayLastValue.current) {
+      if (props.childToFocus - 1 === childrenToDisplayLastValue.current) {
          showNextChildAndPreloadFollowing();
       } else {
          // Otherwise there is no trick we reset the swipe
          reset();
       }
 
-      childrenToDisplayLastValue.current = props.childrenToDisplay;
-   }, [props.childrenToDisplay]);
+      childrenToDisplayLastValue.current = props.childToFocus;
+   }, [props.childToFocus]);
 
    const showNextChildAndPreloadFollowing = () => {
       const nextChildren: React.ReactNode =
-         props.childrenToDisplay + 1 < childrenAsArray.length
-            ? childrenAsArray[props.childrenToDisplay + 1]
+         props.childToFocus + 1 < childrenAsArray.length
+            ? childrenAsArray[props.childToFocus + 1]
             : null;
       /*
          This childB == null is here to make sure a new child goes to the null holder when it's necessary.
@@ -78,7 +78,7 @@ const LimitedChildrenRenderer: FC<LimitedChildrenRendererProps> = props => {
    };
 
    if (props.singleChildrenMode) {
-      return childrenAsArray[props.childrenToDisplay];
+      return childrenAsArray[props.childToFocus];
    }
 
    return (

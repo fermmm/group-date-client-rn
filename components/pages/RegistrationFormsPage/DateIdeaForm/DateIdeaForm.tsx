@@ -6,7 +6,7 @@ import { currentTheme } from "../../../../config";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
-import { RegistrationFormName } from "../hooks/useRequiredFormList";
+import { RegistrationFormName } from "../tools/useRequiredFormList";
 
 export interface PropsDateIdeaForm {
    formName: RegistrationFormName;

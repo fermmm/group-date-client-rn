@@ -56,7 +56,7 @@ export function usePropsAsQuestions<T = UserPropAsQuestion[]>(props?: {
 export async function sendUserProps(params: UserPostParams, autoRevalidateRelated: boolean = true) {
    const resp = await defaultHttpRequest("user", "POST", params);
    if (autoRevalidateRelated) {
-      revalidate(userQueries);
+      revalidate("user");
    }
    return resp;
 }

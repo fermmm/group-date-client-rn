@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import ProfileCard from "../../common/ProfileCard/ProfileCard";
 import NoMoreUsersMessage from "./NoMoreUsersMessage/NoMoreUsersMessage";
@@ -22,7 +22,6 @@ export interface ParamsCardsPage {
    themeId?: string;
 }
 
-// TODO: Poner un mensaje cuando aprietas en ver usuarios disliked y no hay
 const CardsPage: FC = () => {
    const { token } = useFacebookToken();
    const { params } = useRoute<RouteProps<ParamsCardsPage>>();
@@ -71,8 +70,8 @@ const CardsPage: FC = () => {
          const attractions = [...manager.attractionsQueue.current];
 
          await sendAttraction({ attractions, token });
-
          manager.removeFromAttractionsQueue(attractions);
+         revalidate("cards-game/disliked-users");
 
          if (
             reason === AttractionsSendReason.NoMoreUsersButServerMayHave ||
@@ -101,10 +100,18 @@ const CardsPage: FC = () => {
             }
 
             // This triggers the request of new users by invalidating the cache:
-            revalidate(["cards-game/recommendations", "cards-game/disliked-users"]);
+            revalidate("cards-game/recommendations");
          }
       })();
    }, [manager.attractionsShouldBeSentReason]);
+
+   // Effect to automatically quit disliked users mode when there is no disliked users
+   useEffect(() => {
+      if (dislikedUsers?.length === 0 && cardsSource === CardsSource.DislikedUsers) {
+         Alert.alert("", "No hay mas gente dejada de lado para mostrar");
+         setCardsSource(CardsSource.Recommendations);
+      }
+   }, [dislikedUsers, cardsSource]);
 
    const handleLikeOrDislikePress = (attractionType: AttractionType, userId: string) => {
       manager.addAttractionToQueue({ userId, attractionType });
@@ -136,7 +143,7 @@ const CardsPage: FC = () => {
             <NoMoreUsersMessage onViewDislikedUsersPress={handleViewDislikedUsersPress} />
          ) : (
             <>
-               <LimitedChildrenRenderer childrenToDisplay={manager.userDisplaying}>
+               <LimitedChildrenRenderer childToFocus={manager.userDisplaying}>
                   {manager.usersToRender.map((user, i) => (
                      <ProfileCard
                         showLikeDislikeButtons

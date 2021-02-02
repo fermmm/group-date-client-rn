@@ -13,19 +13,20 @@ import {
    EditableUserPropKey,
    EditableUserProps
 } from "../../../api/server/shared-tools/validators/user";
-import { RegistrationFormName, useRequiredFormList } from "./hooks/useRequiredFormList";
+import { RegistrationFormName, useRequiredFormList } from "./tools/useRequiredFormList";
 import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
 import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
-import { useUnifiedThemesToUpdate } from "./hooks/useUnifiedThemesToUpdate";
+import { useUnifiedThemesToUpdate } from "./tools/useUnifiedThemesToUpdate";
 import { sendThemes, ThemeEditAction } from "../../../api/server/themes";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { BackHandler } from "react-native";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
-import { revalidate } from "../../../api/tools/useCache";
+import { mutateCache, revalidate } from "../../../api/tools/useCache";
+import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -63,8 +64,12 @@ const RegistrationFormsPage: FC = () => {
    const { token } = useFacebookToken(profileStatus?.user?.token);
 
    useEffect(() => {
+      if (profileStatus?.user != null && sendingToServer) {
+         mutateCache("user", profileStatus.user);
+      }
+
       if (
-         isFocused &&
+         isFocused() &&
          sendingToServer &&
          (profileStatus?.user?.profileCompleted || params != null)
       ) {
@@ -201,7 +206,9 @@ const RegistrationFormsPage: FC = () => {
       // We send user props last because it contains questionsShowed prop, which means that the themes were sent
       if (Object.keys(propsToSend).length > 0) {
          setSendingToServer(true);
-         await sendUserProps({ token, props: propsToSend });
+         mutateCache("user", { ...(profileStatus?.user ?? {}), ...propsToSend });
+         await sendUserProps({ token, props: propsToSend }, false);
+         revalidate("user/profile-status");
       }
 
       /**
@@ -247,42 +254,6 @@ const RegistrationFormsPage: FC = () => {
       (): string => errorOnForms.current[formsRequired[currentStep]],
       [formsRequired, currentStep]
    );
-
-   /**
-    * Some props like location coordinates are slightly different numbers each time they are retrieved, the difference
-    * is not relevant and equality check it's not useful anymore. This special comparator is required then to know when
-    * the user made real changes.
-    */
-   const filterNotReallyChangedProps = (
-      propsGathered: EditableUserProps,
-      user: Partial<User>
-   ): EditableUserProps => {
-      if (user == null) {
-         return propsGathered;
-      }
-      const result: EditableUserProps = {};
-      const keysToKeep: string[] = Object.keys(propsGathered ?? {}).filter(key => {
-         if (user[key] == null) {
-            return true;
-         }
-
-         if (propsGathered[key] == null) {
-            return false;
-         }
-
-         if (Array.isArray(propsGathered[key])) {
-            return propsGathered[key].join() !== user[key].join();
-         }
-         if (typeof propsGathered[key] === "number") {
-            let reducedNumber1 = String(Math.abs(propsGathered[key])).substring(0, 5);
-            let reducedNumber2 = String(Math.abs(user[key])).substring(0, 5);
-            return reducedNumber1 !== reducedNumber2;
-         }
-         return propsGathered[key] !== user[key];
-      });
-      keysToKeep.forEach(key => (result[key] = propsGathered[key]));
-      return result;
-   };
 
    const isLoading: boolean =
       !profileStatus || formsRequired?.length === 0 || requiredFormListLoading || sendingToServer;

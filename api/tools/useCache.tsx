@@ -45,14 +45,18 @@ export function useCache<Response = void, Error = any>(
    };
 }
 
-export async function revalidate(key: keyInterface | keyInterface[]) {
+export async function revalidate<T>(key: keyInterface | keyInterface[]) {
    if (Array.isArray(key)) {
       for (const k of key) {
-         await mutate(k);
+         await mutate(k, null, true);
       }
    } else {
-      await mutate(key);
+      await mutate(key, null, true);
    }
+}
+
+export async function mutateCache<T>(key: keyInterface, newData: T) {
+   await mutate(key, newData, false);
 }
 
 export const CacheConfigProvider: FC = ({ children }) => {

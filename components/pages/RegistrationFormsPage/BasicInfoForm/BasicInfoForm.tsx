@@ -7,7 +7,7 @@ import { formValidators } from "../../../../common-tools/forms/formValidators";
 import { currentTheme } from "../../../../config";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import { useGeolocation } from "../../../../common-tools/device-native-api/geolocation/getGeolocation";
-import { RegistrationFormName } from "../hooks/useRequiredFormList";
+import { RegistrationFormName } from "../tools/useRequiredFormList";
 import { fromAgeToBirthDate } from "../../../../api/tools/date-tools";
 import MonthSelector from "../../../common/MonthSelector/MonthSelector";
 import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";

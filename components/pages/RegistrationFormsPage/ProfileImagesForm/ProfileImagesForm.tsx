@@ -6,7 +6,7 @@ import TitleText from "../../../common/TitleText/TitleText";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import ImagePlaceholder, { ImagePlaceholderState } from "./ImagePlaceholder/ImagePlaceholder";
 import { moveElementInArray } from "../../../../common-tools/js-tools/js-tools";
-import { RegistrationFormName } from "../hooks/useRequiredFormList";
+import { RegistrationFormName } from "../tools/useRequiredFormList";
 
 export interface PropsProfileImagesForm {
    formName: RegistrationFormName;

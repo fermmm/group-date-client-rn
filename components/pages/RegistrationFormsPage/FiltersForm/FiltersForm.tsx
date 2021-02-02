@@ -10,7 +10,7 @@ import {
    MIN_AGE_ALLOWED
 } from "../../../../config";
 import DistanceSelector from "../../../common/DistanceSelector/DistanceSelector";
-import { RegistrationFormName } from "../hooks/useRequiredFormList";
+import { RegistrationFormName } from "../tools/useRequiredFormList";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 import { fromAgeToBirthDate, fromBirthDateToAge } from "../../../../api/tools/date-tools";
