@@ -16,3 +16,11 @@ export async function sendCreateFakeUsers(
    }
    return resp;
 }
+
+export async function sendForceGroupsSearch(autoRevalidateRelated: boolean = true) {
+   const resp = await defaultHttpRequest<void, string>("testing/force-groups-search", "GET");
+   if (autoRevalidateRelated) {
+      revalidate("user/groups");
+   }
+   return resp;
+}

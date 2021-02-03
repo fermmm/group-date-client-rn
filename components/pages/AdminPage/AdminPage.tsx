@@ -8,15 +8,21 @@ import { Button } from "react-native-paper";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useUser } from "../../../api/server/user";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
-import { sendCreateFakeUsers } from "../../../api/server/admin";
+import { sendCreateFakeUsers, sendForceGroupsSearch } from "../../../api/server/admin";
+import EmptySpace from "../../common/EmptySpace/EmptySpace";
 
 const AdminPage: FC = () => {
    const { colors } = useTheme();
    const { data: localUser } = useUser();
    const [fakeUsersAmount, setFakeUsersAmount] = useState<string>();
 
-   const handleSend = async () => {
+   const handleCreateTestUsersPress = async () => {
       const response = await sendCreateFakeUsers({ token: localUser.token, text: fakeUsersAmount });
+      Alert.alert("Hecho, respuesta:", response);
+   };
+
+   const handleSearchGroupsPress = async () => {
+      const response = await sendForceGroupsSearch();
       Alert.alert("Hecho, respuesta:", response);
    };
 
@@ -35,8 +41,12 @@ const AdminPage: FC = () => {
                value={fakeUsersAmount}
                onChangeText={t => setFakeUsersAmount(t)}
             />
-            <Button onPress={handleSend} mode="outlined" color={colors.accent2}>
+            <Button onPress={handleCreateTestUsersPress} mode="outlined" color={colors.accent2}>
                Enviar
+            </Button>
+            <EmptySpace />
+            <Button onPress={handleSearchGroupsPress} mode="outlined" color={colors.accent2}>
+               Forzar búsqueda de grupos
             </Button>
          </BasicScreenContainer>
       </>
