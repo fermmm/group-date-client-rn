@@ -9,9 +9,15 @@ import EmptyPageMessage from "../../common/EmptyPageMessage/EmptyPageMessage";
 import { useUserGroupList } from "../../../api/server/groups";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
+import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
+import { useUser } from "../../../api/server/user";
+import { getMatchesOf } from "../../../common-tools/groups/groups-tools";
+import { firstBy } from "thenby";
+import { useServerInfo } from "../../../api/server/server-info";
 
 const GroupsListPage: FC = () => {
    const { data: groups } = useUserGroupList();
+   const { data: user } = useUser();
    const { navigate } = useNavigation();
 
    if (groups == null || groups?.length === 0) {
@@ -26,16 +32,21 @@ const GroupsListPage: FC = () => {
 
    return (
       <BasicScreenContainer>
-         <TitleText extraMarginLeft extraSize>
-            Tus citas grupales
-         </TitleText>
+         <HelpBanner
+            text={
+               "Estas son tus citas grupales, el máximo de citas activas en simultaneo que puedes tener es: Una de tamaño pequeño y una de tamaño grande, en total 2. Cada 3 semanas se te habilita espacio para otras 2."
+            }
+         />
+         <TitleText> Activas </TitleText>
          <List.Section>
-            {groups.map((group, i) => (
+            {groups.sort(firstBy(g => g.creationDate, "desc")).map(group => (
                <List.Item
                   title={group.members.map(
-                     (user, u) => (u > 0 ? ", " : "") + toFirstUpperCase(user.name)
+                     (user, i) =>
+                        (i > 0 ? (i === group.members.length - 1 ? " y " : ", ") : "") +
+                        toFirstUpperCase(user.name)
                   )}
-                  description={`Cita de ${group.members.length} personas`}
+                  description={`Te gustas con ${getMatchesOf(user.userId, group).length} personas`}
                   left={props => (
                      <List.Icon
                         {...props}
@@ -45,7 +56,7 @@ const GroupsListPage: FC = () => {
                      />
                   )}
                   onPress={() => navigate("Group", { group })}
-                  key={i}
+                  key={group.groupId}
                />
             ))}
          </List.Section>

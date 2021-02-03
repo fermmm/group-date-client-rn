@@ -11,6 +11,7 @@ import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import Dialog from "../../common/Dialog/Dialog";
 import { withNavigation } from "@react-navigation/compat";
 import { Route } from "@react-navigation/native";
+import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 
 export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
@@ -73,23 +74,12 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
          <>
             <AppBarHeader title={!isContactChat ? "Chat" : "Contáctanos"} />
             {!isContactChat && (
-               <Banner
-                  visible={this.state.adviseBannerVisible}
-                  style={{
-                     backgroundColor: color(colors.background).darken(0.04).toString(),
-                     elevation: 12,
-                     marginBottom: 25
-                  }}
-                  actions={[
-                     {
-                        label: "Entendido",
-                        onPress: () => this.setState({ adviseBannerVisible: false })
-                     }
-                  ]}
-               >
-                  El chat es un medio limitado que distorsiona la percepción sobre los demás,
-                  recomendamos usarlo al mínimo.
-               </Banner>
+               <HelpBanner
+                  showCloseButton
+                  text={
+                     "El chat es un medio limitado que distorsiona la percepción sobre los demás, recomendamos usarlo al mínimo."
+                  }
+               />
             )}
             <GiftedChat
                messages={this.state.messages}

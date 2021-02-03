@@ -37,7 +37,7 @@ export interface ScrollViewExtendedState {
 
 const ScrollViewExtended: FC<ScrollViewExtendedProps> = props => {
    const {
-      showBottomGradient = true,
+      showBottomGradient = false,
       bottomGradientColor = "black"
    }: Partial<ScrollViewExtendedProps> = props;
 
@@ -104,6 +104,10 @@ const ScrollViewExtended: FC<ScrollViewExtendedProps> = props => {
       <View style={{ flex: 1 }}>
          <ScrollView
             {...props}
+            contentContainerStyle={[
+               props.contentContainerStyle,
+               showBottomGradient ? { paddingBottom: 85 } : {}
+            ]}
             onScroll={e => onScroll(e)}
             onContentSizeChange={(w, h) => onContentSizeChange(w, h)}
             onLayout={e => onLayout(e)}

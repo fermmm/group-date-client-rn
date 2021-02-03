@@ -13,6 +13,7 @@ export interface BasicScreenProps extends ScrollViewExtendedProps {
    showBackButton?: boolean;
    showContinueButton?: boolean;
    continueButtonTextFinishMode?: boolean;
+   showBottomGradient?: boolean;
    onContinuePress?(): void;
    onBackPress?(): void;
 }
@@ -21,7 +22,8 @@ const BasicScreenContainer: FC<BasicScreenProps> = props => {
    const {
       showBackButton = false,
       showContinueButton = false,
-      continueButtonTextFinishMode = false
+      continueButtonTextFinishMode = false,
+      showBottomGradient = false
    }: Partial<BasicScreenProps> = props;
 
    return (
@@ -34,7 +36,7 @@ const BasicScreenContainer: FC<BasicScreenProps> = props => {
          ]}
       >
          <ScrollViewExtended
-            showBottomGradient
+            showBottomGradient={showBottomGradient}
             bottomGradientColor={currentTheme.colors.background}
             {...props}
             contentContainerStyle={[

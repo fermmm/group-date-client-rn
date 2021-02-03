@@ -17,6 +17,7 @@ import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/gro
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
+import { getMatchesOf } from "../../../common-tools/groups/groups-tools";
 
 export interface ParamsGroupPage {
    group: Group;
@@ -30,11 +31,6 @@ const GroupPage: FC = () => {
 
    // TODO: Remove this
    const invitationAccepted: boolean = true;
-
-   const getMatchesOf = (userId: string, group: Group): User[] => {
-      const matchesList: string[] = group.matches.find(m => m.userId === userId).matches;
-      return group.members.filter(u => matchesList.includes(u.userId));
-   };
 
    return (
       <>

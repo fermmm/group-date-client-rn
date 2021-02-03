@@ -248,14 +248,16 @@ const styles: Styles = StyleSheet.create({
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      paddingBottom: 0 // The bottom padding under the like-dislike buttons (only applied when buttons are present).
+      paddingBottom: 0, // The bottom padding under the like-dislike buttons (only applied when buttons are present).
+      backgroundColor: currentTheme.colors.background
    },
    scrollView: {
       flexGrow: 0
    },
    card: {
       backgroundColor: currentTheme.colors.background,
-      paddingBottom: 90 // Padding in the content when scrolled to bottom to prevent like-dislike buttons from covering text.
+      paddingBottom: 0, // Padding in the content when scrolled to bottom to prevent like-dislike buttons from covering text.
+      elevation: 0
    },
    galleryScroll: {
       height: Dimensions.get("window").height * 0.48 // This controls the height of the images area.
