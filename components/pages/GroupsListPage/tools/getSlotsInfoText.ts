@@ -16,12 +16,12 @@ export function getSlotStatusInfoText(
 
    slots.forEach(slot => {
       const groupsOfSlot = getGroupsOfSlot(slot, groups);
-      console.log(I18n.locale);
+
       if (groupsOfSlot.length >= slot.amount) {
          result = `Se permite ${slot.amount} grupo(s) al mismo tiempo, dentro de ${moment
             .duration(slot.releaseTime, "seconds")
             .locale(I18n.locale)
-            .humanize()} podrás tener una nueva cita. Hay excepciones si se forma un grupo grande.`;
+            .humanize()} podrás tener una nueva cita. Si se forma un grupo grande se ignora la restricción.`;
       }
    });
 
