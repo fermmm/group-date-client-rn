@@ -9,20 +9,24 @@ import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/Lo
 
 export interface ParamsProfilePage {
    user?: User;
+   requestFullInfo?: boolean;
+   editMode?: boolean;
 }
 
 const ProfilePage: FC = () => {
    const { params } = useRoute<RouteProps<ParamsProfilePage>>();
-   const { data: localUser } = useUser();
-
-   const { user: UserFromParams } = params ?? {};
-   const user = UserFromParams ?? localUser;
-   const editMode: boolean = UserFromParams == null;
+   const { user: userFromParams, requestFullInfo, editMode } = params ?? {};
+   const { data: userRequested } = useUser(
+      requestFullInfo && userFromParams
+         ? { requestParams: { userId: userFromParams.userId } }
+         : null
+   );
+   const user = !requestFullInfo && userFromParams ? userFromParams : userRequested;
 
    return (
       <>
          <ButtonBack />
-         {!localUser ? (
+         {!user ? (
             <LoadingAnimation renderMethod={RenderMethod.FullScreen} />
          ) : (
             <ProfileCard user={user} editMode={editMode} statusBarPadding />

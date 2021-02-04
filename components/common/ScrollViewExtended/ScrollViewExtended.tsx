@@ -101,7 +101,7 @@ const ScrollViewExtended: FC<ScrollViewExtendedProps> = props => {
    };
 
    return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, width: "100%" }}>
          <ScrollView
             {...props}
             contentContainerStyle={[

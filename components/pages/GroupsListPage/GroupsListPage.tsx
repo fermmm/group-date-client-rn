@@ -23,7 +23,7 @@ const GroupsListPage: FC = () => {
    const { data: serverInfo } = useServerInfo();
    const slotsStatusInfoText = getSlotStatusInfoText(serverInfo, groups);
 
-   if (groups == null || groups?.length === 0) {
+   if (groups == null || user == null || groups?.length === 0) {
       return (
          <EmptyPageMessage
             text={

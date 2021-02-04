@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { FC } from "react";
 import { Button } from "react-native-paper";
 import { IconSource } from "react-native-paper/lib/typescript/src/components/Icon";
 import { currentTheme } from "../../../config";
@@ -8,23 +8,19 @@ export interface ButtonForAppBarProps {
    onPress?: () => void;
 }
 
-class ButtonForAppBar extends Component<ButtonForAppBarProps> {
-   static defaultProps: Partial<ButtonForAppBarProps> = {};
-
-   render(): JSX.Element {
-      return (
-         <Button
-            mode="outlined"
-            uppercase={false}
-            style={{ borderColor: currentTheme.colors.text2 }}
-            color={currentTheme.colors.text2}
-            icon={this.props.icon}
-            onPress={this.props.onPress}
-         >
-            {this.props.children}
-         </Button>
-      );
-   }
-}
+const ButtonForAppBar: FC<ButtonForAppBarProps> = props => {
+   return (
+      <Button
+         mode="outlined"
+         uppercase={false}
+         style={{ borderColor: currentTheme.colors.text2 }}
+         color={currentTheme.colors.text2}
+         icon={props.icon}
+         onPress={props.onPress}
+      >
+         {props.children}
+      </Button>
+   );
+};
 
 export default ButtonForAppBar;

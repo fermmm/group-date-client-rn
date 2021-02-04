@@ -106,128 +106,119 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    return (
       <>
          <CardAnimator animate={animate} onAnimationFinish={onAnimationFinish?.func}>
-            <View
-               style={[
-                  styles.mainContainer,
-                  { paddingBottom: showLikeDislikeButtons ? styles.mainContainer.paddingBottom : 0 }
-               ]}
-            >
-               <View>
-                  <ScrollViewExtended
-                     style={[styles.scrollView]}
-                     showBottomGradient={true}
-                     bottomGradientColor={colors.background}
-                     indicatorStyle={"white"}
-                  >
-                     <Card style={styles.card}>
-                        <View>
-                           <ImagesScroll
-                              images={finalImagesUri}
-                              style={[
-                                 styles.galleryScroll,
-                                 statusBarPadding && { marginTop: StatusBar.currentHeight }
-                              ]}
-                              onImageClick={(i: number) => {
-                                 setImageSelected(i);
-                                 setRenderImageModal(true);
-                              }}
-                              renderImage={(uri: string, imageProps: ImageProps) => (
-                                 <ImageBackground
-                                    style={{ width: "100%", height: "100%" }}
-                                    source={{ uri }}
-                                    blurRadius={Platform.OS === "ios" ? 120 : 60}
-                                 >
-                                    <Image
-                                       {...imageProps}
-                                       resizeMethod={"resize"}
-                                       resizeMode={"contain"}
-                                       key={uri}
-                                    />
-                                 </ImageBackground>
-                              )}
+            <View style={styles.mainContainer}>
+               <ScrollViewExtended
+                  style={[styles.scrollView]}
+                  showBottomGradient={true}
+                  bottomGradientColor={colors.background}
+                  indicatorStyle={"white"}
+               >
+                  <Card style={styles.card}>
+                     <View>
+                        <ImagesScroll
+                           images={finalImagesUri}
+                           style={[
+                              styles.galleryScroll,
+                              statusBarPadding && { marginTop: StatusBar.currentHeight }
+                           ]}
+                           onImageClick={(i: number) => {
+                              setImageSelected(i);
+                              setRenderImageModal(true);
+                           }}
+                           renderImage={(uri: string, imageProps: ImageProps) => (
+                              <ImageBackground
+                                 style={{ width: "100%", height: "100%" }}
+                                 source={{ uri }}
+                                 blurRadius={Platform.OS === "ios" ? 120 : 60}
+                              >
+                                 <Image
+                                    {...imageProps}
+                                    resizeMethod={"resize"}
+                                    resizeMode={"contain"}
+                                    key={uri}
+                                 />
+                              </ImageBackground>
+                           )}
+                        />
+                        {editMode && (
+                           <EditButton
+                              showAtBottom
+                              style={{ marginBottom: 60, marginRight: -6 }}
+                              label={"Modificar fotos"}
+                              onPress={() =>
+                                 navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                                    formsToShow: ["ProfileImagesForm"]
+                                 })
+                              }
                            />
-                           {editMode && (
-                              <EditButton
-                                 showAtBottom
-                                 style={{ marginBottom: 60, marginRight: -6 }}
-                                 label={"Modificar fotos"}
-                                 onPress={() =>
-                                    navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
-                                       formsToShow: ["ProfileImagesForm"]
-                                    })
-                                 }
-                              />
-                           )}
-                        </View>
-                        <View style={styles.titleAreaContainer}>
-                           <Card.Title
-                              title={`${toFirstUpperCase(name)}${
-                                 isCoupleProfile ? " (Pareja)" : ""
-                              }`}
-                              subtitle={`${fromBirthDateToAge(birthDate)} · ${cityName}${
-                                 height ? " · " + height + "cm" : ""
-                              }`}
-                              style={{ flex: 1 }}
-                              titleStyle={styles.nameText}
-                              subtitleStyle={styles.basicInfoText}
+                        )}
+                     </View>
+                     <View style={styles.titleAreaContainer}>
+                        <Card.Title
+                           title={`${toFirstUpperCase(name)}${isCoupleProfile ? " (Pareja)" : ""}`}
+                           subtitle={`${fromBirthDateToAge(birthDate)} · ${cityName}${
+                              height ? " · " + height + "cm" : ""
+                           }`}
+                           style={{ flex: 1 }}
+                           titleStyle={styles.nameText}
+                           subtitleStyle={styles.basicInfoText}
+                        />
+                        {!editMode ? (
+                           <View />
+                        ) : (
+                           // <Text style={[styles.compatibilityPercentage, {
+                           //    borderColor: color(colors.statusOk).alpha(0.5).string(),
+                           //    backgroundColor: color(colors.statusOk).alpha(0.5).string(),
+                           // }]}>
+                           //    99%
+                           // </Text>
+                           <EditButton
+                              onPress={() =>
+                                 navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                                    formsToShow: ["BasicInfoForm"]
+                                 })
+                              }
                            />
-                           {!editMode ? (
-                              <View />
-                           ) : (
-                              // <Text style={[styles.compatibilityPercentage, {
-                              //    borderColor: color(colors.statusOk).alpha(0.5).string(),
-                              //    backgroundColor: color(colors.statusOk).alpha(0.5).string(),
-                              // }]}>
-                              //    99%
-                              // </Text>
-                              <EditButton
-                                 onPress={() =>
-                                    navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
-                                       formsToShow: ["BasicInfoForm"]
-                                    })
-                                 }
-                              />
-                           )}
-                           <Paragraph style={styles.interestParagraph}>{genderText}</Paragraph>
+                        )}
+                        <Paragraph style={styles.interestParagraph}>{genderText}</Paragraph>
+                     </View>
+                     <Card.Content>
+                        <Paragraph style={styles.descriptionParagraph}>
+                           {profileDescription}
+                        </Paragraph>
+                        {editMode && (
+                           <EditButton
+                              showAtBottom
+                              absolutePosition={false}
+                              label={"Modificar texto"}
+                              onPress={() =>
+                                 navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                                    formsToShow: ["ProfileDescriptionForm"]
+                                 })
+                              }
+                           />
+                        )}
+                        <View style={styles.questionsContainer}>
+                           {themesSubscribedInCommon?.map(theme => (
+                              <ThemeInProfileCard theme={theme} key={theme.themeId} />
+                           ))}
                         </View>
-                        <Card.Content>
-                           <Paragraph style={styles.descriptionParagraph}>
-                              {profileDescription}
-                           </Paragraph>
-                           {editMode && (
-                              <EditButton
-                                 showAtBottom
-                                 absolutePosition={false}
-                                 label={"Modificar texto"}
-                                 onPress={() =>
-                                    navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
-                                       formsToShow: ["ProfileDescriptionForm"]
-                                    })
-                                 }
-                              />
-                           )}
-                           <View style={styles.questionsContainer}>
-                              {themesSubscribedInCommon?.map(theme => (
-                                 <ThemeInProfileCard theme={theme} key={theme.themeId} />
-                              ))}
-                           </View>
-                           {/* <View style={styles.questionsContainer}>
+                        {/* <View style={styles.questionsContainer}>
                            {themesBlockedInCommon?.map(theme => (
                               <ThemeInProfileCard theme={theme} key={theme.themeId} />
                            ))}
                         </View> */}
-                        </Card.Content>
-                     </Card>
-                  </ScrollViewExtended>
-                  {showLikeDislikeButtons && (
-                     <LikeDislikeButtons
-                        style={styles.likeDislikeButtons}
-                        onLikePress={handleLikeClick}
-                        onDislikePress={handleDislikeClick}
-                        onUndoPress={onUndoPress}
-                     />
-                  )}
-               </View>
+                     </Card.Content>
+                  </Card>
+               </ScrollViewExtended>
+               {showLikeDislikeButtons && (
+                  <LikeDislikeButtons
+                     style={styles.likeDislikeButtons}
+                     onLikePress={handleLikeClick}
+                     onDislikePress={handleDislikeClick}
+                     onUndoPress={onUndoPress}
+                  />
+               )}
             </View>
          </CardAnimator>
          {renderImageModal === true && (
@@ -248,7 +239,6 @@ const styles: Styles = StyleSheet.create({
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      paddingBottom: 0, // The bottom padding under the like-dislike buttons (only applied when buttons are present).
       backgroundColor: currentTheme.colors.background
    },
    scrollView: {

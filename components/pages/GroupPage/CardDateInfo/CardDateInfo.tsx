@@ -1,45 +1,35 @@
-import React, { Component } from "react";
+import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
-import { withTheme, Text, Button } from "react-native-paper";
-import { ThemeExt, Themed } from "../../../../common-tools/themes/types/Themed";
+import { Text, Button } from "react-native-paper";
+import { Themed } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import SurfaceStyled from "../../../common/SurfaceStyled/SurfaceStyled";
 import TitleText from "../../../common/TitleText/TitleText";
 import { currentTheme } from "../../../../config";
 
-export interface DateInfoProps extends Themed {
+export interface DateInfoProps {
    onModifyVotePress(): void;
 }
 export interface DateInfoState {}
 
-class CardDateInfo extends Component<DateInfoProps, DateInfoState> {
-   static defaultProps: Partial<DateInfoProps> = {};
-
-   render(): JSX.Element {
-      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-
-      return (
-         <SurfaceStyled>
-            <TitleText>Cita votada:</TitleText>
-            <View style={styles.row}>
-               <Text style={styles.textHighlighted}>Fecha:</Text>
-               <Text style={styles.textNormal}>Este Sábado 20 de Sep. a las 21hs</Text>
-            </View>
-            <View style={styles.row}>
-               <Text style={styles.textHighlighted}>Lugar:</Text>
-               <Text style={styles.textNormal}>Mate + porro en Parque Centenario</Text>
-            </View>
-            <View style={styles.row}>
-               <Text style={styles.textHighlighted}>Dirección:</Text>
-               <Text style={styles.textNormal}>Av. Angel Gallardo 400</Text>
-            </View>
-            <Button uppercase={false} onPress={() => this.props.onModifyVotePress()}>
-               Modificar voto
-            </Button>
-         </SurfaceStyled>
-      );
-   }
-}
+const CardDateInfo: FC<DateInfoProps> = props => {
+   return (
+      <SurfaceStyled>
+         <TitleText>Cita votada:</TitleText>
+         <View style={styles.row}>
+            <Text style={styles.textHighlighted}>Fecha:</Text>
+            <Text style={styles.textNormal}>Este Sábado 20 de Sep. a las 21hs</Text>
+         </View>
+         <View style={styles.row}>
+            <Text style={styles.textHighlighted}>Lugar:</Text>
+            <Text style={styles.textNormal}>Mate + porro en Parque Centenario</Text>
+         </View>
+         <Button uppercase={false} onPress={() => props.onModifyVotePress()}>
+            Modificar voto
+         </Button>
+      </SurfaceStyled>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    textHighlighted: {
@@ -59,4 +49,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default withTheme(CardDateInfo);
+export default CardDateInfo;

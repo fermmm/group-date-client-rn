@@ -9,13 +9,13 @@ import {
    ProfileStatusServerResponse,
    SetAttractionParams,
    User,
+   UserGetParams,
    UserPostParams,
    UserPropAsQuestion
 } from "./shared-tools/endpoints-interfaces/user";
 import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
 import { Alert } from "react-native";
-import { userQueries } from "./common/queryIds";
 import { defaultHttpRequest, getServerUrl } from "../tools/httpRequest";
 
 export function useServerProfileStatus<T extends ProfileStatusServerResponse>(props?: {
@@ -32,15 +32,18 @@ export function useServerProfileStatus<T extends ProfileStatusServerResponse>(pr
 }
 
 export function useUser<T extends User>(props?: {
-   requestParams?: TokenParameter;
+   requestParams?: Partial<UserGetParams>;
    config?: UseCacheOptions<T>;
 }) {
    const { token } = useFacebookToken(props?.requestParams?.token);
-
-   return useCache<T>("user", () => defaultHttpRequest("user", "GET", { token }), {
-      ...(props?.config ?? {}),
-      enabled: token != null && props?.config?.enabled !== false
-   });
+   return useCache<T>(
+      "user" + (props?.requestParams?.userId ?? ""),
+      () => defaultHttpRequest("user", "GET", { ...(props?.requestParams ?? {}), token }),
+      {
+         ...(props?.config ?? {}),
+         enabled: token != null && props?.config?.enabled !== false
+      }
+   );
 }
 
 export function usePropsAsQuestions<T = UserPropAsQuestion[]>(props?: {

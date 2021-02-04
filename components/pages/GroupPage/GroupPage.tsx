@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { List } from "react-native-paper";
+import { Button, List } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import Avatar from "../../common/Avatar/Avatar";
@@ -11,13 +11,13 @@ import TitleText from "../../common/TitleText/TitleText";
 import { currentTheme } from "../../../config";
 import CardDateInfo from "./CardDateInfo/CardDateInfo";
 import ButtonForAppBar from "../../common/ButtonForAppBar/ButtonForAppBar";
-import CardAcceptInvitation from "./CardAcceptInvitation/CardAcceptInvitation";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
 import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
-import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { getMatchesOf } from "../../../common-tools/groups/groups-tools";
+import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
+import { useUser } from "../../../api/server/user";
 
 export interface ParamsGroupPage {
    group: Group;
@@ -25,71 +25,81 @@ export interface ParamsGroupPage {
 
 const GroupPage: FC = () => {
    const { navigate } = useNavigation();
+   const { data: localUser } = useUser();
    const [expandedUser, setExpandedUser] = useState(-1);
    const { params } = useRoute<RouteProps<ParamsGroupPage>>();
    const group: Group = params?.group;
 
-   // TODO: Remove this
-   const invitationAccepted: boolean = true;
-
    return (
       <>
-         <AppBarHeader title={invitationAccepted ? "Grupo" : "Invitación a una cita"}>
-            {invitationAccepted && (
-               <View>
-                  <ButtonForAppBar icon="forum" onPress={() => navigate("Chat")}>
-                     Chat grupal
-                  </ButtonForAppBar>
-                  <BadgeExtended amount={3} showAtLeftSide />
-               </View>
-            )}
+         <AppBarHeader>
+            <View>
+               <ButtonForAppBar icon="forum" onPress={() => navigate("Chat")}>
+                  Chat grupal
+               </ButtonForAppBar>
+               <BadgeExtended amount={3} showAtLeftSide />
+            </View>
          </AppBarHeader>
          <BasicScreenContainer>
-            {!invitationAccepted && (
-               <CardAcceptInvitation
-                  matchAmount={3}
-                  onAcceptPress={() => navigate("DateVoting", { group })}
-               />
-            )}
-            {invitationAccepted && (
-               <CardDateInfo onModifyVotePress={() => navigate("DateVoting", { group })} />
-            )}
+            <CardDateInfo onModifyVotePress={() => navigate("DateVoting", { group })} />
             <SurfaceStyled>
                <TitleText>Miembros del grupo:</TitleText>
                <List.Section>
                   {group.members.map((user, i) => (
                      <List.Accordion
-                        title={user.name}
+                        title={toFirstUpperCase(user.name)}
                         expanded={i === expandedUser}
                         onPress={() => setExpandedUser(expandedUser !== i ? i : -1)}
                         titleStyle={styles.itemTitle}
                         left={props => (
                            <Avatar {...props} size={50} source={{ uri: user.images[0] }} />
                         )}
-                        key={i}
+                        key={user.userId}
                      >
-                        <List.Section
-                           title="Se gusta con:"
-                           style={styles.subItemTitle}
-                           titleStyle={styles.sectionTitle}
-                        >
-                           {getMatchesOf(user.userId, group).map((matchedUser, u) => (
-                              <List.Item
-                                 title={matchedUser.name}
-                                 style={styles.subItem}
-                                 key={u}
-                                 onPress={() => navigate("Profile", { user: matchedUser })}
-                                 left={props => (
-                                    <Avatar
-                                       {...props}
-                                       onPress={() => navigate("Profile", { user: matchedUser })}
-                                       size={50}
-                                       source={{ uri: matchedUser.images[0] }}
-                                    />
-                                 )}
-                              />
-                           ))}
-                        </List.Section>
+                        <View style={{ paddingLeft: 0 }}>
+                           <List.Section
+                              title={`Se gusta con:`}
+                              style={styles.subItemTitle}
+                              titleStyle={styles.sectionTitle}
+                           >
+                              {getMatchesOf(user.userId, group).map((matchedUser, u) => (
+                                 <List.Item
+                                    title={toFirstUpperCase(matchedUser.name)}
+                                    style={styles.subItem}
+                                    key={u}
+                                    onPress={() =>
+                                       navigate(
+                                          "Profile",
+                                          localUser.userId !== matchedUser.userId
+                                             ? {
+                                                  user: matchedUser,
+                                                  requestFullInfo: true
+                                               }
+                                             : null
+                                       )
+                                    }
+                                    left={props => (
+                                       <Avatar
+                                          {...props}
+                                          onPress={() =>
+                                             navigate(
+                                                "Profile",
+                                                localUser.userId !== matchedUser.userId
+                                                   ? {
+                                                        user: matchedUser,
+                                                        requestFullInfo: true
+                                                     }
+                                                   : null
+                                             )
+                                          }
+                                          size={50}
+                                          source={{ uri: matchedUser.images[0] }}
+                                       />
+                                    )}
+                                 />
+                              ))}
+                           </List.Section>
+                        </View>
                      </List.Accordion>
                   ))}
                </List.Section>
