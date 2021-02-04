@@ -1,3 +1,5 @@
+import "moment/locale/es";
+
 export const es: { [key: string]: string } = {
    Error: "Error",
    OK: "OK",

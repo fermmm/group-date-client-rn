@@ -14,11 +14,14 @@ import { useUser } from "../../../api/server/user";
 import { getMatchesOf } from "../../../common-tools/groups/groups-tools";
 import { firstBy } from "thenby";
 import { useServerInfo } from "../../../api/server/server-info";
+import { getSlotStatusInfoText } from "./tools/getSlotsInfoText";
 
 const GroupsListPage: FC = () => {
+   const { navigate } = useNavigation();
    const { data: groups } = useUserGroupList();
    const { data: user } = useUser();
-   const { navigate } = useNavigation();
+   const { data: serverInfo } = useServerInfo();
+   const slotsStatusInfoText = getSlotStatusInfoText(serverInfo, groups);
 
    if (groups == null || groups?.length === 0) {
       return (
@@ -32,11 +35,7 @@ const GroupsListPage: FC = () => {
 
    return (
       <BasicScreenContainer>
-         <HelpBanner
-            text={
-               "Estas son tus citas grupales, el máximo de citas activas en simultaneo que puedes tener es: Una de tamaño pequeño y una de tamaño grande, en total 2. Cada 3 semanas se te habilita espacio para otras 2."
-            }
-         />
+         {slotsStatusInfoText != null && <HelpBanner text={slotsStatusInfoText} />}
          <TitleText> Activas </TitleText>
          <List.Section>
             {groups.sort(firstBy(g => g.creationDate, "desc")).map(group => (
