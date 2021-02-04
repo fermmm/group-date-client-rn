@@ -18,10 +18,12 @@ export function getSlotStatusInfoText(
       const groupsOfSlot = getGroupsOfSlot(slot, groups);
 
       if (groupsOfSlot.length >= slot.amount) {
-         result = `Se permite ${slot.amount} grupo(s) al mismo tiempo, dentro de ${moment
+         result = `Se permite ${slot.amount} cita${
+            slot.amount > 1 ? "s" : ""
+         } al mismo tiempo, dentro de ${moment
             .duration(slot.releaseTime, "seconds")
             .locale(I18n.locale)
-            .humanize()} podrás tener una nueva cita. Si se forma un grupo grande se ignora la restricción.`;
+            .humanize()} podrás tener una nueva. Si se forma una cita grande se ignora la restricción.`;
       }
    });
 
