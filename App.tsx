@@ -15,10 +15,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import DateVotingPage from "./components/pages/DateVotingPage/DateVotingPage";
 import ChatPage from "./components/pages/ChatPage/ChatPage";
 import AboutPage from "./components/pages/AboutPage/AboutPage";
-import { en } from "./texts/en/en";
-import { es } from "./texts/es/es";
 import AdminPage from "./components/pages/AdminPage/AdminPage";
 import { CacheConfigProvider } from "./api/tools/useCache";
+import { en } from "./texts/en/en";
+import { es } from "./texts/es/es";
+import "intl";
+import "intl/locale-data/jsonp/en";
+import "intl/locale-data/jsonp/es";
 
 i18n.fallbacks = true;
 i18n.translations = {

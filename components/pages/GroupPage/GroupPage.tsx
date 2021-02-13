@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { Button, List } from "react-native-paper";
+import { List } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import Avatar from "../../common/Avatar/Avatar";
@@ -26,7 +26,7 @@ export interface ParamsGroupPage {
 const GroupPage: FC = () => {
    const { navigate } = useNavigation();
    const { data: localUser } = useUser();
-   const [expandedUser, setExpandedUser] = useState(-1);
+   const [expandedUser, setExpandedUser] = useState<number>();
    const { params } = useRoute<RouteProps<ParamsGroupPage>>();
    const group: Group = params?.group;
 
@@ -49,7 +49,7 @@ const GroupPage: FC = () => {
                      <List.Accordion
                         title={toFirstUpperCase(user.name)}
                         expanded={i === expandedUser}
-                        onPress={() => setExpandedUser(expandedUser !== i ? i : -1)}
+                        onPress={() => setExpandedUser(expandedUser !== i ? i : null)}
                         titleStyle={styles.itemTitle}
                         left={props => (
                            <Avatar {...props} size={50} source={{ uri: user.images[0] }} />

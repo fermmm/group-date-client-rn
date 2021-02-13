@@ -49,9 +49,7 @@ const GroupsListPage: FC = () => {
                   left={props => (
                      <List.Icon
                         {...props}
-                        icon={({ color: c }) => (
-                           <GraphSvg2 circleColor={c} lineColor={c} style={styles.logo} />
-                        )}
+                        icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} />}
                      />
                   )}
                   onPress={() => navigate("Group", { group })}
@@ -63,10 +61,6 @@ const GroupsListPage: FC = () => {
    );
 };
 
-const styles: Styles = StyleSheet.create({
-   scene: {
-      flex: 1
-   }
-});
+const styles: Styles = StyleSheet.create({});
 
 export default GroupsListPage;

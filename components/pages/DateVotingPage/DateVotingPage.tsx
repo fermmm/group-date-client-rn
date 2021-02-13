@@ -1,84 +1,83 @@
-import React, { Component } from "react";
+import React, { FC, useState } from "react";
 import { StyleSheet } from "react-native";
-import { Route } from "@react-navigation/native";
-import { withTheme } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
+import { useRoute } from "@react-navigation/native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
-import VotingPoll from "../../common/VotingPoll/VotingPoll";
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import VotingPoll, { VoteSubject } from "../../common/VotingPoll/VotingPoll";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
-import { withNavigation } from "@react-navigation/compat";
+import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
+import { useNavigation } from "../../../common-tools/navigation/useNavigation";
+import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
+import { ParamsGroupPage } from "../GroupPage/GroupPage";
 
-export interface GroupEnterProps extends Themed, StackScreenProps<{}> {}
-export interface GroupEnterState {
-   currentStep: number;
+export interface DateVotingPageParams {
+   group: Group;
 }
 
-class GroupEnterForm extends Component<GroupEnterProps, GroupEnterState> {
-   static defaultProps: Partial<GroupEnterProps> = {};
-   state: GroupEnterState = {
-      currentStep: 0
-   };
+const DateVotingPage: FC = () => {
+   const [currentStep, setCurrentStep] = useState<number>(0);
+   const { colors } = useTheme();
+   const { goBack } = useNavigation();
+   const { params } = useRoute<RouteProps<ParamsGroupPage>>();
+   const group: Group = params?.group;
 
-   render(): JSX.Element {
-      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-      const { goBack }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
-      const route: Route<string, { group: Group }> = this.props.route as Route<
-         string,
-         { group: Group }
-      >;
-      const group: Group = route.params.group;
-
-      return (
-         <>
-            <AppBarHeader />
-            <ScreensStepper
-               currentScreen={this.state.currentStep}
-               swipeEnabled={false}
-               onScreenChange={newStep => this.setState({ currentStep: newStep })}
+   return (
+      <>
+         <AppBarHeader />
+         <ScreensStepper
+            currentScreen={currentStep}
+            swipeEnabled={false}
+            onScreenChange={newStep => setCurrentStep(newStep)}
+         >
+            <BasicScreenContainer
+               showBottomGradient={true}
+               bottomGradientColor={colors.background}
+               onContinuePress={() => setCurrentStep(1)}
+               showContinueButton
             >
-               <BasicScreenContainer
-                  showBottomGradient={true}
-                  bottomGradientColor={colors.background}
-                  onContinuePress={() => this.setState({ currentStep: 1 })}
-                  showContinueButton
-               >
-                  <TitleText extraMarginLeft extraSize>
-                     Votá el dia y la hora de la cita, despues toca "continuar"
-                  </TitleText>
-                  <TitleSmallText style={styles.titleSmall}>
-                     Estos son los dias y horas en los que todos pueden, o la mayoría. Podes votar
-                     por más de una opción.
-                  </TitleSmallText>
-                  <VotingPoll group={group} votingOptions={group.dayOptions} />
-               </BasicScreenContainer>
-               <BasicScreenContainer
-                  showBottomGradient={true}
-                  bottomGradientColor={colors.background}
-                  onBackPress={() => this.setState({ currentStep: 0 })}
-                  onContinuePress={() => goBack()}
-                  showBackButton
-                  showContinueButton
-               >
-                  <TitleText extraMarginLeft extraSize>
-                     Votá el lugar de la cita
-                  </TitleText>
-                  <TitleSmallText style={styles.titleSmall}>
-                     Estas son todas las opciones recomendadas de todos los miembros del grupo.
-                     Podés votar por más de una opción.
-                  </TitleSmallText>
-                  <VotingPoll group={group} votingOptions={group.dateIdeasVotes} />
-               </BasicScreenContainer>
-            </ScreensStepper>
-         </>
-      );
-   }
-}
+               <TitleText extraMarginLeft extraSize>
+                  Vota dia y hora de la cita, después toca "continuar"
+               </TitleText>
+               <TitleSmallText style={styles.titleSmall}>
+                  Puedes votar por más de una opción.
+               </TitleSmallText>
+               <VotingPoll
+                  group={group}
+                  subject={VoteSubject.Date}
+                  onDayOptionVote={() => console.log("pressed")}
+                  onIdeaVote={() => console.log("pressed")}
+               />
+            </BasicScreenContainer>
+            <BasicScreenContainer
+               showBottomGradient={true}
+               bottomGradientColor={colors.background}
+               onBackPress={() => setCurrentStep(0)}
+               onContinuePress={() => goBack()}
+               showBackButton
+               showContinueButton
+            >
+               <TitleText extraMarginLeft extraSize>
+                  Votá el lugar de la cita
+               </TitleText>
+               <TitleSmallText style={styles.titleSmall}>
+                  Estas son todas las opciones recomendadas de todos los miembros del grupo. Podés
+                  votar por más de una opción.
+               </TitleSmallText>
+               <VotingPoll
+                  group={group}
+                  subject={VoteSubject.Idea}
+                  onDayOptionVote={() => console.log("pressed")}
+                  onIdeaVote={() => console.log("pressed")}
+               />
+            </BasicScreenContainer>
+         </ScreensStepper>
+      </>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    titleSmall: {
@@ -86,6 +85,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-// tslint:disable-next-line: ban-ts-ignore-except-imports
-// @ts-ignore
-export default withNavigation(withTheme(GroupEnterForm));
+export default DateVotingPage;
