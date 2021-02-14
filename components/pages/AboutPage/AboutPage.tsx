@@ -26,9 +26,9 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Tu primera cita grupal es probable que sea entre pocos usuarios, por ejemplo de 3
-               personas o tal vez 6, es probable que las siguientes sean de más, ya que se necesita
-               tiempo para que se den coincidencias más numerosas.
+               Tu primera cita grupal es probable que sea pequeña, por ejemplo de 3 personas o tal
+               vez 6, es probable que las siguientes sean de más, ya que se necesita tiempo para que
+               se den coincidencias más numerosas.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Si solo me gusta un género, significa que en la cita grupal van a ser todxs de ese
@@ -36,15 +36,15 @@ const AboutPage: FC = () => {
             </TitleText>
             <Text style={styles.text}>
                No. Para estar en una cita grupal te tienes que gustar con un mínimo de 2 de sus
-               integrantes, no necesariamente con la totalidad, por lo que es muy probable que haya
-               algunas personas en tus citas que pueden ser de cualquier género y sexualidad.
+               integrantes, no necesariamente con la totalidad, es muy probable que haya personas en
+               tus citas que pueden ser de cualquier género y sexualidad.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Se pueden generar citas desequilibradas? (Ej: 1 persona se gusta con 5 que no se
                gustan entre ellas)
             </TitleText>
             <Text style={styles.text}>
-               No. Un requisito para que se forme una cita grupal es que sean grupos mas o menos
+               No. Un requisito para que se forme una cita grupal es que sean grupos más o menos
                equilibrados. Esto también genera que en las citas 100% heterosexuales la cantidad de
                mujeres y hombres siempre va a ser mas o menos la misma.
             </Text>
@@ -59,10 +59,10 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Además en la monogamia te ves con una sola persona y tiene que "tenerlo todo" pero
-               aquí hay multiples personas por lo que no hace falta que nadie lo "tenga todo", se
-               dan relaciones más flexibles y relajadas en ese sentido, generando más likes y
-               coincidencias.
+               Algo que ayuda es que en la lógica de la monogamia te ves con una sola persona por lo
+               que tiene que "tenerlo todo" pero aquí hay multiples personas por lo que no hace
+               falta que nadie lo tenga todo, se dan relaciones más flexibles y relajadas en ese
+               sentido, generando más likes y coincidencias.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
@@ -80,41 +80,43 @@ const AboutPage: FC = () => {
             <Text style={styles.text}>
                Las relaciones afectivas y sexuales entre varias personas son la manera original en
                la que se relacionaba el ser humano y definen el concepto de familia. Hasta hace
-               10.000 años la crianza era una actividad poco exigente por que el sexo solía ser
-               grupal o muy promiscuo y los padres de lxs hijxs eran todas las personas del grupo
-               afectivo o tribu, donde se vivía compartiendo todo de forma igualitaria. Este pasado
-               poliamoroso lo tenemos todxs presente en nuestro cuerpo, por ejemplo: Los "gemidos
-               sexuales" son un instinto que las otras especies que lo tienen (primates) lo usan
-               para llamar a lxs que están cerca, de la misma manera funcionaba originalmente en
-               nuestra especie.
+               10.000 años la crianza era una actividad poco exigente, los padres de lxs hijxs eran
+               todas las personas de un grupo afectivo, donde se compartía el cuidado y los recursos
+               de forma igualitaria como una gran familia, potenciado por el sexo que solía ser
+               grupal y muy abundante. Este pasado poliamoroso grupal lo tenemos todxs presente en
+               la sexualidad biológica de nuestro cuerpo, por ejemplo: Los "gemidos sexuales" son un
+               instinto que las otras especies que lo tienen (primates) lo usan para llamar a lxs
+               que están cerca, de la misma manera funcionaba antes en nuestra especie.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
                La sexualidad que podemos experimentar en nuestra cultura esta muy reprimida y
-               alejada del tipo de sexualidad que nos pide nuestro cuerpo y su evolución, es el
-               trasfondo de muchos problemas que surgen hoy en día a la hora de conocernos o
-               conectar sexualmente. Hay grandes libros de divulgación científica sobre el tema para
-               recomendar, algunos muy conocidos y comentados por la comunidad científica como los
-               de Cacilda Jethá y Christopher Ryan en primer lugar o también el de Friedrich Engels:
-               "El origen de la familia, la propiedad privada y el estado".
+               alejada del tipo de sexualidad que nos pide nuestro cuerpo y su evolución, este
+               alejamiento es el trasfondo de muchos problemas que surgen hoy en día a la hora de
+               mantenernos motivados o conectar sexualmente, algo similar suele suceder con el
+               afecto. Hay grandes libros de divulgación científica sobre el tema para recomendar,
+               algunos muy conocidos y comentados por la comunidad científica como los de Cacilda
+               Jethá y Christopher Ryan en primer lugar o también el de Friedrich Engels: "El origen
+               de la familia, la propiedad privada y el estado".
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
                Cuando se instala la monogamia en nuestra cultura, no sucede por que esta tenga
-               alguna ventaja emocional, aparece por necesidades comerciales: casar hijxs como
+               alguna ventaja sentimental, aparece por necesidades comerciales: casar hijxs como
                contrato comercial entre familias, acumular riqueza de forma personal sin compartir
-               con la tribu, etc. La monogamia y la familia nuclear son dos de los muchos fenómenos
-               sociales de la revolución neolítica, la misma que trajo por primera vez a las clases
-               sociales, patriarcado y otras formas de opresión.
+               colectivamente, herencia, etc. La monogamia y la familia de hoy en día (nuclear) son
+               dos de los muchos fenómenos sociales de la revolución neolítica, la misma que trajo
+               por primera vez a las clases sociales, patriarcado, explotación y otras formas de
+               opresión.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Quién hizo esta aplicación?
+               ¿Quienes hicieron esta aplicación?
             </TitleText>
             <Text style={styles.text}>
                La idea viene de un informático argentino quién también escribió el software de la
                app, pero las diferentes partes y detalles que multiplican su calidad son ideas de
-               varias personas interesadas en el proyecto, gente perteneciente a organizaciones de
-               poliamor, amor libre, feminismo, profesionales de diferentes disciplinas: desde
+               varias personas interesadas en el proyecto, personas pertenecientes a organizaciones
+               de poliamor, amor libre, feminismo, profesionales de diferentes disciplinas: desde
                ciencias sociales hasta otrxs informáticxs.
             </Text>
             <EmptySpace height={80} />

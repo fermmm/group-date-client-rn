@@ -69,8 +69,8 @@ const SettingsPage: FC = () => {
                }
             />
             <List.Item
-               title="Tu lugar recomendado"
-               description="Modifica tu lugar recomendado para citas grupales"
+               title="Tu idea recomendada"
+               description="Modifica idea recomendada para citas grupales"
                left={props => <List.Icon {...props} style={styles.optionIcon} icon="terrain" />}
                onPress={() =>
                   navigate<ParamsRegistrationFormsPage>("RegistrationForms", {

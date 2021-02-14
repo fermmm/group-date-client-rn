@@ -18,6 +18,8 @@ import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { getMatchesOf } from "../../../common-tools/groups/groups-tools";
 import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { useUser } from "../../../api/server/user";
+import { useGroup } from "../../../api/server/groups";
+import { useVotingResults } from "../DateVotingPage/tools/useVotingResults";
 
 export interface ParamsGroupPage {
    group: Group;
@@ -28,7 +30,9 @@ const GroupPage: FC = () => {
    const { data: localUser } = useUser();
    const [expandedUser, setExpandedUser] = useState<number>();
    const { params } = useRoute<RouteProps<ParamsGroupPage>>();
-   const group: Group = params?.group;
+   const { data: groupFromServer } = useGroup({ groupId: params?.group?.groupId });
+   const group: Group = groupFromServer ?? params?.group;
+   const votingResults = useVotingResults(group);
 
    return (
       <>
@@ -41,7 +45,12 @@ const GroupPage: FC = () => {
             </View>
          </AppBarHeader>
          <BasicScreenContainer>
-            <CardDateInfo onModifyVotePress={() => navigate("DateVoting", { group })} />
+            <CardDateInfo
+               day={votingResults.day}
+               idea={votingResults.idea}
+               onModifyVotePress={() => navigate("DateVoting", { group })}
+               loading={groupFromServer == null}
+            />
             <SurfaceStyled>
                <TitleText>Miembros del grupo:</TitleText>
                <List.Section>

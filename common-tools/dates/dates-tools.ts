@@ -7,6 +7,10 @@ import i18n from "i18n-js";
  * @param unixDate Unix date in seconds
  */
 export function dayAndMonthFromUnixDate(unixDate: number): string {
+   if (unixDate == null) {
+      return null;
+   }
+
    const options: Intl.DateTimeFormatOptions = {
       day: "numeric",
       month: "long"

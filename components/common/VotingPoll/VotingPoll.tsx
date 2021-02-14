@@ -5,54 +5,59 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import SurfaceStyled from "../SurfaceStyled/SurfaceStyled";
 import { currentTheme } from "../../../config";
 import ProgressBar from "../ProgressBar/ProgressBar";
-import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
-import { dayAndMonthFromUnixDate } from "../../../common-tools/dates/dates-tools";
-import { getGroupMember } from "../../../api/tools/groupTools";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
+import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 
 export interface VotingPollProps {
-   group: Group;
-   subject: VoteSubject;
-   onDayOptionVote: () => void;
-   onIdeaVote: () => void;
+   votingOptions: VotingOption[];
+   potentialVoters: User[];
+   userId: string;
+   onVoteChange: (userVotes: Array<string | number>, specificChange: VoteChange) => void;
 }
 
 const VotingPoll: FC<VotingPollProps> = props => {
-   const { subject, group } = props;
+   const { votingOptions, potentialVoters, userId, onVoteChange } = props;
    const { colors } = useTheme();
 
-   let votingOptions: VotingOption[] = [];
-   if (subject === VoteSubject.Date) {
-      votingOptions = group.dayOptions.map(o => ({
-         name: dayAndMonthFromUnixDate(o.date),
-         id: o.date,
-         voters: o.votersUserId
-      }));
-   }
+   const isVoted = (votingOption: VotingOption, userId: string) => {
+      return votingOption.voters?.includes(userId) === true;
+   };
+
+   const handleVotePress = (id: string | number) => {
+      const userVotes = votingOptions.filter(op => isVoted(op, userId)).map(op => op.id);
+      const alreadyVoted = userVotes.includes(id);
+
+      // If the option is already voted it means the user wanted to remove the vote
+      if (alreadyVoted) {
+         userVotes.splice(userVotes.indexOf(id), 1);
+      } else {
+         userVotes.push(id);
+      }
+
+      onVoteChange(userVotes, { id, removed: alreadyVoted });
+   };
 
    return (
       <>
-         {votingOptions.map((votingOption: VotingOption, i) => (
+         {votingOptions?.map((votingOption: VotingOption, i) => (
             <SurfaceStyled key={i}>
                <Text style={styles.textLine1}>{votingOption.name}</Text>
-               {/* {votingOption.textLine2 && (
-                     <Text style={styles.textLine2}>{votingOption.textLine2}</Text>
-                  )} */}
                <View style={styles.rowContainer}>
                   <ProgressBar
-                     progress={votingOption.voters?.length ?? 0 / group.members.length}
+                     progress={(votingOption.voters?.length ?? 0) / potentialVoters.length}
                      fillColor={colors.primary}
                   />
                   <Button
                      compact
-                     onPress={() => console.log("vote pressed")}
+                     onPress={() => handleVotePress(votingOption.id)}
                      uppercase={false}
-                     icon={"plus"}
+                     icon={isVoted(votingOption, userId) ? "minus" : "plus"}
                   >
-                     Votar
+                     {isVoted(votingOption, userId) ? "Quitar voto" : "Votar"}
                   </Button>
                </View>
-               {votingOption.voters.length > 0 && (
+               {votingOption.voters?.length > 0 && (
                   <View style={styles.rowContainer}>
                      <Text style={styles.votesAmountText}>
                         {votingOption.voters.length}{" "}
@@ -60,7 +65,11 @@ const VotingPoll: FC<VotingPollProps> = props => {
                         {":"}
                      </Text>
                      <Text style={styles.votersText}>
-                        {votingOption.voters.map(id => getGroupMember(id, group).name).join(", ")}
+                        {votingOption.voters
+                           .map(id =>
+                              toFirstUpperCase(potentialVoters.find(v => v.userId === id).name)
+                           )
+                           .join(", ")}
                      </Text>
                   </View>
                )}
@@ -75,10 +84,6 @@ const styles: Styles = StyleSheet.create({
       fontFamily: currentTheme.font.regular,
       fontSize: 15,
       marginBottom: 5
-   },
-   textLine2: {
-      fontFamily: currentTheme.font.light,
-      fontSize: 12
    },
    rowContainer: {
       flexDirection: "row",
@@ -101,13 +106,13 @@ const styles: Styles = StyleSheet.create({
 
 export default VotingPoll;
 
-export enum VoteSubject {
-   Date,
-   Idea
-}
-
-interface VotingOption {
+export interface VotingOption {
    name: string;
    id: string | number;
-   voters: string[];
+   voters?: string[];
+}
+
+export interface VoteChange {
+   id: string | number;
+   removed: boolean;
 }

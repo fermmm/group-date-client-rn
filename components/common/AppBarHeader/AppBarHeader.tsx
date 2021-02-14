@@ -12,12 +12,18 @@ export interface AppBarHeaderProps {
    title?: string;
    showBackButton?: boolean;
    onBackPress?(): void;
+   afterBackPress?(): void;
 }
 
 const AppBarHeader: FC<AppBarHeaderProps> = props => {
-   const { title = "", showBackButton = true, onBackPress, children } = props;
+   const { title = "", showBackButton = true, onBackPress, afterBackPress, children } = props;
    const { goBack } = useNavigation();
    const theme: ThemeExt = useTheme();
+
+   const handleBackPress = () => {
+      onBackPress != null ? onBackPress() : goBack();
+      afterBackPress != null && afterBackPress();
+   };
 
    return (
       <View style={styles.mainContainer}>
@@ -27,7 +33,7 @@ const AppBarHeader: FC<AppBarHeaderProps> = props => {
                {showBackButton && (
                   <Appbar.BackAction
                      color={theme.colors.text2}
-                     onPress={() => (onBackPress != null ? onBackPress() : goBack())}
+                     onPress={handleBackPress}
                      style={{
                         marginRight: 25
                      }}

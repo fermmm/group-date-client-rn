@@ -3,7 +3,6 @@ import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import { currentTheme } from "../../../../config";
-import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 import { RegistrationFormName } from "../tools/useRequiredFormList";
@@ -42,10 +41,7 @@ const DateIdeaForm: FC<PropsDateIdeaForm> = ({ onChange, initialData, formName }
 
    return (
       <View style={styles.mainContainer}>
-         <TitleText>¿Dónde te gustaría que fuese una cita grupal?</TitleText>
-         <TitleSmallText style={styles.titleSmall}>
-            Todxs conocemos algún lugar público agradable.
-         </TitleSmallText>
+         <TitleText>¿Cómo te gustaría que fuese una cita grupal?</TitleText>
          <EmptySpace height={16} />
          <TextInputExtended
             titleLine2='Ejemplo: "Merienda en la playa"'

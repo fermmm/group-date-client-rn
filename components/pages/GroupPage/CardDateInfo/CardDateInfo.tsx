@@ -1,32 +1,50 @@
 import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, Button } from "react-native-paper";
-import { Themed } from "../../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import SurfaceStyled from "../../../common/SurfaceStyled/SurfaceStyled";
 import TitleText from "../../../common/TitleText/TitleText";
 import { currentTheme } from "../../../../config";
+import { LoadingAnimation } from "../../../common/LoadingAnimation/LoadingAnimation";
 
 export interface DateInfoProps {
-   onModifyVotePress(): void;
+   day?: string;
+   idea?: string;
+   onModifyVotePress: () => void;
+   loading?: boolean;
 }
 export interface DateInfoState {}
 
-const CardDateInfo: FC<DateInfoProps> = props => {
+const CardDateInfo: FC<DateInfoProps> = ({ day, idea, onModifyVotePress, loading }) => {
    return (
       <SurfaceStyled>
-         <TitleText>Cita votada:</TitleText>
-         <View style={styles.row}>
-            <Text style={styles.textHighlighted}>Fecha:</Text>
-            <Text style={styles.textNormal}>Este Sábado 20 de Sep. a las 21hs</Text>
-         </View>
-         <View style={styles.row}>
-            <Text style={styles.textHighlighted}>Lugar:</Text>
-            <Text style={styles.textNormal}>Mate + porro en Parque Centenario</Text>
-         </View>
-         <Button uppercase={false} onPress={() => props.onModifyVotePress()}>
-            Modificar voto
-         </Button>
+         {loading ? (
+            <LoadingAnimation />
+         ) : (
+            <>
+               {(day != null || idea != null) && <TitleText>Cita más votada:</TitleText>}
+               {day == null && idea == null && (
+                  <View style={styles.row}>
+                     <Text style={styles.textNormal}>Se puede votar idea y día para la cita</Text>
+                  </View>
+               )}
+               {day != null && (
+                  <View style={styles.row}>
+                     <Text style={styles.textHighlighted}>Día:</Text>
+                     <Text style={styles.textNormal}>{day}</Text>
+                  </View>
+               )}
+               {idea != null && (
+                  <View style={styles.row}>
+                     <Text style={styles.textHighlighted}>Idea:</Text>
+                     <Text style={styles.textNormal}>{idea}</Text>
+                  </View>
+               )}
+               <Button uppercase={false} onPress={() => onModifyVotePress()}>
+                  VOTAR
+               </Button>
+            </>
+         )}
       </SurfaceStyled>
    );
 };

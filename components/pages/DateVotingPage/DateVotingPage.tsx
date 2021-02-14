@@ -1,9 +1,9 @@
-import React, { FC, useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
-import VotingPoll, { VoteSubject } from "../../common/VotingPoll/VotingPoll";
+import VotingPoll, { VoteChange } from "../../common/VotingPoll/VotingPoll";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
@@ -13,6 +13,12 @@ import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { ParamsGroupPage } from "../GroupPage/GroupPage";
+import { useGroupVotingOptions } from "./tools/useGroupVotingOptions";
+import { useUser } from "../../../api/server/user";
+import { sendDayVotes, sendIdeasVotes, useGroup } from "../../../api/server/groups";
+import { mutateGroupCacheDayVote, mutateGroupCacheIdeaVote } from "./tools/groupCacheMutators";
+import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
+import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 
 export interface DateVotingPageParams {
    group: Group;
@@ -22,8 +28,50 @@ const DateVotingPage: FC = () => {
    const [currentStep, setCurrentStep] = useState<number>(0);
    const { colors } = useTheme();
    const { goBack } = useNavigation();
+   const { data: user } = useUser();
+   const { token } = useFacebookToken();
    const { params } = useRoute<RouteProps<ParamsGroupPage>>();
-   const group: Group = params?.group;
+   const { data: group } = useGroup({ groupId: params?.group?.groupId });
+   const votingOptions = useGroupVotingOptions(group);
+   const daysToVoteGathered = useRef<number[]>(null);
+   const ideasToVoteGathered = useRef<string[]>(null);
+
+   const handleDayVoteChange = (daysToVote: number[], specificChange: VoteChange) => {
+      mutateGroupCacheDayVote(specificChange, user.userId, group);
+      daysToVoteGathered.current = daysToVote;
+   };
+
+   const handleIdeaVoteChange = (ideasToVoteAuthorsIds: string[], specificChange: VoteChange) => {
+      mutateGroupCacheIdeaVote(specificChange, user.userId, group);
+      ideasToVoteGathered.current = ideasToVoteAuthorsIds;
+   };
+
+   // This effect sends the changes to the server once the user leaves the voting page
+   useFocusEffect(
+      React.useCallback(() => {
+         return () => {
+            if (daysToVoteGathered.current != null) {
+               sendDayVotes({
+                  daysToVote: daysToVoteGathered.current,
+                  token,
+                  groupId: group.groupId
+               });
+            }
+
+            if (ideasToVoteGathered.current != null) {
+               sendIdeasVotes({
+                  ideasToVoteAuthorsIds: ideasToVoteGathered.current,
+                  token,
+                  groupId: group.groupId
+               });
+            }
+         };
+      }, [token])
+   );
+
+   if (group == null) {
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
+   }
 
    return (
       <>
@@ -40,16 +88,16 @@ const DateVotingPage: FC = () => {
                showContinueButton
             >
                <TitleText extraMarginLeft extraSize>
-                  Vota dia y hora de la cita, después toca "continuar"
+                  Vota el día para la cita, después toca "continuar"
                </TitleText>
                <TitleSmallText style={styles.titleSmall}>
                   Puedes votar por más de una opción.
                </TitleSmallText>
                <VotingPoll
-                  group={group}
-                  subject={VoteSubject.Date}
-                  onDayOptionVote={() => console.log("pressed")}
-                  onIdeaVote={() => console.log("pressed")}
+                  votingOptions={votingOptions?.dayOptions}
+                  potentialVoters={group.members}
+                  userId={user.userId}
+                  onVoteChange={handleDayVoteChange}
                />
             </BasicScreenContainer>
             <BasicScreenContainer
@@ -61,17 +109,17 @@ const DateVotingPage: FC = () => {
                showContinueButton
             >
                <TitleText extraMarginLeft extraSize>
-                  Votá el lugar de la cita
+                  Vota la idea de la cita
                </TitleText>
                <TitleSmallText style={styles.titleSmall}>
-                  Estas son todas las opciones recomendadas de todos los miembros del grupo. Podés
-                  votar por más de una opción.
+                  Estas son las recomendaciones escritas por los demás del grupo, puedes votar más
+                  de una opción
                </TitleSmallText>
                <VotingPoll
-                  group={group}
-                  subject={VoteSubject.Idea}
-                  onDayOptionVote={() => console.log("pressed")}
-                  onIdeaVote={() => console.log("pressed")}
+                  votingOptions={votingOptions?.ideaOptions}
+                  potentialVoters={group.members}
+                  userId={user.userId}
+                  onVoteChange={handleIdeaVoteChange}
                />
             </BasicScreenContainer>
          </ScreensStepper>
