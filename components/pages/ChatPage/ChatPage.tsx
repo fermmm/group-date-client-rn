@@ -1,17 +1,16 @@
-import React, { Component } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import { withTheme, Banner } from "react-native-paper";
-import { Themed, ThemeExt } from "../../../common-tools/themes/types/Themed";
+import { Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { GiftedChat, IMessage, Bubble, Send } from "react-native-gifted-chat";
-import KeyboardSpacer from "react-native-keyboard-spacer";
+import { GiftedChat, Bubble, Send, IMessage } from "react-native-gifted-chat";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
-import color from "color";
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import { StackScreenProps } from "@react-navigation/stack";
 import Dialog from "../../common/Dialog/Dialog";
-import { withNavigation } from "@react-navigation/compat";
-import { Route } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
+import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
+import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
+import { PageBackgroundGradient } from "../../common/PageBackgroundGradient/PageBackgroundGradient";
 
 export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
@@ -21,58 +20,41 @@ export interface ChatPageState {
    showIntroDialog: boolean;
    introDialogText: string;
 }
-interface RouteParams {
+interface ParamsChat {
    contactChat: boolean;
    introDialogText: string;
 }
 
-class ChatPage extends Component<ChatPageProps, ChatPageState> {
-   static defaultProps: Partial<ChatPageProps> = {};
-   navigation: StackNavigationProp<Record<string, {}>> = this.props.navigation;
-   route: Route<string, RouteParams> = this.props.route as Route<string, RouteParams>;
+const ChatPage: FC<ChatPageProps> = () => {
+   const { colors } = useTheme();
+   const { params } = useRoute<RouteProps<ParamsChat>>();
+   const [messages, setMessages] = useState<IMessage[]>([]);
+   const [showIntroDialog, setShowIntroDialog] = useState(params?.introDialogText != null);
+   const isContactChat = params?.contactChat ?? false;
 
-   state: ChatPageState = {
-      messages: [],
-      adviseBannerVisible: true,
-      isContactChat: this.route.params.contactChat ?? false,
-      showIntroDialog: this.route.params.introDialogText != null,
-      introDialogText: this.route.params.introDialogText
-   };
-
-   componentDidMount(): void {
-      this.setState({
-         messages: [
-            {
-               _id: 1,
-               text: "olis como andan",
-               createdAt: new Date(),
-               user: {
-                  _id: 2,
-                  name: "alberto666",
-                  avatar: "https://placeimg.com/140/140/any"
-               }
+   useEffect(() => {
+      setMessages([
+         {
+            _id: 1,
+            text: "olis como andan",
+            createdAt: new Date(),
+            user: {
+               _id: 2,
+               name: "alberto666",
+               avatar: "https://placeimg.com/140/140/any"
             }
-         ]
-      });
-   }
+         }
+      ]);
+   }, []);
 
-   onSend(messages: IMessage[] = []): void {
-      this.setState(previousState => ({
-         messages: GiftedChat.append(previousState.messages, messages)
-      }));
-   }
+   const onSend = useCallback((messages = []) => {
+      setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
+   }, []);
 
-   render(): JSX.Element {
-      const { colors }: ThemeExt = (this.props.theme as unknown) as ThemeExt;
-      const {
-         isContactChat,
-         showIntroDialog,
-         introDialogText
-      }: Partial<ChatPageState> = this.state;
-
-      return (
-         <>
-            <AppBarHeader title={!isContactChat ? "Chat" : "Contáctanos"} />
+   return (
+      <>
+         <AppBarHeader title={!isContactChat ? "Chat" : "Contáctanos"} />
+         <PageBackgroundGradient>
             {!isContactChat && (
                <HelpBanner
                   showCloseButton
@@ -81,9 +63,10 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
                   }
                />
             )}
+
             <GiftedChat
-               messages={this.state.messages}
-               onSend={messages => this.onSend(messages)}
+               messages={messages}
+               onSend={messages => onSend(messages)}
                user={{
                   _id: 1
                }}
@@ -92,8 +75,6 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
                renderBubble={props => (
                   <Bubble
                      {...props}
-                     // tslint:disable-next-line: ban-ts-ignore-except-imports
-                     // @ts-ignore
                      wrapperStyle={{
                         right: { backgroundColor: colors.primary }
                      }}
@@ -102,24 +83,18 @@ class ChatPage extends Component<ChatPageProps, ChatPageState> {
                renderSend={props => (
                   <Send {...props} label={"Enviar"} textStyle={{ color: colors.primary }} />
                )}
-               keyboardShouldPersistTaps="never"
+               keyboardShouldPersistTaps={"never"}
                scrollToBottom
                alignTop
             />
-            <Dialog
-               visible={showIntroDialog}
-               onDismiss={() => this.setState({ showIntroDialog: false })}
-            >
-               {introDialogText}
+            <Dialog visible={showIntroDialog} onDismiss={() => setShowIntroDialog(false)}>
+               {params?.introDialogText}
             </Dialog>
-            <KeyboardSpacer topSpacing={30} />
-         </>
-      );
-   }
-}
+         </PageBackgroundGradient>
+      </>
+   );
+};
 
 const styles: Styles = StyleSheet.create({});
 
-// tslint:disable-next-line: ban-ts-ignore-except-imports
-// @ts-ignore
-export default withNavigation(withTheme(ChatPage));
+export default ChatPage;

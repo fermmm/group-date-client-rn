@@ -1,32 +1,30 @@
-import React, { Component } from "react";
+import React, { ComponentProps, FC } from "react";
 import { StyleSheet } from "react-native";
-import { Button, ButtonProps } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 
-class ButtonStyled extends Component<Partial<ButtonProps>> {
-   render(): JSX.Element {
-      return (
-         <Button
-            mode="outlined"
-            uppercase={false}
-            {...this.props}
-            style={[styles.button, this.props.style]}
-            contentStyle={[styles.buttonContent, this.props.contentStyle]}
-         >
-            {this.props.children}
-         </Button>
-      );
-   }
-}
+const ButtonStyled: FC<ComponentProps<typeof Button>> = props => {
+   return (
+      <Button
+         mode="outlined"
+         uppercase={false}
+         {...props}
+         style={[styles.button, props.style]}
+         contentStyle={[styles.buttonContent, props.contentStyle]}
+      >
+         {props.children}
+      </Button>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    button: {
       width: "100%",
-      marginBottom: 15,
+      marginBottom: 15
    },
    buttonContent: {
       width: "100%",
-      height: 45,
+      height: 45
    }
 });
 

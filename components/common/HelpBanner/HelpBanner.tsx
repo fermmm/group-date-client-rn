@@ -1,9 +1,10 @@
-import React, { FC, ReactNode, useState } from "react";
-import { StyleSheet, Text } from "react-native";
+import React, { FC, useState } from "react";
+import { StyleSheet } from "react-native";
 import { Banner } from "react-native-paper";
 import color from "color";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
+import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 
 export interface PropsHelpBanner {
    text: string;
@@ -11,6 +12,7 @@ export interface PropsHelpBanner {
 }
 
 export const HelpBanner: FC<PropsHelpBanner> = ({ text, showCloseButton }) => {
+   const { colors } = useTheme();
    const [visible, setVisible] = useState<boolean>(true);
 
    return (
@@ -21,6 +23,10 @@ export const HelpBanner: FC<PropsHelpBanner> = ({ text, showCloseButton }) => {
             showCloseButton
                ? [
                     {
+                       //@ts-ignore
+                       labelStyle: styles.buttonStyle,
+                       //@ts-ignore
+                       color: colors.specialBackground1,
                        label: "Entendido",
                        onPress: () => setVisible(false)
                     }
@@ -38,5 +44,8 @@ const styles: Styles = StyleSheet.create({
       backgroundColor: color(currentTheme.colors.background).darken(0.15).toString(),
       elevation: 12,
       marginBottom: 25
+   },
+   buttonStyle: {
+      color: currentTheme.colors.specialBackground1
    }
 });

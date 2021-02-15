@@ -1,13 +1,12 @@
-import React, { Component, FC } from "react";
+import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import ScrollViewExtended, {
    ScrollViewExtendedProps
 } from "../ScrollViewExtended/ScrollViewExtended";
 import { Button } from "react-native-paper";
-import { LinearGradient } from "expo-linear-gradient";
 import { currentTheme } from "../../../config";
-import color from "color";
+import { PageBackgroundGradient } from "../PageBackgroundGradient/PageBackgroundGradient";
 
 export interface BasicScreenProps extends ScrollViewExtendedProps {
    showBackButton?: boolean;
@@ -27,14 +26,7 @@ const BasicScreenContainer: FC<BasicScreenProps> = props => {
    }: Partial<BasicScreenProps> = props;
 
    return (
-      <LinearGradient
-         style={{ flex: 1 }}
-         locations={[0.7, 1]}
-         colors={[
-            color(currentTheme.colors.background).string(),
-            color(currentTheme.colors.backgroundBottomGradient).alpha(1).string()
-         ]}
-      >
+      <PageBackgroundGradient>
          <ScrollViewExtended
             showBottomGradient={showBottomGradient}
             bottomGradientColor={currentTheme.colors.background}
@@ -70,7 +62,7 @@ const BasicScreenContainer: FC<BasicScreenProps> = props => {
                )}
             </View>
          )}
-      </LinearGradient>
+      </PageBackgroundGradient>
    );
 };
 
