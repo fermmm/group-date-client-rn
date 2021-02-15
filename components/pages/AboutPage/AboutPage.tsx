@@ -81,10 +81,10 @@ const AboutPage: FC = () => {
                Las relaciones afectivas y sexuales entre varias personas son la manera original en
                la que se relacionaba el ser humano y definen el concepto de familia. Hasta hace
                10.000 años la crianza era una actividad poco exigente, los padres de lxs hijxs eran
-               todas las personas de un grupo afectivo, donde se compartía el cuidado y los recursos
-               de forma igualitaria como una gran familia, potenciado por el sexo que solía ser
-               grupal y muy abundante. Este pasado poliamoroso grupal lo tenemos todxs presente en
-               la sexualidad biológica de nuestro cuerpo, por ejemplo: Los "gemidos sexuales" son un
+               todas las personas de un grupo afectivo, se compartía el cuidado y los recursos de
+               forma igualitaria como una gran familia, potenciado por el sexo que solía ser grupal
+               y muy abundante. Este pasado poliamoroso grupal lo tenemos todxs presente en la
+               sexualidad biológica de nuestro cuerpo, por ejemplo: Los "gemidos sexuales" son un
                instinto que las otras especies que lo tienen (primates) lo usan para llamar a lxs
                que están cerca, de la misma manera funcionaba antes en nuestra especie.
             </Text>
