@@ -11,6 +11,14 @@ import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { PageBackgroundGradient } from "../../common/PageBackgroundGradient/PageBackgroundGradient";
+import I18n from "i18n-js";
+import { CHAT_REFRESH_INTERVAL } from "../../../config";
+import { sendChatMessage, useChat, useGroup } from "../../../api/server/groups";
+import moment from "moment";
+import { getGroupMember } from "../../../api/tools/groupTools";
+import { useUser } from "../../../api/server/user";
+import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
+import color from "color";
 
 export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
@@ -21,8 +29,9 @@ export interface ChatPageState {
    introDialogText: string;
 }
 interface ParamsChat {
-   contactChat: boolean;
-   introDialogText: string;
+   groupId?: string;
+   contactChat?: boolean;
+   introDialogText?: string;
 }
 
 const ChatPage: FC<ChatPageProps> = () => {
@@ -31,24 +40,47 @@ const ChatPage: FC<ChatPageProps> = () => {
    const [messages, setMessages] = useState<IMessage[]>([]);
    const [showIntroDialog, setShowIntroDialog] = useState(params?.introDialogText != null);
    const isContactChat = params?.contactChat ?? false;
+   const { token } = useFacebookToken();
+   const { data: user } = useUser();
+   const { data: group } = useGroup({
+      groupId: params?.groupId,
+      config: { enabled: !isContactChat }
+   });
+   const { data: groupChatFromServer } = useChat({
+      groupId: params?.groupId,
+      config: { refreshInterval: CHAT_REFRESH_INTERVAL, enabled: !isContactChat }
+   });
 
    useEffect(() => {
-      setMessages([
-         {
-            _id: 1,
-            text: "olis como andan",
-            createdAt: new Date(),
-            user: {
-               _id: 2,
-               name: "alberto666",
-               avatar: "https://placeimg.com/140/140/any"
-            }
-         }
-      ]);
-   }, []);
+      if (groupChatFromServer == null) {
+         return;
+      }
+      console.log(groupChatFromServer);
+      setMessages(
+         groupChatFromServer?.messages
+            ?.map(message => {
+               const usr = getGroupMember(message.authorUserId, group);
+               return {
+                  _id: message.chatMessageId,
+                  text: message.messageText,
+                  createdAt: moment(message.time, "X").toDate(),
+                  user: {
+                     _id: message.authorUserId,
+                     name: usr?.name,
+                     avatar: usr?.images?.[0]
+                  }
+               };
+            })
+            .reverse() ?? []
+      );
+   }, [groupChatFromServer]);
 
-   const onSend = useCallback((messages = []) => {
-      setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
+   const onSend = useCallback((messages: IMessage[] = []) => {
+      const msg = messages[0];
+      setMessages(previousMessages =>
+         GiftedChat.append(previousMessages, [{ ...msg, pending: true }])
+      );
+      sendChatMessage({ token, groupId: group.groupId, message: messages[0].text });
    }, []);
 
    return (
@@ -68,15 +100,26 @@ const ChatPage: FC<ChatPageProps> = () => {
                messages={messages}
                onSend={messages => onSend(messages)}
                user={{
-                  _id: 1
+                  _id: user.userId
                }}
                renderUsernameOnMessage={true}
                placeholder={"Escribir un mensaje..."}
+               renderAvatar={props => {
+                  console.log(props);
+                  return null;
+               }}
                renderBubble={props => (
                   <Bubble
                      {...props}
+                     renderTime={() => null}
+                     renderTicks={() => null}
                      wrapperStyle={{
-                        right: { backgroundColor: colors.primary }
+                        right: {
+                           backgroundColor: props.currentMessage.pending
+                              ? color(colors.primary).alpha(0.5).toString()
+                              : colors.primary
+                        },
+                        left: { backgroundColor: colors.backdrop }
                      }}
                   />
                )}
@@ -84,6 +127,8 @@ const ChatPage: FC<ChatPageProps> = () => {
                   <Send {...props} label={"Enviar"} textStyle={{ color: colors.primary }} />
                )}
                keyboardShouldPersistTaps={"never"}
+               maxInputLength={5000}
+               locale={I18n.locale}
                scrollToBottom
                alignTop
             />

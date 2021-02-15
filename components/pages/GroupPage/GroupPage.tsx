@@ -25,6 +25,8 @@ export interface ParamsGroupPage {
    group: Group;
 }
 
+// TODO: Ver como simular mensaje de otro miembro del grupo para poder ver si renderea bien el avatar
+// TODO: Arreglar los mensajes de error que estan rotos
 // TODO: Habría que revalidar el request cuando el server mande un mensaje en el chat de que un usuario voto algo
 const GroupPage: FC = () => {
    const { navigate } = useNavigation();
@@ -42,7 +44,10 @@ const GroupPage: FC = () => {
       <>
          <AppBarHeader>
             <View>
-               <ButtonForAppBar icon="forum" onPress={() => navigate("Chat")}>
+               <ButtonForAppBar
+                  icon="forum"
+                  onPress={() => navigate("Chat", { groupId: group.groupId })}
+               >
                   Chat grupal
                </ButtonForAppBar>
                <BadgeExtended amount={3} showAtLeftSide />

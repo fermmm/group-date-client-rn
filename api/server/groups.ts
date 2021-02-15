@@ -5,9 +5,11 @@ import { UseCacheOptions } from "../tools/useCache";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import {
    BasicGroupParams,
+   ChatPostParams,
    DateIdeaVotePostParams,
    DayOptionsVotePostParams,
-   Group
+   Group,
+   GroupChat
 } from "./shared-tools/endpoints-interfaces/groups";
 
 export function useUserGroupList<T extends Group[]>(props?: {
@@ -61,6 +63,38 @@ export async function sendIdeasVotes(
    const resp = await defaultHttpRequest("group/ideas/vote", "POST", params);
    if (autoRevalidateRelated) {
       revalidate("group" + params.groupId);
+   }
+   return resp;
+}
+
+export function useChat<T extends GroupChat>(props?: {
+   groupId: string;
+   token?: string;
+   config?: UseCacheOptions<T>;
+}) {
+   const { token } = useFacebookToken(props?.token);
+
+   return useCache<T>(
+      "group/chat" + (props?.groupId ?? ""),
+      () =>
+         defaultHttpRequest<BasicGroupParams, T>("group/chat", "GET", {
+            token,
+            groupId: props.groupId
+         }),
+      {
+         ...(props?.config ?? {}),
+         enabled: token != null && props?.groupId != null && props?.config?.enabled !== false
+      }
+   );
+}
+
+export async function sendChatMessage(
+   params: ChatPostParams,
+   autoRevalidateRelated: boolean = true
+) {
+   const resp = await defaultHttpRequest("group/chat", "POST", params);
+   if (autoRevalidateRelated) {
+      revalidate("group/chat" + params.groupId);
    }
    return resp;
 }

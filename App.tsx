@@ -22,6 +22,8 @@ import { es } from "./texts/es/es";
 import "intl";
 import "intl/locale-data/jsonp/en";
 import "intl/locale-data/jsonp/es";
+import "dayjs/locale/en";
+import "dayjs/locale/es";
 
 i18n.fallbacks = true;
 i18n.translations = {
