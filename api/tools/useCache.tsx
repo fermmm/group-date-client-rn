@@ -1,9 +1,11 @@
 import I18n from "i18n-js";
 import React, { FC, useEffect } from "react";
-import { Alert } from "react-native";
+import { Alert, LogBox } from "react-native";
 import useSWR, { ConfigInterface, keyInterface, mutate, responseInterface, SWRConfig } from "swr";
 import { fetcherFn } from "swr/dist/types";
 import { tryToGetErrorMessage } from "./httpRequest";
+
+LogBox.ignoreLogs(["Setting a timer for"]);
 
 export const swrGlobalConfig: ConfigInterface = {
    refreshInterval: 0,

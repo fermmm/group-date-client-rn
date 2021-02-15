@@ -8,7 +8,7 @@ import Avatar from "../../common/Avatar/Avatar";
 import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
-import { currentTheme } from "../../../config";
+import { currentTheme, GROUP_REFRESH_INTERVAL } from "../../../config";
 import CardDateInfo from "./CardDateInfo/CardDateInfo";
 import ButtonForAppBar from "../../common/ButtonForAppBar/ButtonForAppBar";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
@@ -25,12 +25,16 @@ export interface ParamsGroupPage {
    group: Group;
 }
 
+// TODO: Habría que revalidar el request cuando el server mande un mensaje en el chat de que un usuario voto algo
 const GroupPage: FC = () => {
    const { navigate } = useNavigation();
    const { data: localUser } = useUser();
    const [expandedUser, setExpandedUser] = useState<number>();
    const { params } = useRoute<RouteProps<ParamsGroupPage>>();
-   const { data: groupFromServer } = useGroup({ groupId: params?.group?.groupId });
+   const { data: groupFromServer } = useGroup({
+      groupId: params?.group?.groupId,
+      config: { refreshInterval: GROUP_REFRESH_INTERVAL }
+   });
    const group: Group = groupFromServer ?? params?.group;
    const votingResults = useVotingResults(group);
 

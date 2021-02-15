@@ -19,6 +19,7 @@ import { sendDayVotes, sendIdeasVotes, useGroup } from "../../../api/server/grou
 import { mutateGroupCacheDayVote, mutateGroupCacheIdeaVote } from "./tools/groupCacheMutators";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
+import { revalidate } from "../../../api/tools/useCache";
 
 export interface DateVotingPageParams {
    group: Group;
@@ -51,19 +52,29 @@ const DateVotingPage: FC = () => {
       React.useCallback(() => {
          return () => {
             if (daysToVoteGathered.current != null) {
-               sendDayVotes({
-                  daysToVote: daysToVoteGathered.current,
-                  token,
-                  groupId: group.groupId
-               });
+               sendDayVotes(
+                  {
+                     daysToVote: daysToVoteGathered.current,
+                     token,
+                     groupId: group.groupId
+                  },
+                  false
+               );
             }
 
             if (ideasToVoteGathered.current != null) {
-               sendIdeasVotes({
-                  ideasToVoteAuthorsIds: ideasToVoteGathered.current,
-                  token,
-                  groupId: group.groupId
-               });
+               sendIdeasVotes(
+                  {
+                     ideasToVoteAuthorsIds: ideasToVoteGathered.current,
+                     token,
+                     groupId: group.groupId
+                  },
+                  false
+               );
+            }
+
+            if (daysToVoteGathered.current != null || ideasToVoteGathered.current != null) {
+               revalidate("group" + group.groupId);
             }
          };
       }, [token])

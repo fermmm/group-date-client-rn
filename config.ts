@@ -67,3 +67,5 @@ export const REQUEST_MORE_CARDS_ANTICIPATION: number = 10;
 export const REQUEST_MORE_CARDS_AFTER_TIME: number = 60 * 1000;
 // The maximum amount of user evaluations pending to send before sending them
 export const MAX_ATTRACTIONS_QUEUE_SIZE: number = 35;
+// How often group cache refreshes when the user is on the chat or voting page inside a group
+export const GROUP_REFRESH_INTERVAL: number = 5 * 60 * 1000;
