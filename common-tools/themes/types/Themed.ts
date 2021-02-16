@@ -37,6 +37,7 @@ export type ThemeExt = Merge<
          statusWarning: string;
          statusBad: string;
       };
+      chatNamesColors: string[];
       font: FontExt;
    }
 >;

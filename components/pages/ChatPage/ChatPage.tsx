@@ -19,6 +19,8 @@ import { getGroupMember } from "../../../api/tools/groupTools";
 import { useUser } from "../../../api/server/user";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import color from "color";
+import Avatar from "../../common/Avatar/Avatar";
+import { useUnreadMessagesCount } from "./tools/useStoredChatLocalHistory";
 
 export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
@@ -35,7 +37,7 @@ interface ParamsChat {
 }
 
 const ChatPage: FC<ChatPageProps> = () => {
-   const { colors } = useTheme();
+   const { colors, font, chatNamesColors } = useTheme();
    const { params } = useRoute<RouteProps<ParamsChat>>();
    const [messages, setMessages] = useState<IMessage[]>([]);
    const [showIntroDialog, setShowIntroDialog] = useState(params?.introDialogText != null);
@@ -50,14 +52,15 @@ const ChatPage: FC<ChatPageProps> = () => {
       groupId: params?.groupId,
       config: { refreshInterval: CHAT_REFRESH_INTERVAL, enabled: !isContactChat }
    });
+   const unreadMessages = useUnreadMessagesCount(group.groupId, groupChatFromServer?.messages);
 
    useEffect(() => {
-      if (groupChatFromServer == null) {
+      if (groupChatFromServer == null || groupChatFromServer.messages == null) {
          return;
       }
-      console.log(groupChatFromServer);
+
       setMessages(
-         groupChatFromServer?.messages
+         groupChatFromServer.messages
             ?.map(message => {
                const usr = getGroupMember(message.authorUserId, group);
                return {
@@ -73,6 +76,8 @@ const ChatPage: FC<ChatPageProps> = () => {
             })
             .reverse() ?? []
       );
+
+      unreadMessages.setAsRead(groupChatFromServer.messages);
    }, [groupChatFromServer]);
 
    const onSend = useCallback((messages: IMessage[] = []) => {
@@ -83,13 +88,19 @@ const ChatPage: FC<ChatPageProps> = () => {
       sendChatMessage({ token, groupId: group.groupId, message: messages[0].text });
    }, []);
 
+   const getColorForUser = (userId: string) => {
+      const memberIndex = group.members.findIndex(m => m.userId === userId);
+      return chatNamesColors[memberIndex] ?? "black";
+   };
+
    return (
       <>
-         <AppBarHeader title={!isContactChat ? "Chat" : "Contáctanos"} />
+         <AppBarHeader title={!isContactChat ? "" : "Contáctanos"} />
          <PageBackgroundGradient>
             {!isContactChat && (
                <HelpBanner
                   showCloseButton
+                  animate={false}
                   text={
                      "El chat es un medio limitado que distorsiona la percepción sobre los demás, recomendamos usarlo al mínimo."
                   }
@@ -103,23 +114,40 @@ const ChatPage: FC<ChatPageProps> = () => {
                   _id: user.userId
                }}
                renderUsernameOnMessage={true}
+               alwaysShowSend
                placeholder={"Escribir un mensaje..."}
                renderAvatar={props => {
-                  console.log(props);
-                  return null;
+                  return (
+                     <Avatar
+                        size={48}
+                        source={{ uri: props.currentMessage.user.avatar as string }}
+                     />
+                  );
                }}
                renderBubble={props => (
                   <Bubble
                      {...props}
                      renderTime={() => null}
                      renderTicks={() => null}
+                     textStyle={{
+                        right: null,
+                        left: {
+                           color: colors.text2
+                        }
+                     }}
+                     usernameStyle={{
+                        color: getColorForUser(props.currentMessage.user._id as string),
+                        fontFamily: font.semiBold
+                     }}
                      wrapperStyle={{
                         right: {
                            backgroundColor: props.currentMessage.pending
                               ? color(colors.primary).alpha(0.5).toString()
                               : colors.primary
                         },
-                        left: { backgroundColor: colors.backdrop }
+                        left: {
+                           backgroundColor: colors.primary
+                        }
                      }}
                   />
                )}

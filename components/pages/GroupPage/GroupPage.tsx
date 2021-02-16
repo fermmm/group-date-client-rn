@@ -1,6 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { List } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
@@ -8,7 +8,7 @@ import Avatar from "../../common/Avatar/Avatar";
 import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
-import { currentTheme, GROUP_REFRESH_INTERVAL } from "../../../config";
+import { CHAT_REFRESH_INTERVAL, currentTheme, GROUP_REFRESH_INTERVAL } from "../../../config";
 import CardDateInfo from "./CardDateInfo/CardDateInfo";
 import ButtonForAppBar from "../../common/ButtonForAppBar/ButtonForAppBar";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
@@ -18,16 +18,17 @@ import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { getMatchesOf } from "../../../common-tools/groups/groups-tools";
 import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { useUser } from "../../../api/server/user";
-import { useGroup } from "../../../api/server/groups";
+import { useChat, useGroup } from "../../../api/server/groups";
 import { useVotingResults } from "../DateVotingPage/tools/useVotingResults";
+import { useUnreadMessagesCount } from "../ChatPage/tools/useStoredChatLocalHistory";
 
 export interface ParamsGroupPage {
    group: Group;
 }
 
-// TODO: Ver como simular mensaje de otro miembro del grupo para poder ver si renderea bien el avatar
-// TODO: Arreglar los mensajes de error que estan rotos
-// TODO: Habría que revalidar el request cuando el server mande un mensaje en el chat de que un usuario voto algo
+// TODO: Hacer que la advertencia del chat no aparezca mas hasta que no reinicias la app o por un tiempo
+// TODO: Bug: Arreglar los mensajes de error que estan rotos
+// TODO: Bug: Parece que si mandas un espacio en el chat se envia pero no se renderea o no se que pasa
 const GroupPage: FC = () => {
    const { navigate } = useNavigation();
    const { data: localUser } = useUser();
@@ -39,6 +40,17 @@ const GroupPage: FC = () => {
    });
    const group: Group = groupFromServer ?? params?.group;
    const votingResults = useVotingResults(group);
+   const { data: groupChatFromServer } = useChat({
+      groupId: group.groupId,
+      config: { refreshInterval: CHAT_REFRESH_INTERVAL }
+   });
+   const unreadMessages = useUnreadMessagesCount(group.groupId, groupChatFromServer?.messages);
+
+   useFocusEffect(
+      useCallback(() => {
+         unreadMessages.refresh();
+      }, [])
+   );
 
    return (
       <>
@@ -50,7 +62,7 @@ const GroupPage: FC = () => {
                >
                   Chat grupal
                </ButtonForAppBar>
-               <BadgeExtended amount={3} showAtLeftSide />
+               <BadgeExtended amount={unreadMessages.count} showAtLeftSide />
             </View>
          </AppBarHeader>
          <BasicScreenContainer>

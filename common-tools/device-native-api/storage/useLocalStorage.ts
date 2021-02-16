@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { loadFromDevice, loadFromDeviceSecure, saveOnDevice, saveOnDeviceSecure } from "./storage";
 
 export function useLocalStorage(key: string, secure: boolean = true): UseLocalStorage {
-   const [isLoading, setIsLoading] = useState(false);
+   const [isLoading, setIsLoading] = useState(true);
    const [valueState, setValueState] = useState(null);
 
    const refresh = useCallback(() => {
