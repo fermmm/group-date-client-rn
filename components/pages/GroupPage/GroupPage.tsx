@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused, useRoute } from "@react-navigation/native";
 import { List } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
@@ -8,7 +8,11 @@ import Avatar from "../../common/Avatar/Avatar";
 import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
-import { CHAT_REFRESH_INTERVAL, currentTheme, GROUP_REFRESH_INTERVAL } from "../../../config";
+import {
+   currentTheme,
+   UNREAD_CHAT_BADGE_REFRESH_INTERVAL,
+   VOTING_RESULT_REFRESH_INTERVAL
+} from "../../../config";
 import CardDateInfo from "./CardDateInfo/CardDateInfo";
 import ButtonForAppBar from "../../common/ButtonForAppBar/ButtonForAppBar";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
@@ -18,37 +22,41 @@ import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { getMatchesOf } from "../../../common-tools/groups/groups-tools";
 import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { useUser } from "../../../api/server/user";
-import { useChat, useGroup } from "../../../api/server/groups";
-import { useVotingResults } from "../DateVotingPage/tools/useVotingResults";
-import { useUnreadMessagesCount } from "../ChatPage/tools/useStoredChatLocalHistory";
+import { useGroup, useUnreadMessagesAmount, useVoteResults } from "../../../api/server/groups";
+import { useVotingResultToRender } from "../DateVotingPage/tools/useVotingResults";
+import { revalidate } from "../../../api/tools/useCache";
 
 export interface ParamsGroupPage {
    group: Group;
 }
 
+// TODO: Cuando hay un usuario nuevo que escribe en el chat y no lo tenemos en el grupo hay que revalidar
 // TODO: Hacer que la advertencia del chat no aparezca mas hasta que no reinicias la app o por un tiempo
+// Para esto va a recibir una prop que es un id que se guarda en device storage y listo, esa key si es
+// la fecha con el dia hace que solo durante un dia recuerde que esta cerrado
 // TODO: Bug: Arreglar los mensajes de error que estan rotos
 // TODO: Bug: Parece que si mandas un espacio en el chat se envia pero no se renderea o no se que pasa
 const GroupPage: FC = () => {
    const { navigate } = useNavigation();
+   const focused = useIsFocused();
    const { data: localUser } = useUser();
    const [expandedUser, setExpandedUser] = useState<number>();
    const { params } = useRoute<RouteProps<ParamsGroupPage>>();
-   const { data: groupFromServer } = useGroup({
-      groupId: params?.group?.groupId,
-      config: { refreshInterval: GROUP_REFRESH_INTERVAL }
-   });
+   const { data: groupFromServer } = useGroup({ groupId: params?.group?.groupId });
    const group: Group = groupFromServer ?? params?.group;
-   const votingResults = useVotingResults(group);
-   const { data: groupChatFromServer } = useChat({
-      groupId: group.groupId,
-      config: { refreshInterval: CHAT_REFRESH_INTERVAL }
+   const { data: voteResultsFromServer } = useVoteResults({
+      groupId: params?.group?.groupId,
+      config: { refreshInterval: VOTING_RESULT_REFRESH_INTERVAL }
    });
-   const unreadMessages = useUnreadMessagesCount(group.groupId, groupChatFromServer?.messages);
+   const votingResults = useVotingResultToRender(group, voteResultsFromServer);
+   const { data: unreadChatMessages } = useUnreadMessagesAmount({
+      groupId: params?.group?.groupId,
+      config: { refreshInterval: UNREAD_CHAT_BADGE_REFRESH_INTERVAL, enabled: focused }
+   });
 
    useFocusEffect(
       useCallback(() => {
-         unreadMessages.refresh();
+         revalidate("group/chat/unread/amount" + params?.group?.groupId);
       }, [])
    );
 
@@ -62,15 +70,15 @@ const GroupPage: FC = () => {
                >
                   Chat grupal
                </ButtonForAppBar>
-               <BadgeExtended amount={unreadMessages.count} showAtLeftSide />
+               <BadgeExtended amount={unreadChatMessages?.unread ?? 0} showAtLeftSide />
             </View>
          </AppBarHeader>
          <BasicScreenContainer>
             <CardDateInfo
-               day={votingResults.day}
-               idea={votingResults.idea}
+               day={votingResults?.day}
+               idea={votingResults?.idea}
                onModifyVotePress={() => navigate("DateVoting", { group })}
-               loading={groupFromServer == null}
+               loading={voteResultsFromServer == null}
             />
             <SurfaceStyled>
                <TitleText>Miembros del grupo:</TitleText>

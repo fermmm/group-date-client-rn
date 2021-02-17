@@ -74,7 +74,7 @@ const DateVotingPage: FC = () => {
             }
 
             if (daysToVoteGathered.current != null || ideasToVoteGathered.current != null) {
-               revalidate("group" + group.groupId);
+               revalidate("group/votes/result" + group.groupId);
             }
          };
       }, [token])

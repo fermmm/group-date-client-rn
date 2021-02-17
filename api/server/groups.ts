@@ -9,7 +9,8 @@ import {
    DateIdeaVotePostParams,
    DayOptionsVotePostParams,
    Group,
-   GroupChat
+   GroupChat,
+   UnreadMessagesAmount
 } from "./shared-tools/endpoints-interfaces/groups";
 
 export function useUserGroupList<T extends Group[]>(props?: {
@@ -35,6 +36,48 @@ export function useGroup<T extends Group>(props?: {
       "group" + (props?.groupId ?? ""),
       () =>
          defaultHttpRequest<BasicGroupParams, T>("group", "GET", {
+            token,
+            groupId: props.groupId
+         }),
+      {
+         ...(props?.config ?? {}),
+         enabled: token != null && props?.groupId != null && props?.config?.enabled !== false
+      }
+   );
+}
+
+export function useVoteResults<T extends Pick<Group, "mostVotedDate" | "mostVotedIdea">>(props?: {
+   groupId: string;
+   token?: string;
+   config?: UseCacheOptions<T>;
+}) {
+   const { token } = useFacebookToken(props?.token);
+
+   return useCache<T>(
+      "group/votes/result" + (props?.groupId ?? ""),
+      () =>
+         defaultHttpRequest<BasicGroupParams, T>("group/votes/result", "GET", {
+            token,
+            groupId: props.groupId
+         }),
+      {
+         ...(props?.config ?? {}),
+         enabled: token != null && props?.groupId != null && props?.config?.enabled !== false
+      }
+   );
+}
+
+export function useUnreadMessagesAmount<T extends UnreadMessagesAmount>(props?: {
+   groupId: string;
+   token?: string;
+   config?: UseCacheOptions<T>;
+}) {
+   const { token } = useFacebookToken(props?.token);
+
+   return useCache<T>(
+      "group/chat/unread/amount" + (props?.groupId ?? ""),
+      () =>
+         defaultHttpRequest<BasicGroupParams, T>("group/chat/unread/amount", "GET", {
             token,
             groupId: props.groupId
          }),

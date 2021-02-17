@@ -6,7 +6,7 @@ import { GiftedChat, Bubble, Send, IMessage } from "react-native-gifted-chat";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import { StackScreenProps } from "@react-navigation/stack";
 import Dialog from "../../common/Dialog/Dialog";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
@@ -20,7 +20,7 @@ import { useUser } from "../../../api/server/user";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import color from "color";
 import Avatar from "../../common/Avatar/Avatar";
-import { useUnreadMessagesCount } from "./tools/useStoredChatLocalHistory";
+import { revalidate } from "../../../api/tools/useCache";
 
 export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
@@ -50,9 +50,17 @@ const ChatPage: FC<ChatPageProps> = () => {
    });
    const { data: groupChatFromServer } = useChat({
       groupId: params?.groupId,
-      config: { refreshInterval: CHAT_REFRESH_INTERVAL, enabled: !isContactChat }
+      config: {
+         refreshInterval: CHAT_REFRESH_INTERVAL,
+         enabled: !isContactChat
+      }
    });
-   const unreadMessages = useUnreadMessagesCount(group.groupId, groupChatFromServer?.messages);
+
+   useFocusEffect(
+      useCallback(() => {
+         revalidate("group/chat" + params?.groupId);
+      }, [])
+   );
 
    useEffect(() => {
       if (groupChatFromServer == null || groupChatFromServer.messages == null) {
@@ -76,8 +84,6 @@ const ChatPage: FC<ChatPageProps> = () => {
             })
             .reverse() ?? []
       );
-
-      unreadMessages.setAsRead(groupChatFromServer.messages);
    }, [groupChatFromServer]);
 
    const onSend = useCallback((messages: IMessage[] = []) => {

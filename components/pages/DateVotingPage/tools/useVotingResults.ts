@@ -1,25 +1,21 @@
 import { getGroupMember } from "./../../../../api/tools/groupTools";
-import { firstBy } from "thenby";
 import { Group } from "../../../../api/server/shared-tools/endpoints-interfaces/groups";
 import { dayAndMonthFromUnixDate } from "../../../../common-tools/dates/dates-tools";
 
-export function useVotingResults(group: Group): UseVotingResults {
+export function useVotingResultToRender(
+   group: Group,
+   results: Pick<Group, "mostVotedDate" | "mostVotedIdea">
+): UseVotingResults {
    if (group == null) {
       return null;
    }
 
    return {
-      day: dayAndMonthFromUnixDate(
-         group.dayOptions
-            .filter(op => op.votersUserId?.length > 0)
-            .sort(firstBy(op => op.votersUserId?.length ?? 0, "desc"))?.[0]?.date
-      ),
-      idea: getGroupMember(
-         group.dateIdeasVotes
-            .filter(op => op.votersUserId?.length > 0)
-            .sort(firstBy(op => op.votersUserId?.length ?? 0, "desc"))?.[0]?.ideaOfUser,
-         group
-      )?.dateIdea
+      day: results?.mostVotedDate != null ? dayAndMonthFromUnixDate(results.mostVotedDate) : null,
+      idea:
+         results?.mostVotedIdea != null
+            ? getGroupMember(results.mostVotedIdea, group)?.dateIdea
+            : null
    };
 }
 

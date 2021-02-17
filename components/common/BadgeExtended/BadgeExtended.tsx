@@ -16,10 +16,13 @@ export interface BadgeExtendedProps {
 
 const BadgeExtended: FC<BadgeExtendedProps> = props => {
    const { size = 25, extraX = 0, extraY = 0, showAtLeftSide, amount, style } = props;
+   if (amount == null || amount <= 0) {
+      return null;
+   }
 
    return (
       <Badge
-         visible={amount != null && amount > 0}
+         visible
          size={size}
          style={[
             style,

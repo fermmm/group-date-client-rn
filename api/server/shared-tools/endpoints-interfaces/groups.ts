@@ -7,19 +7,19 @@ export interface Group {
    membersAmount: number;
    members: User[];
    chat: GroupChat;
+   chatMessagesAmount: number;
    dateIdeasVotes: IdeaOption[];
    dayOptions: DayOption[];
-   usersThatAccepted: string[];
    openForMoreUsers: boolean;
    feedback: ExperienceFeedback[];
    matches: UserWithMatches[];
-   mostVotedDate: number;
+   mostVotedDate?: number;
+   mostVotedIdea?: string;
    reminder1NotificationSent: boolean;
    reminder2NotificationSent: boolean;
 }
 
 export interface GroupChat {
-   usersDownloadedLastMessage: string[];
    messages: ChatMessage[];
 }
 
@@ -84,7 +84,7 @@ export interface UserWithMatches {
 
 export interface GroupMembership {
    newMessagesRead: boolean;
-   lastNotificationDate: number;
+   readMessagesAmount: number;
 }
 
 export interface SizeRestriction {
@@ -95,4 +95,8 @@ export interface SizeRestriction {
 export interface Slot extends SizeRestriction {
    amount: number;
    releaseTime: number;
+}
+
+export interface UnreadMessagesAmount {
+   unread: number;
 }
