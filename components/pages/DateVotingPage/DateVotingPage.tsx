@@ -50,6 +50,7 @@ const DateVotingPage: FC = () => {
    // This effect sends the changes to the server once the user leaves the voting page
    useFocusEffect(
       React.useCallback(() => {
+         revalidate("group" + params?.group?.groupId);
          return () => {
             if (daysToVoteGathered.current != null) {
                sendDayVotes(
