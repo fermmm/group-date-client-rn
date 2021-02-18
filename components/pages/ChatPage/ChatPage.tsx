@@ -2,7 +2,7 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { GiftedChat, Bubble, Send, IMessage } from "react-native-gifted-chat";
+import { GiftedChat, Bubble, Send, IMessage, InputToolbar } from "react-native-gifted-chat";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import { StackScreenProps } from "@react-navigation/stack";
 import Dialog from "../../common/Dialog/Dialog";
@@ -139,14 +139,21 @@ const ChatPage: FC<ChatPageProps> = () => {
                      renderTime={() => null}
                      renderTicks={() => null}
                      textStyle={{
-                        right: null,
+                        right: {
+                           color: colors.text2,
+                           fontFamily: font.regular,
+                           fontSize: 15
+                        },
                         left: {
-                           color: colors.text2
+                           color: colors.text2,
+                           fontFamily: font.regular,
+                           fontSize: 15
                         }
                      }}
                      usernameStyle={{
                         color: getColorForUser(props.currentMessage.user._id as string),
-                        fontFamily: font.semiBold
+                        fontFamily: font.semiBold,
+                        fontSize: 10
                      }}
                      wrapperStyle={{
                         right: {
@@ -160,6 +167,7 @@ const ChatPage: FC<ChatPageProps> = () => {
                      }}
                   />
                )}
+               // renderInputToolbar={() => null} // This will be required when remaking input toolbar
                renderSend={props => (
                   <Send {...props} label={"Enviar"} textStyle={{ color: colors.primary }} />
                )}
