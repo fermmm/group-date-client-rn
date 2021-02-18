@@ -1,3 +1,5 @@
+import jsSHA from "jssha";
+
 /**
  * Mutates the array moving the desired element to the target position.
  *
@@ -53,4 +55,10 @@ export function toFirstUpperCase(str: string): string {
    }
 
    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function getUniqueHashOfString(str: string) {
+   const shaObj = new jsSHA("SHA-256", "TEXT", { encoding: "UTF8" });
+   shaObj.update(str);
+   return shaObj.getHash("HEX");
 }

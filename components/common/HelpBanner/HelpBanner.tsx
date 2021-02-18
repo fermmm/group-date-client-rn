@@ -1,26 +1,57 @@
-import React, { FC, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { FC, useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
 import { Banner } from "react-native-paper";
 import color from "color";
+import moment from "moment";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
+import { getUniqueHashOfString } from "../../../common-tools/js-tools/js-tools";
+import {
+   loadFromDevice,
+   saveOnDevice
+} from "../../../common-tools/device-native-api/storage/storage";
 
 export interface PropsHelpBanner {
    text: string;
    showCloseButton?: boolean;
    coverContent?: boolean;
    animate?: boolean;
+   rememberClose?: boolean;
+   rememberCloseTimeInSeconds?: number;
 }
 
 export const HelpBanner: FC<PropsHelpBanner> = ({
    text,
    showCloseButton,
    coverContent,
+   rememberClose,
+   rememberCloseTimeInSeconds,
    animate = true
 }) => {
    const { colors } = useTheme();
-   const [visible, setVisible] = useState<boolean>(true);
+   const [visible, setVisible] = useState<boolean>(rememberClose ? false : true);
+
+   useEffect(() => {
+      if (rememberClose) {
+         (async () => {
+            const lastCloseDate = Number((await loadFromDevice(getUniqueHashOfString(text))) ?? -1);
+            if (
+               lastCloseDate === -1 ||
+               moment().unix() - lastCloseDate > rememberCloseTimeInSeconds
+            ) {
+               setVisible(true);
+            }
+         })();
+      }
+   }, []);
+
+   const handleClose = async () => {
+      if (rememberClose) {
+         await saveOnDevice(getUniqueHashOfString(text), String(moment().unix()));
+      }
+      setVisible(false);
+   };
 
    if (!animate && !visible) {
       return null;
@@ -39,7 +70,7 @@ export const HelpBanner: FC<PropsHelpBanner> = ({
                        //@ts-ignore
                        color: colors.specialBackground1,
                        label: "Entendido",
-                       onPress: () => setVisible(false)
+                       onPress: handleClose
                     }
                  ]
                : []

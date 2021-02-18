@@ -31,9 +31,6 @@ export interface ParamsGroupPage {
 }
 
 // TODO: Cuando hay un usuario nuevo que escribe en el chat y no lo tenemos en el grupo hay que revalidar
-// TODO: Hacer que la advertencia del chat no aparezca mas hasta que no reinicias la app o por un tiempo
-// Para esto va a recibir una prop que es un id que se guarda en device storage y listo, esa key si es
-// la fecha con el dia hace que solo durante un dia recuerde que esta cerrado
 // TODO: Bug: Arreglar los mensajes de error que estan rotos
 // TODO: Bug: Parece que si mandas un espacio en el chat se envia pero no se renderea o no se que pasa
 const GroupPage: FC = () => {

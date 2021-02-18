@@ -21,6 +21,7 @@ import { useFacebookToken } from "../../../api/third-party/facebook/facebook-log
 import color from "color";
 import Avatar from "../../common/Avatar/Avatar";
 import { revalidate } from "../../../api/tools/useCache";
+import { DAY_IN_SECONDS } from "../../../api/tools/date-tools";
 
 export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
@@ -108,8 +109,10 @@ const ChatPage: FC<ChatPageProps> = () => {
                   showCloseButton
                   animate={false}
                   text={
-                     "El chat es un medio limitado que distorsiona la percepción sobre los demás, recomendamos usarlo al mínimo."
+                     "Advertencia: El chat es un medio limitado que distorsiona la percepción sobre los demás y desmotiva la socialización cara a cara."
                   }
+                  rememberClose={true}
+                  rememberCloseTimeInSeconds={DAY_IN_SECONDS * 3}
                />
             )}
 
