@@ -165,6 +165,10 @@ const RegistrationFormsPage: FC = () => {
       if (questionsShowed?.length > 0) {
          propsToSend.questionsShowed = questionsShowed;
       }
+      if ((propsToSend?.name as string)?.endsWith(" ")) {
+         propsToSend.name = (propsToSend.name as string).slice(0, -1);
+      }
+
       if (unifiedThemesToUpdate?.themesToSubscribe?.length > 0) {
          setSendingToServer(true);
          themesWereChanged = true;
