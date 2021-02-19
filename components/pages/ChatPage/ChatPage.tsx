@@ -2,7 +2,7 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Themed } from "../../../common-tools/themes/types/Themed";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { GiftedChat, Bubble, Send, IMessage, InputToolbar } from "react-native-gifted-chat";
+import { GiftedChat, Bubble, Send, IMessage } from "react-native-gifted-chat";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import { StackScreenProps } from "@react-navigation/stack";
 import Dialog from "../../common/Dialog/Dialog";
@@ -22,6 +22,8 @@ import color from "color";
 import Avatar from "../../common/Avatar/Avatar";
 import { revalidate } from "../../../api/tools/useCache";
 import { DAY_IN_SECONDS } from "../../../api/tools/date-tools";
+import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
+import { getColorForUser, getUnknownUsersFromChat } from "./tools/chat-tools";
 
 export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
@@ -56,6 +58,7 @@ const ChatPage: FC<ChatPageProps> = () => {
          enabled: !isContactChat
       }
    });
+   const isLoading: boolean = group == null || user == null;
 
    useFocusEffect(
       useCallback(() => {
@@ -85,20 +88,23 @@ const ChatPage: FC<ChatPageProps> = () => {
             })
             .reverse() ?? []
       );
-   }, [groupChatFromServer]);
 
-   const onSend = useCallback((messages: IMessage[] = []) => {
+      if (getUnknownUsersFromChat(group, groupChatFromServer.messages).length > 0) {
+         revalidate("group" + params?.groupId);
+      }
+   }, [groupChatFromServer, group]);
+
+   if (isLoading) {
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
+   }
+
+   const handleSend = useCallback((messages: IMessage[] = []) => {
       const msg = messages[0];
       setMessages(previousMessages =>
          GiftedChat.append(previousMessages, [{ ...msg, pending: true }])
       );
       sendChatMessage({ token, groupId: group.groupId, message: messages[0].text });
    }, []);
-
-   const getColorForUser = (userId: string) => {
-      const memberIndex = group.members.findIndex(m => m.userId === userId);
-      return chatNamesColors[memberIndex] ?? "black";
-   };
 
    return (
       <>
@@ -118,7 +124,7 @@ const ChatPage: FC<ChatPageProps> = () => {
 
             <GiftedChat
                messages={messages}
-               onSend={messages => onSend(messages)}
+               onSend={messages => handleSend(messages)}
                user={{
                   _id: user.userId
                }}
@@ -151,7 +157,11 @@ const ChatPage: FC<ChatPageProps> = () => {
                         }
                      }}
                      usernameStyle={{
-                        color: getColorForUser(props.currentMessage.user._id as string),
+                        color: getColorForUser(
+                           props.currentMessage.user._id as string,
+                           group,
+                           chatNamesColors
+                        ),
                         fontFamily: font.semiBold,
                         fontSize: 10
                      }}

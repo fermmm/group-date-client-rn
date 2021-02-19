@@ -21,6 +21,8 @@ export interface NotificationsPageState {
    notifications: Notification[];
 }
 
+// TODO: Cuando se recibe aca una notificación de grupo nuevo hay que revalidar la lista de grupos y mostrar la pantalla de felicitaciones
+
 class NotificationsPage extends Component<NotificationsPageProps, NotificationsPageState> {
    state: NotificationsPageState = {
       // TODO: Get notifications from server

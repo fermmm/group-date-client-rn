@@ -1,5 +1,5 @@
 import I18n from "i18n-js";
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { Alert, LogBox } from "react-native";
 import useSWR, { ConfigInterface, keyInterface, mutate, responseInterface, SWRConfig } from "swr";
 import { fetcherFn } from "swr/dist/types";
@@ -9,7 +9,7 @@ LogBox.ignoreLogs(["Setting a timer for"]);
 
 export const swrGlobalConfig: ConfigInterface = {
    refreshInterval: 0,
-   errorRetryCount: 0,
+   errorRetryCount: 1,
    shouldRetryOnError: false,
    revalidateOnMount: false,
    revalidateOnFocus: false,
@@ -25,6 +25,8 @@ export function useCache<Response = void, Error = any>(
    const newKey = key && config?.enabled !== false ? key : null;
    let swr = useSWR<Response>(newKey, fn, config);
    swr = defaultErrorHandler(swr);
+   const data = useAvoidNull(swr.data);
+   swr = { ...swr, data: data };
 
    // Workaround for this swr bug: https://github.com/vercel/swr/issues/455
    useEffect(() => {
@@ -98,6 +100,19 @@ export function defaultErrorHandler<Response, Error extends RequestError>(
    }
 
    return queryResult;
+}
+
+/**
+ * When revalidating something SWR always sets data as null so you show a loading screen.
+ * Instead of a loading screen it's better to show old information if there is available.
+ * So this hook keeps the old data available in a ref and returns that when data == null
+ */
+function useAvoidNull<T>(data: T): T {
+   const backup = useRef<T>();
+   if (data != null) {
+      backup.current = data;
+   }
+   return backup.current;
 }
 
 export interface UseCacheOptions<Response, Error = any> extends ConfigInterface<Response, Error> {

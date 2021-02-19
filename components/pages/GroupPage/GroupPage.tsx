@@ -30,7 +30,6 @@ export interface ParamsGroupPage {
    group: Group;
 }
 
-// TODO: Cuando hay un usuario nuevo que escribe en el chat y no lo tenemos en el grupo hay que revalidar
 // TODO: Bug: Arreglar los mensajes de error que estan rotos
 // TODO: Bug: Parece que si mandas un espacio en el chat se envia pero no se renderea o no se que pasa
 const GroupPage: FC = () => {
