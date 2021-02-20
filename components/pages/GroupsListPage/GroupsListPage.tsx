@@ -8,17 +8,18 @@ import TitleText from "../../common/TitleText/TitleText";
 import EmptyPageMessage from "../../common/EmptyPageMessage/EmptyPageMessage";
 import { useUserGroupList } from "../../../api/server/groups";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
-import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 import { useUser } from "../../../api/server/user";
-import { getMatchesOf } from "../../../common-tools/groups/groups-tools";
 import { firstBy } from "thenby";
 import { useServerInfo } from "../../../api/server/server-info";
 import { getSlotStatusInfoText } from "./tools/getSlotsInfoText";
+import { GROUP_LIST_REFRESH_INTERVAL } from "../../../config";
 
 const GroupsListPage: FC = () => {
    const { navigate } = useNavigation();
-   const { data: groups } = useUserGroupList();
+   const { data: groups } = useUserGroupList({
+      config: { refreshInterval: GROUP_LIST_REFRESH_INTERVAL }
+   });
    const { data: user } = useUser();
    const { data: serverInfo } = useServerInfo();
    const slotsStatusInfoText = getSlotStatusInfoText(serverInfo, groups);
@@ -40,12 +41,7 @@ const GroupsListPage: FC = () => {
          <List.Section>
             {groups.sort(firstBy(g => g.creationDate, "desc")).map(group => (
                <List.Item
-                  title={group.members.map(
-                     (user, i) =>
-                        (i > 0 ? (i === group.members.length - 1 ? " y " : ", ") : "") +
-                        toFirstUpperCase(user.name)
-                  )}
-                  description={`Te gustas con ${getMatchesOf(user.userId, group).length} personas`}
+                  title={group.name}
                   left={props => (
                      <List.Icon
                         {...props}

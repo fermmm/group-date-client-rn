@@ -36,11 +36,11 @@ function getGroupsOfSlot(slot: Slot, groups: Group[]): Group[] {
          return false;
       }
 
-      if (group.members.length < slot.minimumSize ?? 0) {
+      if (group.membersAmount < slot.minimumSize ?? 0) {
          return false;
       }
 
-      if (group.members.length > slot.maximumSize ?? Number.MAX_SAFE_INTEGER) {
+      if (group.membersAmount > slot.maximumSize ?? Number.MAX_SAFE_INTEGER) {
          return false;
       }
 

@@ -30,6 +30,7 @@ export interface ParamsGroupPage {
    group: Group;
 }
 
+// TODO: Implementar una prop de group que sea seenBy para saber si es nuevo y mostrar una pantalla de felicitacion al menos un alert por ahora
 // TODO: Bug: Arreglar los mensajes de error que estan rotos
 // TODO: Bug: Parece que si mandas un espacio en el chat se envia pero no se renderea o no se que pasa
 const GroupPage: FC = () => {
@@ -79,7 +80,7 @@ const GroupPage: FC = () => {
             <SurfaceStyled>
                <TitleText>Miembros del grupo:</TitleText>
                <List.Section>
-                  {group.members.map((user, i) => (
+                  {group.members?.map((user, i) => (
                      <List.Accordion
                         title={toFirstUpperCase(user.name)}
                         expanded={i === expandedUser}
