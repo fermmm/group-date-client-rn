@@ -35,7 +35,7 @@ export function useThemesAsQuestions<T extends ThemesAsQuestion[]>(props?: {
 }
 
 export async function sendThemes(params: ThemeParams, autoRevalidateRelated: boolean = true) {
-   const resp = await defaultHttpRequest(params.action, "POST", params);
+   const resp = await defaultHttpRequest(params.action, "POST", params, { handleErrors: true });
    if (autoRevalidateRelated) {
       revalidate("user");
    }

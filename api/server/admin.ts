@@ -9,7 +9,8 @@ export async function sendCreateFakeUsers(
    const resp = await defaultHttpRequest<typeof params, string>(
       "testing/create-fake-users",
       "GET",
-      params
+      params,
+      { handleErrors: true }
    );
    if (autoRevalidateRelated) {
       revalidate("cards-game/recommendations");
@@ -18,7 +19,9 @@ export async function sendCreateFakeUsers(
 }
 
 export async function sendForceGroupsSearch(autoRevalidateRelated: boolean = true) {
-   const resp = await defaultHttpRequest<void, string>("testing/force-groups-search", "GET");
+   const resp = await defaultHttpRequest<void, string>("testing/force-groups-search", "GET", null, {
+      handleErrors: true
+   });
    if (autoRevalidateRelated) {
       revalidate("user/groups");
    }

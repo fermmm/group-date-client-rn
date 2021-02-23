@@ -57,7 +57,7 @@ export function usePropsAsQuestions<T = UserPropAsQuestion[]>(props?: {
 }
 
 export async function sendUserProps(params: UserPostParams, autoRevalidateRelated: boolean = true) {
-   const resp = await defaultHttpRequest("user", "POST", params);
+   const resp = await defaultHttpRequest("user", "POST", params, { handleErrors: true });
    if (autoRevalidateRelated) {
       revalidate("user");
    }
@@ -65,7 +65,7 @@ export async function sendUserProps(params: UserPostParams, autoRevalidateRelate
 }
 
 export async function sendAttraction(params: SetAttractionParams) {
-   return await defaultHttpRequest("user/set-attraction", "POST", params);
+   return await defaultHttpRequest("user/set-attraction", "POST", params, { handleErrors: true });
 }
 
 export async function uploadImage(

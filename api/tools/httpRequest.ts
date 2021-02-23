@@ -108,9 +108,11 @@ export function tryToGetErrorMessage(error: any): string {
 export async function defaultHttpRequest<Params = void, Response = void>(
    url: string,
    method: Method,
-   data?: Params
+   data?: Params,
+   options?: AxiosRequestConfigExtended
 ): Promise<Response> {
    const axiosObject: AxiosRequestConfigExtended = {
+      ...(options ?? {}),
       headers: { "Accept-Language": I18n.locale },
       baseURL: getServerUrl(),
       url,

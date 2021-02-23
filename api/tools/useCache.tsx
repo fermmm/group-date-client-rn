@@ -1,7 +1,14 @@
 import I18n from "i18n-js";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Alert, LogBox } from "react-native";
-import useSWR, { ConfigInterface, keyInterface, mutate, responseInterface, SWRConfig } from "swr";
+import useSWR, {
+   cache,
+   ConfigInterface,
+   keyInterface,
+   mutate,
+   responseInterface,
+   SWRConfig
+} from "swr";
 import { fetcherFn } from "swr/dist/types";
 import { tryToGetErrorMessage } from "./httpRequest";
 

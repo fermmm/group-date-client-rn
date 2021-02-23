@@ -93,7 +93,7 @@ export async function sendDayVotes(
    params: DayOptionsVotePostParams,
    autoRevalidateRelated: boolean = true
 ) {
-   const resp = await defaultHttpRequest("group/days/vote", "POST", params);
+   const resp = await defaultHttpRequest("group/days/vote", "POST", params, { handleErrors: true });
    if (autoRevalidateRelated) {
       revalidate("group" + params.groupId);
    }
@@ -104,7 +104,9 @@ export async function sendIdeasVotes(
    params: DateIdeaVotePostParams,
    autoRevalidateRelated: boolean = true
 ) {
-   const resp = await defaultHttpRequest("group/ideas/vote", "POST", params);
+   const resp = await defaultHttpRequest("group/ideas/vote", "POST", params, {
+      handleErrors: true
+   });
    if (autoRevalidateRelated) {
       revalidate("group" + params.groupId);
    }
@@ -136,7 +138,7 @@ export async function sendChatMessage(
    params: ChatPostParams,
    autoRevalidateRelated: boolean = true
 ) {
-   const resp = await defaultHttpRequest("group/chat", "POST", params);
+   const resp = await defaultHttpRequest("group/chat", "POST", params, { handleErrors: true });
    if (autoRevalidateRelated) {
       revalidate("group/chat" + params.groupId);
    }
@@ -147,7 +149,7 @@ export async function sendSeenToGroup(
    params: SeenByPostParams,
    autoRevalidateRelated: boolean = true
 ) {
-   const resp = await defaultHttpRequest("group/seen", "POST", params);
+   const resp = await defaultHttpRequest("group/seen", "POST", params, { handleErrors: true });
    if (autoRevalidateRelated) {
       revalidate("user/groups");
       revalidate("group" + params.groupId);
