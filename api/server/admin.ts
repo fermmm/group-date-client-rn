@@ -1,5 +1,5 @@
 import { defaultHttpRequest } from "../tools/httpRequest";
-import { revalidate } from "../tools/useCache";
+import { revalidate, UseCacheOptions, useCache } from "../tools/useCache";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 
 export async function sendCreateFakeUsers(
@@ -23,4 +23,13 @@ export async function sendForceGroupsSearch(autoRevalidateRelated: boolean = tru
       revalidate("user/groups");
    }
    return resp;
+}
+
+export function useTemp<T extends string>(props?: {
+   requestParams?: TokenParameter;
+   config?: UseCacheOptions<T>;
+}) {
+   return useCache<T>("testing/temp", () => defaultHttpRequest("testing/temp", "GET"), {
+      ...(props?.config ?? {})
+   });
 }

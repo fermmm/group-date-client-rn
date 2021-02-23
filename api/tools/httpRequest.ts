@@ -1,3 +1,4 @@
+import { responseInterface } from "swr";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import { Alert } from "react-native";
 import I18n from "i18n-js";
@@ -81,19 +82,27 @@ export function tryToGetErrorMessage(error: any): string {
       return "";
    }
 
-   if (error.response == null) {
-      return error.message ?? "";
-   }
-
-   if (error.response.data?.error?.message) {
+   if (error.response?.data?.error?.message) {
       return error.response.data.error.message;
    }
 
-   if (error.response.data?.[0].message != null) {
+   if (error.response?.data?.[0]?.message != null) {
       return error.response.data[0].message;
    }
 
-   return error.message;
+   if (error.response?.data != null) {
+      return error.response.data;
+   }
+
+   if (error.response != null) {
+      return error.response;
+   }
+
+   if (error.message != null) {
+      return error.message;
+   }
+
+   return "No information found";
 }
 
 export async function defaultHttpRequest<Params = void, Response = void>(
