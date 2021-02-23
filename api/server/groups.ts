@@ -10,6 +10,7 @@ import {
    DayOptionsVotePostParams,
    Group,
    GroupChat,
+   SeenByPostParams,
    UnreadMessagesAmount
 } from "./shared-tools/endpoints-interfaces/groups";
 
@@ -138,6 +139,18 @@ export async function sendChatMessage(
    const resp = await defaultHttpRequest("group/chat", "POST", params);
    if (autoRevalidateRelated) {
       revalidate("group/chat" + params.groupId);
+   }
+   return resp;
+}
+
+export async function sendSeenToGroup(
+   params: SeenByPostParams,
+   autoRevalidateRelated: boolean = true
+) {
+   const resp = await defaultHttpRequest("group/seen", "POST", params);
+   if (autoRevalidateRelated) {
+      revalidate("user/groups");
+      revalidate("group" + params.groupId);
    }
    return resp;
 }
