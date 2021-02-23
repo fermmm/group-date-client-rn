@@ -100,6 +100,16 @@ const ChatPage: FC<ChatPageProps> = () => {
 
    const handleSend = useCallback((messages: IMessage[] = []) => {
       const msg = messages[0];
+
+      if (msg?.text == null) {
+         return;
+      }
+
+      // This regex checks if the message are only space characters or it's empty, in that case don't send anything
+      if (!/\S/.test(msg?.text)) {
+         return;
+      }
+
       setMessages(previousMessages =>
          GiftedChat.append(previousMessages, [{ ...msg, pending: true }])
       );
