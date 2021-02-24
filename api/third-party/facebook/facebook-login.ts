@@ -4,8 +4,8 @@ import { Alert } from "react-native";
 import { Flatten } from "../../../common-tools/ts-tools/common-ts-tools";
 import { FACEBOOK_APP_ID, FACEBOOK_APP_NAME } from "@env";
 import {
-   loadFromDeviceSecure,
-   saveOnDeviceSecure
+   loadFromDevice,
+   saveOnDevice
 } from "../../../common-tools/device-native-api/storage/storage";
 import { httpRequest } from "../../tools/httpRequest";
 import { useState } from "react";
@@ -24,7 +24,7 @@ export function useFacebookToken(externallyProvidedToken?: string): UseFacebookT
 
    const getNewTokenFromFacebook = () =>
       getTokenFromFacebook().then(t => {
-         saveOnDeviceSecure("pdfbtoken", t);
+         saveOnDevice("pdfbtoken", t, { secure: true });
          fasterTokenCache = t;
          setToken(t);
       });
@@ -38,7 +38,7 @@ export function useFacebookToken(externallyProvidedToken?: string): UseFacebookT
    }
 
    // Try to get stored token from previous session
-   loadFromDeviceSecure("pdfbtoken")
+   loadFromDevice("pdfbtoken", { secure: true })
       .then(t => {
          setIsLoading(false);
          fasterTokenCache = t;

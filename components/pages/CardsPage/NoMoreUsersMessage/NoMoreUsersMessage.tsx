@@ -39,13 +39,13 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
 
       if (!sendNotificationChecked && user.sendNewUsersNotification !== 0) {
          sendUserProps({ props: { sendNewUsersNotification: 0 }, token }, false);
-         saveOnDevice("noUsersLastSelected", "0");
+         saveOnDevice("noUsersLastSelected", 0);
          return;
       }
 
       if (sendNotificationChecked && user.sendNewUsersNotification != sendNewUsersNotification) {
          sendUserProps({ props: { sendNewUsersNotification }, token }, false);
-         saveOnDevice("noUsersLastSelected", String(sendNewUsersNotification));
+         saveOnDevice("noUsersLastSelected", sendNewUsersNotification);
       }
    }, [sendNewUsersNotification, sendNotificationChecked]);
 
@@ -61,9 +61,9 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
       }
 
       if (user.sendNewUsersNotification === -1) {
-         loadFromDevice("noUsersLastSelected").then(value => {
+         loadFromDevice<number>("noUsersLastSelected").then(value => {
             setSendNotificationChecked(true);
-            setSendNewUsersNotification(value != null ? Number(value) : defaultValue);
+            setSendNewUsersNotification(value != null ? value : defaultValue);
          });
          return;
       }

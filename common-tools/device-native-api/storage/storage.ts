@@ -1,46 +1,65 @@
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export async function saveOnDeviceSecure(key: string, value: string): Promise<void> {
+export async function saveOnDevice<T extends any = string>(
+   key: string,
+   value: T,
+   settings?: { secure?: boolean }
+): Promise<void> {
    const secureStorageAvailable: boolean = await isSecureStorageAvailable();
-   if (secureStorageAvailable) {
-      return SecureStore.setItemAsync(key, value);
+   let finalValue: string;
+
+   if (typeof value === "string") {
+      finalValue = value;
    } else {
-      return saveOnDevice(key, value);
+      finalValue = JSON.stringify(value);
+   }
+
+   if (settings?.secure && secureStorageAvailable) {
+      return SecureStore.setItemAsync(key, finalValue);
+   } else {
+      return AsyncStorage.setItem(key, finalValue);
    }
 }
 
-export async function loadFromDeviceSecure(key: string): Promise<string> {
+export async function loadFromDevice<T extends any = string>(
+   key: string,
+   settings?: { secure?: boolean }
+): Promise<T> {
    const secureStorageAvailable: boolean = await isSecureStorageAvailable();
-   if (secureStorageAvailable) {
-      return SecureStore.getItemAsync(key);
+   let result: string;
+
+   if (settings?.secure && secureStorageAvailable) {
+      result = await SecureStore.getItemAsync(key);
    } else {
-      return loadFromDevice(key);
+      result = await AsyncStorage.getItem(key);
    }
+
+   let parsedResult: T;
+
+   try {
+      parsedResult = JSON.parse(result);
+   } catch {
+      parsedResult = result as T;
+   }
+
+   return parsedResult as T;
 }
 
-export async function removeFromDeviceSecure(key: string): Promise<void> {
+export async function removeFromDevice(
+   key: string,
+   settings?: { secure?: boolean }
+): Promise<void> {
    const secureStorageAvailable: boolean = await isSecureStorageAvailable();
-   if (secureStorageAvailable) {
+
+   if (settings?.secure && secureStorageAvailable) {
       return SecureStore.deleteItemAsync(key);
    } else {
-      return removeFromDevice(key);
+      return AsyncStorage.removeItem(key);
    }
-}
-
-export async function saveOnDevice(key: string, value: string): Promise<void> {
-   return AsyncStorage.setItem(key, value);
-}
-
-export async function loadFromDevice(key: string): Promise<string> {
-   return AsyncStorage.getItem(key);
-}
-
-export async function removeFromDevice(key: string): Promise<void> {
-   return AsyncStorage.removeItem(key);
 }
 
 async function isSecureStorageAvailable(): Promise<boolean> {
-   await SecureStore.setItemAsync("test", "1234");
-   return Promise.resolve((await SecureStore.getItemAsync("test")) === "1234");
+   await SecureStore.setItemAsync("__test___", "1234");
+   return Promise.resolve((await SecureStore.getItemAsync("__test___")) === "1234");
 }

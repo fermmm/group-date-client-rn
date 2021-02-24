@@ -15,7 +15,9 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
    const isFocused = useIsFocused();
    const { isActive } = useAppState();
    const [userDisplaying, setUserDisplaying] = useState(0);
-   const { value: attractionsFromStorage, setValue: saveOnStorage } = useLocalStorage("_attrQueue");
+   const { value: attractionsFromStorage, setValue: saveOnStorage } = useLocalStorage<Attraction[]>(
+      "_attrQueue"
+   );
    const [usersToRender, setUsersToRender] = useState<User[]>([]);
    const attractionsQueue = useRef<Attraction[]>([]);
    const appendMode = useRef(false);
@@ -59,7 +61,7 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
     */
    useEffectExceptOnMount(() => {
       if (attractionsFromStorage != null) {
-         attractionsQueue.current = JSON.parse(attractionsFromStorage);
+         attractionsQueue.current = attractionsFromStorage;
          setAttractionsShouldBeSentReason(
             AttractionsSendReason.PendingAttractionsToSendFromPreviousSession
          );
@@ -113,14 +115,14 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
 
    const addAttractionToQueue = useCallback((attraction: Attraction) => {
       attractionsQueue.current.push(attraction);
-      saveOnStorage(JSON.stringify(attractionsQueue.current));
+      saveOnStorage(attractionsQueue.current);
    }, []);
 
    const removeFromAttractionsQueue = useCallback((toRemove: Array<{ userId: string }>) => {
       attractionsQueue.current = attractionsQueue.current.filter(
          el => toRemove.find(tr => tr.userId === el.userId) == null
       );
-      saveOnStorage(JSON.stringify(attractionsQueue.current));
+      saveOnStorage(attractionsQueue.current);
       setAttractionsShouldBeSentReason(AttractionsSendReason.None);
    }, []);
 

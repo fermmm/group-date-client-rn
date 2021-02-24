@@ -16,7 +16,7 @@ import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation
 import { useServerProfileStatus } from "../../../api/server/user";
 import { userFinishedRegistration } from "../../../api/tools/userTools";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
-import { removeFromDeviceSecure } from "../../../common-tools/device-native-api/storage/storage";
+import { removeFromDevice } from "../../../common-tools/device-native-api/storage/storage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 
 const LoginPage: FC = () => {
@@ -138,7 +138,7 @@ const LoginPage: FC = () => {
                      style={{
                         borderColor: colors.textLogin
                      }}
-                     onPress={() => removeFromDeviceSecure("pdfbtoken")}
+                     onPress={() => removeFromDevice("pdfbtoken")}
                   >
                      Debug button
                   </ButtonStyled>

@@ -35,7 +35,7 @@ export const HelpBanner: FC<PropsHelpBanner> = ({
    useEffect(() => {
       if (rememberClose) {
          (async () => {
-            const lastCloseDate = Number((await loadFromDevice(getUniqueHashOfString(text))) ?? -1);
+            const lastCloseDate = (await loadFromDevice<number>(getUniqueHashOfString(text))) ?? -1;
             if (
                lastCloseDate === -1 ||
                moment().unix() - lastCloseDate > rememberCloseTimeInSeconds
@@ -48,7 +48,7 @@ export const HelpBanner: FC<PropsHelpBanner> = ({
 
    const handleClose = async () => {
       if (rememberClose) {
-         await saveOnDevice(getUniqueHashOfString(text), String(moment().unix()));
+         await saveOnDevice(getUniqueHashOfString(text), moment().unix());
       }
       setVisible(false);
    };
