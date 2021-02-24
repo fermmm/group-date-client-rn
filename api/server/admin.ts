@@ -23,7 +23,7 @@ export async function sendForceGroupsSearch(autoRevalidateRelated: boolean = tru
       handleErrors: true
    });
    if (autoRevalidateRelated) {
-      revalidate("user/groups");
+      revalidate("user/notifications");
    }
    return resp;
 }

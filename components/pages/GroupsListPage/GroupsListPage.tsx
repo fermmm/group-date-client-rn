@@ -13,14 +13,11 @@ import { useUser } from "../../../api/server/user";
 import { firstBy } from "thenby";
 import { useServerInfo } from "../../../api/server/server-info";
 import { getSlotStatusInfoText } from "./tools/getSlotsInfoText";
-import { GROUP_LIST_REFRESH_INTERVAL } from "../../../config";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 
 const GroupsListPage: FC = () => {
    const { navigate } = useNavigation();
-   const { data: groups } = useUserGroupList({
-      config: { refreshInterval: GROUP_LIST_REFRESH_INTERVAL }
-   });
+   const { data: groups } = useUserGroupList();
    const { data: user } = useUser();
    const { data: serverInfo } = useServerInfo();
    const slotsStatusInfoText = getSlotStatusInfoText(serverInfo, groups);

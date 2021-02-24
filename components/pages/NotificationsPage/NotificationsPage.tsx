@@ -1,79 +1,34 @@
-import React, { Component } from "react";
+import React, { FC } from "react";
 import { StyleSheet, Linking } from "react-native";
-import { withNavigation } from "@react-navigation/compat";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { withTheme, List } from "react-native-paper";
-import { ThemeExt, Themed } from "../../../common-tools/themes/types/Themed";
+import { List } from "react-native-paper";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
-import { StackScreenProps, StackNavigationProp } from "@react-navigation/stack";
 import { currentTheme } from "../../../config";
 import GraphSvg2 from "../../../assets/GraphSvg2";
 import {
    Notification,
    NotificationType
 } from "../../../api/server/shared-tools/endpoints-interfaces/user";
-import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
+import { useNavigation } from "../../../common-tools/navigation/useNavigation";
+import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
+import { useNotificationsInfo } from "./tools/useNotificationsInfo";
 
-export interface NotificationsPageProps extends Themed, StackScreenProps<{}> {}
-export interface NotificationsPageState {
-   notifications: Notification[];
-}
+// TODO: Terminar: En vez de revalidar cada cierto tiempo la lista de grupos seria mas optimo revalidar solo las notificaciones y a partir de ellas revalidar los grupos
+// TODO: Implementar boton de marcar todas las notificaciones como leidas usando setAllNotificationsAsSeen
 
-// TODO: Cuando se recibe aca una notificación de grupo nuevo hay que revalidar la lista de grupos y mostrar la pantalla de felicitaciones
+const NotificationsPage: FC = () => {
+   const { navigate } = useNavigation();
+   const {
+      notifications,
+      seenNotificationsIds,
+      isLoading,
+      setNotificationAsSeen
+   } = useNotificationsInfo();
 
-class NotificationsPage extends Component<NotificationsPageProps, NotificationsPageState> {
-   state: NotificationsPageState = {
-      // TODO: Get notifications from server
-      notifications: []
-   };
-   // TODO: Save this into local storage
-   seenNotificationsIds: string[] = [];
-   // TODO: Get local user from server:
-   userGroups: Group[] = [];
-
-   render(): JSX.Element {
-      return (
-         <>
-            <BasicScreenContainer>
-               <TitleText extraMarginLeft extraSize>
-                  Notificaciones
-               </TitleText>
-               <EmptySpace height={10} />
-               {this.state.notifications.map((notification, i) => {
-                  const icon: string | ((color: string) => React.ReactNode) = this.getIcon(
-                     notification
-                  );
-
-                  return (
-                     <List.Item
-                        title={notification.title}
-                        description={notification.text}
-                        left={props =>
-                           typeof icon === "string" ? (
-                              <List.Icon {...props} style={styles.optionIcon} icon={icon} />
-                           ) : (
-                              icon(props.color)
-                           )
-                        }
-                        onPress={() => this.onNotificationPress(notification)}
-                        style={[
-                           styles.notification,
-                           !this.seenNotificationsIds.includes(notification.notificationId) &&
-                              styles.unseenNotification
-                        ]}
-                        key={i}
-                     />
-                  );
-               })}
-            </BasicScreenContainer>
-         </>
-      );
-   }
-
-   onNotificationPress(notification: Notification): void {
-      const { navigate }: StackNavigationProp<Record<string, {}>> = this.props.navigation;
+   const handleNotificationPress = (notification: Notification) => {
+      setNotificationAsSeen(notification.notificationId);
 
       switch (notification.type) {
          case NotificationType.FacebookEvent:
@@ -86,20 +41,18 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
             navigate("Chat", { contactChat: true });
             break;
          case NotificationType.Group:
-            navigate("Group", {
-               group: this.userGroups.find(g => g.groupId === notification.targetId)
-            });
+            navigate("Group");
             break;
          case NotificationType.About:
             navigate("About");
             break;
       }
-   }
+   };
 
-   getIcon(notification: Notification): string | ((color: string) => React.ReactNode) {
+   const getIcon = (notification: Notification): string | ((color: string) => React.ReactNode) => {
       switch (notification.type) {
          case NotificationType.FacebookEvent:
-            return "event";
+            return "calendar";
          case NotificationType.Chat:
             return "forum";
          case NotificationType.ContactChat:
@@ -108,11 +61,54 @@ class NotificationsPage extends Component<NotificationsPageProps, NotificationsP
             return color => (
                <GraphSvg2 circleColor={color} lineColor={color} style={styles.svgIcon} />
             );
+         case NotificationType.About:
+            return "all-inclusive";
          default:
-            return "notifications";
+            return "bell";
       }
+   };
+
+   if (isLoading) {
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
-}
+
+   return (
+      <>
+         <BasicScreenContainer>
+            {notifications?.length > 0 && (
+               <TitleText extraMarginLeft extraSize>
+                  Notificaciones
+               </TitleText>
+            )}
+            <EmptySpace height={10} />
+            {notifications?.reverse().map((notification, i) => {
+               const icon: string | ((color: string) => React.ReactNode) = getIcon(notification);
+
+               return (
+                  <List.Item
+                     title={notification.title}
+                     description={notification.text}
+                     left={props =>
+                        typeof icon === "string" ? (
+                           <List.Icon {...props} style={styles.optionIcon} icon={icon} />
+                        ) : (
+                           icon(props.color)
+                        )
+                     }
+                     onPress={() => handleNotificationPress(notification)}
+                     style={[
+                        styles.notification,
+                        !seenNotificationsIds?.includes(notification.notificationId) &&
+                           styles.unseenNotification
+                     ]}
+                     key={notification.notificationId}
+                  />
+               );
+            })}
+         </BasicScreenContainer>
+      </>
+   );
+};
 
 const styles: Styles = StyleSheet.create({
    profileIcon: {
@@ -138,6 +134,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-// tslint:disable-next-line: ban-ts-ignore-except-imports
-// @ts-ignore
-export default withTheme(withNavigation(NotificationsPage));
+export default NotificationsPage;

@@ -11,7 +11,8 @@ import {
    User,
    UserGetParams,
    UserPostParams,
-   UserPropAsQuestion
+   UserPropAsQuestion,
+   Notification
 } from "./shared-tools/endpoints-interfaces/user";
 import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
@@ -53,6 +54,24 @@ export function usePropsAsQuestions<T = UserPropAsQuestion[]>(props?: {
       "user/props-as-questions",
       () => defaultHttpRequest("user/props-as-questions", "GET"),
       props?.config
+   );
+}
+
+export function useNotifications<T extends Notification[]>(props?: {
+   requestParams?: TokenParameter;
+   config?: UseCacheOptions<T>;
+}) {
+   const { token } = useFacebookToken(props?.requestParams?.token);
+   return useCache<T>(
+      "user/notifications",
+      () =>
+         defaultHttpRequest("user/notifications", "GET", {
+            token
+         }),
+      {
+         ...(props?.config ?? {}),
+         enabled: token != null && props?.config?.enabled !== false
+      }
    );
 }
 

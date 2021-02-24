@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
    Dimensions,
    ImageBackground,
@@ -21,16 +21,25 @@ import { currentTheme } from "../../../config";
 import GraphSvg2 from "../../../assets/GraphSvg2";
 import ShadowBottom from "../ShadowBottom/ShadowBottom";
 import BadgeExtended from "../BadgeExtended/BadgeExtended";
+import { useNotificationsInfo } from "../../pages/NotificationsPage/tools/useNotificationsInfo";
 
 const Tab = createMaterialTopTabNavigator();
 
 const NavigationBar: FC = () => {
-   const [badgeNumbers] = useState<Record<string, number>>({
+   const { notSeenNotifications } = useNotificationsInfo();
+
+   const [badgeNumbers, setBadgeNumbers] = useState<Record<string, number>>({
       Cards: 0,
-      Notifications: 2,
+      Notifications: 0,
       Groups: 0,
-      Settings: 4
+      Settings: 0
    });
+
+   useEffect(() => {
+      if (notSeenNotifications?.length > 0) {
+         setBadgeNumbers({ ...badgeNumbers, Notifications: notSeenNotifications.length });
+      }
+   }, [notSeenNotifications]);
 
    return (
       <Tab.Navigator
