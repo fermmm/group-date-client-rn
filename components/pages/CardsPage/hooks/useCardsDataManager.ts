@@ -10,13 +10,14 @@ import {
 import { useIsFocused } from "@react-navigation/native";
 import { useAppState } from "../../../../common-tools/device-native-api/state/useAppState";
 import { useInterval } from "../../../../common-tools/common-hooks/useInterval";
+import { LocalStorageKey } from "../../../../common-tools/strings/LocalStorageKey";
 
 export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManager {
    const isFocused = useIsFocused();
    const { isActive } = useAppState();
    const [userDisplaying, setUserDisplaying] = useState(0);
    const { value: attractionsFromStorage, setValue: saveOnStorage } = useLocalStorage<Attraction[]>(
-      "_attrQueue"
+      LocalStorageKey.AttractionQueue
    );
    const [usersToRender, setUsersToRender] = useState<User[]>([]);
    const attractionsQueue = useRef<Attraction[]>([]);

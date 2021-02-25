@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { revalidate, useCache } from "./../../../api/tools/useCache";
+import { useCallback } from "react";
 import { loadFromDevice, saveOnDevice } from "./storage";
 
 /**
@@ -10,39 +11,27 @@ export function useLocalStorage<T>(
    key: string,
    settings?: { secure: boolean }
 ): UseLocalStorage<T> {
-   const [isLoading, setIsLoading] = useState(true);
-   const [valueState, setValueState] = useState<T>(null);
+   const { data: stored, isLoading } = useCache<{ value: T }>(key, async () => {
+      return { value: await loadFromDevice(key, settings) };
+   });
 
    const refresh = useCallback(() => {
-      setIsLoading(true);
-      const promise: Promise<T> = loadFromDevice(key, settings);
-
-      promise
-         .then(v => {
-            setValueState(v);
-            setIsLoading(false);
-         })
-         .catch(() => {
-            setIsLoading(false);
-         });
-   }, [settings?.secure]);
+      revalidate(key);
+   }, [key]);
 
    const setValue = useCallback(
-      async (value: T) => {
-         setIsLoading(true);
+      async (value: T, reRender?: boolean) => {
          await saveOnDevice(key, value, settings);
-         setIsLoading(false);
+         if (reRender) {
+            refresh();
+         }
       },
-      [settings?.secure]
+      [key, settings?.secure]
    );
-
-   useEffect(() => {
-      refresh();
-   }, []);
 
    return {
       isLoading,
-      value: valueState,
+      value: stored?.value,
       setValue,
       refresh
    };
@@ -51,6 +40,6 @@ export function useLocalStorage<T>(
 export interface UseLocalStorage<T> {
    isLoading: boolean;
    value: T;
-   setValue: (newValue: T) => Promise<void>;
+   setValue: (newValue: T, reRender?: boolean) => Promise<void>;
    refresh: () => void;
 }

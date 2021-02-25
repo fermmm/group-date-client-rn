@@ -72,6 +72,7 @@ const LoginPage: FC = () => {
 
    const showLoadingAnimation: boolean =
       logoAnimCompleted &&
+      !showLoginButton &&
       (tokenLoading || tokenCheckLoading || serverInfoLoading || !profileStatusData);
 
    return (

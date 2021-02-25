@@ -9,6 +9,7 @@ import {
 } from "../../../common-tools/device-native-api/storage/storage";
 import { httpRequest } from "../../tools/httpRequest";
 import { useState } from "react";
+import { LocalStorageKey } from "../../../common-tools/strings/LocalStorageKey";
 
 let fasterTokenCache: string = null;
 
@@ -24,7 +25,7 @@ export function useFacebookToken(externallyProvidedToken?: string): UseFacebookT
 
    const getNewTokenFromFacebook = () =>
       getTokenFromFacebook().then(t => {
-         saveOnDevice("pdfbtoken", t, { secure: true });
+         saveOnDevice(LocalStorageKey.FacebookToken, t, { secure: true });
          fasterTokenCache = t;
          setToken(t);
       });
@@ -38,7 +39,7 @@ export function useFacebookToken(externallyProvidedToken?: string): UseFacebookT
    }
 
    // Try to get stored token from previous session
-   loadFromDevice("pdfbtoken", { secure: true })
+   loadFromDevice(LocalStorageKey.FacebookToken, { secure: true })
       .then(t => {
          setIsLoading(false);
          fasterTokenCache = t;

@@ -62,3 +62,7 @@ export function getUniqueHashOfString(str: string) {
    shaObj.update(str);
    return shaObj.getHash("HEX");
 }
+
+export function stringIsEmptyOrSpacesOnly(str: string): boolean {
+   return !/\S/.test(str);
+}

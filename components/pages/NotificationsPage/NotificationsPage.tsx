@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { StyleSheet, Linking } from "react-native";
+import { StyleSheet, Linking, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { List } from "react-native-paper";
+import { Button, List } from "react-native-paper";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
@@ -14,8 +14,8 @@ import {
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useNotificationsInfo } from "./tools/useNotificationsInfo";
+import { useCacheRevalidationBasedOnNotifications } from "./tools/useCacheRevalidationBasedOnNotifications";
 
-// TODO: Terminar: En vez de revalidar cada cierto tiempo la lista de grupos seria mas optimo revalidar solo las notificaciones y a partir de ellas revalidar los grupos
 // TODO: Implementar boton de marcar todas las notificaciones como leidas usando setAllNotificationsAsSeen
 
 const NotificationsPage: FC = () => {
@@ -23,9 +23,13 @@ const NotificationsPage: FC = () => {
    const {
       notifications,
       seenNotificationsIds,
-      isLoading,
-      setNotificationAsSeen
+      notSeenNotifications,
+      isLoading: notificationsLoading,
+      setNotificationAsSeen,
+      setAllNotificationsAsSeen
    } = useNotificationsInfo();
+   useCacheRevalidationBasedOnNotifications(notifications);
+   const isLoading = notificationsLoading || notifications == null;
 
    const handleNotificationPress = (notification: Notification) => {
       setNotificationAsSeen(notification.notificationId);
@@ -35,18 +39,22 @@ const NotificationsPage: FC = () => {
             Linking.openURL(notification.targetId);
             break;
          case NotificationType.Chat:
-            navigate("Chat");
+            navigate("Chat", { groupId: notification.targetId });
             break;
          case NotificationType.ContactChat:
             navigate("Chat", { contactChat: true });
             break;
          case NotificationType.Group:
-            navigate("Group");
+            navigate("Group", { groupId: notification.targetId });
             break;
          case NotificationType.About:
             navigate("About");
             break;
       }
+   };
+
+   const handleMarkAsReadPress = () => {
+      setAllNotificationsAsSeen();
    };
 
    const getIcon = (notification: Notification): string | ((color: string) => React.ReactNode) => {
@@ -75,13 +83,19 @@ const NotificationsPage: FC = () => {
    return (
       <>
          <BasicScreenContainer>
-            {notifications?.length > 0 && (
-               <TitleText extraMarginLeft extraSize>
-                  Notificaciones
-               </TitleText>
+            {notSeenNotifications?.length > 0 && (
+               <View style={styles.allAsReadButtonContainer}>
+                  <Button
+                     mode="text"
+                     labelStyle={styles.allAsReadButtonText}
+                     onPress={handleMarkAsReadPress}
+                  >
+                     Marcar todas como vistas
+                  </Button>
+               </View>
             )}
             <EmptySpace height={10} />
-            {notifications?.reverse().map((notification, i) => {
+            {[...(notifications ?? [])].reverse().map((notification, i) => {
                const icon: string | ((color: string) => React.ReactNode) = getIcon(notification);
 
                return (
@@ -111,6 +125,12 @@ const NotificationsPage: FC = () => {
 };
 
 const styles: Styles = StyleSheet.create({
+   allAsReadButtonContainer: {
+      flexDirection: "row-reverse"
+   },
+   allAsReadButtonText: {
+      textTransform: "none"
+   },
    profileIcon: {
       marginLeft: 4,
       marginRight: 9

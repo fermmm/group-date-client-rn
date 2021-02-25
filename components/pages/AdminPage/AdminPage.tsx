@@ -10,6 +10,8 @@ import { useUser } from "../../../api/server/user";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { sendCreateFakeUsers, sendForceGroupsSearch } from "../../../api/server/admin";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
+import { LocalStorageKey } from "../../../common-tools/strings/LocalStorageKey";
+import { removeFromDevice } from "../../../common-tools/device-native-api/storage/storage";
 
 const AdminPage: FC = () => {
    const { colors } = useTheme();
@@ -24,6 +26,13 @@ const AdminPage: FC = () => {
    const handleSearchGroupsPress = async () => {
       const response = await sendForceGroupsSearch();
       Alert.alert("Hecho, respuesta:", response);
+   };
+
+   const handleRemoveLocalStorage = async () => {
+      Object.values(LocalStorageKey).forEach(value => {
+         removeFromDevice(value);
+         removeFromDevice(value, { secure: true });
+      });
    };
 
    if (!localUser) {
@@ -47,6 +56,10 @@ const AdminPage: FC = () => {
             <EmptySpace />
             <Button onPress={handleSearchGroupsPress} mode="outlined" color={colors.accent2}>
                Forzar búsqueda de grupos
+            </Button>
+            <EmptySpace height={100} />
+            <Button onPress={handleRemoveLocalStorage} mode="outlined" color={colors.accent2}>
+               Borrar local storage
             </Button>
          </BasicScreenContainer>
       </>

@@ -16,7 +16,6 @@ import {
 import CardDateInfo from "./CardDateInfo/CardDateInfo";
 import ButtonForAppBar from "../../common/ButtonForAppBar/ButtonForAppBar";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
-import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { getMatchesOf } from "../../../common-tools/groups/groups-tools";
@@ -25,9 +24,10 @@ import { useUser } from "../../../api/server/user";
 import { useGroup, useUnreadMessagesAmount, useVoteResults } from "../../../api/server/groups";
 import { useVotingResultToRender } from "../DateVotingPage/tools/useVotingResults";
 import { revalidate } from "../../../api/tools/useCache";
+import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 
 export interface ParamsGroupPage {
-   group: Group;
+   groupId: string;
 }
 
 const GroupPage: FC = () => {
@@ -36,23 +36,27 @@ const GroupPage: FC = () => {
    const { data: localUser } = useUser();
    const [expandedUser, setExpandedUser] = useState<number>();
    const { params } = useRoute<RouteProps<ParamsGroupPage>>();
-   const { data: groupFromServer } = useGroup({ groupId: params?.group?.groupId });
-   const group: Group = groupFromServer ?? params?.group;
+   const { data: group } = useGroup({ groupId: params?.groupId });
    const { data: voteResultsFromServer } = useVoteResults({
-      groupId: params?.group?.groupId,
+      groupId: params?.groupId,
       config: { refreshInterval: VOTING_RESULT_REFRESH_INTERVAL }
    });
    const votingResults = useVotingResultToRender(group, voteResultsFromServer);
    const { data: unreadChatMessages } = useUnreadMessagesAmount({
-      groupId: params?.group?.groupId,
+      groupId: params?.groupId,
       config: { refreshInterval: UNREAD_CHAT_BADGE_REFRESH_INTERVAL, enabled: focused }
    });
+   const isLoading = group == null;
 
    useFocusEffect(
       useCallback(() => {
-         revalidate("group/chat/unread/amount" + params?.group?.groupId);
+         revalidate("group/chat/unread/amount" + params?.groupId);
       }, [])
    );
+
+   if (isLoading) {
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
+   }
 
    return (
       <>

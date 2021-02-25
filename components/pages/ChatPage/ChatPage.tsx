@@ -24,6 +24,7 @@ import { revalidate } from "../../../api/tools/useCache";
 import { DAY_IN_SECONDS } from "../../../api/tools/date-tools";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { getColorForUser, getUnknownUsersFromChat } from "./tools/chat-tools";
+import { stringIsEmptyOrSpacesOnly } from "../../../common-tools/js-tools/js-tools";
 
 export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
@@ -94,10 +95,6 @@ const ChatPage: FC<ChatPageProps> = () => {
       }
    }, [groupChatFromServer, group]);
 
-   if (isLoading) {
-      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
-   }
-
    const handleSend = useCallback((messages: IMessage[] = []) => {
       const msg = messages[0];
 
@@ -105,8 +102,7 @@ const ChatPage: FC<ChatPageProps> = () => {
          return;
       }
 
-      // This regex checks if the message are only space characters or it's empty, in that case don't send anything
-      if (!/\S/.test(msg?.text)) {
+      if (stringIsEmptyOrSpacesOnly(msg?.text)) {
          return;
       }
 
@@ -115,6 +111,10 @@ const ChatPage: FC<ChatPageProps> = () => {
       );
       sendChatMessage({ token, groupId: group.groupId, message: messages[0].text });
    }, []);
+
+   if (isLoading) {
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
+   }
 
    return (
       <>

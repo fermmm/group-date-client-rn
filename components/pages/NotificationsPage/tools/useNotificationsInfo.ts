@@ -1,8 +1,9 @@
 import { Notification } from "./../../../../api/server/shared-tools/endpoints-interfaces/user";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNotifications } from "../../../../api/server/user";
 import { useLocalStorage } from "../../../../common-tools/device-native-api/storage/useLocalStorage";
 import { NOTIFICATIONS_REFRESH_INTERVAL } from "../../../../config";
+import { LocalStorageKey } from "../../../../common-tools/strings/LocalStorageKey";
 
 export function useNotificationsInfo() {
    const {
@@ -10,7 +11,7 @@ export function useNotificationsInfo() {
       isLoading: loadingSeenNotifications,
       setValue,
       refresh
-   } = useLocalStorage<string[]>("seenNotificationsIds");
+   } = useLocalStorage<string[]>(LocalStorageKey.SeenNotificationsIds);
 
    const { data: notifications } = useNotifications({
       config: {
@@ -18,46 +19,53 @@ export function useNotificationsInfo() {
       }
    });
 
-   const seenNotifications = useRef<Notification[]>([]);
-   const notSeenNotifications = useRef<Notification[]>([]);
+   const [seenNotifications, setSeenNotifications] = useState<Notification[]>([]);
+   const [notSeenNotifications, setNotSeenNotifications] = useState<Notification[]>([]);
 
    const isLoading = loadingSeenNotifications || notifications == null;
 
    useEffect(() => {
-      seenNotifications.current = notifications?.filter(
-         notification => !isLoading && seenNotificationsIds?.includes(notification.notificationId)
-      );
-      notSeenNotifications.current = notifications?.filter(
-         notification => !isLoading && !seenNotificationsIds?.includes(notification.notificationId)
-      );
-   }, [isLoading, seenNotificationsIds]);
+      if (isLoading) {
+         return;
+      }
 
-   const setNotificationAsSeen = useCallback(
-      async (notificationId: string) => {
-         if (!seenNotificationsIds?.includes(notificationId)) {
-            await setValue([...(seenNotificationsIds ?? []), notificationId]);
-            refresh();
-         }
-      },
-      [seenNotificationsIds]
-   );
+      setSeenNotifications(
+         notifications?.filter(notification =>
+            seenNotificationsIds?.includes(notification.notificationId)
+         )
+      );
+      setNotSeenNotifications(
+         notifications?.filter(
+            notification => !seenNotificationsIds?.includes(notification.notificationId)
+         )
+      );
+   }, [isLoading, seenNotificationsIds, notifications]);
 
-   const setAllNotificationsAsSeen = useCallback(async () => {
+   const setNotificationAsSeen = (notificationId: string) => {
+      if (!seenNotificationsIds?.includes(notificationId)) {
+         setValue([...(seenNotificationsIds ?? []), notificationId], true);
+      }
+   };
+
+   const setAllNotificationsAsSeen = async () => {
       if (notifications == null) {
          return;
       }
-      await setValue(notifications.map(n => n.notificationId));
-      refresh();
-   }, [notifications]);
+      setValue(
+         notifications.map(n => n.notificationId),
+         true
+      );
+   };
 
    return {
       isLoading,
       notifications,
-      seenNotifications: seenNotifications.current,
-      notSeenNotifications: notSeenNotifications.current,
+      seenNotifications,
+      notSeenNotifications,
       seenNotificationsIds,
       setNotificationAsSeen,
-      setAllNotificationsAsSeen
+      setAllNotificationsAsSeen,
+      refresh
    };
 }
 
@@ -69,4 +77,5 @@ export interface UseNotificationsInfo {
    seenNotificationsIds?: string[];
    setNotificationAsSeen: (notificationId: string) => void;
    setAllNotificationsAsSeen: () => void;
+   refresh: () => void;
 }

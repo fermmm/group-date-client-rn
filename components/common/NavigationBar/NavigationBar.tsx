@@ -27,7 +27,6 @@ const Tab = createMaterialTopTabNavigator();
 
 const NavigationBar: FC = () => {
    const { notSeenNotifications } = useNotificationsInfo();
-
    const [badgeNumbers, setBadgeNumbers] = useState<Record<string, number>>({
       Cards: 0,
       Notifications: 0,
@@ -36,9 +35,7 @@ const NavigationBar: FC = () => {
    });
 
    useEffect(() => {
-      if (notSeenNotifications?.length > 0) {
-         setBadgeNumbers({ ...badgeNumbers, Notifications: notSeenNotifications.length });
-      }
+      setBadgeNumbers({ ...badgeNumbers, Notifications: notSeenNotifications?.length ?? 0 });
    }, [notSeenNotifications]);
 
    return (

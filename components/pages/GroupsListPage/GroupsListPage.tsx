@@ -14,6 +14,7 @@ import { firstBy } from "thenby";
 import { useServerInfo } from "../../../api/server/server-info";
 import { getSlotStatusInfoText } from "./tools/getSlotsInfoText";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
+import EmptySpace from "../../common/EmptySpace/EmptySpace";
 
 const GroupsListPage: FC = () => {
    const { navigate } = useNavigation();
@@ -52,7 +53,12 @@ const GroupsListPage: FC = () => {
 
    return (
       <BasicScreenContainer>
-         {slotsStatusInfoText != null && <HelpBanner text={slotsStatusInfoText} />}
+         {slotsStatusInfoText != null && (
+            <>
+               <HelpBanner text={slotsStatusInfoText} />
+               <EmptySpace height={10} />
+            </>
+         )}
          <TitleText> Activas </TitleText>
          <List.Section>
             {groups.sort(firstBy(g => g.creationDate, "desc")).map(group => (
@@ -64,7 +70,7 @@ const GroupsListPage: FC = () => {
                         icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} />}
                      />
                   )}
-                  onPress={() => navigate("Group", { group })}
+                  onPress={() => navigate("Group", { groupId: group.groupId })}
                   key={group.groupId}
                />
             ))}
