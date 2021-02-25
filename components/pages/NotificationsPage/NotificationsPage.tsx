@@ -4,7 +4,6 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { Button, List } from "react-native-paper";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
-import TitleText from "../../common/TitleText/TitleText";
 import { currentTheme } from "../../../config";
 import GraphSvg2 from "../../../assets/GraphSvg2";
 import {
@@ -15,8 +14,6 @@ import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useNotificationsInfo } from "./tools/useNotificationsInfo";
 import { useCacheRevalidationBasedOnNotifications } from "./tools/useCacheRevalidationBasedOnNotifications";
-
-// TODO: Implementar boton de marcar todas las notificaciones como leidas usando setAllNotificationsAsSeen
 
 const NotificationsPage: FC = () => {
    const { navigate } = useNavigation();
