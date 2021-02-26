@@ -18,6 +18,7 @@ import { userFinishedRegistration } from "../../../api/tools/userTools";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { removeFromDevice } from "../../../common-tools/device-native-api/storage/storage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
+import { useSendPropsToUpdateAtLogin } from "./tools/useSendPropsToUpdateAtLogin";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -38,12 +39,18 @@ const LoginPage: FC = () => {
       enabled: token != null
    });
 
-   // If we have the user token we check if there is any user property missing (unfinished registration or not registered)
-   const { data: profileStatusData } = useServerProfileStatus({
-      config: { enabled: tokenIsValid != null }
+   // If we have a valid token we can send the user props that needs to be updated at each login
+   const sendLoginPropsLoading = useSendPropsToUpdateAtLogin(token, {
+      enabled: tokenIsValid
    });
 
-   // If the user has unfinished registration redirect to RegistrationForms otherwise redirect to Main
+   // If we have a valid user token and finished updating the login props we check if there is any user
+   // property missing (caused by unfinished registration or new props)
+   const { data: profileStatusData } = useServerProfileStatus({
+      config: { enabled: tokenIsValid && !sendLoginPropsLoading }
+   });
+
+   // If the user has props missing redirect to RegistrationForms otherwise redirect to Main
    useEffect(() => {
       const registrationFinished: boolean = userFinishedRegistration(profileStatusData);
       if (profileStatusData != null && logoAnimCompleted && isFocused) {

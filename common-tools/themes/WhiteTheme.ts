@@ -28,7 +28,8 @@ export default {
       disabled: "#FFBF9C",
       placeholder: color("#DCC4CA").alpha(0.54).rgb().string(),
       backdrop: color("#DCC4CA").alpha(0.5).rgb().string(),
-      notification: "#FF7A8F"
+      notification: "#FF7A8F",
+      deviceNotificationLed: "#5EFFF4"
    },
    chatNamesColors: [
       "#a85b7c",

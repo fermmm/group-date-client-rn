@@ -26,7 +26,8 @@
       "turboModules": true
     },
     "android": {
-      "package": "com.polydates.polydates"
+      "package": "com.polydates.polydates",
+      "useNextNotificationsApi": true
     },
     "ios": {
       "supportsTablet": true

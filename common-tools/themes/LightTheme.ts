@@ -26,7 +26,8 @@ export default {
       disabled: color("#DCC4CA").alpha(0.26).rgb().string(),
       placeholder: color("#DCC4CA").alpha(0.54).rgb().string(),
       backdrop: color("#DCC4CA").alpha(0.5).rgb().string(),
-      notification: "#FF4040"
+      notification: "#FF4040",
+      deviceNotificationLed: "#5EFFF4"
    },
    chatNamesColors: [
       "#a85b7c",
