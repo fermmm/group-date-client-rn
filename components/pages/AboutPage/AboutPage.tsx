@@ -73,21 +73,21 @@ const AboutPage: FC = () => {
                10.000 años la crianza era una actividad poco exigente, los padres de lxs hijxs eran
                todas las personas de un grupo afectivo, se compartía el cuidado y los recursos de
                forma igualitaria como una gran familia, potenciado por el sexo que solía ser grupal
-               y muy abundante. Este pasado poliamoroso grupal lo tenemos todxs presente en la
-               sexualidad biológica de nuestro cuerpo, por ejemplo: Los "gemidos sexuales" son un
-               instinto que las otras especies que lo tienen (primates) lo usan para llamar a lxs
-               que están cerca, de la misma manera funcionaba en nuestra especie.
+               y muy abundante. Este pasado poliamoroso lo tenemos todxs presente en la sexualidad
+               biológica de nuestro cuerpo, por ejemplo: Los "gemidos sexuales" son un instinto que
+               las otras especies que lo tienen (primates) lo usan para llamar a lxs que están
+               cerca, de la misma manera funcionaba en nuestra especie.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               La sexualidad que podemos experimentar en nuestra cultura esta muy reprimida y
-               alejada del tipo de sexualidad que nos pide nuestro cuerpo y su evolución, este es el
-               trasfondo de muchos problemas que surgen hoy en día a la hora de mantenernos
-               motivados sexualmente y conectar con nuevas personas, algo similar suele suceder con
-               el afecto. Hay grandes libros de divulgación científica sobre el tema para
-               recomendar, algunos muy conocidos y comentados por la comunidad científica como los
-               de Cacilda Jethá y Christopher Ryan en primer lugar o también el de Friedrich Engels:
-               "El origen de la familia, la propiedad privada y el estado".
+               La sexualidad que podemos experimentar en nuestra cultura esta muy reprimida,
+               desconocida y alejada del tipo de sexualidad que nos pide nuestro cuerpo y su
+               evolución, este es el trasfondo de muchos problemas que surgen hoy en día a la hora
+               de mantenernos motivados sexualmente y conectar con nuevas personas, algo similar
+               puede suceder hasta con el afecto. Hay grandes libros de divulgación científica sobre
+               el tema para recomendar, algunos muy conocidos y comentados por la comunidad
+               científica como los de Cacilda Jethá y Christopher Ryan en primer lugar o también el
+               de Friedrich Engels: "El origen de la familia, la propiedad privada y el estado".
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
