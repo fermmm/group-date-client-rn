@@ -50,7 +50,7 @@ const ProfileDescriptionForm: FC<DescriptionFormProps> = ({ initialData, onChang
             style={[
                styles.input,
                {
-                  height: profileDescription?.length > 0 ? null : 280
+                  height: 280
                }
             ]}
          />
