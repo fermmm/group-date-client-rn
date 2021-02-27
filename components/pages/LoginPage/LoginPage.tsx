@@ -40,8 +40,8 @@ const LoginPage: FC = () => {
    });
 
    // If we have a valid token we can send the user props that needs to be updated at each login
-   const sendLoginPropsLoading = useSendPropsToUpdateAtLogin(token, {
-      enabled: tokenIsValid
+   const sendLoginPropsLoading = useSendPropsToUpdateAtLogin(token, serverInfoData, {
+      enabled: tokenIsValid && serverInfoData != null
    });
 
    // If we have a valid user token and finished updating the login props we check if there is any user

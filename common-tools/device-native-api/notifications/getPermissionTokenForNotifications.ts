@@ -1,9 +1,12 @@
-import { PUSH_NOTIFICATIONS_CHANNELS } from "../../../config";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
+import { NotificationChannelInfo } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { PUSH_NOTIFICATIONS_SETTINGS } from "../../../config";
 
-export async function getPermissionTokenForNotifications(): Promise<string> {
+export async function getPermissionTokenForNotifications(
+   notificationsChannels: NotificationChannelInfo[]
+): Promise<string> {
    let result: string;
    if (Constants.isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -22,8 +25,13 @@ export async function getPermissionTokenForNotifications(): Promise<string> {
    }
 
    if (Platform.OS === "android") {
-      PUSH_NOTIFICATIONS_CHANNELS.forEach(channelInfo => {
-         Notifications.setNotificationChannelAsync(channelInfo.id, channelInfo);
+      notificationsChannels.forEach(channelInfo => {
+         Notifications.setNotificationChannelAsync(channelInfo.id, {
+            name: channelInfo.name,
+            importance: PUSH_NOTIFICATIONS_SETTINGS.importance,
+            vibrationPattern: PUSH_NOTIFICATIONS_SETTINGS.vibrationPattern,
+            lightColor: PUSH_NOTIFICATIONS_SETTINGS.lightColor
+         });
       });
    }
 

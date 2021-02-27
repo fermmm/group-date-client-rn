@@ -2,6 +2,7 @@ import { useGeolocation } from "./../../../../common-tools/device-native-api/geo
 import { useEffect, useState } from "react";
 import { getPermissionTokenForNotifications } from "../../../../common-tools/device-native-api/notifications/getPermissionTokenForNotifications";
 import { sendUserProps } from "../../../../api/server/user";
+import { ServerInfoResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/server-info";
 
 /**
  * At every login there are some user props that need to be updated: The user may be in a different
@@ -11,6 +12,7 @@ import { sendUserProps } from "../../../../api/server/user";
  */
 export function useSendPropsToUpdateAtLogin(
    token: string,
+   serverInfo: ServerInfoResponse,
    settings: { enabled: boolean }
 ): boolean {
    const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -36,7 +38,9 @@ export function useSendPropsToUpdateAtLogin(
    // Effect to set notification state when is ready
    useEffect(() => {
       (async () => {
-         setNotificationsToken(await getPermissionTokenForNotifications());
+         setNotificationsToken(
+            await getPermissionTokenForNotifications(serverInfo.pushNotificationsChannels)
+         );
       })();
    }, []);
 
