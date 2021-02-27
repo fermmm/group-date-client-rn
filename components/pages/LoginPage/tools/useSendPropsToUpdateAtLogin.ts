@@ -37,12 +37,16 @@ export function useSendPropsToUpdateAtLogin(
 
    // Effect to set notification state when is ready
    useEffect(() => {
+      if (serverInfo?.pushNotificationsChannels == null) {
+         return;
+      }
+
       (async () => {
          setNotificationsToken(
             await getPermissionTokenForNotifications(serverInfo.pushNotificationsChannels)
          );
       })();
-   }, []);
+   }, [serverInfo?.pushNotificationsChannels]);
 
    // Effect to send the data to the server when all the information is gathered
    useEffect(() => {
