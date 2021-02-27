@@ -15,7 +15,7 @@ export function useSendPropsToUpdateAtLogin(
    serverInfo: ServerInfoResponse,
    settings: { enabled: boolean }
 ): boolean {
-   const [isLoading, setIsLoading] = useState<boolean>(true);
+   const [completed, setCompleted] = useState<boolean>(false);
    const { geolocation } = useGeolocation();
    const [notificationsToken, setNotificationsToken] = useState<string>();
    const [locationLat, setLocationLat] = useState<number>();
@@ -63,10 +63,10 @@ export function useSendPropsToUpdateAtLogin(
                { token, props: { locationLat, locationLon, country, notificationsToken } },
                false
             );
-            setIsLoading(false);
+            setCompleted(true);
          })();
       }
    }, [notificationsToken, locationLat, locationLon, country, token, settings.enabled]);
 
-   return isLoading;
+   return completed;
 }

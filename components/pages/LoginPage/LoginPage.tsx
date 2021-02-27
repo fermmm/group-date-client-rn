@@ -39,24 +39,25 @@ const LoginPage: FC = () => {
       enabled: token != null
    });
 
-   // If we have a valid token we can send the user props that needs to be updated at each login
-   const sendLoginPropsLoading = useSendPropsToUpdateAtLogin(token, serverInfoData, {
-      enabled: tokenIsValid && serverInfoData != null
-   });
-
    // If we have a valid user token and finished updating the login props we check if there is any user
    // property missing (caused by unfinished registration or new props)
    const { data: profileStatusData } = useServerProfileStatus({
-      config: { enabled: tokenIsValid && !sendLoginPropsLoading }
+      config: { enabled: tokenIsValid === true }
+   });
+
+   // If we have a valid token we can send the user props that needs to be updated at each login
+   const sendLoginPropsCompleted = useSendPropsToUpdateAtLogin(token, serverInfoData, {
+      enabled: tokenIsValid === true && serverInfoData != null && profileStatusData != null
    });
 
    // If the user has props missing redirect to RegistrationForms otherwise redirect to Main
    useEffect(() => {
-      const registrationFinished: boolean = userFinishedRegistration(profileStatusData);
-      if (profileStatusData != null && logoAnimCompleted && isFocused) {
-         navigateWithoutHistory(registrationFinished ? "Main" : "RegistrationForms");
+      if (profileStatusData != null && sendLoginPropsCompleted && logoAnimCompleted && isFocused) {
+         navigateWithoutHistory(
+            userFinishedRegistration(profileStatusData) ? "Main" : "RegistrationForms"
+         );
       }
-   }, [profileStatusData, logoAnimCompleted]);
+   }, [profileStatusData, sendLoginPropsCompleted, logoAnimCompleted]);
 
    /**
     * The login button is visible when we don't have the token or we don't have a valid token.

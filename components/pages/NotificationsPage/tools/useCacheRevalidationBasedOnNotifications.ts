@@ -18,7 +18,10 @@ export function useCacheRevalidationBasedOnNotifications(notifications: Notifica
 
       notifications.forEach(notification => {
          if (notification.type === NotificationType.Group) {
-            if (groupList.find(group => group.groupId === notification.targetId) == null) {
+            const groupIsNew =
+               notification.targetId &&
+               groupList.find(group => group.groupId === notification.targetId) == null;
+            if (groupIsNew) {
                revalidateGroupList = true;
             }
          }
