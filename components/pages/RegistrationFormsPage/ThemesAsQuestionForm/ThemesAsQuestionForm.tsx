@@ -1,5 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
-import { ThemeBasicInfo } from "../../../../api/server/shared-tools/endpoints-interfaces/themes";
+import {
+   ThemeBasicInfo,
+   ThemesAsQuestion
+} from "../../../../api/server/shared-tools/endpoints-interfaces/themes";
 import { EditableUserProps } from "../../../../api/server/shared-tools/validators/user";
 import {
    CenteredMethod,
@@ -14,6 +17,7 @@ export interface PropsThemesAsQuestionForm {
    initialData: ThemesInfo;
    questionId: string;
    mandatoryQuestion: boolean;
+   themesAsQuestions: ThemesAsQuestion[];
    onChange: (
       formName: string,
       newProps: EditableUserProps,
@@ -28,7 +32,14 @@ export interface ThemesInfo {
 }
 
 const ThemesAsQuestionForm: FC<PropsThemesAsQuestionForm> = props => {
-   const { questionId, initialData, onChange, formName, mandatoryQuestion } = props;
+   const {
+      questionId,
+      initialData,
+      onChange,
+      formName,
+      mandatoryQuestion,
+      themesAsQuestions
+   } = props;
    const [selectedAnswer, setSelectedAnswer] = useState<string>(null);
    const [itsImportantChecked, setItsImportantChecked] = useState<boolean>(null);
    const {
@@ -37,7 +48,13 @@ const ThemesAsQuestionForm: FC<PropsThemesAsQuestionForm> = props => {
       initiallySelectedAnswer,
       initiallyItsImportantChecked,
       themesToUpdate
-   } = useThemeAsQuestionInfo(questionId, initialData, selectedAnswer, itsImportantChecked);
+   } = useThemeAsQuestionInfo(
+      themesAsQuestions,
+      questionId,
+      initialData,
+      selectedAnswer,
+      itsImportantChecked
+   );
 
    useEffect(() => {
       onChange(formName, null, mandatoryQuestion ? getError() : null, themesToUpdate);

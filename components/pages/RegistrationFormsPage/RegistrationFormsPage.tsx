@@ -20,7 +20,7 @@ import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
 import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
 import { useUnifiedThemesToUpdate } from "./tools/useUnifiedThemesToUpdate";
-import { sendThemes, ThemeEditAction } from "../../../api/server/themes";
+import { sendThemes, ThemeEditAction, useThemesAsQuestions } from "../../../api/server/themes";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { BackHandler } from "react-native";
@@ -52,6 +52,7 @@ const RegistrationFormsPage: FC = () => {
       themesToUpdate.current
    );
    const { data: profileStatus } = useServerProfileStatus();
+   const { data: themesAsQuestions } = useThemesAsQuestions();
    const {
       isLoading: requiredFormListLoading,
       formsRequired,
@@ -358,6 +359,7 @@ const RegistrationFormsPage: FC = () => {
                            questionId={formName}
                            initialData={profileStatus.user}
                            mandatoryQuestion={true}
+                           themesAsQuestions={themesAsQuestions}
                            onChange={handleChangeOnForm}
                         />
                      )}

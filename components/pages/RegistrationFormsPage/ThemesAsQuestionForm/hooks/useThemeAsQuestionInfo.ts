@@ -3,17 +3,15 @@ import {
    ThemeBasicInfo,
    ThemesAsQuestion
 } from "../../../../../api/server/shared-tools/endpoints-interfaces/themes";
-import { useThemesAsQuestions } from "../../../../../api/server/themes";
 import { ThemesInfo } from "../ThemesAsQuestionForm";
 
 export function useThemeAsQuestionInfo(
+   themesAsQuestions: ThemesAsQuestion[],
    questionId: string,
    initialData: ThemesInfo,
    selectedAnswer?: string,
    itsImportantChecked?: boolean
 ): UseThemeInfoResponse {
-   const { data: themesAsQuestions, isLoading } = useThemesAsQuestions();
-
    const question = themesAsQuestions?.find(q => q.questionId === questionId);
    const initiallySelectedAnswer = getInitiallySelectedAnswer(
       question,
@@ -39,7 +37,7 @@ export function useThemeAsQuestionInfo(
    });
 
    return {
-      isLoading,
+      isLoading: themesAsQuestions == null,
       question,
       initiallySelectedAnswer,
       initiallyItsImportantChecked,
