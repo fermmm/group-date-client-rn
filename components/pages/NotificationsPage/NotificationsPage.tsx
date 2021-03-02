@@ -15,6 +15,7 @@ import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/Lo
 import { useNotificationsInfo } from "./tools/useNotificationsInfo";
 import { useCacheRevalidationBasedOnNotifications } from "./tools/useCacheRevalidationBasedOnNotifications";
 
+// TODO: BUG: Cuando creo usuarios fake de a 2 tandas se traban las cartas
 const NotificationsPage: FC = () => {
    const { navigate } = useNavigation();
    const {
@@ -32,7 +33,7 @@ const NotificationsPage: FC = () => {
       setNotificationAsSeen(notification.notificationId);
 
       switch (notification.type) {
-         case NotificationType.FacebookEvent:
+         case NotificationType.NearbyPartyOrEvent:
             Linking.openURL(notification.targetId);
             break;
          case NotificationType.Chat:
@@ -56,7 +57,7 @@ const NotificationsPage: FC = () => {
 
    const getIcon = (notification: Notification): string | ((color: string) => React.ReactNode) => {
       switch (notification.type) {
-         case NotificationType.FacebookEvent:
+         case NotificationType.NearbyPartyOrEvent:
             return "calendar";
          case NotificationType.Chat:
             return "forum";

@@ -27,6 +27,7 @@ import { BackHandler } from "react-native";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { mutateCache, revalidate } from "../../../api/tools/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
+import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -48,6 +49,7 @@ const RegistrationFormsPage: FC = () => {
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
    const themesToUpdate = useRef<Record<string, ThemesToUpdate>>({});
+   const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
    const { unifiedThemesToUpdate, questionsShowed } = useUnifiedThemesToUpdate(
       themesToUpdate.current
    );
@@ -74,7 +76,18 @@ const RegistrationFormsPage: FC = () => {
          sendingToServer &&
          (profileStatus?.user?.profileCompleted || params != null)
       ) {
-         params == null ? navigateWithoutHistory("Main") : goBack();
+         if (params != null) {
+            goBack();
+         } else {
+            if (redirectFromPushNotificationPress != null) {
+               const redirected = redirectFromPushNotificationPress();
+               if (!redirected) {
+                  navigateWithoutHistory("Main");
+               }
+            } else {
+               navigateWithoutHistory("Main");
+            }
+         }
       }
    }, [profileStatus]);
 

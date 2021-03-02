@@ -4,6 +4,7 @@ import { useNotifications } from "../../../../api/server/user";
 import { useLocalStorage } from "../../../../common-tools/device-native-api/storage/useLocalStorage";
 import { NOTIFICATIONS_REFRESH_INTERVAL } from "../../../../config";
 import { LocalStorageKey } from "../../../../common-tools/strings/LocalStorageKey";
+import { useSetNotificationAsSeen } from "./useSetNotificationAsSeen";
 
 export function useNotificationsInfo() {
    const {
@@ -12,6 +13,11 @@ export function useNotificationsInfo() {
       setValue,
       refresh
    } = useLocalStorage<string[]>(LocalStorageKey.SeenNotificationsIds);
+
+   const {
+      setNotificationAsSeen,
+      isLoading: loadingSetNotificationsAsSeen
+   } = useSetNotificationAsSeen();
 
    const { data: notifications } = useNotifications({
       config: {
@@ -22,7 +28,8 @@ export function useNotificationsInfo() {
    const [seenNotifications, setSeenNotifications] = useState<Notification[]>([]);
    const [notSeenNotifications, setNotSeenNotifications] = useState<Notification[]>([]);
 
-   const isLoading = loadingSeenNotifications || notifications == null;
+   const isLoading =
+      loadingSetNotificationsAsSeen || loadingSeenNotifications || notifications == null;
 
    useEffect(() => {
       if (isLoading) {
@@ -40,12 +47,6 @@ export function useNotificationsInfo() {
          )
       );
    }, [isLoading, seenNotificationsIds, notifications]);
-
-   const setNotificationAsSeen = (notificationId: string) => {
-      if (!seenNotificationsIds?.includes(notificationId)) {
-         setValue([...(seenNotificationsIds ?? []), notificationId], true);
-      }
-   };
 
    const setAllNotificationsAsSeen = async () => {
       if (notifications == null) {

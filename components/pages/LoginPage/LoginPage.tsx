@@ -19,6 +19,7 @@ import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { removeFromDevice } from "../../../common-tools/device-native-api/storage/storage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useSendPropsToUpdateAtLogin } from "./tools/useSendPropsToUpdateAtLogin";
+import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -28,6 +29,7 @@ const LoginPage: FC = () => {
    const [logoAnimCompleted, setLogoAnimCompleted] = useState(false);
    const { colors } = useTheme();
    const { navigateWithoutHistory, navigate } = useNavigation();
+   const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
    const isFocused = useIsFocused();
    const { data: serverInfoData, isLoading: serverInfoLoading } = useServerInfo();
 
@@ -50,12 +52,21 @@ const LoginPage: FC = () => {
       enabled: tokenIsValid === true && serverInfoData != null && profileStatusData != null
    });
 
-   // If the user has props missing redirect to RegistrationForms otherwise redirect to Main
+   // If the user has props missing redirect to RegistrationForms otherwise redirect to Main or notification press
    useEffect(() => {
       if (profileStatusData != null && sendLoginPropsCompleted && logoAnimCompleted && isFocused) {
-         navigateWithoutHistory(
-            userFinishedRegistration(profileStatusData) ? "Main" : "RegistrationForms"
-         );
+         if (!userFinishedRegistration(profileStatusData)) {
+            navigateWithoutHistory("RegistrationForms");
+         } else {
+            if (redirectFromPushNotificationPress != null) {
+               const redirected = redirectFromPushNotificationPress();
+               if (!redirected) {
+                  navigateWithoutHistory("Main");
+               }
+            } else {
+               navigateWithoutHistory("Main");
+            }
+         }
       }
    }, [profileStatusData, sendLoginPropsCompleted, logoAnimCompleted]);
 

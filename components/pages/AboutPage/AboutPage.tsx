@@ -7,11 +7,16 @@ import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import TitleText from "../../common/TitleText/TitleText";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import { currentTheme } from "../../../config";
+import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 
 const AboutPage: FC = () => {
+   const { goBack } = useGoBackExtended({
+      whenBackNotAvailable: { goToRoute: "Main" }
+   });
+
    return (
       <>
-         <AppBarHeader />
+         <AppBarHeader onBackPress={goBack} />
          <BasicScreenContainer style={styles.mainContainer}>
             <TitleText extraSize style={styles.title}>
                ¿De cuántas personas son las citas grupales de la app?
@@ -102,10 +107,8 @@ const AboutPage: FC = () => {
                ¿Hay que pagar algo?
             </TitleText>
             <Text style={styles.text}>
-               Esta app es y será siempre gratis, sin fines comerciales y muy pronto de código
-               abierto. Financiada con donaciones a voluntad, el único fin es ayudar para que
-               iniciarse en el poliamor sea mas fácil en la práctica y difundir la idea de que las
-               citas pueden ser de mas de dos personas.
+               Esta app es y será siempre gratis, sin fines comerciales, de código abierto y
+               financiada con donaciones a voluntad.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Quienes hicieron esta aplicación?

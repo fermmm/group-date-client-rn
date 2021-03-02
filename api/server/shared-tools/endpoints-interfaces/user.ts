@@ -113,7 +113,7 @@ export enum NotificationType {
    Group,
    Chat,
    ContactChat,
-   FacebookEvent,
+   NearbyPartyOrEvent,
    CardsGame,
    About,
 }
@@ -148,4 +148,10 @@ export enum NotificationChannelId {
 export interface NotificationChannelInfo {
    id: NotificationChannelId;
    name: string;
+}
+
+export interface NotificationData {
+   targetId: string;
+   type: NotificationType;
+   notificationId: string;
 }

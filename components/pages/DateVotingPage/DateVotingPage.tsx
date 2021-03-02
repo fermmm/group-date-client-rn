@@ -12,7 +12,6 @@ import { Group } from "../../../api/server/shared-tools/endpoints-interfaces/gro
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
-import { ParamsGroupPage } from "../GroupPage/GroupPage";
 import { useGroupVotingOptions } from "./tools/useGroupVotingOptions";
 import { useUser } from "../../../api/server/user";
 import { sendDayVotes, sendIdeasVotes, useGroup } from "../../../api/server/groups";
@@ -31,7 +30,7 @@ const DateVotingPage: FC = () => {
    const { goBack } = useNavigation();
    const { data: user } = useUser();
    const { token } = useFacebookToken();
-   const { params } = useRoute<RouteProps<ParamsGroupPage>>();
+   const { params } = useRoute<RouteProps<DateVotingPageParams>>();
    const { data: group } = useGroup({ groupId: params?.group?.groupId });
    const votingOptions = useGroupVotingOptions(group);
    const daysToVoteGathered = useRef<number[]>(null);

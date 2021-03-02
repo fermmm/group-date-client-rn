@@ -1,8 +1,7 @@
-import { Alert, BackHandler, ToastAndroid, Platform } from "react-native";
+import { Alert, BackHandler } from "react-native";
 import * as IntentLauncher from "expo-intent-launcher";
-import Constants from "expo-constants";
-import { Linking } from "expo";
 import i18n from "i18n-js";
+import { openDeviceAction } from "../../device-action/openDeviceAction";
 
 export async function showRejectedPermissionsDialog(
    dialogSettings: RejectedDialogSettings = {}
@@ -28,7 +27,11 @@ export async function showRejectedPermissionsDialog(
          {
             text: dialogSettings.openSettingsButtonText,
             onPress: async () => {
-               await openAppSettings(dialogSettings.instructionsToastText);
+               await openDeviceAction(
+                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                  "app-settings:",
+                  dialogSettings.instructionsToastText
+               );
                promiseResolve();
             }
          },
@@ -38,18 +41,6 @@ export async function showRejectedPermissionsDialog(
    );
 
    return resultPromise;
-}
-
-function openAppSettings(instructionsText: string): Promise<unknown> {
-   if (Platform.OS === "ios") {
-      // TODO: Test this with a IOS device
-      return Linking.openURL("app-settings:");
-   } else {
-      ToastAndroid.show(instructionsText, ToastAndroid.LONG);
-      return IntentLauncher.startActivityAsync(IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS, {
-         data: "package:" + Constants.manifest.android.package
-      });
-   }
 }
 
 export interface RejectedDialogSettings {

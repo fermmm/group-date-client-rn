@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
+import * as IntentLauncher from "expo-intent-launcher";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { List } from "react-native-paper";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
@@ -10,6 +11,7 @@ import Avatar from "../../common/Avatar/Avatar";
 import { ParamsRegistrationFormsPage } from "../RegistrationFormsPage/RegistrationFormsPage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
+import { openDeviceAction } from "../../../common-tools/device-native-api/device-action/openDeviceAction";
 
 const SettingsPage: FC = () => {
    const { navigate } = useNavigation();
@@ -34,13 +36,25 @@ const SettingsPage: FC = () => {
             <EmptySpace height={10} />
             <List.Item
                title="Edad y distancia"
-               description="Configurar las preferencias de edad y distancia"
+               description="Elige que personas verás según su edad y distancia"
                left={props => (
                   <List.Icon {...props} style={styles.optionIcon} icon="arrow-left-right-bold" />
                )}
                onPress={() =>
                   navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
                      formsToShow: ["FiltersForm"]
+                  })
+               }
+            />
+            <List.Item
+               title="Preferencias de género"
+               description="Elige que géneros quieres ver"
+               left={props => (
+                  <List.Icon {...props} style={styles.optionIcon} icon="gender-transgender" />
+               )}
+               onPress={() =>
+                  navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                     formsToShow: ["TargetGenderForm"]
                   })
                }
             />
@@ -57,18 +71,6 @@ const SettingsPage: FC = () => {
                }
             />
             <List.Item
-               title="Preferencias de género"
-               description="Modifica tus preferencias de genero"
-               left={props => (
-                  <List.Icon {...props} style={styles.optionIcon} icon="gender-transgender" />
-               )}
-               onPress={() =>
-                  navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
-                     formsToShow: ["TargetGenderForm"]
-                  })
-               }
-            />
-            <List.Item
                title="Tu idea recomendada"
                description="Modifica idea recomendada para citas grupales"
                left={props => <List.Icon {...props} style={styles.optionIcon} icon="terrain" />}
@@ -76,6 +78,16 @@ const SettingsPage: FC = () => {
                   navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
                      formsToShow: ["DateIdeaForm"]
                   })
+               }
+            />
+            <List.Item
+               title="Notificaciones"
+               description="Preferencias de las notificaciones push"
+               left={props => (
+                  <List.Icon {...props} style={styles.optionIcon} icon="cellphone-sound" />
+               )}
+               onPress={() =>
+                  openDeviceAction(IntentLauncher.ACTION_APP_NOTIFICATION_SETTINGS, "app-settings:")
                }
             />
             <List.Item

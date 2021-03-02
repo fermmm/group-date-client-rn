@@ -12,11 +12,13 @@ import { sendCreateFakeUsers, sendForceGroupsSearch } from "../../../api/server/
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import { LocalStorageKey } from "../../../common-tools/strings/LocalStorageKey";
 import { removeFromDevice } from "../../../common-tools/device-native-api/storage/storage";
+import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 
 const AdminPage: FC = () => {
    const { colors } = useTheme();
    const { data: localUser } = useUser();
    const [fakeUsersAmount, setFakeUsersAmount] = useState<string>();
+   const { navigate } = useNavigation();
 
    const handleCreateTestUsersPress = async () => {
       const response = await sendCreateFakeUsers({ token: localUser.token, text: fakeUsersAmount });
@@ -32,6 +34,12 @@ const AdminPage: FC = () => {
       Object.values(LocalStorageKey).forEach(value => {
          removeFromDevice(value);
          removeFromDevice(value, { secure: true });
+      });
+   };
+
+   const handleTemp = () => {
+      navigate("Main", {
+         screen: "Notifications"
       });
    };
 
@@ -60,6 +68,10 @@ const AdminPage: FC = () => {
             <EmptySpace height={100} />
             <Button onPress={handleRemoveLocalStorage} mode="outlined" color={colors.accent2}>
                Borrar local storage
+            </Button>
+            <EmptySpace height={100} />
+            <Button onPress={handleTemp} mode="outlined" color={colors.accent2}>
+               temp
             </Button>
          </BasicScreenContainer>
       </>

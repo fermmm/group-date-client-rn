@@ -25,6 +25,7 @@ import { DAY_IN_SECONDS } from "../../../api/tools/date-tools";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { getColorForUser, getUnknownUsersFromChat } from "./tools/chat-tools";
 import { stringIsEmptyOrSpacesOnly } from "../../../common-tools/js-tools/js-tools";
+import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 
 export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
@@ -58,6 +59,9 @@ const ChatPage: FC<ChatPageProps> = () => {
          refreshInterval: CHAT_REFRESH_INTERVAL,
          enabled: !isContactChat
       }
+   });
+   const { goBack } = useGoBackExtended({
+      whenBackNotAvailable: { goToRoute: "Group", params: { groupId: params?.groupId } }
    });
    const isLoading: boolean = group == null || user == null;
 
@@ -95,22 +99,25 @@ const ChatPage: FC<ChatPageProps> = () => {
       }
    }, [groupChatFromServer, group]);
 
-   const handleSend = useCallback((messages: IMessage[] = []) => {
-      const msg = messages[0];
+   const handleSend = useCallback(
+      (messages: IMessage[] = []) => {
+         const msg = messages[0];
 
-      if (msg?.text == null) {
-         return;
-      }
+         if (msg?.text == null) {
+            return;
+         }
 
-      if (stringIsEmptyOrSpacesOnly(msg?.text)) {
-         return;
-      }
+         if (stringIsEmptyOrSpacesOnly(msg?.text)) {
+            return;
+         }
 
-      setMessages(previousMessages =>
-         GiftedChat.append(previousMessages, [{ ...msg, pending: true }])
-      );
-      sendChatMessage({ token, groupId: group.groupId, message: messages[0].text });
-   }, []);
+         setMessages(previousMessages =>
+            GiftedChat.append(previousMessages, [{ ...msg, pending: true }])
+         );
+         sendChatMessage({ token, groupId: group.groupId, message: messages[0].text });
+      },
+      [group?.groupId]
+   );
 
    if (isLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
@@ -118,7 +125,7 @@ const ChatPage: FC<ChatPageProps> = () => {
 
    return (
       <>
-         <AppBarHeader title={!isContactChat ? "" : "Contáctanos"} />
+         <AppBarHeader title={!isContactChat ? "" : "Contáctanos"} onBackPress={goBack} />
          <PageBackgroundGradient>
             {!isContactChat && (
                <HelpBanner

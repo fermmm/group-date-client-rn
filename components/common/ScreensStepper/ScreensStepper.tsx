@@ -35,14 +35,34 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
    const dontSaveHistoryNextTime = useRef(false);
 
    useEffect(() => {
+      scrollToScreen(currentScreen, animated);
+      addCurrentStepToHistory(currentScreen);
+   }, [currentScreen]);
+
+   useEffect(() => {
       BackHandler.addEventListener("hardwareBackPress", handleBackButton);
       return () => BackHandler.removeEventListener("hardwareBackPress", handleBackButton);
    }, [onScreenChange]);
 
-   useEffect(() => {
-      scrollToScreen(currentScreen, animated);
-      addCurrentStepToHistory(currentScreen);
-   }, [currentScreen]);
+   const handleBackButton = useCallback((): boolean => {
+      const canGoBack = goBack();
+      // Returning true here disables the default behavior of the back button:
+      return canGoBack;
+   }, []);
+
+   /*
+    * The return value is true or false whether or not is possible to go back to a previous step
+    */
+   const goBack = (): boolean => {
+      if (historyContainsItemsToGoBack()) {
+         dontSaveHistoryNextTime.current = true; // Don't register the way back as somewhere to go back
+         removeLastStepFromHistory();
+         onScreenChange(history.current[history.current.length - 1]);
+         return true;
+      } else {
+         return false;
+      }
+   };
 
    /**
     * This is triggered when the user finishes swiping to another screen
@@ -57,12 +77,6 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
    const scrollToScreen = (screenIndex: number, animated: boolean = false): void => {
       ref.current.scrollTo({ x: screensWidth * screenIndex, animated });
    };
-
-   const handleBackButton = useCallback((): boolean => {
-      const canGoBack = goBack();
-      // Returning true here disables the default behavior of the back button:
-      return canGoBack;
-   }, []);
 
    const addCurrentStepToHistory = (screenIndex: number): void => {
       if (dontSaveHistoryNextTime.current) {
@@ -80,20 +94,6 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
 
    const removeLastStepFromHistory = () => {
       history.current.pop();
-   };
-
-   /*
-    * The return value is true or false whether or not is possible to go back to a previous step
-    */
-   const goBack = (): boolean => {
-      if (historyContainsItemsToGoBack()) {
-         dontSaveHistoryNextTime.current = true; // Dont register the way back as somewhere to go back
-         removeLastStepFromHistory();
-         onScreenChange(history.current[history.current.length - 1]);
-         return true;
-      } else {
-         return false;
-      }
    };
 
    /*

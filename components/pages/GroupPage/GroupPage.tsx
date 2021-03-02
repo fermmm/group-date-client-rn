@@ -25,6 +25,7 @@ import { useGroup, useUnreadMessagesAmount, useVoteResults } from "../../../api/
 import { useVotingResultToRender } from "../DateVotingPage/tools/useVotingResults";
 import { revalidate } from "../../../api/tools/useCache";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
+import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 
 export interface ParamsGroupPage {
    groupId: string;
@@ -54,13 +55,17 @@ const GroupPage: FC = () => {
       }, [])
    );
 
+   const { goBack } = useGoBackExtended({
+      whenBackNotAvailable: { goToRoute: "Main" }
+   });
+
    if (isLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 
    return (
       <>
-         <AppBarHeader>
+         <AppBarHeader onBackPress={goBack}>
             <View>
                <ButtonForAppBar
                   icon="forum"

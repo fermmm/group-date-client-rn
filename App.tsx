@@ -1,13 +1,13 @@
 import * as Localization from "expo-localization";
 import i18n from "i18n-js";
+import React, { useEffect, useState } from "react";
+import { AppLoading } from "expo";
+import { Provider as PaperProvider } from "react-native-paper";
 import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
 import ProfilePage from "./components/pages/ProfilePage/ProfilePage";
 import RegistrationFormsPage from "./components/pages/RegistrationFormsPage/RegistrationFormsPage";
-import React, { Component } from "react";
-import { AppLoading } from "expo";
-import { Provider as PaperProvider } from "react-native-paper";
 import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
 import { currentTheme } from "./config";
 import { NavigationContainer } from "@react-navigation/native";
@@ -16,6 +16,8 @@ import DateVotingPage from "./components/pages/DateVotingPage/DateVotingPage";
 import ChatPage from "./components/pages/ChatPage/ChatPage";
 import AboutPage from "./components/pages/AboutPage/AboutPage";
 import AdminPage from "./components/pages/AdminPage/AdminPage";
+import { listenForPushNotifications } from "./common-tools/device-native-api/notifications/listenForPushNotifications";
+import { usePushNotificationRedirectWhileUsingApp } from "./common-tools/device-native-api/notifications/usePushNotificationRedirectWhileUsingApp";
 import { CacheConfigProvider } from "./api/tools/useCache";
 import { en } from "./texts/en/en";
 import { es } from "./texts/es/es";
@@ -32,13 +34,9 @@ i18n.translations = {
 };
 i18n.defaultLocale = "en";
 i18n.locale = Localization.locale.split("-")[0];
-// i18n.locale = "en";    // Uncomment to try another language
+// i18n.locale = "en";    // Uncomment to force setting a language for debugging
 
-interface PageBasicWrapperState {
-   resourcesLoaded: boolean;
-}
-
-const TestTheme = {
+const testTheme = {
    dark: false,
    colors: {
       primary: "rgb(255, 45, 85)",
@@ -52,39 +50,56 @@ const TestTheme = {
 
 const Stack = createStackNavigator();
 
-export default class App extends Component<{}, PageBasicWrapperState> {
-   state: PageBasicWrapperState = {
-      resourcesLoaded: false
-   };
+listenForPushNotifications();
 
-   async componentDidMount(): Promise<void> {
-      await loadFontMontserrat();
-      this.setState({ resourcesLoaded: true });
+const App = () => {
+   const [resourcesLoaded, setResourcesLoaded] = useState(false);
+   const {
+      navigationRef,
+      onNavigationReady,
+      onNavigationStateChange
+   } = usePushNotificationRedirectWhileUsingApp({
+      disableRedirectWhen: [
+         { currentRoute: "Login" },
+         { previousRoute: "Login", currentRoute: "RegistrationForms" }
+      ]
+   });
+
+   useEffect(() => {
+      (async () => {
+         await loadFontMontserrat();
+         setResourcesLoaded(true);
+      })();
+   }, []);
+
+   if (!resourcesLoaded) {
+      return <AppLoading />;
    }
 
-   render(): JSX.Element {
-      if (!this.state.resourcesLoaded) {
-         return <AppLoading />;
-      }
+   return (
+      <CacheConfigProvider>
+         <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
+            <NavigationContainer
+               theme={testTheme}
+               ref={navigationRef}
+               onReady={onNavigationReady}
+               onStateChange={onNavigationStateChange}
+            >
+               <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
+                  <Stack.Screen name="Login" component={LoginPage} />
+                  <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
+                  <Stack.Screen name="Main" component={MainPage} />
+                  <Stack.Screen name="Profile" component={ProfilePage} />
+                  <Stack.Screen name="About" component={AboutPage} />
+                  <Stack.Screen name="Group" component={GroupPage} />
+                  <Stack.Screen name="Chat" component={ChatPage} />
+                  <Stack.Screen name="DateVoting" component={DateVotingPage} />
+                  <Stack.Screen name="Admin" component={AdminPage} />
+               </Stack.Navigator>
+            </NavigationContainer>
+         </PaperProvider>
+      </CacheConfigProvider>
+   );
+};
 
-      return (
-         <CacheConfigProvider>
-            <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
-               <NavigationContainer theme={TestTheme}>
-                  <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
-                     <Stack.Screen name="Login" component={LoginPage} />
-                     <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
-                     <Stack.Screen name="Main" component={MainPage} />
-                     <Stack.Screen name="Profile" component={ProfilePage} />
-                     <Stack.Screen name="About" component={AboutPage} />
-                     <Stack.Screen name="Group" component={GroupPage} />
-                     <Stack.Screen name="Chat" component={ChatPage} />
-                     <Stack.Screen name="DateVoting" component={DateVotingPage} />
-                     <Stack.Screen name="Admin" component={AdminPage} />
-                  </Stack.Navigator>
-               </NavigationContainer>
-            </PaperProvider>
-         </CacheConfigProvider>
-      );
-   }
-}
+export default App;
