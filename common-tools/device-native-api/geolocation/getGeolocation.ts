@@ -1,8 +1,9 @@
+import { useLocalStorage } from "./../storage/useLocalStorage";
 import { useCache } from "./../../../api/tools/useCache";
 import * as Location from "expo-location";
 import {
    showLocationDisabledDialog,
-   DisabledLocationDialogTexts
+   DisabledLocationDialogSettings
 } from "./dialogLocationDisabled/dialogLocationDisabled";
 import * as Permissions from "expo-permissions";
 import { usePermission } from "../permissions/askForPermissions";
@@ -17,18 +18,29 @@ import { usePermission } from "../permissions/askForPermissions";
  */
 export function useGeolocation(settings?: GetGeolocationParams) {
    const permissionGranted = usePermission(Permissions.LOCATION);
-   const enabled = settings?.enabled !== false && permissionGranted;
+   const {
+      value: storedGeolocation,
+      setValue: setStoredGeolocation,
+      isLoading: localStorageLoading
+   } = useLocalStorage("__geolocation__");
+
+   const enabled = settings?.enabled !== false && permissionGranted && !localStorageLoading;
+
    const { data: geolocation, isLoading } = useCache(
       "_geolocation_",
-      () => getGeolocation(settings),
-      { enabled }
+      () =>
+         getGeolocation({
+            ...settings,
+            errorDialogSettings: { cancelable: storedGeolocation != null }
+         }),
+      { enabled, onSuccess: geo => setStoredGeolocation(geo) }
    );
 
    if (!enabled) {
       return { isLoading: true, geolocation: null };
    }
 
-   return { isLoading, geolocation };
+   return { isLoading, geolocation: geolocation ?? storedGeolocation };
 }
 
 /**
@@ -45,7 +57,7 @@ export async function getGeolocation(settings?: GetGeolocationParams): Promise<L
 
    settings.allowContinueWithGeolocationDisabled =
       settings.allowContinueWithGeolocationDisabled || false;
-   settings.disabledLocationDialogTexts = settings.disabledLocationDialogTexts || {};
+   settings.errorDialogSettings = settings.errorDialogSettings || {};
 
    let locationData: LocationData = null;
 
@@ -65,7 +77,7 @@ export async function getGeolocation(settings?: GetGeolocationParams): Promise<L
       if (settings.allowContinueWithGeolocationDisabled) {
          return Promise.resolve(null);
       }
-      await showLocationDisabledDialog(settings.disabledLocationDialogTexts);
+      await showLocationDisabledDialog(settings.errorDialogSettings);
       return getGeolocation(settings);
    }
 
@@ -84,7 +96,7 @@ export interface GetGeolocationParams {
    /**
     * Default = {}. Texts to show in the location not available error dialog, if this is not set then english generic texts are used.
     */
-   disabledLocationDialogTexts?: DisabledLocationDialogTexts;
+   errorDialogSettings?: DisabledLocationDialogSettings;
 }
 
 export interface LocationData {

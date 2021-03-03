@@ -18,6 +18,7 @@ export const es: { [key: string]: string } = {
       "Nos ayudaría si haces una captura de pantalla de este error y nos lo comunicas",
    "Error when uploading the image": "Error subiendo la imagen",
    "There seems to be a connection problem": "Parece que hay un problema de conexión",
+   "Use last one": "Usar anterior",
    January: "Enero",
    February: "Febrero",
    March: "Marzo",

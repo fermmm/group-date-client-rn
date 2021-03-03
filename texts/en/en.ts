@@ -16,6 +16,7 @@ export const en: { [key: string]: string } = {
       "If you want you can help by sending us a screen capture of this error",
    "Error when uploading the image": "Error when uploading the image",
    "There seems to be a connection problem": "There seems to be a connection problem",
+   "Use last one": "Use last one",
    January: "January",
    February: "February",
    March: "March",
