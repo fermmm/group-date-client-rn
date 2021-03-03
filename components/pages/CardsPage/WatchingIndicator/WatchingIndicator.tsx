@@ -1,7 +1,6 @@
 import color from "color";
 import React, { FC } from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
@@ -15,9 +14,8 @@ const WatchingIndicator: FC<PropsWatchingIndicator> = ({ name, onPress }) => {
    const { colors } = useTheme();
    return (
       <TouchableOpacity onPress={onPress} style={styles.mainContainer}>
-         <Icon name={"eye"} color={colors.text} size={20} />
          <Text style={styles.mainText}>
-            <Text style={styles.indicationText}>{name}.</Text> Toca para salir
+            Estas viendo solo <Text style={styles.indicationText}>{name}</Text> toca para salir
          </Text>
       </TouchableOpacity>
    );
