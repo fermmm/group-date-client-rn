@@ -13,7 +13,7 @@ export interface LimitedChildrenRendererProps {
  * will also be rendered with a lower z-index just in case is needed. So this works only when the next
  * child to render is the next one on the list, jumping is not recommended. This z-index switch approach
  * is a solution to switch visibility of components when they are on top of each other without re rendering,
- * useful for some ui styles.
+ * useful for some ui concepts.
  */
 const LimitedChildrenRenderer: FC<LimitedChildrenRendererProps> = props => {
    const [childA, setChildA] = useState<ReactNode>(null);
@@ -21,7 +21,8 @@ const LimitedChildrenRenderer: FC<LimitedChildrenRendererProps> = props => {
    const [childAtFront, setChildAtFront] = useState<ReactNode>(null);
    const childrenToDisplayLastValue = useRef<number>(null);
    const childrenAsArray: ReactElement[] = React.Children.toArray(props.children) as ReactElement[];
-   const initialized = useRef(false);
+   // This is useful to know if the children list really changed because props.children always has a reference change
+   const childrenKeysAsString = childrenAsArray.map(c => c.key).join();
 
    const reset = () => {
       if (childrenAsArray == null || childrenAsArray.length === 0) {
@@ -37,19 +38,13 @@ const LimitedChildrenRenderer: FC<LimitedChildrenRendererProps> = props => {
    };
 
    useEffect(() => {
-      if (initialized.current) {
-         return;
-      }
-
       reset();
-
       childrenToDisplayLastValue.current = props.childToFocus;
-      initialized.current = true;
-   }, [childrenAsArray.length]);
+   }, [childrenKeysAsString]);
 
    useEffectExceptOnMount(() => {
       // If the change is the next element we can do the swipe trick
-      if (props.childToFocus - 1 === childrenToDisplayLastValue.current) {
+      if (props.childToFocus === childrenToDisplayLastValue.current + 1) {
          showNextChildAndPreloadFollowing();
       } else {
          // Otherwise there is no trick we reset the swipe

@@ -15,17 +15,16 @@ import { LocalStorageKey } from "../../../../common-tools/strings/LocalStorageKe
 export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManager {
    const isFocused = useIsFocused();
    const { isActive } = useAppState();
-   const [userDisplaying, setUserDisplaying] = useState(0);
+   const [currentUserDisplaying, setCurrentUserDisplaying] = useState(0);
    const { value: attractionsFromStorage, setValue: saveOnStorage } = useLocalStorage<Attraction[]>(
       LocalStorageKey.AttractionQueue
    );
    const [usersToRender, setUsersToRender] = useState<User[]>([]);
    const attractionsQueue = useRef<Attraction[]>([]);
    const appendMode = useRef(false);
-   const [
-      attractionsShouldBeSentReason,
-      setAttractionsShouldBeSentReason
-   ] = useState<AttractionsSendReason>(AttractionsSendReason.None);
+   const [attractionsShouldBeSentReason, setAttractionsShouldBeSentReason] = useState<{
+      reason: AttractionsSendReason;
+   }>({ reason: AttractionsSendReason.None });
 
    /**
     * If more users are coming from server replace usersToRender or add them at the end of it
@@ -42,7 +41,7 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
          appendMode.current = false;
       } else {
          newUsersToRender = usersFromServer;
-         setUserDisplaying(0);
+         setCurrentUserDisplaying(0);
       }
 
       // The server may return users that are still pending to send the attraction, these users should not be displayed
@@ -63,9 +62,9 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
    useEffectExceptOnMount(() => {
       if (attractionsFromStorage != null) {
          attractionsQueue.current = attractionsFromStorage;
-         setAttractionsShouldBeSentReason(
-            AttractionsSendReason.PendingAttractionsToSendFromPreviousSession
-         );
+         setAttractionsShouldBeSentReason({
+            reason: AttractionsSendReason.PendingAttractionsToSendFromPreviousSession
+         });
       }
    }, [attractionsFromStorage]);
 
@@ -74,27 +73,33 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
     */
    useEffect(() => {
       if (attractionsQueue.current.length > MAX_ATTRACTIONS_QUEUE_SIZE) {
-         setAttractionsShouldBeSentReason(AttractionsSendReason.AttractionsQueueSizeReachedMaximum);
+         setAttractionsShouldBeSentReason({
+            reason: AttractionsSendReason.AttractionsQueueSizeReachedMaximum
+         });
          return;
       }
 
-      if (userDisplaying >= usersToRender.length && usersToRender.length > 0) {
-         setAttractionsShouldBeSentReason(AttractionsSendReason.NoMoreUsersButServerMayHave);
+      if (currentUserDisplaying >= usersToRender.length && usersToRender.length > 0) {
+         setAttractionsShouldBeSentReason({
+            reason: AttractionsSendReason.NoMoreUsersButServerMayHave
+         });
          return;
       }
 
-      if (userDisplaying === usersToRender.length - 1 - REQUEST_MORE_CARDS_ANTICIPATION) {
-         setAttractionsShouldBeSentReason(AttractionsSendReason.NearlyRunningOutOfUsers);
+      if (currentUserDisplaying === usersToRender.length - 1 - REQUEST_MORE_CARDS_ANTICIPATION) {
+         setAttractionsShouldBeSentReason({
+            reason: AttractionsSendReason.NearlyRunningOutOfUsers
+         });
          return;
       }
-   }, [userDisplaying]);
+   }, [currentUserDisplaying]);
 
    /**
     * An effect to check whether the attractions queue should be sent based on the section is focused or not
     */
    useEffect(() => {
       if (!isFocused) {
-         setAttractionsShouldBeSentReason(AttractionsSendReason.UserMovedToOtherScreen);
+         setAttractionsShouldBeSentReason({ reason: AttractionsSendReason.UserMovedToOtherScreen });
       }
    }, [isFocused]);
 
@@ -103,7 +108,7 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
     */
    useEffect(() => {
       if (!isActive) {
-         setAttractionsShouldBeSentReason(AttractionsSendReason.AppMinimized);
+         setAttractionsShouldBeSentReason({ reason: AttractionsSendReason.AppMinimized });
       }
    }, [isActive]);
 
@@ -111,7 +116,9 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
     * An effect to check whether the attractions queue should be sent based on a time interval
     */
    useInterval(() => {
-      setAttractionsShouldBeSentReason(AttractionsSendReason.TooMuchTimePassedWithoutSending);
+      setAttractionsShouldBeSentReason({
+         reason: AttractionsSendReason.TooMuchTimePassedWithoutSending
+      });
    }, REQUEST_MORE_CARDS_AFTER_TIME);
 
    const addAttractionToQueue = useCallback((attraction: Attraction) => {
@@ -124,7 +131,7 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
          el => toRemove.find(tr => tr.userId === el.userId) == null
       );
       saveOnStorage(attractionsQueue.current);
-      setAttractionsShouldBeSentReason(AttractionsSendReason.None);
+      setAttractionsShouldBeSentReason({ reason: AttractionsSendReason.None });
    }, []);
 
    const appendUsersFromServerInNextUpdate = useCallback(() => {
@@ -133,17 +140,17 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
 
    const moveToNextUser = (currentUserId: string) => {
       const positionInList = usersToRender.findIndex(u => u.userId === currentUserId);
-      setUserDisplaying(positionInList + 1);
+      setCurrentUserDisplaying(positionInList + 1);
    };
 
    const goBackToPreviousUser = (currentUserId: string) => {
       const positionInList = usersToRender.findIndex(u => u.userId === currentUserId);
-      setUserDisplaying(positionInList - 1);
+      setCurrentUserDisplaying(positionInList - 1);
    };
 
    return {
       usersToRender,
-      userDisplaying,
+      currentUserDisplaying,
       attractionsQueue,
       attractionsShouldBeSentReason,
       moveToNextUser,
@@ -183,17 +190,16 @@ function removeUsersFromPendingAttractions(usersList: User[], attractions: Attra
 
 export interface UseCardsDataManager {
    usersToRender: User[];
-   userDisplaying: number;
+   currentUserDisplaying: number;
    attractionsQueue: React.MutableRefObject<Attraction[]>;
-   attractionsShouldBeSentReason: AttractionsSendReason;
+   attractionsShouldBeSentReason: { reason: AttractionsSendReason };
    moveToNextUser: (currentUserId: string) => void;
    goBackToPreviousUser: (currentUserId: string) => void;
    addAttractionToQueue: (attraction: Attraction) => void;
    removeFromAttractionsQueue: (toRemove: Array<{ userId: string }>) => void;
    /**
     * After calling this the next time new cards are received will be appended into the usersToRender
-    * list instead of replacing it. This is disabled after receiving more cards and need to be called
-    * again when needed.
+    * list instead of replacing it. This only apply once so it needs to be called again when needed.
     */
    appendUsersFromServerInNextUpdate: () => void;
 }

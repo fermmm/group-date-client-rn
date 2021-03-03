@@ -45,16 +45,17 @@ const CardsPage: FC = () => {
    const manager = useCardsDataManager(usersFromServer);
 
    const noMoreUsersLeft =
-      manager.userDisplaying >= manager.usersToRender.length && usersFromServer?.length === 0;
+      manager.currentUserDisplaying >= manager.usersToRender.length &&
+      usersFromServer?.length === 0;
 
    const isLoading =
       usersFromServer == null ||
-      (manager.userDisplaying >= manager.usersToRender.length && !noMoreUsersLeft);
+      (manager.currentUserDisplaying >= manager.usersToRender.length && !noMoreUsersLeft);
 
    // This effect sends the attractions to the server if it's required
-   React.useEffect(() => {
+   useEffect(() => {
       (async () => {
-         const reason = manager.attractionsShouldBeSentReason;
+         const reason = manager.attractionsShouldBeSentReason.reason;
 
          if (reason === AttractionsSendReason.None) {
             return;
@@ -143,7 +144,7 @@ const CardsPage: FC = () => {
             <NoMoreUsersMessage onViewDislikedUsersPress={handleViewDislikedUsersPress} />
          ) : (
             <>
-               <LimitedChildrenRenderer childToFocus={manager.userDisplaying}>
+               <LimitedChildrenRenderer childToFocus={manager.currentUserDisplaying}>
                   {manager.usersToRender.map((user, i) => (
                      <ProfileCard
                         showLikeDislikeButtons
@@ -161,7 +162,7 @@ const CardsPage: FC = () => {
                </LimitedChildrenRenderer>
                {cardsSource !== CardsSource.Recommendations && (
                   <WatchingIndicator
-                     name={cardsSource === CardsSource.DislikedUsers ? "Dejados de lado" : "Theme"}
+                     name={cardsSource === CardsSource.DislikedUsers ? "dejados de lado" : "tema"}
                      onPress={handleGoBackToRecommendations}
                   />
                )}
