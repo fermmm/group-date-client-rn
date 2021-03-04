@@ -1,4 +1,4 @@
-import { mutateCache } from "./../../../api/tools/useCache";
+import { mutateCache, revalidate } from "./../../../api/tools/useCache";
 import * as Notifications from "expo-notifications";
 import { NotificationData } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
@@ -17,7 +17,10 @@ export function listenForPushNotifications(): void {
    /**
     * This listener is fired whenever a notification is received while the app is foregrounded.
     */
-   // const handleNotificationReceived = (notification: Notifications.Notification) => {};
+   const handleNotificationReceived = (event: Notifications.Notification) => {
+      // Keep in sync push with app notifications, otherwise a push appears and the app is not updated for some time
+      revalidate("user/notifications");
+   };
 
    /**
     * This listener is fired whenever a user taps on or interacts with a notification (works when
@@ -29,6 +32,6 @@ export function listenForPushNotifications(): void {
       mutateCache("notification-press", { notification });
    };
 
-   // Notifications.addNotificationReceivedListener(handleNotificationReceived);
+   Notifications.addNotificationReceivedListener(handleNotificationReceived);
    Notifications.addNotificationResponseReceivedListener(handleNotificationPress);
 }

@@ -15,7 +15,6 @@ import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/Lo
 import { useNotificationsInfo } from "./tools/useNotificationsInfo";
 import { useCacheRevalidationBasedOnNotifications } from "./tools/useCacheRevalidationBasedOnNotifications";
 
-// TODO: BUG: Cuando creo usuarios fake de a 2 tandas se traban las cartas
 const NotificationsPage: FC = () => {
    const { navigate } = useNavigation();
    const {

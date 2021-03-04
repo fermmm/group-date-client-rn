@@ -5,7 +5,9 @@ import { usePushNotificationPress } from "./usePushNotificationPress";
 /**
  * Hook to be used in the main App component with NavigationContainer to redirect the user when a push
  * notification is pressed while the app is open. Only redirects when the user route is not on the
- * parameters filter, this is required to not redirect while loading or other "non scaping" operation.
+ * parameters filter provided (if any), this is required to not redirect while loading or other
+ * "non scaping" operation.
+ * Also this hook updates the cache of the app notifications when receiving a new one so they keep in sync.
  */
 export function usePushNotificationRedirectWhileUsingApp(
    options?: UseForegroundPushOptions
