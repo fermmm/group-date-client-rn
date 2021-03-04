@@ -77,12 +77,12 @@ export const REQUEST_MORE_CARDS_ANTICIPATION: number = 10;
 // How often in time the user evaluations are sent to the server in milliseconds
 export const REQUEST_MORE_CARDS_AFTER_TIME: number = 60 * 1000;
 // The maximum amount of user evaluations pending to send before sending them
-export const MAX_ATTRACTIONS_QUEUE_SIZE: number = 35;
+export const MAX_ATTRACTIONS_QUEUE_SIZE: number = 20;
 // How often group list refreshes, this also reveals new groups to the user
-export const NOTIFICATIONS_REFRESH_INTERVAL: number = 1 * 60 * 1000;
+export const NOTIFICATIONS_REFRESH_INTERVAL: number = 5 * 60 * 1000;
 // When the user is on the group page the voting results may change and needs to be updated often
 export const VOTING_RESULT_REFRESH_INTERVAL: number = 2 * 60 * 1000;
 // How often chat is refreshed
-export const CHAT_REFRESH_INTERVAL: number = 6 * 1000;
+export const CHAT_REFRESH_INTERVAL: number = 10 * 1000;
 // How often the badge of unread chat messages is refreshed when the user is on the group page
-export const UNREAD_CHAT_BADGE_REFRESH_INTERVAL: number = 12 * 1000;
+export const UNREAD_CHAT_BADGE_REFRESH_INTERVAL: number = CHAT_REFRESH_INTERVAL;
