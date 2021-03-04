@@ -3,7 +3,7 @@ import i18n from "i18n-js";
 
 export async function showLocationDisabledDialog(
    dialogSettings: DisabledLocationDialogSettings = {}
-): Promise<void> {
+): Promise<boolean> {
    dialogSettings.dialogTitle = dialogSettings.dialogTitle || i18n.t("Error");
    dialogSettings.tryAgainButtonText = dialogSettings.tryAgainButtonText || i18n.t("Try again");
    dialogSettings.useLastOneButtonText =
@@ -11,8 +11,8 @@ export async function showLocationDisabledDialog(
    dialogSettings.dialogText = dialogSettings.dialogText || i18n.t("Location is not available");
    const cancelable = dialogSettings?.cancelable ?? true;
 
-   let promiseResolve: () => void = null;
-   const resultPromise: Promise<void> = new Promise(resolve => {
+   let promiseResolve: (retry: boolean) => void = null;
+   const resultPromise: Promise<boolean> = new Promise(resolve => {
       promiseResolve = resolve;
    });
 
@@ -21,11 +21,11 @@ export async function showLocationDisabledDialog(
       dialogSettings.dialogText,
       cancelable
          ? [
-              { text: dialogSettings.tryAgainButtonText, onPress: () => promiseResolve() },
-              { text: dialogSettings.useLastOneButtonText }
+              { text: dialogSettings.tryAgainButtonText, onPress: () => promiseResolve(true) },
+              { text: dialogSettings.useLastOneButtonText, onPress: () => promiseResolve(false) }
            ]
-         : [{ text: dialogSettings.tryAgainButtonText, onPress: () => promiseResolve() }],
-      { cancelable }
+         : [{ text: dialogSettings.tryAgainButtonText, onPress: () => promiseResolve(true) }],
+      { cancelable, onDismiss: cancelable ? () => promiseResolve(false) : null }
    );
 
    return resultPromise;

@@ -22,11 +22,11 @@ export function useGeolocation(settings?: GetGeolocationParams) {
       value: storedGeolocation,
       setValue: setStoredGeolocation,
       isLoading: localStorageLoading
-   } = useLocalStorage("__geolocation__");
+   } = useLocalStorage<LocationData>("__geolocation__");
 
    const enabled = settings?.enabled !== false && permissionGranted && !localStorageLoading;
 
-   const { data: geolocation, isLoading } = useCache(
+   const { data: geolocation, isLoading, error } = useCache(
       "_geolocation_",
       () =>
          getGeolocation({
@@ -39,6 +39,9 @@ export function useGeolocation(settings?: GetGeolocationParams) {
    if (!enabled) {
       return { isLoading: true, geolocation: null };
    }
+
+   // TODO: This error handling and local storage usage is not yet working correctly
+   // console.log(isLoading, error);
 
    return { isLoading, geolocation: geolocation ?? storedGeolocation };
 }
@@ -73,15 +76,19 @@ export async function getGeolocation(settings?: GetGeolocationParams): Promise<L
          coords: position.coords,
          info
       };
+
+      return Promise.resolve(locationData);
    } catch (error) {
       if (settings.allowContinueWithGeolocationDisabled) {
          return Promise.resolve(null);
       }
-      await showLocationDisabledDialog(settings.errorDialogSettings);
-      return getGeolocation(settings);
+      const retry = await showLocationDisabledDialog(settings.errorDialogSettings);
+      if (retry) {
+         return getGeolocation(settings);
+      } else {
+         throw new Error(error);
+      }
    }
-
-   return Promise.resolve(locationData);
 }
 
 export interface GetGeolocationParams {
