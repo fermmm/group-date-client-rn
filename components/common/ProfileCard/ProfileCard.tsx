@@ -15,7 +15,7 @@ import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
-import ThemeInProfileCard from "./QuestionInProfileCard/QuestionInProfileCard";
+import ThemeChip from "./QuestionInProfileCard/QuestionInProfileCard";
 import EditButton from "./EditButton/EditButton";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { Theme } from "../../../api/server/shared-tools/endpoints-interfaces/themes";
@@ -200,7 +200,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                         )}
                         <View style={styles.questionsContainer}>
                            {themesSubscribedInCommon?.map(theme => (
-                              <ThemeInProfileCard theme={theme} key={theme.themeId} />
+                              <ThemeChip theme={theme} key={theme.themeId} />
                            ))}
                         </View>
                         {/* <View style={styles.questionsContainer}>

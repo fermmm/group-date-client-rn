@@ -10,9 +10,10 @@ import { currentTheme } from "../../../../config";
 
 export interface ThemeInProfileCardProps {
    theme: Theme;
+   showCategory?: boolean;
 }
 
-const ThemeInProfileCard: FC<ThemeInProfileCardProps> = ({ theme }) => {
+const ThemeChip: FC<ThemeInProfileCardProps> = ({ theme, showCategory }) => {
    const { colors }: ThemeExt = useTheme();
    const answerMatches: boolean = true; // Implement compare logic here
 
@@ -27,13 +28,15 @@ const ThemeInProfileCard: FC<ThemeInProfileCardProps> = ({ theme }) => {
             !answerMatches && styles.border
          ]}
       >
-         {/* <Text
-            style={{
-               color: colors.text
-            }}
-         >
-            {theme.category}
-         </Text> */}
+         {showCategory && (
+            <Text
+               style={{
+                  color: colors.text
+               }}
+            >
+               {theme.category}
+            </Text>
+         )}
          <Caption
             style={{
                color: colors.text
@@ -48,6 +51,8 @@ const styles: Styles = StyleSheet.create({
    mainContainer: {
       alignSelf: "flex-start",
       padding: 10,
+      paddingLeft: 17,
+      paddingRight: 17,
       marginRight: 5,
       marginBottom: 5,
       borderRadius: currentTheme.roundness
@@ -57,4 +62,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default ThemeInProfileCard;
+export default ThemeChip;
