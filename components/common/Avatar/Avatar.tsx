@@ -1,7 +1,6 @@
 import React, { FC, ComponentProps } from "react";
 import {
    StyleSheet,
-   TouchableHighlight,
    GestureResponderEvent,
    ImageURISource,
    ViewStyle,
@@ -12,6 +11,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import color from "color";
 import { useServerInfo } from "../../../api/server/server-info";
 import { prepareUrl } from "../../../api/tools/httpRequest";
+import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 export interface PropsAvatar {
    source: ImageURISource;
@@ -35,13 +35,9 @@ const Avatar: FC<PropsAvatar> = props => {
 
    if (onPress != null) {
       return (
-         <TouchableHighlight
-            onPress={onPress}
-            underlayColor={color("white").alpha(0.5).string()}
-            activeOpacity={1}
-         >
+         <ViewTouchable onPress={onPress}>
             <PaperAvatar.Image size={size} source={finalSource} style={style} />
-         </TouchableHighlight>
+         </ViewTouchable>
       );
    } else {
       return <PaperAvatar.Image size={size} source={finalSource} />;

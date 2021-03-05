@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { FC, useState } from "react";
 import { View, Image, ImageSourcePropType, StyleProp, ViewStyle, ImageStyle } from "react-native";
 
 export interface PropsShadowBottom {
@@ -7,57 +7,46 @@ export interface PropsShadowBottom {
    imageStyle?: StyleProp<ImageStyle>;
 }
 
-interface State {
-   height: number;
-   aspectRatio: number;
-}
-
 /**
  * Displays an image at the bottom of an element. Made for png bottom shadows.
  */
-class ShadowBottom extends Component<PropsShadowBottom, State> {
-   state: State = {
-      height: 0,
-      aspectRatio: null,
-   };
+const ShadowBottom: FC<PropsShadowBottom> = props => {
+   const [height, setHeight] = useState(0);
+   const [aspectRatio, setAspectRatio] = useState<number>(null);
+   const { imageSource, style, imageStyle }: PropsShadowBottom = props;
 
-   render(): JSX.Element {
-      const { height, aspectRatio }: State = this.state;
-      const { imageSource, style, imageStyle }: PropsShadowBottom = this.props;
-
-      return (
-         <View
-            pointerEvents="none"
-            onLayout={e => this.setState({ height: e.nativeEvent.layout.height })}
+   return (
+      <View
+         pointerEvents="none"
+         onLayout={e => setHeight(e.nativeEvent.layout.height)}
+         style={[
+            {
+               position: "absolute",
+               bottom: 0,
+               zIndex: 1,
+               width: "100%",
+               transform: [{ translateY: height }]
+            },
+            style,
+            (!aspectRatio || !height) && { opacity: 0 }
+         ]}
+         key={height}
+      >
+         <Image
+            source={imageSource}
+            onLoad={d => setAspectRatio(d.nativeEvent.source.width / d.nativeEvent.source.height)}
+            resizeMode={"stretch"}
             style={[
                {
-                  position: "absolute",
-                  bottom: 0,
-                  zIndex: 1,
                   width: "100%",
-                  transform: [{ translateY: height }]
-               }, 
-               style,
-               (!aspectRatio || !height) && {opacity: 0}
+                  height: undefined,
+                  aspectRatio
+               },
+               imageStyle
             ]}
-            key={height}
-         >
-            <Image
-               source={imageSource}
-               onLoad={d => this.setState({aspectRatio: d.nativeEvent.source.width / d.nativeEvent.source.height})} 
-               resizeMode={"stretch"}
-               style={[
-                  { 
-                     width: "100%", 
-                     height: undefined, 
-                     aspectRatio 
-                  },
-                  imageStyle
-               ]}
-            />
-         </View>
-      );
-   }
-}
+         />
+      </View>
+   );
+};
 
 export default ShadowBottom;

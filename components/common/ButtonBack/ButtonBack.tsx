@@ -1,23 +1,18 @@
 import React, { FC } from "react";
-import { StyleSheet, TouchableHighlight } from "react-native";
+import { StyleSheet } from "react-native";
 import { FAB } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
-import color from "color";
 import { useNavigation } from "@react-navigation/native";
+import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
-const ButtonBack: FC = props => {
+const ButtonBack: FC = () => {
    const navigation = useNavigation();
 
    return (
-      <TouchableHighlight
-         style={styles.container}
-         onPress={() => navigation.goBack()}
-         underlayColor={color("white").alpha(0).string()}
-         activeOpacity={1}
-      >
+      <ViewTouchable style={styles.container} onPress={() => navigation.goBack()}>
          <FAB style={styles.fab} icon="arrow-left" onPress={() => navigation.goBack()} small />
-      </TouchableHighlight>
+      </ViewTouchable>
    );
 };
 

@@ -1,12 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import {
-   ImageBackground,
-   TouchableHighlight,
-   Image,
-   ImageStyle,
-   Platform,
-   StyleSheet
-} from "react-native";
+import { ImageBackground, Image, ImageStyle, Platform, StyleSheet, View } from "react-native";
 import SurfaceStyled from "../../../../common/SurfaceStyled/SurfaceStyled";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Menu, Position } from "@breeffy/react-native-popup-menu";
@@ -23,6 +16,7 @@ import { callImagePicker } from "../../../../../common-tools/device-native-api/f
 import { useServerInfo } from "../../../../../api/server/server-info";
 import { useTheme } from "../../../../../common-tools/themes/useTheme/useTheme";
 import { prepareUrl } from "../../../../../api/tools/httpRequest";
+import { ViewTouchable } from "../../../../common/ViewTouchable/ViewTouchable";
 
 interface PropsImagePlaceholder {
    initialUri: string;
@@ -58,7 +52,7 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
    const [imageSize, setImageSize] = useState<{ width: number; height: number }>(null);
    const [id] = useState(props.id);
    const [isUploading, setIsUploading] = useState(false);
-   const touchableRef = useRef<TouchableHighlight>(null);
+   const touchableRef = useRef<View>(null);
    const menuRef = useRef<Menu>(null);
 
    useEffect(() => onChange({ uri, isUploading, id }), [uri, isUploading]);
@@ -80,7 +74,7 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
 
       menuRef.current.show(touchableRef.current, Position.TOP_LEFT, {
          left: 0,
-         top: 20
+         top: 50
       });
    };
 
@@ -137,47 +131,48 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
 
    return (
       <>
-         <TouchableHighlight
+         <ViewTouchable
             onPress={handleTouch}
             style={styles.imageContainer}
-            underlayColor="white"
-            activeOpacity={0.6}
-            ref={touchableRef}
+            defaultRippleColor={colors.primary}
          >
-            <SurfaceStyled style={[styles.imageSurface]}>
-               {uri && !isUploading && (
-                  <ImageBackground
-                     style={[styles.imageBackground, { opacity: repositionMode ? 0.25 : 1 }]}
-                     imageStyle={styles.image as ImageStyle}
-                     source={{ uri: fullUri }}
-                     blurRadius={Platform.OS === "ios" ? 120 : 60}
-                  >
-                     <Image
+            <>
+               <View ref={touchableRef} collapsable={false} />
+               <SurfaceStyled style={[styles.imageSurface]}>
+                  {uri && !isUploading && (
+                     <ImageBackground
+                        style={[styles.imageBackground, { opacity: repositionMode ? 0.25 : 1 }]}
+                        imageStyle={styles.image as ImageStyle}
                         source={{ uri: fullUri }}
-                        resizeMode={"contain"}
-                        style={styles.image as ImageStyle}
+                        blurRadius={Platform.OS === "ios" ? 120 : 60}
+                     >
+                        <Image
+                           source={{ uri: fullUri }}
+                           resizeMode={"contain"}
+                           style={styles.image as ImageStyle}
+                        />
+                     </ImageBackground>
+                  )}
+                  {isUploading && (
+                     <LoadingAnimation visible centeredMethod={CenteredMethod.Absolute} />
+                  )}
+                  {!repositionMode && !uri && !isUploading && (
+                     <Icon
+                        name={"plus-circle-outline"}
+                        color={colors.primary}
+                        style={styles.imagePlaceholderIcon}
                      />
-                  </ImageBackground>
-               )}
-               {isUploading && (
-                  <LoadingAnimation visible centeredMethod={CenteredMethod.Absolute} />
-               )}
-               {!repositionMode && !uri && !isUploading && (
-                  <Icon
-                     name={"plus-circle-outline"}
-                     color={colors.primary}
-                     style={styles.imagePlaceholderIcon}
-                  />
-               )}
-               {repositionMode && uri && (
-                  <Icon
-                     name={"selection-ellipse-arrow-inside"}
-                     color={colors.accent2}
-                     style={styles.imagePlaceholderIcon}
-                  />
-               )}
-            </SurfaceStyled>
-         </TouchableHighlight>
+                  )}
+                  {repositionMode && uri && (
+                     <Icon
+                        name={"selection-ellipse-arrow-inside"}
+                        color={colors.accent2}
+                        style={styles.imagePlaceholderIcon}
+                     />
+                  )}
+               </SurfaceStyled>
+            </>
+         </ViewTouchable>
          <Menu ref={menuRef} style={styles.menu}>
             <PaperMenu.Item
                title="Galería"
@@ -219,7 +214,8 @@ const styles: Styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "center",
       paddingLeft: 5,
-      paddingRight: 5
+      paddingRight: 5,
+      borderRadius: currentTheme.roundnessSmall
    },
    imageSurface: {
       flex: 1,

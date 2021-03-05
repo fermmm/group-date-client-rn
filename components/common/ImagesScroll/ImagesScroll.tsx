@@ -5,7 +5,6 @@ import {
    StyleProp,
    ViewStyle,
    ImageStyle,
-   TouchableHighlight,
    ImageProps,
    ScrollView,
    NativeSyntheticEvent,
@@ -13,6 +12,7 @@ import {
 } from "react-native";
 import DotsIndicator from "../DotsIndicator/DotsIndicator";
 import { Asset } from "expo-asset";
+import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 export interface PropsImagesScroll {
    images: string[];
@@ -86,17 +86,16 @@ const ImagesScroll: FC<PropsImagesScroll> = props => {
                      source: { uri: value }
                   })
                ) : (
-                  <TouchableHighlight
+                  <ViewTouchable
                      onPress={() => onImageClick && onImageClick(i)}
-                     underlayColor="#4D4D4D"
-                     activeOpacity={0.5}
+                     style={{ borderRadius: 0 }}
                      key={i}
                   >
                      {findImageToRender(value, {
                         style: [{ width: imagesWidth, height: imagesHeight }, imagesStyle],
                         source: { uri: value }
                      })}
-                  </TouchableHighlight>
+                  </ViewTouchable>
                )
             )}
          </ScrollView>

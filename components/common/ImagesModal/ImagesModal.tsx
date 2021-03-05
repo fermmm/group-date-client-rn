@@ -1,8 +1,9 @@
 import React, { FC } from "react";
-import { StyleSheet, Modal, TouchableOpacity, Image, ImageProps } from "react-native";
+import { StyleSheet, Modal, Image, ImageProps } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Gallery from "./Gallery/Gallery";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
+import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 export interface ImagesModalProps {
    images: string[];
@@ -42,12 +43,9 @@ const ImagesModal: FC<ImagesModalProps> = props => {
                )
             }
          />
-         <TouchableOpacity
-            onPress={() => props.onClose && props.onClose()}
-            style={styles.closeButton}
-         >
+         <ViewTouchable onPress={() => props.onClose && props.onClose()} style={styles.closeButton}>
             <Icon name={"close"} color={"white"} size={30} />
-         </TouchableOpacity>
+         </ViewTouchable>
       </Modal>
    );
 };

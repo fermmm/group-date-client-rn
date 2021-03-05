@@ -1,9 +1,10 @@
 import color from "color";
 import React, { FC } from "react";
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
+import { ViewTouchable } from "../../../common/ViewTouchable/ViewTouchable";
 
 interface PropsWatchingIndicator {
    name: string;
@@ -13,11 +14,11 @@ interface PropsWatchingIndicator {
 const WatchingIndicator: FC<PropsWatchingIndicator> = ({ name, onPress }) => {
    const { colors } = useTheme();
    return (
-      <TouchableOpacity onPress={onPress} style={styles.mainContainer}>
+      <ViewTouchable onPress={onPress} style={styles.mainContainer}>
          <Text style={styles.mainText}>
             Estas viendo solo <Text style={styles.indicationText}>{name}</Text> toca para salir
          </Text>
-      </TouchableOpacity>
+      </ViewTouchable>
    );
 };
 

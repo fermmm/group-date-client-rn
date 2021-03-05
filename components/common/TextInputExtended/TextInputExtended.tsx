@@ -2,7 +2,6 @@ import React, { useState, FC, useCallback, useRef } from "react";
 import {
    StyleSheet,
    View,
-   TouchableHighlight,
    Keyboard,
    TextStyle,
    StyleProp,
@@ -13,9 +12,9 @@ import {
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { TextInput } from "react-native-paper";
 import ButtonStyled from "../ButtonStyled/ButtonStyled";
-import color from "color";
 import { currentTheme } from "../../../config";
 import TitleMediumText from "../TitleMediumText/TitleMediumText";
+import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 export interface TextInputExtendedProps {
    title?: string;
@@ -68,11 +67,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
             {titleLine2 && (
                <TitleMediumText style={styles.titleLine2}>{titleLine2}</TitleMediumText>
             )}
-            <TouchableHighlight
-               onPress={() => setFullScreenMode(true)}
-               underlayColor={color("white").alpha(0.5).string()}
-               activeOpacity={1}
-            >
+            <ViewTouchable onPress={() => setFullScreenMode(true)} defaultAlpha={0.15}>
                <TextInput
                   mode={mode}
                   keyboardType={keyboardType}
@@ -101,7 +96,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                   )}
                   disabled
                />
-            </TouchableHighlight>
+            </ViewTouchable>
             {errorText && canShowError && (
                <TitleMediumText style={styles.errorText}>{errorText}</TitleMediumText>
             )}
