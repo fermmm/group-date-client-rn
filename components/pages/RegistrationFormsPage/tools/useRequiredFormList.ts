@@ -31,7 +31,7 @@ export const useRequiredFormList = (
          "likesOtherGenders"
       ],
       CoupleProfileForm: ["isCoupleProfile"],
-      ThemesAsQuestionsForms: [],
+      TagsAsQuestionsForms: [],
       UnknownPropsQuestionForms: [],
       DateIdeaForm: ["dateIdea"],
       BasicInfoForm: [
@@ -55,7 +55,7 @@ export const useRequiredFormList = (
       }
    });
    const [unknownPropsQuestions, setUnknownPropsQuestions] = useState<string[]>([]);
-   const [themesAsQuestionsToShow, setThemesAsQuestionsToShow] = useState<string[]>([]);
+   const [tagsAsQuestionsToShow, setTagsAsQuestionsToShow] = useState<string[]>([]);
 
    useEffect(() => {
       if (
@@ -99,19 +99,19 @@ export const useRequiredFormList = (
       );
 
       /**
-       * Replace "ThemesAsQuestionsForms" with the list of theme as questions ids, if there are none then
-       * "ThemesAsQuestionsForms" gets removed anyway.
+       * Replace "TagsAsQuestionsForms" with the list of tag as questions ids, if there are none then
+       * "TagsAsQuestionsForms" gets removed anyway.
        */
       _formsRequired = mergeArraysAt(
-         _formsRequired.indexOf("ThemesAsQuestionsForms"),
-         requirementSource.fromProfileStatus.notShowedThemeQuestions,
+         _formsRequired.indexOf("TagsAsQuestionsForms"),
+         requirementSource.fromProfileStatus.notShowedTagQuestions,
          _formsRequired,
          { replace: true }
       );
 
       setFormsRequired(_formsRequired);
       setUnknownPropsQuestions(unknownProps);
-      setThemesAsQuestionsToShow(requirementSource.fromProfileStatus.notShowedThemeQuestions ?? []);
+      setTagsAsQuestionsToShow(requirementSource.fromProfileStatus.notShowedTagQuestions ?? []);
    }, [requirementSource.fromProfileStatus, allPropsAsQuestions]);
 
    return {
@@ -122,7 +122,7 @@ export const useRequiredFormList = (
             : formsRequired,
       knownFormsWithPropsTheyChange: formsForProps,
       unknownPropsQuestions,
-      themesAsQuestionsToShow
+      tagsAsQuestionsToShow
    };
 };
 
@@ -130,17 +130,17 @@ export interface RequiredScreensResult {
    isLoading: boolean;
    /**
     * This list contains all form names of the forms that are required to be rendered, in order.
-    * For the themes as questions, the theme id is present.
+    * For the tags as questions, the tag id is present.
     * For the unknown props that are questions, the prop is present.
     * Also the same information of this list is present divided into the other 3 lists:
     *    knownFormsWithPropsTheyChange
     *    unknownQuestionsProps
-    *    themesAsQuestionsToShow
+    *    tagsAsQuestionsToShow
     */
    formsRequired: string[];
    knownFormsWithPropsTheyChange: FormsAndTheirProps;
    unknownPropsQuestions: string[];
-   themesAsQuestionsToShow: string[];
+   tagsAsQuestionsToShow: string[];
 }
 
 export type FormsAndTheirProps = Partial<
@@ -153,11 +153,11 @@ export type RegistrationFormName =
    | "ProfileImagesForm"
    | "DateIdeaForm"
    | "ProfileDescriptionForm"
-   | "ThemeQuestionForm"
+   | "TagQuestionForm"
    | "TargetGenderForm"
    | "GenderForm"
    | "CoupleProfileForm"
-   | "ThemesAsQuestionsForms"
+   | "TagsAsQuestionsForms"
    | "UnknownPropsQuestionForms";
 
 function getUnknownQuestionsProps(
@@ -187,7 +187,7 @@ function getOnlyRequired(
 ): RegistrationFormName[] {
    return formNames.filter(formName => {
       // These forms will be included always because are removed in another place
-      if (formName === "UnknownPropsQuestionForms" || formName === "ThemesAsQuestionsForms") {
+      if (formName === "UnknownPropsQuestionForms" || formName === "TagsAsQuestionsForms") {
          return true;
       }
       const propsOfForm = formsForProps[formName] as EditableUserPropKey[];

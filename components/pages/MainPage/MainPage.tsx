@@ -6,7 +6,7 @@ import NotificationsPage from "../../pages/NotificationsPage/NotificationsPage";
 import SettingsPage from "../../pages/SettingsPage/SettingsPage";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useNotificationsInfo } from "../../pages/NotificationsPage/tools/useNotificationsInfo";
-import { ThemesPage } from "../../pages/ThemesPage/ThemesPage";
+import { TagsPage } from "../TagsPage/TagsPage";
 import CustomTabBar from "./CustomTabBar/CustomTabBar";
 
 const Tab = createMaterialTopTabNavigator();
@@ -37,7 +37,7 @@ const MainPage: FC = () => {
          <Tab.Screen name="Cards" component={CardsPage} />
          <Tab.Screen name="Groups" component={GroupsListPage} />
          <Tab.Screen name="Notifications" component={NotificationsPage} />
-         <Tab.Screen name="Themes" component={ThemesPage} />
+         <Tab.Screen name="Tags" component={TagsPage} />
          <Tab.Screen name="Settings" component={SettingsPage} />
       </Tab.Navigator>
    );

@@ -1,44 +1,44 @@
 import React, { FC, useEffect, useState } from "react";
 import {
-   ThemeBasicInfo,
-   ThemesAsQuestion
-} from "../../../../api/server/shared-tools/endpoints-interfaces/themes";
+   TagBasicInfo,
+   TagsAsQuestion
+} from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { EditableUserProps } from "../../../../api/server/shared-tools/validators/user";
 import {
    CenteredMethod,
    LoadingAnimation
 } from "../../../common/LoadingAnimation/LoadingAnimation";
 import Question from "../../../common/Question/Question";
-import { ThemesToUpdate } from "../RegistrationFormsPage";
-import { useThemeAsQuestionInfo } from "./hooks/useThemeAsQuestionInfo";
+import { TagsToUpdate } from "../RegistrationFormsPage";
+import { useTagAsQuestionInfo } from "./hooks/useTagAsQuestionInfo";
 
-export interface PropsThemesAsQuestionForm {
+export interface PropsTagsAsQuestionForm {
    formName: string;
-   initialData: ThemesInfo;
+   initialData: TagsInfo;
    questionId: string;
    mandatoryQuestion: boolean;
-   themesAsQuestions: ThemesAsQuestion[];
+   tagsAsQuestions: TagsAsQuestion[];
    onChange: (
       formName: string,
       newProps: EditableUserProps,
       error: string | null,
-      themesToUpdate: ThemesToUpdate
+      tagsToUpdate: TagsToUpdate
    ) => void;
 }
 
-export interface ThemesInfo {
-   themesSubscribed?: ThemeBasicInfo[];
-   themesBlocked?: ThemeBasicInfo[];
+export interface TagsInfo {
+   tagsSubscribed?: TagBasicInfo[];
+   tagsBlocked?: TagBasicInfo[];
 }
 
-const ThemesAsQuestionForm: FC<PropsThemesAsQuestionForm> = props => {
+const TagsAsQuestionForm: FC<PropsTagsAsQuestionForm> = props => {
    const {
       questionId,
       initialData,
       onChange,
       formName,
       mandatoryQuestion,
-      themesAsQuestions
+      tagsAsQuestions
    } = props;
    const [selectedAnswer, setSelectedAnswer] = useState<string>(null);
    const [itsImportantChecked, setItsImportantChecked] = useState<boolean>(null);
@@ -47,9 +47,9 @@ const ThemesAsQuestionForm: FC<PropsThemesAsQuestionForm> = props => {
       question,
       initiallySelectedAnswer,
       initiallyItsImportantChecked,
-      themesToUpdate
-   } = useThemeAsQuestionInfo(
-      themesAsQuestions,
+      tagsToUpdate
+   } = useTagAsQuestionInfo(
+      tagsAsQuestions,
       questionId,
       initialData,
       selectedAnswer,
@@ -57,7 +57,7 @@ const ThemesAsQuestionForm: FC<PropsThemesAsQuestionForm> = props => {
    );
 
    useEffect(() => {
-      onChange(formName, null, mandatoryQuestion ? getError() : null, themesToUpdate);
+      onChange(formName, null, mandatoryQuestion ? getError() : null, tagsToUpdate);
    }, [selectedAnswer, itsImportantChecked]);
 
    const handleQuestionChange = ({ selectedAnswer, itsImportantChecked }) => {
@@ -80,7 +80,7 @@ const ThemesAsQuestionForm: FC<PropsThemesAsQuestionForm> = props => {
    return (
       <Question
          questionText={question.text}
-         answers={question.answers.map(a => ({ text: a.text, id: a.themeId }))}
+         answers={question.answers.map(a => ({ text: a.text, id: a.tagId }))}
          incompatibilitiesBetweenAnswers={question.incompatibilitiesBetweenAnswers}
          multipleAnswersAllowed={false}
          initiallySelected={[initiallySelectedAnswer]}
@@ -90,4 +90,4 @@ const ThemesAsQuestionForm: FC<PropsThemesAsQuestionForm> = props => {
    );
 };
 
-export default React.memo(ThemesAsQuestionForm);
+export default React.memo(TagsAsQuestionForm);

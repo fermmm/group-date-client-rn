@@ -4,6 +4,6 @@ export function userFinishedRegistration(profileStatus: ProfileStatusServerRespo
    if (profileStatus == null) {
       return false;
    }
-   const { missingEditableUserProps = [], notShowedThemeQuestions = [] } = profileStatus;
-   return missingEditableUserProps.length === 0 && notShowedThemeQuestions.length === 0;
+   const { missingEditableUserProps = [], notShowedTagQuestions = [] } = profileStatus;
+   return missingEditableUserProps.length === 0 && notShowedTagQuestions.length === 0;
 }

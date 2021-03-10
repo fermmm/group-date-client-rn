@@ -18,9 +18,9 @@ import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
-import ThemesAsQuestionForm from "./ThemesAsQuestionForm/ThemesAsQuestionForm";
-import { useUnifiedThemesToUpdate } from "./tools/useUnifiedThemesToUpdate";
-import { sendThemes, ThemeEditAction, useThemesAsQuestions } from "../../../api/server/themes";
+import TagsAsQuestionForm from "./TagsAsQuestionForm/TagsAsQuestionForm";
+import { useUnifiedTagsToUpdate } from "./tools/useUnifiedTagsToUpdate";
+import { sendTags, TagEditAction, useTagsAsQuestions } from "../../../api/server/tags";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { BackHandler } from "react-native";
@@ -31,7 +31,7 @@ import { usePushNotificationPressRedirect } from "../../../common-tools/device-n
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
-   themesAsQuestionsToShow?: string[];
+   tagsAsQuestionsToShow?: string[];
 }
 
 /**
@@ -48,19 +48,17 @@ const RegistrationFormsPage: FC = () => {
    const [sendingToServer, setSendingToServer] = useState(false);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
-   const themesToUpdate = useRef<Record<string, ThemesToUpdate>>({});
+   const tagsToUpdate = useRef<Record<string, TagsToUpdate>>({});
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
-   const { unifiedThemesToUpdate, questionsShowed } = useUnifiedThemesToUpdate(
-      themesToUpdate.current
-   );
+   const { unifiedTagsToUpdate, questionsShowed } = useUnifiedTagsToUpdate(tagsToUpdate.current);
    const { data: profileStatus } = useServerProfileStatus();
-   const { data: themesAsQuestions } = useThemesAsQuestions();
+   const { data: tagsAsQuestions } = useTagsAsQuestions();
    const {
       isLoading: requiredFormListLoading,
       formsRequired,
       knownFormsWithPropsTheyChange,
       unknownPropsQuestions,
-      themesAsQuestionsToShow
+      tagsAsQuestionsToShow
    } = useRequiredFormList(
       params != null ? { fromParams: params } : { fromProfileStatus: profileStatus }
    );
@@ -105,7 +103,7 @@ const RegistrationFormsPage: FC = () => {
          formName: RegistrationFormName | string,
          newProps: EditableUserProps,
          error: string | null,
-         themesToUpdateReceived?: ThemesToUpdate
+         tagsToUpdateReceived?: TagsToUpdate
       ) => {
          propsGathered.current = {
             ...propsGathered.current,
@@ -116,8 +114,8 @@ const RegistrationFormsPage: FC = () => {
             profileStatus?.user
          );
          errorOnForms.current[formName] = error;
-         if (themesToUpdateReceived != null) {
-            themesToUpdate.current[formName] = themesToUpdateReceived;
+         if (tagsToUpdateReceived != null) {
+            tagsToUpdate.current[formName] = tagsToUpdateReceived;
          }
       },
       []
@@ -162,7 +160,7 @@ const RegistrationFormsPage: FC = () => {
       if (currentStep < formsRequired.length - 1) {
          setCurrentStep(currentStep + 1);
       } else {
-         if (userChangedSomething(propsGathered.current, unifiedThemesToUpdate, questionsShowed)) {
+         if (userChangedSomething(propsGathered.current, unifiedTagsToUpdate, questionsShowed)) {
             sendDataToServer();
          } else {
             if (canGoBack()) {
@@ -170,11 +168,11 @@ const RegistrationFormsPage: FC = () => {
             }
          }
       }
-   }, [currentStep, formsRequired, propsGathered.current, unifiedThemesToUpdate, questionsShowed]);
+   }, [currentStep, formsRequired, propsGathered.current, unifiedTagsToUpdate, questionsShowed]);
 
    const sendDataToServer = async () => {
       let propsToSend: EditableUserProps = propsGathered.current;
-      let themesWereChanged: boolean = false;
+      let tagsWereChanged: boolean = false;
 
       if (questionsShowed?.length > 0) {
          propsToSend.questionsShowed = questionsShowed;
@@ -183,45 +181,45 @@ const RegistrationFormsPage: FC = () => {
          propsToSend.name = (propsToSend.name as string).slice(0, -1);
       }
 
-      if (unifiedThemesToUpdate?.themesToSubscribe?.length > 0) {
+      if (unifiedTagsToUpdate?.tagsToSubscribe?.length > 0) {
          setSendingToServer(true);
-         themesWereChanged = true;
-         await sendThemes({
-            action: ThemeEditAction.Subscribe,
-            themeIds: unifiedThemesToUpdate.themesToSubscribe,
+         tagsWereChanged = true;
+         await sendTags({
+            action: TagEditAction.Subscribe,
+            tagIds: unifiedTagsToUpdate.tagsToSubscribe,
             token
          });
       }
-      if (unifiedThemesToUpdate?.themesToBlock?.length > 0) {
+      if (unifiedTagsToUpdate?.tagsToBlock?.length > 0) {
          setSendingToServer(true);
-         themesWereChanged = true;
-         await sendThemes({
-            action: ThemeEditAction.Block,
-            themeIds: unifiedThemesToUpdate.themesToBlock,
+         tagsWereChanged = true;
+         await sendTags({
+            action: TagEditAction.Block,
+            tagIds: unifiedTagsToUpdate.tagsToBlock,
             token
          });
       }
-      if (unifiedThemesToUpdate?.themesToUnsubscribe?.length > 0) {
+      if (unifiedTagsToUpdate?.tagsToUnsubscribe?.length > 0) {
          setSendingToServer(true);
-         themesWereChanged = true;
-         await sendThemes({
-            action: ThemeEditAction.RemoveSubscription,
-            themeIds: unifiedThemesToUpdate.themesToUnsubscribe,
-            token
-         });
-      }
-
-      if (unifiedThemesToUpdate?.themesToUnblock?.length > 0) {
-         setSendingToServer(true);
-         themesWereChanged = true;
-         await sendThemes({
-            action: ThemeEditAction.RemoveBlock,
-            themeIds: unifiedThemesToUpdate.themesToUnblock,
+         tagsWereChanged = true;
+         await sendTags({
+            action: TagEditAction.RemoveSubscription,
+            tagIds: unifiedTagsToUpdate.tagsToUnsubscribe,
             token
          });
       }
 
-      // We send user props last because it contains questionsShowed prop, which means that the themes were sent
+      if (unifiedTagsToUpdate?.tagsToUnblock?.length > 0) {
+         setSendingToServer(true);
+         tagsWereChanged = true;
+         await sendTags({
+            action: TagEditAction.RemoveBlock,
+            tagIds: unifiedTagsToUpdate.tagsToUnblock,
+            token
+         });
+      }
+
+      // We send user props last because it contains questionsShowed prop, which means that the tags were sent
       if (Object.keys(propsToSend).length > 0) {
          setSendingToServer(true);
          mutateCache("user", { ...(profileStatus?.user ?? {}), ...propsToSend });
@@ -248,22 +246,22 @@ const RegistrationFormsPage: FC = () => {
       const recommendationsRelatedChanges = keysMutated.filter(key =>
          recommendationsRelatedKeys.includes(key)
       );
-      if (recommendationsRelatedChanges.length > 0 || themesWereChanged) {
+      if (recommendationsRelatedChanges.length > 0 || tagsWereChanged) {
          revalidate("cards-game/recommendations");
       }
    };
 
    const userChangedSomething = (
       propsToSend: EditableUserProps,
-      unifiedThemesToUpdate: ThemesToUpdate,
+      unifiedTagsToUpdate: TagsToUpdate,
       questionsShowed: string[]
    ) => {
       return (
          questionsShowed?.length > 0 ||
-         unifiedThemesToUpdate?.themesToSubscribe?.length > 0 ||
-         unifiedThemesToUpdate?.themesToBlock?.length > 0 ||
-         unifiedThemesToUpdate?.themesToUnsubscribe?.length > 0 ||
-         unifiedThemesToUpdate?.themesToUnblock?.length > 0 ||
+         unifiedTagsToUpdate?.tagsToSubscribe?.length > 0 ||
+         unifiedTagsToUpdate?.tagsToBlock?.length > 0 ||
+         unifiedTagsToUpdate?.tagsToUnsubscribe?.length > 0 ||
+         unifiedTagsToUpdate?.tagsToUnblock?.length > 0 ||
          Object.keys(propsToSend).length > 0
       );
    };
@@ -366,13 +364,13 @@ const RegistrationFormsPage: FC = () => {
                            onChange={handleChangeOnForm}
                         />
                      )}
-                     {themesAsQuestionsToShow.includes(formName) && (
-                        <ThemesAsQuestionForm
+                     {tagsAsQuestionsToShow.includes(formName) && (
+                        <TagsAsQuestionForm
                            formName={formName}
                            questionId={formName}
                            initialData={profileStatus.user}
                            mandatoryQuestion={true}
-                           themesAsQuestions={themesAsQuestions}
+                           tagsAsQuestions={tagsAsQuestions}
                            onChange={handleChangeOnForm}
                         />
                      )}
@@ -397,11 +395,11 @@ const RegistrationFormsPage: FC = () => {
    );
 };
 
-export interface ThemesToUpdate {
-   themesToUnsubscribe?: string[];
-   themesToSubscribe?: string[];
-   themesToBlock?: string[];
-   themesToUnblock?: string[];
+export interface TagsToUpdate {
+   tagsToUnsubscribe?: string[];
+   tagsToSubscribe?: string[];
+   tagsToBlock?: string[];
+   tagsToUnblock?: string[];
 }
 
 export default RegistrationFormsPage;

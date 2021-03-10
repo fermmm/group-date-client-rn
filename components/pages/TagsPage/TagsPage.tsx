@@ -1,32 +1,31 @@
 import React, { FC } from "react";
 import { View, StyleSheet } from "react-native";
-import { useThemes } from "../../../api/server/themes";
+import { useTags } from "../../../api/server/tags";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { ViewTouchable } from "../../common/ViewTouchable/ViewTouchable";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import ThemeChip from "../../common/ProfileCard/QuestionInProfileCard/QuestionInProfileCard";
+import TagChip from "../../common/ProfileCard/QuestionInProfileCard/QuestionInProfileCard";
 
-export const ThemesPage: FC = () => {
-   // Sorry for this almost name collision of unrelated things
-   const { data: themes } = useThemes();
+export const TagsPage: FC = () => {
+   const { data: tags } = useTags();
    const { colors } = useTheme();
 
-   if (!themes) {
+   if (!tags) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 
    return (
       <BasicScreenContainer>
          <View>
-            {themes.map(theme => (
+            {tags.map(tag => (
                <ViewTouchable
                   onPress={() => console.log("Pressed")}
-                  key={theme.themeId}
-                  style={styles.themeContainer}
+                  key={tag.tagId}
+                  style={styles.tagContainer}
                >
-                  <ThemeChip theme={theme} />
+                  <TagChip tag={tag} />
                </ViewTouchable>
             ))}
          </View>
@@ -35,5 +34,5 @@ export const ThemesPage: FC = () => {
 };
 
 const styles: Styles = StyleSheet.create({
-   themeContainer: {}
+   tagContainer: {}
 });

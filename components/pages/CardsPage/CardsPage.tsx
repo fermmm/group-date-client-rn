@@ -19,7 +19,7 @@ import { revalidate } from "../../../api/tools/useCache";
 
 export interface ParamsCardsPage {
    specialCardsSource?: CardsSource;
-   themeId?: string;
+   tagId?: string;
 }
 
 const CardsPage: FC = () => {

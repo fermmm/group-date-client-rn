@@ -4,16 +4,16 @@ import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { Caption, Text } from "react-native-paper";
 import { ThemeExt } from "../../../../common-tools/themes/types/Themed";
 import color from "color";
-import { Theme } from "../../../../api/server/shared-tools/endpoints-interfaces/themes";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { currentTheme } from "../../../../config";
+import { Tag } from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
 
-export interface ThemeInProfileCardProps {
-   theme: Theme;
+export interface PropsTagChip {
+   tag: Tag;
    showCategory?: boolean;
 }
 
-const ThemeChip: FC<ThemeInProfileCardProps> = ({ theme, showCategory }) => {
+const TagChip: FC<PropsTagChip> = ({ tag, showCategory }) => {
    const { colors }: ThemeExt = useTheme();
    const answerMatches: boolean = true; // Implement compare logic here
 
@@ -34,7 +34,7 @@ const ThemeChip: FC<ThemeInProfileCardProps> = ({ theme, showCategory }) => {
                   color: colors.text
                }}
             >
-               {theme.category}
+               {tag.category}
             </Text>
          )}
          <Caption
@@ -42,7 +42,7 @@ const ThemeChip: FC<ThemeInProfileCardProps> = ({ theme, showCategory }) => {
                color: colors.text
             }}
          >
-            {theme.name}
+            {tag.name}
          </Caption>
       </View>
    );
@@ -62,4 +62,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default ThemeChip;
+export default TagChip;

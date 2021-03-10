@@ -60,7 +60,7 @@ const CustomTabBar: FC<MaterialTopTabBarProps & { badgeNumbers: Record<string, n
                            />
                         );
                         break;
-                     case "Themes":
+                     case "Tags":
                         icon = "pound";
                         break;
                      case "Settings":

@@ -15,12 +15,11 @@ import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
-import ThemeChip from "./QuestionInProfileCard/QuestionInProfileCard";
+import TagChip from "./QuestionInProfileCard/QuestionInProfileCard";
 import EditButton from "./EditButton/EditButton";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
-import { Theme } from "../../../api/server/shared-tools/endpoints-interfaces/themes";
 import { useUser } from "../../../api/server/user";
-import { useThemes } from "../../../api/server/themes";
+import { useTags } from "../../../api/server/tags";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { fromBirthDateToAge } from "../../../api/tools/date-tools";
 import { LoadingAnimation, RenderMethod } from "../LoadingAnimation/LoadingAnimation";
@@ -32,6 +31,7 @@ import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import CardAnimator, { CardAnimationType } from "./CardAnimator/CardAnimator";
 import { getGenderName } from "../../../common-tools/strings/gender";
 import { prepareUrl } from "../../../api/tools/httpRequest";
+import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 
 export interface ProfileCardProps {
    user: User;
@@ -62,8 +62,8 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       gender,
       profileDescription,
       isCoupleProfile,
-      themesSubscribed,
-      themesBlocked
+      tagsSubscribed,
+      tagsBlocked
    }: Partial<User> = props.user;
    const genderText: string = getGenderName(gender, isCoupleProfile);
 
@@ -74,17 +74,17 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    const [onAnimationFinish, setOnAnimationFinish] = useState<{ func: () => void }>(null);
    const { colors } = useTheme();
    const { data: localUser } = useUser();
-   const { data: allThemes, isLoading: themesLoading } = useThemes();
+   const { data: allTags, isLoading: tagsLoading } = useTags();
    const { data: serverInfo, isLoading: serverInfoLoading } = useServerInfo();
 
-   const themesSubscribedInCommon: Theme[] = themesSubscribed
-      ?.filter(t => localUser.themesSubscribed.find(ut => ut.themeId === t.themeId) != null)
-      .map(t => allThemes?.find(at => at.themeId === t.themeId))
+   const tagsSubscribedInCommon: Tag[] = tagsSubscribed
+      ?.filter(t => localUser.tagsSubscribed.find(ut => ut.tagId === t.tagId) != null)
+      .map(t => allTags?.find(at => at.tagId === t.tagId))
       .filter(t => t != null);
 
-   const themesBlockedInCommon: Theme[] = themesBlocked
-      ?.filter(t => localUser.themesBlocked.find(ut => ut.themeId === t.themeId) != null)
-      .map(t => allThemes?.find(at => at.themeId === t.themeId))
+   const tagsBlockedInCommon: Tag[] = tagsBlocked
+      ?.filter(t => localUser.tagsBlocked.find(ut => ut.tagId === t.tagId) != null)
+      .map(t => allTags?.find(at => at.tagId === t.tagId))
       .filter(t => t != null);
 
    const finalImagesUri = images.map(uri => prepareUrl(serverInfo.imagesHost + uri));
@@ -99,7 +99,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       setAnimate(CardAnimationType.Dislike);
    };
 
-   if (!localUser || themesLoading || serverInfoLoading) {
+   if (!localUser || tagsLoading || serverInfoLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 
@@ -199,13 +199,13 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                            />
                         )}
                         <View style={styles.questionsContainer}>
-                           {themesSubscribedInCommon?.map(theme => (
-                              <ThemeChip theme={theme} key={theme.themeId} />
+                           {tagsSubscribedInCommon?.map(tag => (
+                              <TagChip tag={tag} key={tag.tagId} />
                            ))}
                         </View>
                         {/* <View style={styles.questionsContainer}>
-                           {themesBlockedInCommon?.map(theme => (
-                              <ThemeInProfileCard theme={theme} key={theme.themeId} />
+                           {tagsBlockedInCommon?.map(tag => (
+                              <TagChip tag={tag} key={tag.tagId} />
                            ))}
                         </View> */}
                      </Card.Content>

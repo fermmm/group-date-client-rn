@@ -1,21 +1,21 @@
-import { ThemesToUpdate } from "../../RegistrationFormsPage";
 import {
-   ThemeBasicInfo,
-   ThemesAsQuestion
-} from "../../../../../api/server/shared-tools/endpoints-interfaces/themes";
-import { ThemesInfo } from "../ThemesAsQuestionForm";
+   TagBasicInfo,
+   TagsAsQuestion
+} from "../../../../../api/server/shared-tools/endpoints-interfaces/tags";
+import { TagsToUpdate } from "../../RegistrationFormsPage";
+import { TagsInfo } from "../TagsAsQuestionForm";
 
-export function useThemeAsQuestionInfo(
-   themesAsQuestions: ThemesAsQuestion[],
+export function useTagAsQuestionInfo(
+   tagsAsQuestions: TagsAsQuestion[],
    questionId: string,
-   initialData: ThemesInfo,
+   initialData: TagsInfo,
    selectedAnswer?: string,
    itsImportantChecked?: boolean
-): UseThemeInfoResponse {
-   const question = themesAsQuestions?.find(q => q.questionId === questionId);
+): UseTagInfoResponse {
+   const question = tagsAsQuestions?.find(q => q.questionId === questionId);
    const initiallySelectedAnswer = getInitiallySelectedAnswer(
       question,
-      initialData.themesSubscribed
+      initialData.tagsSubscribed
    )?.[0];
    const initiallySelectedAnswerIncompatibles = getIncompatibleAnswersOf(
       initiallySelectedAnswer,
@@ -24,10 +24,10 @@ export function useThemeAsQuestionInfo(
    const selectedAnswerIncompatibles = getIncompatibleAnswersOf(selectedAnswer, question);
    const initiallyItsImportantChecked = getInitiallyItsImportantChecked(
       initiallySelectedAnswer?.[0],
-      initialData.themesBlocked,
+      initialData.tagsBlocked,
       question
    );
-   const themesToUpdate = getThemesToUpdate({
+   const tagsToUpdate = getTagsToUpdate({
       initiallySelectedAnswer,
       initiallyItsImportantChecked,
       initiallySelectedAnswerIncompatibles,
@@ -37,30 +37,30 @@ export function useThemeAsQuestionInfo(
    });
 
    return {
-      isLoading: themesAsQuestions == null,
+      isLoading: tagsAsQuestions == null,
       question,
       initiallySelectedAnswer,
       initiallyItsImportantChecked,
-      themesToUpdate
+      tagsToUpdate
    };
 }
 
-export interface UseThemeInfoResponse {
+export interface UseTagInfoResponse {
    isLoading: boolean;
-   question: ThemesAsQuestion;
+   question: TagsAsQuestion;
    initiallySelectedAnswer: string;
    initiallyItsImportantChecked: boolean;
-   themesToUpdate?: ThemesToUpdate;
+   tagsToUpdate?: TagsToUpdate;
 }
 
-function getThemesToUpdate(props: {
+function getTagsToUpdate(props: {
    initiallySelectedAnswer: string;
    initiallyItsImportantChecked: boolean;
    initiallySelectedAnswerIncompatibles: string[];
    itsImportantChecked?: boolean;
    selectedAnswer?: string;
    selectedAnswerIncompatibles?: string[];
-}): ThemesToUpdate {
+}): TagsToUpdate {
    const {
       initiallySelectedAnswer,
       initiallyItsImportantChecked,
@@ -70,10 +70,10 @@ function getThemesToUpdate(props: {
       selectedAnswerIncompatibles
    } = props;
 
-   let themesToUnsubscribe: string[] = [];
-   let themesToSubscribe: string[] = [];
-   let themesToBlock: string[] = [];
-   let themesToUnblock: string[] = [];
+   let tagsToUnsubscribe: string[] = [];
+   let tagsToSubscribe: string[] = [];
+   let tagsToBlock: string[] = [];
+   let tagsToUnblock: string[] = [];
 
    if (selectedAnswer == null) {
       return null;
@@ -83,58 +83,58 @@ function getThemesToUpdate(props: {
    if (initiallySelectedAnswer != selectedAnswer) {
       // If there was an answer selected previously remove the effects of the previous answer
       if (initiallySelectedAnswer != null) {
-         themesToUnsubscribe = [initiallySelectedAnswer];
-         themesToUnblock = initiallyItsImportantChecked ? initiallySelectedAnswerIncompatibles : [];
+         tagsToUnsubscribe = [initiallySelectedAnswer];
+         tagsToUnblock = initiallyItsImportantChecked ? initiallySelectedAnswerIncompatibles : [];
       }
 
       // Apply the effects of the new change made
-      themesToSubscribe = [selectedAnswer];
-      themesToBlock = itsImportantChecked ? selectedAnswerIncompatibles : [];
+      tagsToSubscribe = [selectedAnswer];
+      tagsToBlock = itsImportantChecked ? selectedAnswerIncompatibles : [];
    }
 
    // User didn't change the answer but changed the it's important checkbox
    if (initiallySelectedAnswer == selectedAnswer) {
       if (!itsImportantChecked && initiallyItsImportantChecked) {
-         themesToUnblock = initiallySelectedAnswerIncompatibles;
+         tagsToUnblock = initiallySelectedAnswerIncompatibles;
       }
 
       if (itsImportantChecked && !initiallyItsImportantChecked) {
-         themesToBlock = selectedAnswerIncompatibles;
+         tagsToBlock = selectedAnswerIncompatibles;
       }
    }
 
    return {
-      themesToUnsubscribe,
-      themesToSubscribe,
-      themesToBlock,
-      themesToUnblock
+      tagsToUnsubscribe,
+      tagsToSubscribe,
+      tagsToBlock,
+      tagsToUnblock
    };
 }
 
 function getInitiallySelectedAnswer(
-   question: ThemesAsQuestion,
-   themesSubscribed: ThemeBasicInfo[]
+   question: TagsAsQuestion,
+   tagsSubscribed: TagBasicInfo[]
 ): string[] {
-   if (question == null || themesSubscribed == null) {
+   if (question == null || tagsSubscribed == null) {
       return [];
    }
 
    // If the user is subscribed to any of the answers then that answer is considered selected
    const optionSelected = question.answers.find(
-      answer => themesSubscribed?.find(subscribed => subscribed.themeId === answer.themeId) != null
+      answer => tagsSubscribed?.find(subscribed => subscribed.tagId === answer.tagId) != null
    );
 
    if (optionSelected == null) {
       return [];
    }
 
-   return [optionSelected.themeId];
+   return [optionSelected.tagId];
 }
 
 function getInitiallyItsImportantChecked(
    initiallySelectedAnswer: string,
-   themesBlocked: ThemeBasicInfo[],
-   question: ThemesAsQuestion
+   tagsBlocked: TagBasicInfo[],
+   question: TagsAsQuestion
 ) {
    if (question == null || initiallySelectedAnswer == null) {
       return false;
@@ -142,21 +142,21 @@ function getInitiallyItsImportantChecked(
 
    const incompatibleAnswers = getIncompatibleAnswersOf(initiallySelectedAnswer, question);
 
-   // If any incompatible answer is a theme blocked by the user then it's important is considered checked
+   // If any incompatible answer is a tag blocked by the user then it's important is considered checked
    const incompatibleAnswerIsBlocked = incompatibleAnswers.find(
       incompatibleAnswer =>
-         themesBlocked?.find(themeBlocked => themeBlocked.themeId === incompatibleAnswer) != null
+         tagsBlocked?.find(tagBlocked => tagBlocked.tagId === incompatibleAnswer) != null
    );
 
    return incompatibleAnswerIsBlocked != null;
 }
 
-function getIncompatibleAnswersOf(answerId: string, question: ThemesAsQuestion): string[] {
+function getIncompatibleAnswersOf(answerId: string, question: TagsAsQuestion): string[] {
    if (answerId == null || question == null || question.incompatibilitiesBetweenAnswers == null) {
       return [];
    }
 
-   const answerIndex = question.answers.findIndex(a => a.themeId === answerId);
+   const answerIndex = question.answers.findIndex(a => a.tagId === answerId);
    const incompatibleAnswersIndexes = question.incompatibilitiesBetweenAnswers[answerIndex];
 
    if (incompatibleAnswersIndexes == null || incompatibleAnswersIndexes.length === 0) {
@@ -167,5 +167,5 @@ function getIncompatibleAnswersOf(answerId: string, question: ThemesAsQuestion):
       incompatibleAnswersIndexes.includes(i)
    );
 
-   return incompatibleAnswers.map(a => a.themeId);
+   return incompatibleAnswers.map(a => a.tagId);
 }
