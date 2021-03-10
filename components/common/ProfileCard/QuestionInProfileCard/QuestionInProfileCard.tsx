@@ -10,10 +10,10 @@ import { Tag } from "../../../../api/server/shared-tools/endpoints-interfaces/ta
 
 export interface PropsTagChip {
    tag: Tag;
-   showCategory?: boolean;
+   hideCategory?: boolean;
 }
 
-const TagChip: FC<PropsTagChip> = ({ tag, showCategory }) => {
+const TagChip: FC<PropsTagChip> = ({ tag, hideCategory }) => {
    const { colors }: ThemeExt = useTheme();
    const answerMatches: boolean = true; // Implement compare logic here
 
@@ -28,22 +28,8 @@ const TagChip: FC<PropsTagChip> = ({ tag, showCategory }) => {
             !answerMatches && styles.border
          ]}
       >
-         {showCategory && (
-            <Text
-               style={{
-                  color: colors.text
-               }}
-            >
-               {tag.category}
-            </Text>
-         )}
-         <Caption
-            style={{
-               color: colors.text
-            }}
-         >
-            {tag.name}
-         </Caption>
+         {!hideCategory && <Caption style={styles.categoryText}>{tag.category}</Caption>}
+         <Text style={styles.nameText}>{tag.name}</Text>
       </View>
    );
 };
@@ -59,6 +45,14 @@ const styles: Styles = StyleSheet.create({
    },
    border: {
       borderBottomWidth: 1
+   },
+   categoryText: {
+      color: currentTheme.colors.text,
+      fontSize: 10,
+      marginBottom: 0
+   },
+   nameText: {
+      color: currentTheme.colors.text
    }
 });
 
