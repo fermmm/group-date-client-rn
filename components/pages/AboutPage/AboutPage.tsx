@@ -26,13 +26,8 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Las citas tradicionales de 2 personas no son posibles en esta app.
-            </Text>
-            <EmptySpace height={15} />
-            <Text style={styles.text}>
-               Tu primera cita grupal es probable que sea pequeña, por ejemplo de 3 personas o tal
-               vez 6, es probable que las siguientes sean de más, ya que se necesita tiempo para que
-               se den coincidencias más numerosas.
+               Tu primera cita grupal es probable que tenga un tamaño de 3 a 6 personas, es probable
+               que las siguientes sean de más.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es fácil que se genere una cita grupal?
@@ -50,9 +45,18 @@ const AboutPage: FC = () => {
                personas por lo que se puede evaluar perfiles con una mentalidad más relajada y
                abierta, generando más likes y coincidencias.
             </Text>
+            <EmptySpace height={15} />
             <TitleText extraSize style={styles.title}>
-               ¿Se pueden generar citas desequilibradas? (Ej: 1 persona se gusta con 5 que no se
-               gustan entre ellas)
+               ¿Permite la app una cita tradicional de 2 personas?
+            </TitleText>
+            <Text style={styles.text}>
+               No, esta app esta pensada para formar comunidades de poliamor grupal y no de poliamor
+               de parejas o monogamia, ya existen aplicaciones conocidas que puedes descargar para
+               ese tipo de citas.
+            </Text>
+            <TitleText extraSize style={styles.title}>
+               ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
+               gustan entre ellas
             </TitleText>
             <Text style={styles.text}>
                No. Solo se generan grupos más o menos equilibrados. Esto también genera que en las
@@ -69,56 +73,58 @@ const AboutPage: FC = () => {
                citas que pueden ser de cualquier género y sexualidad.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Hay diferencias importantes entre las relaciones grupales y las tradicionales de 2
-               personas?
+               Datos interesantes sobre la importancia del poliamor grupal
             </TitleText>
             <Text style={styles.text}>
-               Si, las relaciones afectivas y sexuales entre varias personas son la manera original
-               en la que se relacionaba el ser humano y definen el concepto de familia. Hasta hace
-               10.000 años la crianza era una actividad poco exigente, los padres de lxs hijxs eran
-               todas las personas de un grupo afectivo, se compartía el cuidado y los recursos de
-               forma igualitaria como una gran familia, potenciado por el sexo que solía ser grupal
-               y muy abundante. Este pasado poliamoroso lo tenemos todxs presente en la sexualidad
-               biológica de nuestro cuerpo, por ejemplo: Los "gemidos sexuales" son un instinto que
-               las otras especies que lo tienen (primates) lo usan para llamar a lxs que están
-               cerca, de la misma manera funcionaba en nuestra especie.
+               El poliamor grupal es la manera original en la que se relacionaba el ser humano y
+               cambia el modelo de familia. Hasta hace 9.000 años los padres de lxs hijxs eran todas
+               las personas de un grupo afectivo, la crianza era una actividad poco exigente, se
+               compartía el cuidado y la comida de forma igualitaria entre todxs, potenciado por el
+               sexo que solía ser grupal, muy abundante y probablemente más divertido. Este pasado
+               de poliamor grupal lo tenemos todxs presente en la sexualidad biológica de nuestro
+               cuerpo, por ejemplo: Los "gemidos sexuales" son un instinto que en las otras especies
+               que lo tienen (primates) tiene el efecto de llamar a lxs que están cerca.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               La sexualidad que podemos experimentar en nuestra cultura esta muy reprimida,
-               desconocida y alejada del tipo de sexualidad que nos pide nuestro cuerpo y su
-               evolución, este es el trasfondo de muchos problemas que surgen hoy en día a la hora
-               de mantenernos motivados sexualmente y conectar con nuevas personas, algo similar
-               puede suceder hasta con el afecto. Hay grandes libros de divulgación científica sobre
-               el tema para recomendar, algunos muy conocidos y comentados por la comunidad
-               científica como los de Cacilda Jethá y Christopher Ryan en primer lugar o también el
-               de Friedrich Engels: "El origen de la familia, la propiedad privada y el estado".
+               Hay grandes libros de divulgación científica sobre el tema para recomendar, algunos
+               conocidos y respaldados por la comunidad científica como los de Cacilda Jethá y
+               Christopher Ryan en primer lugar y "El origen de la familia, la propiedad privada y
+               el estado" de Friedrich Engels.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               En el último 3% de la historia del humano inteligente aparece la monogamia debido a
-               necesidades comerciales: casar hijxs como contrato comercial entre familias, acumular
-               riqueza de forma individual, herencias, etc. La monogamia y la familia de hoy en día
-               (nuclear) son dos de los muchos fenómenos sociales de la revolución neolítica, la
-               misma que trajo por primera vez a las clases sociales, patriarcado, explotación y
-               jerarquías culturales.
+               La monogamia, con ella las parejas como única forma posible de relación y la familia
+               nuclear son algunos de los muchos fenómenos culturales provenientes de la revolución
+               neolítica, una revolución costosa que trajo al patriarcado, las diferencias de clase,
+               explotación, avance contra la ecología, etc. Problemáticas que se van revirtiendo
+               lentamente a medida que las vamos cuestionando.
+            </Text>
+            <TitleText extraSize style={styles.title}>
+               ¿Son anti naturales las apps para conocer gente?
+            </TitleText>
+            <Text style={styles.text}>
+               Probablemente si, pero sirven como una herramienta más dentro de nuestra cultura y
+               forma de vida, que no le queda mucho de natural u original. En particular esta app
+               puede ser muy útil al menos para poder tomarse vacaciones de nuestra cultura y
+               aprender algo nuevo.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
             </TitleText>
             <Text style={styles.text}>
-               Esta app es y será siempre gratis, sin fines comerciales, de código abierto y
+               No, esta app es y será siempre gratis, sin fines comerciales, de código abierto y
                financiada con donaciones a voluntad.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Quienes hicieron esta aplicación?
+               ¿Quienes hicieron esta app?
             </TitleText>
             <Text style={styles.text}>
-               La idea viene de un informático argentino quién también escribió el software de la
-               app, pero las diferentes partes y detalles que multiplican su calidad son ideas de
-               varias personas interesadas en el proyecto, personas pertenecientes a organizaciones
-               de poliamor, amor libre, feminismo, profesionales de diferentes disciplinas: desde
-               ciencias sociales hasta otrxs informáticxs.
+               La idea viene de un informático argentino quién también escribió el software, pero
+               los múltiples detalles que multiplican su calidad son ideas de varias personas
+               interesadas en el proyecto, personas pertenecientes a organizaciones de poliamor,
+               amor libre, feminismo, profesionales de diferentes disciplinas: desde ciencias
+               sociales hasta otrxs informáticxs.
             </Text>
             <EmptySpace height={80} />
          </BasicScreenContainer>
