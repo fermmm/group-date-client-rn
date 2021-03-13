@@ -26,7 +26,7 @@ const AdminPage: FC = () => {
    };
 
    const handleSearchGroupsPress = async () => {
-      const response = await sendForceGroupsSearch();
+      const response = await sendForceGroupsSearch({ token: localUser.token });
       Alert.alert("Hecho, respuesta:", response);
    };
 

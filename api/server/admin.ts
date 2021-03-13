@@ -18,10 +18,18 @@ export async function sendCreateFakeUsers(
    return resp;
 }
 
-export async function sendForceGroupsSearch(autoRevalidateRelated: boolean = true) {
-   const resp = await defaultHttpRequest<void, string>("testing/force-groups-search", "GET", null, {
-      handleErrors: true
-   });
+export async function sendForceGroupsSearch(
+   params: TokenParameter,
+   autoRevalidateRelated: boolean = true
+) {
+   const resp = await defaultHttpRequest<typeof params, string>(
+      "testing/force-groups-search",
+      "GET",
+      params,
+      {
+         handleErrors: true
+      }
+   );
    if (autoRevalidateRelated) {
       revalidate("user/notifications");
    }
