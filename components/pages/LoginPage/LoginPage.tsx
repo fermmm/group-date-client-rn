@@ -43,7 +43,7 @@ const LoginPage: FC = () => {
 
    // If we have a valid user token and finished updating the login props we check if there is any user
    // property missing (caused by unfinished registration or new props)
-   const { data: profileStatusData } = useServerProfileStatus({
+   const { data: profileStatusData, error: profileStatusError } = useServerProfileStatus({
       config: { enabled: tokenIsValid === true }
    });
 
@@ -83,6 +83,7 @@ const LoginPage: FC = () => {
 
    const showLoginButton: boolean =
       forceShowConnectButton ||
+      profileStatusError ||
       (serverOperating &&
          (token == null || tokenIsValid === false) &&
          !tokenCheckLoading &&
@@ -92,6 +93,7 @@ const LoginPage: FC = () => {
    const showLoadingAnimation: boolean =
       logoAnimCompleted &&
       !showLoginButton &&
+      !profileStatusError &&
       (tokenLoading || tokenCheckLoading || serverInfoLoading || !profileStatusData);
 
    return (
