@@ -89,6 +89,12 @@ function getTagsToUpdate(props: {
 
       // Apply the effects of the new change made
       tagsToSubscribe = [selectedAnswer];
+
+      // There is a special string in the id for the text only answers that prevents sending a tag subscription
+      if (selectedAnswer.includes("no tag")) {
+         tagsToSubscribe = [];
+      }
+
       tagsToBlock = itsImportantChecked ? selectedAnswerIncompatibles : [];
    }
 

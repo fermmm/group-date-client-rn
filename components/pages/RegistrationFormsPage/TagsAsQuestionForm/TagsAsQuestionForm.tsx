@@ -8,7 +8,7 @@ import {
    CenteredMethod,
    LoadingAnimation
 } from "../../../common/LoadingAnimation/LoadingAnimation";
-import Question from "../../../common/Question/Question";
+import Question, { QuestionOnChange } from "../../../common/Question/Question";
 import { TagsToUpdate } from "../RegistrationFormsPage";
 import { useTagAsQuestionInfo } from "./hooks/useTagAsQuestionInfo";
 
@@ -60,7 +60,7 @@ const TagsAsQuestionForm: FC<PropsTagsAsQuestionForm> = props => {
       onChange(formName, null, mandatoryQuestion ? getError() : null, tagsToUpdate);
    }, [selectedAnswer, itsImportantChecked]);
 
-   const handleQuestionChange = ({ selectedAnswer, itsImportantChecked }) => {
+   const handleQuestionChange = ({ selectedAnswer, itsImportantChecked }: QuestionOnChange) => {
       setSelectedAnswer(selectedAnswer);
       setItsImportantChecked(itsImportantChecked);
    };
@@ -80,7 +80,10 @@ const TagsAsQuestionForm: FC<PropsTagsAsQuestionForm> = props => {
    return (
       <Question
          questionText={question.text}
-         answers={question.answers.map(a => ({ text: a.text, id: a.tagId }))}
+         answers={question.answers.map((a, i) => ({
+            text: a.text,
+            id: a.tagId ?? `no tag ${String(i)}`
+         }))}
          incompatibilitiesBetweenAnswers={question.incompatibilitiesBetweenAnswers}
          multipleAnswersAllowed={false}
          initiallySelected={[initiallySelectedAnswer]}
