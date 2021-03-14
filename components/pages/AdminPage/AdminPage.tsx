@@ -8,19 +8,25 @@ import { Button } from "react-native-paper";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useUser } from "../../../api/server/user";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
-import { sendCreateFakeUsers, sendForceGroupsSearch } from "../../../api/server/admin";
+import {
+   sendCreateFakeTags,
+   sendCreateFakeUsers,
+   sendForceGroupsSearch
+} from "../../../api/server/admin";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import { LocalStorageKey } from "../../../common-tools/strings/LocalStorageKey";
 import { removeFromDevice } from "../../../common-tools/device-native-api/storage/storage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
+import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
 
 const AdminPage: FC = () => {
    const { colors } = useTheme();
    const { data: localUser } = useUser();
-   const [fakeUsersAmount, setFakeUsersAmount] = useState<string>();
+   const [fakeUsersAmount, setFakeUsersAmount] = useState<string>("5");
+   const [fakeTagsAmount, setFakeTagsAmount] = useState<string>("40");
    const { navigate } = useNavigation();
 
-   const handleCreateTestUsersPress = async () => {
+   const handleCreateFakeUsersPress = async () => {
       const response = await sendCreateFakeUsers({ token: localUser.token, text: fakeUsersAmount });
       Alert.alert("Hecho, respuesta:", response);
    };
@@ -37,6 +43,11 @@ const AdminPage: FC = () => {
       });
    };
 
+   const handleCreateFakeTagsPress = async () => {
+      const response = await sendCreateFakeTags({ token: localUser.token, text: fakeTagsAmount });
+      Alert.alert("Hecho, respuesta:", response);
+   };
+
    const handleTemp = () => {
       navigate("Main", {
          screen: "Notifications"
@@ -51,27 +62,43 @@ const AdminPage: FC = () => {
       <>
          <AppBarHeader />
          <BasicScreenContainer style={styles.mainContainer}>
-            <TextInputExtended
-               title="Crear usuarios de prueba, cantidad:"
-               mode="outlined"
-               keyboardType="number-pad"
-               value={fakeUsersAmount}
-               onChangeText={t => setFakeUsersAmount(t)}
-            />
-            <Button onPress={handleCreateTestUsersPress} mode="outlined" color={colors.accent2}>
-               Enviar
-            </Button>
-            <EmptySpace />
-            <Button onPress={handleSearchGroupsPress} mode="outlined" color={colors.accent2}>
-               Forzar búsqueda de grupos
-            </Button>
-            <EmptySpace height={100} />
-            <Button onPress={handleRemoveLocalStorage} mode="outlined" color={colors.accent2}>
-               Borrar local storage
-            </Button>
-            <EmptySpace height={100} />
+            <SurfaceStyled>
+               <TextInputExtended
+                  title="Crear usuarios de prueba, cantidad:"
+                  mode="outlined"
+                  keyboardType="number-pad"
+                  value={fakeUsersAmount}
+                  onChangeText={t => setFakeUsersAmount(t)}
+               />
+               <Button onPress={handleCreateFakeUsersPress} mode="outlined" color={colors.accent2}>
+                  Enviar
+               </Button>
+               <EmptySpace />
+               <Button onPress={handleSearchGroupsPress} mode="outlined" color={colors.accent2}>
+                  Forzar buscar grupos
+               </Button>
+            </SurfaceStyled>
+
+            <EmptySpace height={30} />
+            <SurfaceStyled>
+               <TextInputExtended
+                  title="Crear tags de prueba, cantidad:"
+                  mode="outlined"
+                  keyboardType="number-pad"
+                  value={fakeTagsAmount}
+                  onChangeText={t => setFakeTagsAmount(t)}
+               />
+               <Button onPress={handleCreateFakeTagsPress} mode="outlined" color={colors.accent2}>
+                  Enviar
+               </Button>
+            </SurfaceStyled>
+            <EmptySpace height={80} />
             <Button onPress={handleTemp} mode="outlined" color={colors.accent2}>
                temp
+            </Button>
+            <EmptySpace height={30} />
+            <Button onPress={handleRemoveLocalStorage} mode="outlined" color={colors.accent2}>
+               Borrar local storage
             </Button>
          </BasicScreenContainer>
       </>

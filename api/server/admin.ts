@@ -36,6 +36,22 @@ export async function sendForceGroupsSearch(
    return resp;
 }
 
+export async function sendCreateFakeTags(
+   params: TokenParameter & { text: string },
+   autoRevalidateRelated: boolean = true
+) {
+   const resp = await defaultHttpRequest<typeof params, string>(
+      "testing/create-fake-tags",
+      "GET",
+      params,
+      { handleErrors: true }
+   );
+   if (autoRevalidateRelated) {
+      revalidate("tags");
+   }
+   return resp;
+}
+
 export function useTemp<T extends string>(props?: {
    requestParams?: TokenParameter;
    config?: UseCacheOptions<T>;
