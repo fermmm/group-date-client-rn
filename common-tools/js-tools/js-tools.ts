@@ -66,3 +66,29 @@ export function getUniqueHashOfString(str: string) {
 export function stringIsEmptyOrSpacesOnly(str: string): boolean {
    return !/\S/.test(str);
 }
+
+/**
+ * The same than array.filter but returns also the filtered elements (extracted)
+ */
+export function extractFromArray<T>(
+   array: T[],
+   filterFunc: (value: T, index: number) => boolean
+): ExtractFromArray<T> {
+   const result: T[] = [];
+   const extracted: T[] = [];
+
+   array.forEach((value, i) => {
+      if (filterFunc(value, i)) {
+         extracted.push(value);
+      } else {
+         result.push(value);
+      }
+   });
+
+   return { result, extracted };
+}
+
+export interface ExtractFromArray<T> {
+   result: T[];
+   extracted: T[];
+}

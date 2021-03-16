@@ -15,7 +15,7 @@ import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
-import TagChip from "./QuestionInProfileCard/QuestionInProfileCard";
+import TagChip from "../TagChip/TagChip";
 import EditButton from "./EditButton/EditButton";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useUser } from "../../../api/server/user";
