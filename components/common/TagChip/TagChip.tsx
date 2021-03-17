@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { Caption, Text } from "react-native-paper";
 import { ThemeExt } from "../../../common-tools/themes/types/Themed";
@@ -12,9 +12,10 @@ export interface PropsTagChip {
    tag: Tag;
    hideCategory?: boolean;
    showSubscribersAmount?: boolean;
+   style?: StyleProp<ViewStyle>;
 }
 
-const TagChip: FC<PropsTagChip> = ({ tag, hideCategory, showSubscribersAmount }) => {
+const TagChip: FC<PropsTagChip> = ({ tag, hideCategory, showSubscribersAmount, style }) => {
    const { colors }: ThemeExt = useTheme();
    const answerMatches: boolean = true; // Implement compare logic here
 
@@ -26,7 +27,8 @@ const TagChip: FC<PropsTagChip> = ({ tag, hideCategory, showSubscribersAmount })
                backgroundColor: color(colors.background).darken(0.05).string(),
                borderColor: !answerMatches && color(colors.statusBad).alpha(0.6).string()
             },
-            !answerMatches && styles.border
+            !answerMatches && styles.border,
+            style
          ]}
       >
          <View>
