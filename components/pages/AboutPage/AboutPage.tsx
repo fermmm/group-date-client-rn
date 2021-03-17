@@ -34,10 +34,11 @@ const AboutPage: FC = () => {
                ¿Es fácil que se genere una cita grupal?
             </TitleText>
             <Text style={styles.text}>
-               Si, es igual de fácil que se generen citas en esta app en comparación con las
-               tradicionales, quienes están acostumbradxs a tener de inmediato muchos "matches" en
-               esas apps, aquí van a tener que ser mas pacientes y seguir intentando ya que no es
-               tan importante recibir muchos likes si no que se de una coincidencia grupal.
+               Si, matemáticamente es igual de fácil que se generen citas en esta app en comparación
+               con las tradicionales, quienes están acostumbradxs a tener de inmediato muchos
+               "matches" en esas apps, aquí van a tener que ser mas pacientes y seguir intentando ya
+               que no es tan importante recibir muchos likes si no que se de una coincidencia
+               grupal.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
