@@ -9,23 +9,30 @@ import {
    TextInput as NativeTextInput,
    Modal
 } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { TextInput } from "react-native-paper";
 import ButtonStyled from "../ButtonStyled/ButtonStyled";
 import { currentTheme } from "../../../config";
 import TitleMediumText from "../TitleMediumText/TitleMediumText";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
+import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 
 export interface TextInputExtendedProps {
    title?: string;
    titleLine2?: string;
+   placeholderText?: string;
    errorText?: string;
    multiline?: boolean;
+   saveButtonText?: string;
    style?: StyleProp<TextStyle>;
    mode?: "flat" | "outlined";
+   small?: boolean;
    keyboardType?: KeyboardTypeOptions;
    // tslint:disable-next-line: ban-types
    onChangeText?: ((text: string) => void) & Function;
+   iconButton?: string;
+   onIconButtonPress?: () => void;
    value: string;
 }
 
@@ -33,15 +40,20 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
    const {
       title,
       titleLine2,
+      placeholderText,
       errorText,
       multiline,
-      mode,
+      saveButtonText = "Guardar",
+      mode = "outlined",
+      small,
       keyboardType,
       value,
       onChangeText,
+      iconButton,
+      onIconButtonPress,
       style
    }: TextInputExtendedProps = props;
-
+   const theme = useTheme();
    const [fullScreenMode, setFullScreenMode] = useState(false);
    const [canShowError, setCanShowError] = useState(false);
    const fullScreenInputRef = useRef<NativeTextInput>();
@@ -69,6 +81,8 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
             )}
             <ViewTouchable onPress={() => setFullScreenMode(true)} defaultAlpha={0.15}>
                <TextInput
+                  dense={small}
+                  placeholder={placeholderText}
                   mode={mode}
                   keyboardType={keyboardType}
                   value={value}
@@ -85,6 +99,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                         {...innerProps}
                         style={[
                            innerProps.style,
+                           iconButton && { paddingRight: 45 },
                            multiline
                               ? {
                                    paddingTop: 8,
@@ -97,6 +112,22 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                   disabled
                />
             </ViewTouchable>
+            {iconButton && (
+               <ViewTouchable
+                  style={{
+                     position: "absolute",
+                     justifyContent: "center",
+                     alignItems: "center",
+                     right: 30,
+                     width: 35,
+                     top: 3,
+                     height: "100%"
+                  }}
+                  onPress={onIconButtonPress}
+               >
+                  <Icon name={iconButton} color={theme.colors.primary} size={22} />
+               </ViewTouchable>
+            )}
             {errorText && canShowError && (
                <TitleMediumText style={styles.errorText}>{errorText}</TitleMediumText>
             )}
@@ -133,7 +164,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                      style={styles.buttonSave}
                      color={currentTheme.colors.text2}
                   >
-                     Guardar
+                     {saveButtonText}
                   </ButtonStyled>
                </View>
             </Modal>
