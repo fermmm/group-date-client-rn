@@ -19,7 +19,7 @@ export const ViewTouchable: FC<
             .alpha(props?.defaultAlpha ?? 0.32)
             .toString()}
          {...props}
-         style={[{ borderRadius: roundness }, props.style]}
+         style={[{ borderRadius: roundness, padding: 2 }, props.style]}
       >
          {props.children}
       </TouchableRipple>
