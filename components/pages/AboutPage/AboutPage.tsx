@@ -26,35 +26,20 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Tu primera cita grupal es probable que tenga un tamaño de 3 a 6 personas, es probable
-               que las siguientes sean de más, con el tiempo se va generando la cantidad de
-               coincidencias necesaria para grupos mas grandes.
+               Con el paso del tiempo las citas van siendo de mas personas ya que se necesita tiempo
+               dando likes para generar mas coincidencias.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es fácil que se genere una cita grupal?
             </TitleText>
             <Text style={styles.text}>
-               Si, matemáticamente es igual de fácil que se generen citas en esta app en comparación
-               con las tradicionales, quienes están acostumbradxs a tener de inmediato muchos
-               "matches" en esas apps, aquí van a tener que ser mas pacientes y seguir intentando ya
-               que no es tan importante recibir muchos likes si no que se de una coincidencia
-               grupal.
+               Si, matemáticamente es igual de fácil que en las apps tradicionales. Incluso ayuda
+               que las citas sean grupales: en la lógica de conocerse en pareja te ves con una sola
+               persona que tiene que "tenerlo todo en uno" pero en las citas de esta app hay
+               multiples personas por lo que se puede tener una mentalidad relajada que genera más
+               likes.
             </Text>
             <EmptySpace height={15} />
-            <Text style={styles.text}>
-               Algo que ayuda es que en la lógica de la monogamia te ves con una sola persona por lo
-               que esta tiene que "tenerlo todo" pero en las citas de esta app hay multiples
-               personas por lo que se puede evaluar perfiles con una mentalidad más relajada y
-               abierta, generando más likes y coincidencias.
-            </Text>
-            <EmptySpace height={15} />
-            <TitleText extraSize style={styles.title}>
-               ¿Permite la app una cita tradicional de 2 personas?
-            </TitleText>
-            <Text style={styles.text}>
-               No, esta app esta pensada para citas de poliamor grupal y no de poliamor de parejas,
-               existen aplicaciones conocidas que puedes descargar para ese tipo de citas.
-            </Text>
             <TitleText extraSize style={styles.title}>
                ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
                gustan entre ellas
@@ -65,26 +50,26 @@ const AboutPage: FC = () => {
                menos la misma.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Si solo me gusta un género, significa que en la cita grupal van a ser todxs de ese
-               género?
+               ¿En la cita grupal van a ser todxs del género que me gusta?
             </TitleText>
             <Text style={styles.text}>
-               No. Para estar en una cita grupal te tienes que gustar con un mínimo de 2 de sus
-               integrantes, no necesariamente con la totalidad, es probable que haya personas en tus
-               citas que pueden ser de cualquier género y sexualidad.
+               No. Para estar en una cita grupal te tienes que gustar con un mínimo porcentaje de
+               sus integrantes y no necesariamente con la totalidad, es probable que haya personas
+               en tus citas que pueden ser de cualquier género y sexualidad.
             </Text>
             <TitleText extraSize style={styles.title}>
-               Datos interesantes sobre la importancia del poliamor grupal
+               Breve historia del poliamor grupal
             </TitleText>
             <Text style={styles.text}>
                El poliamor grupal es la manera original en la que se relacionaba el ser humano y
                define el modelo de familia. Hasta hace 9.000 años los padres de lxs hijxs eran todas
-               las personas de un grupo afectivo, se compartía el cuidado y la comida de forma
+               las personas de un grupo afectivo, se compartía el cuidado y los recursos de forma
                igualitaria entre todxs, potenciado por el sexo que solía ser grupal, muy abundante y
-               probablemente más divertido. Este pasado de poliamor grupal lo tenemos todxs presente
-               en la sexualidad biológica de nuestro cuerpo, por ejemplo: Los "gemidos sexuales" son
-               un instinto que en las otras especies que lo tienen (primates) tiene el efecto de
-               llamar a lxs que están cerca.
+               probablemente más divertido. Este pasado nos acompañó durante nuestra evolución y lo
+               tenemos todxs en nuestro cuerpo, por ejemplo: Los "gemidos sexuales" son un instinto
+               que en las otras especies que lo tienen (primates) tiene la función de llamar a lxs
+               que están cerca. Así también el resto de nuestras características físicas sexuales
+               muestran que el sexo de a dos no es lo ideal biológicamente hablando.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
@@ -96,19 +81,18 @@ const AboutPage: FC = () => {
             <EmptySpace height={15} />
             <Text style={styles.text}>
                La monogamia, con ella las parejas como única forma posible de relación y la familia
-               nuclear son algunos de los muchos fenómenos culturales provenientes de la revolución
-               neolítica, una revolución costosa que trajo al patriarcado, las diferencias de clase,
-               explotación, avance contra la ecología, etc. Problemáticas que se van revirtiendo
-               lentamente a medida que las vamos cuestionando.
+               nuclear son algunos de los muchos fenómenos culturales provenientes de la costosa
+               revolución neolítica, la revolución que trajo las diferencias de clase, patriarcado,
+               explotación, avance contra la ecología, etc. Problemas que se van revirtiendo a
+               medida que los vamos cuestionando.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es anti natural conocer gente en una app?
             </TitleText>
             <Text style={styles.text}>
-               Probablemente si, pero sirven como una herramienta más dentro de nuestra cultura y
-               forma de vida que no le queda mucho de natural u original. En particular esta app
-               puede ser muy útil al menos para poder tomarse vacaciones de nuestra cultura y
-               aprender algo nuevo.
+               Probablemente si, pero sirve como una herramienta más en nuestra forma de vida
+               moderna que no le queda mucho de natural u original. De todas maneras los foros
+               destinados a conocerse en "citas" son algo milenario y presente en diversas culturas.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
