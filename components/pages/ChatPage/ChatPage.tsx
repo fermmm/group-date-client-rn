@@ -127,17 +127,20 @@ const ChatPage: FC<ChatPageProps> = () => {
       <>
          <AppBarHeader title={!isContactChat ? "" : "Contáctanos"} onBackPress={goBack} />
          <PageBackgroundGradient>
-            {!isContactChat && (
-               <HelpBanner
-                  showCloseButton
-                  animate={false}
-                  text={
-                     "Advertencia: El chat es un medio limitado que distorsiona la percepción sobre los demás y desmotiva la socialización cara a cara."
-                  }
-                  rememberClose={true}
-                  rememberCloseTimeInSeconds={DAY_IN_SECONDS * 3}
-               />
-            )}
+            {/* Tal vez este mensaje condiciona a los usuarios implantándoles una realidad en su mente que tal vez nunca suceda*/}
+            {/* 
+               !isContactChat && (
+                  <HelpBanner
+                     showCloseButton
+                     animate={false}
+                     text={
+                        "Concejo: El medio escrito desmotiva a socializar en persona, es mejor usarlo con moderación."
+                     }
+                     rememberClose={true}
+                     rememberCloseTimeInSeconds={DAY_IN_SECONDS * 3}
+                  />
+               )
+            */}
 
             <GiftedChat
                messages={messages}
