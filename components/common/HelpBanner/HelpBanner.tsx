@@ -58,9 +58,14 @@ export const HelpBanner: FC<PropsHelpBanner> = ({
    }
 
    return (
+      //@ts-ignore
       <Banner
          visible={visible}
-         style={[styles.banner, coverContent ? styles.cover : {}]}
+         style={[
+            styles.banner,
+            coverContent ? styles.cover : {},
+            visible ? { marginBottom: 20 } : {}
+         ]}
          actions={
             showCloseButton
                ? [
@@ -83,8 +88,8 @@ export const HelpBanner: FC<PropsHelpBanner> = ({
 
 const styles: Styles = StyleSheet.create({
    banner: {
-      backgroundColor: color(currentTheme.colors.background).darken(0.15).toString(),
-      elevation: 12
+      backgroundColor: color(currentTheme.colors.background).darken(0.1).toString()
+      // elevation: 12
    },
    cover: {
       position: "absolute",
