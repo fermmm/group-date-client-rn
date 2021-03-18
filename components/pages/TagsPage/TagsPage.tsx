@@ -13,6 +13,7 @@ import { useTagListWithoutInteracted } from "./tools/useTagListWithoutInteracted
 import TextInputExtended from "../../common/TextInputExtended/TextInputExtended";
 import { currentTheme } from "../../../config";
 import { useTagListFilteredBySearch } from "./tools/useTagsListFilteredBySearch";
+import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 
 // TODO:
 // A partir de cierta cantidad por ejemplo 300 no se renderea mas y se pide usar el buscador con un mensaje
@@ -69,6 +70,13 @@ export const TagsPage: FC = () => {
 
    return (
       <BasicScreenContainer>
+         <HelpBanner
+            showCloseButton
+            rememberClose={false}
+            text={
+               "Toca un tag, puedes suscribirte, navegar sus subscriptores u ocultarlos. También puedes crear nuevos"
+            }
+         />
          <TextInputExtended
             small
             placeholderText={"Buscar..."}
