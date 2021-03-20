@@ -13,6 +13,7 @@ export interface BasicScreenProps extends ScrollViewExtendedProps {
    showContinueButton?: boolean;
    continueButtonTextFinishMode?: boolean;
    showBottomGradient?: boolean;
+   wrapChildrenInScrollView?: boolean;
    onContinuePress?(): void;
    onBackPress?(): void;
 }
@@ -22,22 +23,28 @@ const BasicScreenContainer: FC<BasicScreenProps> = props => {
       showBackButton = false,
       showContinueButton = false,
       continueButtonTextFinishMode = false,
-      showBottomGradient = false
+      showBottomGradient = false,
+      wrapChildrenInScrollView = true
    }: Partial<BasicScreenProps> = props;
 
    return (
       <PageBackgroundGradient>
-         <ScrollViewExtended
-            showBottomGradient={showBottomGradient}
-            bottomGradientColor={currentTheme.colors.background}
-            {...props}
-            contentContainerStyle={[
-               styles.scrollViewContainer,
-               (showBackButton || showContinueButton) && { paddingBottom: 70 }
-            ]}
-         >
-            {props.children}
-         </ScrollViewExtended>
+         {!wrapChildrenInScrollView ? (
+            props.children
+         ) : (
+            <ScrollViewExtended
+               showBottomGradient={showBottomGradient}
+               bottomGradientColor={currentTheme.colors.background}
+               {...props}
+               contentContainerStyle={[
+                  styles.scrollViewContainer,
+                  (showBackButton || showContinueButton) && { paddingBottom: 70 }
+               ]}
+            >
+               {props.children}
+            </ScrollViewExtended>
+         )}
+
          {(showBackButton || showContinueButton) && (
             <View style={styles.buttonsContainer}>
                {showBackButton && (

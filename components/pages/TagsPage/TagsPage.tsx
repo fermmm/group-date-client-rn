@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { StyleSheet } from "react-native";
+import { SectionList, StyleSheet } from "react-native";
 import { useTags } from "../../../api/server/tags";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
@@ -7,16 +7,15 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import TagChip from "../../common/TagChip/TagChip";
 import { useTagListDivided } from "./tools/useTagListDivided";
 import TitleText from "../../common/TitleText/TitleText";
-import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { useUser } from "../../../api/server/user";
 import { useTagListWithoutInteracted } from "./tools/useTagListWithoutInteracted";
 import TextInputExtended from "../../common/TextInputExtended/TextInputExtended";
 import { currentTheme } from "../../../config";
 import { useTagListFilteredBySearch } from "./tools/useTagsListFilteredBySearch";
 import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
+import { useTagsDividedScrollFormat } from "./tools/useTagsDividedScrollFormat";
 
-// TODO:
-// A partir de cierta cantidad por ejemplo 300 no se renderea mas y se pide usar el buscador con un mensaje
+// TODO: Probar si SectionList anda y la performance.
 // Implementar tab con los tags del usuario para cambiarlos
 // Implementar popup al tocar en un tag
 // Implementar formulario de crear tag
@@ -30,46 +29,17 @@ export const TagsPage: FC = () => {
       user?.tagsSubscribed,
       user?.tagsBlocked
    );
-   const tags = useTagListDivided(tagListWithoutInteracted, {
-      amountPerCategory: 10
-   });
+   const tagsDivided = useTagListDivided(tagListWithoutInteracted, { amountPerCategory: 10 });
+   const tags = useTagsDividedScrollFormat(tagsDivided);
+
    const tagsOfSearchResult = useTagListFilteredBySearch(tagsFromServer, searchString);
 
    if (!tagsFromServer) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 
-   const renderTagList = (
-      title: string,
-      list: Tag[],
-      showSubscribersAmount: boolean = false,
-      firstToRender?: boolean
-   ) => {
-      if (list.length === 0) {
-         return null;
-      }
-
-      return (
-         <>
-            {title && (
-               <TitleText style={firstToRender ? styles.firstTitle : styles.title}>
-                  {title}
-               </TitleText>
-            )}
-            {list.map(tag => (
-               <TagChip
-                  tag={tag}
-                  showSubscribersAmount={showSubscribersAmount}
-                  style={styles.tagChip}
-                  key={tag.tagId}
-               />
-            ))}
-         </>
-      );
-   };
-
    return (
-      <BasicScreenContainer>
+      <BasicScreenContainer wrapChildrenInScrollView={false}>
          <HelpBanner
             showCloseButton
             rememberClose={false}
@@ -87,22 +57,16 @@ export const TagsPage: FC = () => {
             iconButton={searchString ? "backspace-outline" : null}
             onIconButtonPress={() => setSearchString("")}
          />
-         {!searchString ? (
-            <>
-               {renderTagList(
-                  "Últimos con interacción",
-                  tags.withMostRecentInteraction,
-                  false,
-                  true
-               )}
-               {renderTagList("Nuevos", tags.newest)}
-               {renderTagList("Más populares", tags.withMoreSubscribersAndBlockersMixed)}
-               {renderTagList("De los creadores de la app", tags.globals)}
-               {renderTagList("El resto", tags.rest)}
-            </>
-         ) : (
-            renderTagList(null, tagsOfSearchResult, true)
-         )}
+         <SectionList
+            sections={!searchString ? tags : [{ data: tagsOfSearchResult }]}
+            keyExtractor={tag => tag.tagId}
+            renderSectionHeader={({ section: { title, data } }) =>
+               data?.length > 0 && <TitleText style={styles.title}>{title}</TitleText>
+            }
+            renderItem={({ item: tag }) => (
+               <TagChip tag={tag} showSubscribersAmount={searchString?.length > 0} />
+            )}
+         />
       </BasicScreenContainer>
    );
 };
@@ -126,8 +90,5 @@ const styles: Styles = StyleSheet.create({
       paddingLeft: 10,
       paddingRight: 10,
       textAlign: "center"
-   },
-   tagChip: {
-      marginLeft: 5
    }
 });
