@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { Caption, Text } from "react-native-paper";
@@ -70,4 +70,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default TagChip;
+export default memo(TagChip);

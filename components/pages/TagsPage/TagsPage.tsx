@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { SectionList, StyleSheet } from "react-native";
+import { SectionList, StyleSheet, View } from "react-native";
 import { useTags } from "../../../api/server/tags";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
@@ -14,6 +14,7 @@ import { currentTheme } from "../../../config";
 import { useTagListFilteredBySearch } from "./tools/useTagsListFilteredBySearch";
 import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 import { useTagsDividedScrollFormat } from "./tools/useTagsDividedScrollFormat";
+import { FlatList } from "react-native-gesture-handler";
 
 // TODO: Probar si SectionList anda y la performance.
 // Implementar tab con los tags del usuario para cambiarlos
@@ -47,34 +48,51 @@ export const TagsPage: FC = () => {
                "Toca un tag, puedes suscribirte, navegar sus subscriptores u ocultarlos. También puedes crear nuevos"
             }
          />
-         <TextInputExtended
-            small
-            placeholderText={"Buscar..."}
-            saveButtonText={"Buscar"}
-            style={styles.searchInput}
-            value={searchString}
-            onChangeText={t => setSearchString(t)}
-            iconButton={searchString ? "backspace-outline" : null}
-            onIconButtonPress={() => setSearchString("")}
-         />
-         <SectionList
-            sections={!searchString ? tags : [{ data: tagsOfSearchResult }]}
-            keyExtractor={tag => tag.tagId}
-            renderSectionHeader={({ section: { title, data } }) =>
-               data?.length > 0 && <TitleText style={styles.title}>{title}</TitleText>
-            }
-            renderItem={({ item: tag }) => (
-               <TagChip tag={tag} showSubscribersAmount={searchString?.length > 0} />
+         <View>
+            <TextInputExtended
+               small
+               placeholderText={"Buscar..."}
+               saveButtonText={"Buscar"}
+               containerStyle={styles.searchInput}
+               value={searchString}
+               onChangeText={t => setSearchString(t)}
+               iconButton={searchString ? "backspace-outline" : null}
+               onIconButtonPress={() => setSearchString("")}
+               fullScreenTyping={false}
+            />
+            {!searchString ? (
+               <SectionList
+                  sections={tags}
+                  keyExtractor={tag => tag.tagId}
+                  renderSectionHeader={({ section: { title, data } }) =>
+                     data?.length > 0 && <TitleText style={styles.title}>{title}</TitleText>
+                  }
+                  renderItem={({ item: tag }) => <TagChip tag={tag} style={styles.tagChip} />}
+                  contentContainerStyle={styles.listScroll}
+               />
+            ) : (
+               <FlatList
+                  data={tagsOfSearchResult}
+                  keyExtractor={tag => tag.tagId}
+                  renderItem={({ item: tag }) => (
+                     <TagChip tag={tag} style={styles.tagChip} showSubscribersAmount />
+                  )}
+                  contentContainerStyle={styles.listScroll}
+               />
             )}
-         />
+         </View>
       </BasicScreenContainer>
    );
 };
 
 const styles: Styles = StyleSheet.create({
    searchInput: {
-      paddingLeft: 20,
-      paddingRight: 20
+      position: "absolute",
+      top: 20,
+      zIndex: 10,
+      width: "100%",
+      paddingLeft: 15,
+      paddingRight: 15
    },
    firstTitle: {
       fontFamily: currentTheme.fonts.light.fontFamily,
@@ -90,5 +108,12 @@ const styles: Styles = StyleSheet.create({
       paddingLeft: 10,
       paddingRight: 10,
       textAlign: "center"
+   },
+   listScroll: {
+      paddingTop: 90,
+      paddingBottom: 90
+   },
+   tagChip: {
+      marginLeft: 15
    }
 });
