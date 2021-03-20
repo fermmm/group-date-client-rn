@@ -29,17 +29,26 @@ const AboutPage: FC = () => {
                Con el paso del tiempo las citas van siendo de mas personas ya que se necesita tiempo
                dando likes para generar mas coincidencias.
             </Text>
+            <EmptySpace height={15} />
+            <Text style={styles.text}>
+               Las citas tradicionales de 2 personas no son posibles an esta app ya que es de
+               poliamor grupal. El poliamor de multiples parejas y la monogamia tienen sus
+               respectivas apps.
+            </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es fácil que se genere una cita grupal?
             </TitleText>
             <Text style={styles.text}>
-               Si, matemáticamente es igual de fácil que en las apps tradicionales. Incluso ayuda
-               que las citas sean grupales: en la lógica de conocerse en pareja te ves con una sola
-               persona que tiene que "tenerlo todo en uno" pero en las citas de esta app hay
-               multiples personas por lo que se puede tener una mentalidad relajada que genera más
-               likes.
+               Si, matemáticamente es igual de fácil que en las apps tradicionales, aunque quienes
+               reciben muchos likes en esas apps aquí aveces necesitarán mas paciencia ya que muchos
+               likes no siempre se traducen en una coincidencia grupal.
             </Text>
             <EmptySpace height={15} />
+            <Text style={styles.text}>
+               Que las citas sean grupales ayuda: en la lógica de conocerse en pareja te ves con una
+               sola persona que tiene que "tener todo lo posible en uno" pero en las citas de
+               poliamor grupal hay otra lógica que suele generar más likes y coincidencias.
+            </Text>
             <TitleText extraSize style={styles.title}>
                ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
                gustan entre ellas
@@ -64,12 +73,12 @@ const AboutPage: FC = () => {
                El poliamor grupal es la manera original en la que se relacionaba el ser humano y
                define el modelo de familia. Hasta hace 9.000 años los padres de lxs hijxs eran todas
                las personas de un grupo afectivo, se compartía el cuidado y los recursos de forma
-               igualitaria entre todxs, potenciado por el sexo que solía ser grupal, muy abundante y
-               probablemente más divertido. Este pasado nos acompañó durante nuestra evolución y lo
-               tenemos todxs en nuestro cuerpo, por ejemplo: Los "gemidos sexuales" son un instinto
-               que en las otras especies que lo tienen (primates) tiene la función de llamar a lxs
-               que están cerca. Así también el resto de nuestras características físicas sexuales
-               muestran que el sexo de a dos no es lo ideal biológicamente hablando.
+               igualitaria entre todxs, potenciado por el sexo que solía ser grupal y muy abundante.
+               Este pasado nos acompañó durante toda nuestra evolución y lo tenemos todxs en nuestro
+               cuerpo, por ejemplo: Los "gemidos sexuales" son un instinto que en las otras especies
+               (primates) tiene la función de llamar a lxs que están cerca. Así también el resto de
+               nuestras características físicas sexuales muestran que el sexo de a dos no es lo
+               ideal biológicamente hablando.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
@@ -80,11 +89,11 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               La monogamia, con ella las parejas como única forma posible de relación y la familia
-               nuclear son algunos de los muchos fenómenos culturales provenientes de la costosa
-               revolución neolítica, la revolución que trajo las diferencias de clase, patriarcado,
-               explotación, avance contra la ecología, etc. Problemas que se van revirtiendo a
-               medida que los vamos cuestionando.
+               La monogamia, con ella las parejas como única forma posible de relación y con ella la
+               familia nuclear son algunos de los muchos fenómenos culturales provenientes de la
+               costosa revolución neolítica, la revolución que trajo por primera vez muchas
+               problemáticas como las diferencias de clase, patriarcado, explotación, avance contra
+               la ecología, etc. Problemas que se van revirtiendo a medida que se genera conciencia.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es anti natural conocer gente en una app?
