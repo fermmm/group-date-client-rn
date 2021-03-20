@@ -7,7 +7,8 @@ import {
    StyleProp,
    KeyboardTypeOptions,
    TextInput as NativeTextInput,
-   Modal
+   Modal,
+   ViewStyle
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -23,9 +24,11 @@ export interface TextInputExtendedProps {
    titleLine2?: string;
    placeholderText?: string;
    errorText?: string;
+   fullScreenTyping?: boolean;
    multiline?: boolean;
    saveButtonText?: string;
    style?: StyleProp<TextStyle>;
+   containerStyle?: StyleProp<ViewStyle>;
    mode?: "flat" | "outlined";
    small?: boolean;
    keyboardType?: KeyboardTypeOptions;
@@ -42,6 +45,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       titleLine2,
       placeholderText,
       errorText,
+      fullScreenTyping = true,
       multiline,
       saveButtonText = "Guardar",
       mode = "outlined",
@@ -51,7 +55,8 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       onChangeText,
       iconButton,
       onIconButtonPress,
-      style
+      style,
+      containerStyle
    }: TextInputExtendedProps = props;
    const theme = useTheme();
    const [fullScreenMode, setFullScreenMode] = useState(false);
@@ -74,12 +79,15 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
 
    return (
       <>
-         <View style={styles.mainContainer}>
+         <View style={[styles.mainContainer, containerStyle]}>
             {title && <TitleMediumText style={styles.title}>{title}</TitleMediumText>}
             {titleLine2 && (
                <TitleMediumText style={styles.titleLine2}>{titleLine2}</TitleMediumText>
             )}
-            <ViewTouchable onPress={() => setFullScreenMode(true)} defaultAlpha={0.15}>
+            <ViewTouchable
+               onPress={fullScreenTyping ? () => setFullScreenMode(true) : null}
+               defaultAlpha={0.15}
+            >
                <TextInput
                   dense={small}
                   placeholder={placeholderText}
@@ -109,7 +117,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                         ]}
                      />
                   )}
-                  disabled
+                  disabled={fullScreenTyping}
                />
             </ViewTouchable>
             {iconButton && (
