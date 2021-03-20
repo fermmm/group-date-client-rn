@@ -15,8 +15,9 @@ import { useTagListFilteredBySearch } from "./tools/useTagsListFilteredBySearch"
 import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 import { useTagsDividedScrollFormat } from "./tools/useTagsDividedScrollFormat";
 import { FlatList } from "react-native-gesture-handler";
+import { FAB } from "react-native-paper";
 
-// TODO: Probar si SectionList anda y la performance.
+// TODO:
 // Implementar tab con los tags del usuario para cambiarlos
 // Implementar popup al tocar en un tag
 // Implementar formulario de crear tag
@@ -32,7 +33,6 @@ export const TagsPage: FC = () => {
    );
    const tagsDivided = useTagListDivided(tagListWithoutInteracted, { amountPerCategory: 10 });
    const tags = useTagsDividedScrollFormat(tagsDivided);
-
    const tagsOfSearchResult = useTagListFilteredBySearch(tagsFromServer, searchString);
 
    if (!tagsFromServer) {
@@ -45,10 +45,10 @@ export const TagsPage: FC = () => {
             showCloseButton
             rememberClose={false}
             text={
-               "Toca un tag, puedes suscribirte, navegar sus subscriptores u ocultarlos. También puedes crear nuevos"
+               "Toca un tag para suscribirte, navegar sus subscriptores u ocultarlos. También puedes crear nuevos"
             }
          />
-         <View>
+         <View style={styles.searchAndListContainer}>
             <TextInputExtended
                small
                placeholderText={"Buscar..."}
@@ -81,11 +81,21 @@ export const TagsPage: FC = () => {
                />
             )}
          </View>
+         <FAB
+            style={styles.createButton}
+            small
+            icon="plus"
+            label="Crear tag"
+            onPress={() => console.log("Pressed")}
+         />
       </BasicScreenContainer>
    );
 };
 
 const styles: Styles = StyleSheet.create({
+   searchAndListContainer: {
+      flex: 1
+   },
    searchInput: {
       position: "absolute",
       top: 20,
@@ -115,5 +125,12 @@ const styles: Styles = StyleSheet.create({
    },
    tagChip: {
       marginLeft: 15
+   },
+   createButton: {
+      position: "absolute",
+      margin: 16,
+      right: 10,
+      bottom: 15,
+      backgroundColor: currentTheme.colors.accent
    }
 });
