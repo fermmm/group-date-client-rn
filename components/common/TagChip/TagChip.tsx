@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { FC, memo, useState } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { Caption, Text } from "react-native-paper";
@@ -7,6 +7,8 @@ import color from "color";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { currentTheme } from "../../../config";
 import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
+import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
+import { TagPressModal } from "./TagPressModal/TagPressModal";
 
 export interface PropsTagChip {
    tag: Tag;
@@ -17,28 +19,38 @@ export interface PropsTagChip {
 
 const TagChip: FC<PropsTagChip> = ({ tag, hideCategory, showSubscribersAmount, style }) => {
    const { colors }: ThemeExt = useTheme();
-   const answerMatches: boolean = true; // Implement compare logic here
+   const [showModal, setShowModal] = useState(false);
+   const userHasTag: boolean = true; // Implement compare logic here
 
    return (
-      <View
-         style={[
-            styles.mainContainer,
-            {
-               backgroundColor: color(colors.background).darken(0.05).string(),
-               borderColor: !answerMatches && color(colors.statusBad).alpha(0.6).string()
-            },
-            !answerMatches && styles.border,
-            style
-         ]}
-      >
-         <View>
-            {!hideCategory && <Caption style={styles.categoryText}>{tag.category}</Caption>}
-            <Text style={styles.nameText}>{tag.name}</Text>
-         </View>
-         {showSubscribersAmount && (
-            <Text style={styles.subscribersText}>+{tag.subscribersAmount ?? 0}</Text>
-         )}
-      </View>
+      <>
+         <ViewTouchable onPress={() => setShowModal(true)}>
+            <View
+               style={[
+                  styles.mainContainer,
+                  {
+                     backgroundColor: color(colors.background).darken(0.05).string(),
+                     borderColor: !userHasTag && color(colors.statusBad).alpha(0.6).string()
+                  },
+                  !userHasTag && styles.border,
+                  style
+               ]}
+            >
+               <>
+                  <View>
+                     {!hideCategory && (
+                        <Caption style={styles.categoryText}>{tag.category}</Caption>
+                     )}
+                     <Text style={styles.nameText}>{tag.name}</Text>
+                  </View>
+                  {showSubscribersAmount && (
+                     <Text style={styles.subscribersText}>+{tag.subscribersAmount ?? 0}</Text>
+                  )}
+               </>
+            </View>
+         </ViewTouchable>
+         {showModal && <TagPressModal tag={tag} onClose={() => setShowModal(false)} />}
+      </>
    );
 };
 const styles: Styles = StyleSheet.create({
