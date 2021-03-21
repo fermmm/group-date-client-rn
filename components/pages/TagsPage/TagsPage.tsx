@@ -21,6 +21,7 @@ import { FAB } from "react-native-paper";
 // Implementar tab con los tags del usuario para cambiarlos
 // Implementar popup al tocar en un tag
 // Implementar formulario de crear tag
+// Cuando esta todo terminado y se ve bien activar que recuerde que cerraste el HelpBanner
 
 export const TagsPage: FC = () => {
    const [searchString, setSearchString] = useState("");
@@ -51,11 +52,10 @@ export const TagsPage: FC = () => {
          <View style={styles.searchAndListContainer}>
             <TextInputExtended
                small
-               placeholderText={"Buscar..."}
-               saveButtonText={"Buscar"}
-               containerStyle={styles.searchInput}
                value={searchString}
                onChangeText={t => setSearchString(t)}
+               placeholderText={"Buscar..."}
+               containerStyle={styles.searchInput}
                iconButton={searchString ? "backspace-outline" : null}
                onIconButtonPress={() => setSearchString("")}
                fullScreenTyping={false}

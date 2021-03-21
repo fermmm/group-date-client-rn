@@ -1,4 +1,4 @@
-import React, { useState, FC, useCallback, useRef } from "react";
+import React, { useState, FC, useCallback, useRef, useEffect } from "react";
 import {
    StyleSheet,
    View,
@@ -70,7 +70,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       }
    }, [fullScreenMode]);
 
-   React.useEffect(() => {
+   useEffect(() => {
       Keyboard.addListener("keyboardDidHide", disableEditMode);
       return () => {
          Keyboard.removeListener("keyboardDidHide", disableEditMode);
