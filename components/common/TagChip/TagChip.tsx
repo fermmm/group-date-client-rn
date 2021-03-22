@@ -14,17 +14,24 @@ export interface PropsTagChip {
    tag: Tag;
    hideCategory?: boolean;
    showSubscribersAmount?: boolean;
+   interactive?: boolean;
    style?: StyleProp<ViewStyle>;
 }
 
-const TagChip: FC<PropsTagChip> = ({ tag, hideCategory, showSubscribersAmount, style }) => {
+const TagChip: FC<PropsTagChip> = ({
+   tag,
+   hideCategory,
+   showSubscribersAmount,
+   interactive = true,
+   style
+}) => {
    const { colors }: ThemeExt = useTheme();
    const [showModal, setShowModal] = useState(false);
    const userHasTag: boolean = true; // Implement compare logic here
 
    return (
       <>
-         <ViewTouchable onPress={() => setShowModal(true)}>
+         <ViewTouchable onPress={interactive ? () => setShowModal(true) : null}>
             <View
                style={[
                   styles.mainContainer,
