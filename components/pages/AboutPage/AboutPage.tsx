@@ -31,7 +31,7 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Las citas tradicionales de 2 personas no son posibles an esta app ya que es de
+               Las citas tradicionales de 2 personas no son posibles an esta app ya que es solo de
                poliamor grupal. El poliamor de multiples parejas y la monogamia tienen sus
                respectivas apps.
             </Text>
@@ -71,14 +71,12 @@ const AboutPage: FC = () => {
             </TitleText>
             <Text style={styles.text}>
                El poliamor grupal es la manera original en la que se relacionaba el ser humano y
-               define el modelo de familia. Hasta hace 9.000 años los padres de lxs hijxs eran todas
-               las personas de un grupo afectivo, se compartía el cuidado y los recursos de forma
-               igualitaria entre todxs, potenciado por el sexo que solía ser grupal y muy abundante.
-               Este pasado nos acompañó durante toda nuestra evolución y lo tenemos todxs en nuestro
-               cuerpo, por ejemplo: Los "gemidos sexuales" son un instinto que en las otras especies
-               (primates) tiene la función de llamar a lxs que están cerca. Así también el resto de
-               nuestras características físicas sexuales muestran que el sexo de a dos no es lo
-               ideal biológicamente hablando.
+               define el modelo de familia. En la prehistoria del humano inteligente los padres de
+               lxs hijxs eran todas las personas de una comunidad, compartían su cuidado y los
+               recursos de forma igualitaria, potenciado por el sexo que solía ser grupal y muy
+               abundante. Este pasado nos acompañó durante toda nuestra evolución por lo que sigue
+               presente en nuestro cuerpo, por ejemplo: Los "gemidos sexuales" son un instinto que
+               en las otras especies (primates) tiene la función de llamar a lxs que están cerca.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
@@ -89,19 +87,18 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               La monogamia, con ella las parejas como única forma posible de relación y con ella la
-               familia nuclear son algunos de los muchos fenómenos culturales provenientes de la
-               costosa revolución neolítica, la revolución que trajo por primera vez muchas
-               problemáticas como las diferencias de clase, patriarcado, explotación, avance contra
-               la ecología, etc. Problemas que se van revirtiendo a medida que se genera conciencia.
+               Las parejas como única forma posible de relación y con ella la familia nuclear son
+               algunos de los muchos fenómenos culturales actuales provenientes de la costosa
+               revolución neolítica, la cual trajo por primera vez muchas problemáticas como las
+               diferencias de clase, patriarcado, explotación, avance contra la ecología, etc.
+               Problemas que se van abordando a medida que se genera conciencia.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es anti natural conocer gente en una app?
             </TitleText>
             <Text style={styles.text}>
                Probablemente si, pero sirve como una herramienta más en nuestra forma de vida
-               moderna que no le queda mucho de natural u original. De todas maneras los foros
-               destinados a conocerse en "citas" son algo milenario y presente en diversas culturas.
+               moderna que no le queda mucho de natural u original.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
