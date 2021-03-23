@@ -182,7 +182,7 @@ const styles: Styles = StyleSheet.create({
 
 export enum CardsSource {
    Recommendations,
-   Theme,
+   Tag,
    DislikedUsers
 }
 

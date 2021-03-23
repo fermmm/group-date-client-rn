@@ -16,6 +16,8 @@ export interface PropsTagChip {
    showSubscribersAmount?: boolean;
    interactive?: boolean;
    style?: StyleProp<ViewStyle>;
+   userSubscribed?: boolean;
+   userBlocked?: boolean;
 }
 
 const TagChip: FC<PropsTagChip> = ({
@@ -23,25 +25,30 @@ const TagChip: FC<PropsTagChip> = ({
    hideCategory,
    showSubscribersAmount,
    interactive = true,
+   userSubscribed,
+   userBlocked,
    style
 }) => {
    const { colors }: ThemeExt = useTheme();
    const [showModal, setShowModal] = useState(false);
-   const userHasTag: boolean = true; // Implement compare logic here
+
+   const getColors = () => {
+      if (userBlocked) {
+         return { background: color(colors.statusBad).lighten(0.2).string() };
+      }
+
+      if (userSubscribed) {
+         return { background: color(colors.primary).string() };
+      }
+
+      return { background: color(colors.background).darken(0.05).string() };
+   };
 
    return (
       <>
          <ViewTouchable onPress={interactive ? () => setShowModal(true) : null}>
             <View
-               style={[
-                  styles.mainContainer,
-                  {
-                     backgroundColor: color(colors.background).darken(0.05).string(),
-                     borderColor: !userHasTag && color(colors.statusBad).alpha(0.6).string()
-                  },
-                  !userHasTag && styles.border,
-                  style
-               ]}
+               style={[styles.mainContainer, { backgroundColor: getColors().background }, style]}
             >
                <>
                   <View>
@@ -71,9 +78,6 @@ const styles: Styles = StyleSheet.create({
       marginRight: 5,
       marginBottom: 5,
       borderRadius: currentTheme.roundness
-   },
-   border: {
-      borderBottomWidth: 1
    },
    categoryText: {
       color: currentTheme.colors.text,

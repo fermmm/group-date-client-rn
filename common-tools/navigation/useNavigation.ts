@@ -1,6 +1,11 @@
-import { StackActions, useNavigation as useNavigationNative } from "@react-navigation/native";
+import {
+   StackActions,
+   useNavigation as useNavigationNative,
+   useRoute
+} from "@react-navigation/native";
 
 export interface useNavigation {
+   currentRouteName: string;
    isFocused: boolean;
    navigate: <T extends object>(name: string, params?: T) => void;
    navigateWithoutHistory: <T extends object>(name: string, params?: T) => void;
@@ -10,6 +15,7 @@ export interface useNavigation {
 
 export function useNavigation() {
    const navigation = useNavigationNative();
+   const route = useRoute();
 
    const navigate = <T>(name: string, params?: T) => {
       navigation.dispatch(StackActions.push(name, (params as unknown) as object));
@@ -20,6 +26,7 @@ export function useNavigation() {
    };
 
    return {
+      currentRouteName: route.name,
       isFocused: navigation.isFocused,
       navigate,
       navigateWithoutHistory,

@@ -16,10 +16,10 @@ import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 import { useTagsDividedScrollFormat } from "./tools/useTagsDividedScrollFormat";
 import { FlatList } from "react-native-gesture-handler";
 import { FAB } from "react-native-paper";
+import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 
 // TODO:
 // Implementar tab con los tags del usuario para cambiarlos
-// Implementar popup al tocar en un tag
 // Implementar formulario de crear tag
 // Cuando esta todo terminado y se ve bien activar que recuerde que cerraste el HelpBanner
 
@@ -27,14 +27,17 @@ export const TagsPage: FC = () => {
    const [searchString, setSearchString] = useState("");
    const { data: user } = useUser();
    const { data: tagsFromServer } = useTags();
-   const tagListWithoutInteracted = useTagListWithoutInteracted(
-      tagsFromServer,
-      user?.tagsSubscribed,
-      user?.tagsBlocked
-   );
-   const tagsDivided = useTagListDivided(tagListWithoutInteracted, { amountPerCategory: 10 });
+   const tagsDivided = useTagListDivided(tagsFromServer, { amountPerCategory: 10 });
    const tags = useTagsDividedScrollFormat(tagsDivided);
    const tagsOfSearchResult = useTagListFilteredBySearch(tagsFromServer, searchString);
+
+   const userSubscribedToTag = (tag: Tag) => {
+      return user?.tagsSubscribed?.find(t => t.tagId === tag.tagId) != null;
+   };
+
+   const userBlockedToTag = (tag: Tag) => {
+      return user?.tagsBlocked?.find(t => t.tagId === tag.tagId) != null;
+   };
 
    if (!tagsFromServer) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
@@ -67,7 +70,14 @@ export const TagsPage: FC = () => {
                   renderSectionHeader={({ section: { title, data } }) =>
                      data?.length > 0 && <TitleText style={styles.title}>{title}</TitleText>
                   }
-                  renderItem={({ item: tag }) => <TagChip tag={tag} style={styles.tagChip} />}
+                  renderItem={({ item: tag }) => (
+                     <TagChip
+                        tag={tag}
+                        style={styles.tagChip}
+                        userSubscribed={userSubscribedToTag(tag)}
+                        userBlocked={userBlockedToTag(tag)}
+                     />
+                  )}
                   contentContainerStyle={styles.listScroll}
                />
             ) : (
@@ -75,7 +85,13 @@ export const TagsPage: FC = () => {
                   data={tagsOfSearchResult}
                   keyExtractor={tag => tag.tagId}
                   renderItem={({ item: tag }) => (
-                     <TagChip tag={tag} style={styles.tagChip} showSubscribersAmount />
+                     <TagChip
+                        tag={tag}
+                        style={styles.tagChip}
+                        showSubscribersAmount
+                        userSubscribed={userSubscribedToTag(tag)}
+                        userBlocked={userBlockedToTag(tag)}
+                     />
                   )}
                   contentContainerStyle={styles.listScroll}
                />
