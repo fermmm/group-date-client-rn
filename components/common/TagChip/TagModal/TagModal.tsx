@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useMemo } from "react";
 import { View, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { Tag } from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
@@ -9,18 +9,20 @@ import { useFacebookToken } from "../../../../api/third-party/facebook/facebook-
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
-import { CardsSource } from "../../../pages/CardsPage/CardsPage";
+import { CardsSource } from "../../../pages/CardsPage/tools/types";
 import { LoadingAnimation } from "../../LoadingAnimation/LoadingAnimation";
 import { ModalTransparent } from "../../ModalTransparent/ModalTransparent";
 import TagChip from "../TagChip";
 
-interface TagPressModalProps {
+interface TagModalProps {
    tag: Tag;
    onClose: () => void;
+   showSubscribersAmount?: boolean;
+   hideCategory?: boolean;
 }
 
-export const TagPressModal: FC<TagPressModalProps> = ({ tag, onClose }) => {
-   const [loading, setLoading] = useState(false);
+export const TagModal: FC<TagModalProps> = props => {
+   const { tag, onClose, showSubscribersAmount, hideCategory } = props;
    const { colors } = useTheme();
    const { navigate } = useNavigation();
    const { data: user } = useUser();
@@ -32,15 +34,14 @@ export const TagPressModal: FC<TagPressModalProps> = ({ tag, onClose }) => {
    const isBlocking = useMemo(() => user?.tagsBlocked?.find(t => t.tagId === tag.tagId) != null, [
       user
    ]);
+   const loading = user == null;
 
    const handleSubscribePress = async () => {
-      setLoading(true);
-      await sendTags({
+      sendTags({
          action: !isSubscribed ? TagEditAction.Subscribe : TagEditAction.RemoveSubscription,
          tagIds: [tag.tagId],
          token
       });
-      setLoading(false);
       onClose();
    };
 
@@ -53,13 +54,11 @@ export const TagPressModal: FC<TagPressModalProps> = ({ tag, onClose }) => {
    };
 
    const handleHidePress = async () => {
-      setLoading(true);
-      await sendTags({
+      sendTags({
          action: !isBlocking ? TagEditAction.Block : TagEditAction.RemoveBlock,
          tagIds: [tag.tagId],
          token
       });
-      setLoading(false);
       onClose();
    };
 
@@ -74,8 +73,10 @@ export const TagPressModal: FC<TagPressModalProps> = ({ tag, onClose }) => {
                      <TagChip
                         tag={tag}
                         interactive={false}
-                        showSubscribersAmount
+                        showSubscribersAmount={showSubscribersAmount}
                         userSubscribed={isSubscribed}
+                        userBlocked={isBlocking}
+                        hideCategory={hideCategory}
                      />
                   </View>
                   <Button

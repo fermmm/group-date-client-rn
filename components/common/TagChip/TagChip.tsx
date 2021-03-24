@@ -1,4 +1,4 @@
-import React, { FC, memo, useState } from "react";
+import React, { FC, memo, useMemo } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { Caption, Text } from "react-native-paper";
@@ -8,13 +8,13 @@ import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { currentTheme } from "../../../config";
 import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
-import { TagPressModal } from "./TagPressModal/TagPressModal";
 
 export interface PropsTagChip {
    tag: Tag;
+   interactive?: boolean;
+   onPress?: (tag: Tag) => void;
    hideCategory?: boolean;
    showSubscribersAmount?: boolean;
-   interactive?: boolean;
    style?: StyleProp<ViewStyle>;
    userSubscribed?: boolean;
    userBlocked?: boolean;
@@ -25,31 +25,43 @@ const TagChip: FC<PropsTagChip> = ({
    hideCategory,
    showSubscribersAmount,
    interactive = true,
+   onPress,
    userSubscribed,
    userBlocked,
    style
 }) => {
    const { colors }: ThemeExt = useTheme();
-   const [showModal, setShowModal] = useState(false);
 
-   const getColors = () => {
-      if (userBlocked) {
-         return { background: color(colors.statusBad).lighten(0.2).string() };
-      }
+   const styleBasedOnUserTags = useMemo(() => {
+      let result: StyleProp<ViewStyle> = {};
 
       if (userSubscribed) {
-         return { background: color(colors.primary).string() };
+         result = {
+            ...result,
+            borderLeftWidth: 2,
+            borderRightWidth: 2,
+            elevation: 6,
+            borderColor: color(colors.accent3).string()
+         };
       }
 
-      return { background: color(colors.background).darken(0.05).string() };
-   };
+      if (userBlocked) {
+         result = {
+            ...result,
+            borderLeftWidth: 2,
+            borderRightWidth: 2,
+            elevation: 6,
+            borderColor: color(colors.statusBad).lighten(0.3).string()
+         };
+      }
+
+      return result;
+   }, [userBlocked, userSubscribed]);
 
    return (
       <>
-         <ViewTouchable onPress={interactive ? () => setShowModal(true) : null}>
-            <View
-               style={[styles.mainContainer, { backgroundColor: getColors().background }, style]}
-            >
+         <ViewTouchable onPress={interactive ? () => onPress(tag) : null} defaultAlpha={0.1}>
+            <View style={[styles.mainContainer, styleBasedOnUserTags, style]}>
                <>
                   <View>
                      {!hideCategory && (
@@ -63,7 +75,6 @@ const TagChip: FC<PropsTagChip> = ({
                </>
             </View>
          </ViewTouchable>
-         {showModal && <TagPressModal tag={tag} onClose={() => setShowModal(false)} />}
       </>
    );
 };
@@ -77,7 +88,8 @@ const styles: Styles = StyleSheet.create({
       paddingRight: 17,
       marginRight: 5,
       marginBottom: 5,
-      borderRadius: currentTheme.roundness
+      borderRadius: currentTheme.roundness,
+      backgroundColor: color(currentTheme.colors.background).darken(0.05).string()
    },
    categoryText: {
       color: currentTheme.colors.text,

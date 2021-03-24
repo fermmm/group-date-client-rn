@@ -15,7 +15,6 @@ import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import LikeDislikeButtons from "./LikeDislikeButtons/LikeDislikeButtons";
 import ScrollViewExtended from "../ScrollViewExtended/ScrollViewExtended";
-import TagChip from "../TagChip/TagChip";
 import EditButton from "./EditButton/EditButton";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useUser } from "../../../api/server/user";
@@ -32,6 +31,7 @@ import CardAnimator, { CardAnimationType } from "./CardAnimator/CardAnimator";
 import { getGenderName } from "../../../common-tools/strings/gender";
 import { prepareUrl } from "../../../api/tools/httpRequest";
 import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
+import TagChipList from "../TagChipList/TagChipList";
 
 export interface ProfileCardProps {
    user: User;
@@ -198,16 +198,33 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               }
                            />
                         )}
-                        <View style={styles.questionsContainer}>
-                           {tagsSubscribedInCommon?.map(tag => (
-                              <TagChip tag={tag} key={tag.tagId} />
-                           ))}
+                        <View style={styles.tagsListContainer}>
+                           <TagChipList
+                              notScrollingFlatList={tagsSubscribedInCommon}
+                              tagChipStyle={styles.tagChip}
+                              highlightSubscribedAndBlocked={false}
+                              showSubscribersAmount={false}
+                              showSubscribersAmountOnModal={false}
+                              hideCategory={true}
+                              hideCategoryOnModal={false}
+                           />
                         </View>
-                        {/* <View style={styles.questionsContainer}>
-                           {tagsBlockedInCommon?.map(tag => (
-                              <TagChip tag={tag} key={tag.tagId} />
-                           ))}
-                        </View> */}
+                        {
+                           /*
+                            * This is commented because it can be interpreted as incompatibility but it's a negative compatibility
+                            */
+                           // <View style={styles.tagsListContainer}>
+                           //    <TagChipList
+                           //       notScrollingFlatList={tagsBlockedInCommon}
+                           //       tagChipStyle={styles.tagChip}
+                           //       highlightSubscribedAndBlocked={true}
+                           //       showSubscribersAmount={false}
+                           //       showSubscribersAmountOnModal={false}
+                           //       hideCategory={true}
+                           //       hideCategoryOnModal={false}
+                           //    />
+                           // </View>
+                        }
                      </Card.Content>
                   </Card>
                </ScrollViewExtended>
@@ -291,7 +308,7 @@ const styles: Styles = StyleSheet.create({
       marginBottom: 5,
       fontSize: 15
    },
-   questionsContainer: {
+   tagsListContainer: {
       paddingTop: 10,
       flexDirection: "row",
       flexWrap: "wrap"
@@ -299,6 +316,9 @@ const styles: Styles = StyleSheet.create({
    likeDislikeButtons: {
       alignSelf: "center", // This controls the horizontal position of the buttons.
       bottom: 17 // This controls the vertical position of the buttons.
+   },
+   tagChip: {
+      marginLeft: 0
    }
 });
 

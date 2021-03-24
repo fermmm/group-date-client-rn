@@ -8,7 +8,7 @@ import { useCardsDisliked, useCardsRecommendations } from "../../../api/server/c
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { currentTheme } from "../../../config";
 import { __String } from "typescript";
-import { AttractionsSendReason, useCardsDataManager } from "./hooks/useCardsDataManager";
+import { AttractionsSendReason, useCardsDataManager } from "./tools/useCardsDataManager";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { AttractionType } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useRoute } from "@react-navigation/native";
@@ -16,6 +16,7 @@ import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import WatchingIndicator from "./WatchingIndicator/WatchingIndicator";
 import { sendAttraction } from "../../../api/server/user";
 import { revalidate } from "../../../api/tools/useCache";
+import { CardsSource } from "./tools/types";
 
 export interface ParamsCardsPage {
    specialCardsSource?: CardsSource;
@@ -179,11 +180,5 @@ const styles: Styles = StyleSheet.create({
       padding: 0
    }
 });
-
-export enum CardsSource {
-   Recommendations,
-   Tag,
-   DislikedUsers
-}
 
 export default CardsPage;

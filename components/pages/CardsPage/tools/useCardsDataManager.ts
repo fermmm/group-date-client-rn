@@ -1,6 +1,6 @@
-import { useLocalStorage } from "./../../../../common-tools/device-native-api/storage/useLocalStorage";
+import { useLocalStorage } from "../../../../common-tools/device-native-api/storage/useLocalStorage";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useEffectExceptOnMount } from "./../../../../common-tools/common-hooks/useEffectExceptoOnMount";
+import { useEffectExceptOnMount } from "../../../../common-tools/common-hooks/useEffectExceptoOnMount";
 import { Attraction, User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import {
    MAX_ATTRACTIONS_QUEUE_SIZE,
