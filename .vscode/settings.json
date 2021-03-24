@@ -34,5 +34,6 @@
     "subscribirte",
     "ticamente",
     "todxs"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
