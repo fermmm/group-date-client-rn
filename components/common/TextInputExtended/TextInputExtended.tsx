@@ -1,4 +1,4 @@
-import React, { useState, FC, useCallback, useRef, useEffect } from "react";
+import React, { useState, FC, useCallback, useRef, useEffect, Ref } from "react";
 import {
    StyleSheet,
    View,
@@ -32,6 +32,7 @@ export interface TextInputExtendedProps {
    mode?: "flat" | "outlined";
    small?: boolean;
    keyboardType?: KeyboardTypeOptions;
+   inputRef?: Ref<NativeTextInput>;
    // tslint:disable-next-line: ban-types
    onChangeText?: ((text: string) => void) & Function;
    iconButton?: string;
@@ -56,7 +57,8 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       iconButton,
       onIconButtonPress,
       style,
-      containerStyle
+      containerStyle,
+      inputRef
    }: TextInputExtendedProps = props;
    const theme = useTheme();
    const [fullScreenMode, setFullScreenMode] = useState(false);
@@ -95,25 +97,16 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                   keyboardType={keyboardType}
                   value={value}
                   onChangeText={onChangeText}
-                  style={[
-                     style,
-                     {
-                        textAlignVertical: "top"
-                     }
-                  ]}
+                  style={[styles.input, style]}
                   multiline={multiline}
+                  ref={inputRef}
                   render={innerProps => (
                      <NativeTextInput
                         {...innerProps}
                         style={[
                            innerProps.style,
-                           iconButton && { paddingRight: 45 },
-                           multiline
-                              ? {
-                                   paddingTop: 8,
-                                   paddingBottom: 8
-                                }
-                              : null
+                           iconButton ? styles.inputWithIconButton : null,
+                           multiline ? styles.inputMultiline : null
                         ]}
                      />
                   )}
@@ -121,18 +114,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                />
             </ViewTouchable>
             {iconButton && (
-               <ViewTouchable
-                  style={{
-                     position: "absolute",
-                     justifyContent: "center",
-                     alignItems: "center",
-                     right: 30,
-                     width: 35,
-                     top: 3,
-                     height: "100%"
-                  }}
-                  onPress={onIconButtonPress}
-               >
+               <ViewTouchable style={styles.iconButton} onPress={onIconButtonPress}>
                   <Icon name={iconButton} color={theme.colors.primary} size={22} />
                </ViewTouchable>
             )}
@@ -197,6 +179,26 @@ const styles: Styles = StyleSheet.create({
       marginTop: 6,
       fontFamily: currentTheme.font.medium,
       color: currentTheme.colors.error
+   },
+   input: {
+      textAlignVertical: "top",
+      marginTop: -6 // For some reason the react native paper component has a space like a padding but it's not, so we compensate with this
+   },
+   inputWithIconButton: {
+      paddingRight: 45
+   },
+   inputMultiline: {
+      paddingTop: 8,
+      paddingBottom: 8
+   },
+   iconButton: {
+      position: "absolute",
+      justifyContent: "center",
+      alignItems: "center",
+      right: 10,
+      width: 35,
+      top: 1,
+      height: "100%"
    },
    modal: {
       position: "absolute",
