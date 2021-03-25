@@ -1,5 +1,5 @@
-import React, { FC, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { FC, useRef, useState } from "react";
+import { StyleSheet, TextInput, View } from "react-native";
 import { useTags } from "../../../api/server/tags";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
@@ -10,20 +10,29 @@ import { currentTheme } from "../../../config";
 import { useTagListFilteredBySearch } from "./tools/useTagsListFilteredBySearch";
 import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 import { useTagsDividedScrollFormat } from "./tools/useTagsDividedScrollFormat";
-import { FAB } from "react-native-paper";
+import { Button, FAB } from "react-native-paper";
 import TagChipList from "../../common/TagChipList/TagChipList";
+import { useUserTags } from "./tools/useUserTags";
 
 // TODO:
-// Implementar tab con los tags del usuario para cambiarlos
+// Implementar navegar usuarios de un tag en la pagina Cards
 // Implementar formulario de crear tag
 // Cuando esta todo terminado y se ve bien activar que recuerde que cerraste el HelpBanner
 
 export const TagsPage: FC = () => {
    const [searchString, setSearchString] = useState("");
+   const [showUserTags, setShowUserTags] = useState(false);
+   const searchInputRef = useRef<TextInput>();
    const { data: tagsFromServer } = useTags();
    const tagsDivided = useTagListDivided(tagsFromServer, { amountPerCategory: 10 });
    const tags = useTagsDividedScrollFormat(tagsDivided);
    const tagsOfSearchResult = useTagListFilteredBySearch(tagsFromServer, searchString);
+   const userTags = useUserTags(tagsFromServer);
+   const listToShow = searchString
+      ? TagListType.SearchResult
+      : showUserTags
+      ? TagListType.UserTags
+      : TagListType.All;
 
    if (!tagsFromServer) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
@@ -38,18 +47,38 @@ export const TagsPage: FC = () => {
                "Toca un tag para suscribirte, navegar sus subscriptores u ocultarlos. También puedes crear nuevos"
             }
          />
-         <View style={styles.searchAndListContainer}>
-            <TextInputExtended
-               small
-               value={searchString}
-               onChangeText={t => setSearchString(t)}
-               placeholderText={"Buscar..."}
-               containerStyle={styles.searchInput}
-               iconButton={searchString ? "backspace-outline" : null}
-               onIconButtonPress={() => setSearchString("")}
-               fullScreenTyping={false}
-            />
-            {!searchString ? (
+         <View style={styles.mainContainer}>
+            <View style={styles.header}>
+               <TextInputExtended
+                  small
+                  value={searchString}
+                  onChangeText={t => {
+                     setSearchString(t);
+                     setShowUserTags(false);
+                  }}
+                  placeholderText={"Buscar..."}
+                  containerStyle={styles.searchInput}
+                  iconButton={searchString ? "backspace" : null}
+                  onIconButtonPress={() => {
+                     setSearchString("");
+                     searchInputRef?.current?.blur();
+                  }}
+                  fullScreenTyping={false}
+                  inputRef={searchInputRef}
+               />
+               <Button
+                  style={styles.buttonMyTags}
+                  mode={showUserTags ? "contained" : "text"}
+                  onPress={() => {
+                     setShowUserTags(!showUserTags);
+                     setSearchString("");
+                     searchInputRef?.current?.blur();
+                  }}
+               >
+                  Mis tags
+               </Button>
+            </View>
+            {listToShow === TagListType.All && (
                <TagChipList
                   sectionedList={tags}
                   showSubscribersAmount={false}
@@ -57,9 +86,19 @@ export const TagsPage: FC = () => {
                   hideCategory={true}
                   hideCategoryOnModal={false}
                />
-            ) : (
+            )}
+            {listToShow === TagListType.SearchResult && (
                <TagChipList
                   flatList={tagsOfSearchResult}
+                  showSubscribersAmount={false}
+                  showSubscribersAmountOnModal={false}
+                  hideCategory={true}
+                  hideCategoryOnModal={false}
+               />
+            )}
+            {listToShow === TagListType.UserTags && (
+               <TagChipList
+                  sectionedList={userTags}
                   showSubscribersAmount={false}
                   showSubscribersAmountOnModal={false}
                   hideCategory={true}
@@ -79,17 +118,24 @@ export const TagsPage: FC = () => {
 };
 
 const styles: Styles = StyleSheet.create({
-   searchAndListContainer: {
+   mainContainer: {
       flex: 1
    },
-   searchInput: {
+   header: {
       position: "absolute",
+      flexDirection: "row",
+      alignItems: "center",
       top: 20,
       zIndex: 10,
       width: "100%",
       paddingLeft: 15,
       paddingRight: 15
    },
+   searchInput: {
+      flex: 1,
+      marginBottom: 0
+   },
+   buttonMyTags: { marginLeft: 10 },
    firstTitle: {
       fontFamily: currentTheme.fonts.light.fontFamily,
       marginBottom: 25,
@@ -105,3 +151,9 @@ const styles: Styles = StyleSheet.create({
       backgroundColor: currentTheme.colors.accent
    }
 });
+
+enum TagListType {
+   All,
+   SearchResult,
+   UserTags
+}
