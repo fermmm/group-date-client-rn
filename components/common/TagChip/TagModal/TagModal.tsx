@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { FC, useMemo } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { Button } from "react-native-paper";
 import { Tag } from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { sendTags, TagEditAction } from "../../../../api/server/tags";
@@ -36,7 +36,7 @@ export const TagModal: FC<TagModalProps> = props => {
    ]);
    const loading = user == null;
 
-   const handleSubscribePress = async () => {
+   const handleSubscribePress = () => {
       sendTags({
          action: !isSubscribed ? TagEditAction.Subscribe : TagEditAction.RemoveSubscription,
          tagIds: [tag.tagId],
@@ -53,13 +53,35 @@ export const TagModal: FC<TagModalProps> = props => {
       });
    };
 
-   const handleHidePress = async () => {
-      sendTags({
-         action: !isBlocking ? TagEditAction.Block : TagEditAction.RemoveBlock,
-         tagIds: [tag.tagId],
-         token
-      });
-      onClose();
+   const handleHidePress = () => {
+      if (isBlocking) {
+         sendTags({
+            action: TagEditAction.RemoveBlock,
+            tagIds: [tag.tagId],
+            token
+         });
+         onClose();
+         return;
+      }
+
+      Alert.alert(
+         "",
+         "¿Estas segurx?. Verás menos usuarios en la app, recomendamos usar esto solo si lo consideras realmente necesario",
+         [
+            { text: "Cancelar" },
+            {
+               text: "Ocultar",
+               onPress: () => {
+                  sendTags({
+                     action: TagEditAction.Block,
+                     tagIds: [tag.tagId],
+                     token
+                  });
+                  onClose();
+               }
+            }
+         ]
+      );
    };
 
    return (
