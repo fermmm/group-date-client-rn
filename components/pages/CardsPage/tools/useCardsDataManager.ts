@@ -12,7 +12,7 @@ import { useAppState } from "../../../../common-tools/device-native-api/state/us
 import { useInterval } from "../../../../common-tools/common-hooks/useInterval";
 import { LocalStorageKey } from "../../../../common-tools/strings/LocalStorageKey";
 
-export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManager {
+export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManager {
    const isFocused = useIsFocused();
    const { isActive } = useAppState();
    const [currentUserDisplaying, setCurrentUserDisplaying] = useState(0);
@@ -25,22 +25,24 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
    const [attractionsShouldBeSentReason, setAttractionsShouldBeSentReason] = useState<{
       reason: AttractionsSendReason;
    }>({ reason: AttractionsSendReason.None });
+   const noMoreUsersLeft =
+      currentUserDisplaying >= usersToRender.length && cardsFromServer?.length === 0;
 
    /**
     * If more users are coming from server replace usersToRender or add them at the end of it
     */
    useEffectExceptOnMount(() => {
-      if (usersFromServer == null) {
+      if (cardsFromServer == null) {
          return;
       }
 
       let newUsersToRender = [];
 
       if (appendMode.current) {
-         newUsersToRender = mergeUsersList(usersToRender, usersFromServer);
+         newUsersToRender = mergeUsersList(usersToRender, cardsFromServer);
          appendMode.current = false;
       } else {
-         newUsersToRender = usersFromServer;
+         newUsersToRender = cardsFromServer;
          setCurrentUserDisplaying(0);
       }
 
@@ -51,7 +53,7 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
       );
 
       setUsersToRender(newUsersToRender);
-   }, [usersFromServer]);
+   }, [cardsFromServer]);
 
    /**
     * Get the attraction queue from local storage. This is here because the user may have
@@ -134,7 +136,7 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
       setAttractionsShouldBeSentReason({ reason: AttractionsSendReason.None });
    }, []);
 
-   const appendUsersFromServerInNextUpdate = useCallback(() => {
+   const inNextUpdateAppendNewUsersToRenderList = useCallback(() => {
       appendMode.current = true;
    }, []);
 
@@ -153,11 +155,12 @@ export function useCardsDataManager(usersFromServer: User[]): UseCardsDataManage
       currentUserDisplaying,
       attractionsQueue,
       attractionsShouldBeSentReason,
+      noMoreUsersLeft,
       moveToNextUser,
       goBackToPreviousUser,
       addAttractionToQueue,
       removeFromAttractionsQueue,
-      appendUsersFromServerInNextUpdate
+      inNextUpdateAppendNewUsersToRenderList
    };
 }
 
@@ -193,15 +196,16 @@ export interface UseCardsDataManager {
    currentUserDisplaying: number;
    attractionsQueue: React.MutableRefObject<Attraction[]>;
    attractionsShouldBeSentReason: { reason: AttractionsSendReason };
+   noMoreUsersLeft: boolean;
    moveToNextUser: (currentUserId: string) => void;
    goBackToPreviousUser: (currentUserId: string) => void;
    addAttractionToQueue: (attraction: Attraction) => void;
    removeFromAttractionsQueue: (toRemove: Array<{ userId: string }>) => void;
    /**
     * After calling this the next time new cards are received will be appended into the usersToRender
-    * list instead of replacing it. This only apply once so it needs to be called again when needed.
+    * list instead of replacing it. This only applies once so it needs to be called again when needed.
     */
-   appendUsersFromServerInNextUpdate: () => void;
+   inNextUpdateAppendNewUsersToRenderList: () => void;
 }
 
 export enum AttractionsSendReason {

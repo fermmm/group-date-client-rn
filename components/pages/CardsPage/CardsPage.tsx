@@ -4,116 +4,72 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import ProfileCard from "../../common/ProfileCard/ProfileCard";
 import NoMoreUsersMessage from "./NoMoreUsersMessage/NoMoreUsersMessage";
 import LimitedChildrenRenderer from "../../common/LimitedChildrenRenderer/LimitedChildrenRenderer";
-import { useCardsDisliked, useCardsRecommendations } from "../../../api/server/cards-game";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { currentTheme } from "../../../config";
 import { __String } from "typescript";
-import { AttractionsSendReason, useCardsDataManager } from "./tools/useCardsDataManager";
+import { useCardsDataManager } from "./tools/useCardsDataManager";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { AttractionType } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useRoute } from "@react-navigation/native";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import WatchingIndicator from "./WatchingIndicator/WatchingIndicator";
-import { sendAttraction } from "../../../api/server/user";
-import { revalidate } from "../../../api/tools/useCache";
 import { CardsSource } from "./tools/types";
+import { useSendAttractionsAndRequestMoreCards } from "./tools/useSendAttractionsAndRequestMoreCards";
+import { useCardsFromServer } from "./tools/useCardsFromServer";
 
 export interface ParamsCardsPage {
-   specialCardsSource?: CardsSource;
+   cardsSource?: CardsSource;
    tagId?: string;
+   tagName?: string;
 }
 
+// TODO: Testear que las recomendaciones de tags funcionan
 const CardsPage: FC = () => {
-   const { token } = useFacebookToken();
-   const { params } = useRoute<RouteProps<ParamsCardsPage>>();
    const [cardsSource, setCardsSource] = useState<CardsSource>(CardsSource.Recommendations);
-   const { data: recommendations } = useCardsRecommendations({
-      config: {
-         enabled: cardsSource === CardsSource.Recommendations
-      }
-   });
-   const { data: dislikedUsers } = useCardsDisliked({
-      config: {
-         enabled: cardsSource === CardsSource.DislikedUsers
-      }
-   });
-   const usersFromServer =
-      cardsSource === CardsSource.Recommendations
-         ? recommendations
-         : cardsSource === CardsSource.DislikedUsers
-         ? dislikedUsers
-         : recommendations;
-   const manager = useCardsDataManager(usersFromServer);
+   const { params } = useRoute<RouteProps<ParamsCardsPage>>();
+   const { token } = useFacebookToken();
+   const cardsFromServer = useCardsFromServer(cardsSource, { tagId: params?.tagId });
+   const manager = useCardsDataManager(cardsFromServer);
 
-   const noMoreUsersLeft =
-      manager.currentUserDisplaying >= manager.usersToRender.length &&
-      usersFromServer?.length === 0;
+   /**
+    * This hook sends the likes and dislikes when needed (after time or when running out of cards).
+    * Also requests more cards if needed
+    */
+   useSendAttractionsAndRequestMoreCards({
+      manager,
+      token,
+      cardsSource,
+      cardsFromServer,
+      tagId: params?.tagId
+   });
 
    const isLoading =
-      usersFromServer == null ||
-      (manager.currentUserDisplaying >= manager.usersToRender.length && !noMoreUsersLeft);
+      cardsFromServer == null ||
+      (manager.currentUserDisplaying >= manager.usersToRender.length && !manager.noMoreUsersLeft);
 
-   // This effect sends the attractions to the server if it's required
+   // Effect that changes the card source when received on navigate params (currently only used for tags)
    useEffect(() => {
-      (async () => {
-         const reason = manager.attractionsShouldBeSentReason.reason;
-
-         if (reason === AttractionsSendReason.None) {
-            return;
-         }
-
-         if (
-            manager.attractionsQueue.current == null ||
-            manager.attractionsQueue.current.length === 0
-         ) {
-            return;
-         }
-
-         const attractions = [...manager.attractionsQueue.current];
-
-         await sendAttraction({ attractions, token });
-         manager.removeFromAttractionsQueue(attractions);
-         revalidate("cards-game/disliked-users");
-
-         if (
-            reason === AttractionsSendReason.NoMoreUsersButServerMayHave ||
-            reason === AttractionsSendReason.NearlyRunningOutOfUsers
-         ) {
-            // Load more while reviewing the users is not possible with disliked users list because contains repetitions
-            if (
-               cardsSource === CardsSource.DislikedUsers &&
-               reason === AttractionsSendReason.NearlyRunningOutOfUsers
-            ) {
-               return;
-            }
-
-            // If last time the server returned no users then there is no need to request again
-            if (usersFromServer?.length === 0) {
-               return;
-            }
-
-            /**
-             * It's required to add the new cards to the end of the list, and not replace the list,
-             * because when new cards arrive the user is probably still finishing the previous ones.
-             * Disliked users list contains repetitions so in that case we always replace the current list.
-             */
-            if (cardsSource !== CardsSource.DislikedUsers) {
-               manager.appendUsersFromServerInNextUpdate();
-            }
-
-            // This triggers the request of new users by invalidating the cache:
-            revalidate("cards-game/recommendations");
-         }
-      })();
-   }, [manager.attractionsShouldBeSentReason]);
-
-   // Effect to automatically quit disliked users mode when there is no disliked users
-   useEffect(() => {
-      if (dislikedUsers?.length === 0 && cardsSource === CardsSource.DislikedUsers) {
-         Alert.alert("", "No hay mas gente dejada de lado para mostrar");
-         setCardsSource(CardsSource.Recommendations);
+      if (params?.cardsSource != null) {
+         setCardsSource(params.cardsSource);
       }
-   }, [dislikedUsers, cardsSource]);
+   }, [params?.cardsSource, params?.tagId]);
+
+   // Effect to go back to recommendations when there are no more users on the current mode
+   useEffect(() => {
+      if (cardsSource === CardsSource.Recommendations || cardsFromServer?.length > 0) {
+         return;
+      }
+
+      if (cardsSource === CardsSource.DislikedUsers) {
+         Alert.alert("", "No hay mas gente dejada de lado para mostrar");
+      }
+
+      if (cardsSource === CardsSource.Tag) {
+         Alert.alert("", `No hay mas gente para mostrar en ${params?.tagName}`);
+      }
+
+      setCardsSource(CardsSource.Recommendations);
+   }, [cardsFromServer, cardsSource, params?.tagId]);
 
    const handleLikeOrDislikePress = (attractionType: AttractionType, userId: string) => {
       manager.addAttractionToQueue({ userId, attractionType });
@@ -141,7 +97,7 @@ const CardsPage: FC = () => {
 
    return (
       <View style={styles.mainContainer}>
-         {noMoreUsersLeft ? (
+         {manager.noMoreUsersLeft ? (
             <NoMoreUsersMessage onViewDislikedUsersPress={handleViewDislikedUsersPress} />
          ) : (
             <>
@@ -163,7 +119,11 @@ const CardsPage: FC = () => {
                </LimitedChildrenRenderer>
                {cardsSource !== CardsSource.Recommendations && (
                   <WatchingIndicator
-                     name={cardsSource === CardsSource.DislikedUsers ? "dejados de lado" : "tema"}
+                     name={
+                        cardsSource === CardsSource.DislikedUsers
+                           ? "dejados de lado"
+                           : params?.tagName
+                     }
                      onPress={handleGoBackToRecommendations}
                   />
                )}

@@ -48,8 +48,9 @@ export const TagModal: FC<TagModalProps> = props => {
    const handleNavigatePress = () => {
       onClose();
       navigate("Cards", {
-         specialCardsSource: CardsSource.Tag,
-         tagId: tag.tagId
+         cardsSource: CardsSource.Tag,
+         tagId: tag.tagId,
+         tagName: tag.name
       });
    };
 

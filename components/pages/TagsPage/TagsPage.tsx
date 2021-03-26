@@ -15,7 +15,6 @@ import TagChipList from "../../common/TagChipList/TagChipList";
 import { useUserTags } from "./tools/useUserTags";
 
 // TODO:
-// Implementar navegar usuarios de un tag en la pagina Cards
 // Implementar formulario de crear tag
 // Cuando esta todo terminado y se ve bien activar que recuerde que cerraste el HelpBanner
 
