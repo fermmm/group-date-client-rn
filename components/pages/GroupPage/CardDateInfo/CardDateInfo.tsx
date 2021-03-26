@@ -25,7 +25,10 @@ const CardDateInfo: FC<DateInfoProps> = ({ day, idea, onModifyVotePress, loading
                {(day != null || idea != null) && <TitleText>Cita más votada:</TitleText>}
                {day == null && idea == null && (
                   <View style={styles.row}>
-                     <Text style={styles.textNormal}>Se puede votar idea y día para la cita</Text>
+                     <Text style={styles.textNormal}>
+                        Puedes votar idea y día para la cita y lo verán los demás. De momento no hay
+                        votos.
+                     </Text>
                   </View>
                )}
                {day != null && (
