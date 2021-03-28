@@ -50,7 +50,8 @@ export const TagModal: FC<TagModalProps> = props => {
       navigate("Cards", {
          cardsSource: CardsSource.Tag,
          tagId: tag.tagId,
-         tagName: tag.name
+         tagName: tag.name,
+         comingFromTagModal: Math.random() // This math.random() is a required uniqueId for each message to navigate changing the cards source to tag cards
       });
    };
 

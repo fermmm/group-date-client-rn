@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import {
    ImageProps,
    Image,
@@ -77,15 +77,23 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    const { data: allTags, isLoading: tagsLoading } = useTags();
    const { data: serverInfo, isLoading: serverInfoLoading } = useServerInfo();
 
-   const tagsSubscribedInCommon: Tag[] = tagsSubscribed
-      ?.filter(t => localUser.tagsSubscribed.find(ut => ut.tagId === t.tagId) != null)
-      .map(t => allTags?.find(at => at.tagId === t.tagId))
-      .filter(t => t != null);
+   const tagsSubscribedInCommon: Tag[] = useMemo(
+      () =>
+         tagsSubscribed
+            ?.filter(t => localUser?.tagsSubscribed.find(ut => ut.tagId === t.tagId) != null)
+            .map(t => allTags?.find(at => at.tagId === t.tagId))
+            .filter(t => t != null),
+      [localUser, tagsSubscribed, allTags]
+   );
 
-   const tagsBlockedInCommon: Tag[] = tagsBlocked
-      ?.filter(t => localUser.tagsBlocked.find(ut => ut.tagId === t.tagId) != null)
-      .map(t => allTags?.find(at => at.tagId === t.tagId))
-      .filter(t => t != null);
+   const tagsBlockedInCommon: Tag[] = useMemo(
+      () =>
+         tagsBlocked
+            ?.filter(t => localUser?.tagsBlocked.find(ut => ut.tagId === t.tagId) != null)
+            .map(t => allTags?.find(at => at.tagId === t.tagId))
+            .filter(t => t != null),
+      [localUser, tagsSubscribed, allTags]
+   );
 
    const finalImagesUri = images.map(uri => prepareUrl(serverInfo.imagesHost + uri));
 

@@ -1,4 +1,4 @@
-import { BasicTagParams } from "./shared-tools/endpoints-interfaces/tags";
+import { BasicSingleTagParams, BasicTagParams } from "./shared-tools/endpoints-interfaces/tags";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
 import { defaultHttpRequest } from "../tools/httpRequest";
 import { useCache, UseCacheOptions } from "../tools/useCache";
@@ -22,14 +22,14 @@ export function useCardsRecommendations<T extends User[]>(props?: {
 }
 
 export function useCardsFromTag<T extends User[]>(props?: {
-   requestParams?: Partial<BasicTagParams>;
+   requestParams?: Partial<BasicSingleTagParams>;
    config?: UseCacheOptions<T>;
 }) {
    const { token } = useFacebookToken(props?.requestParams?.token);
 
    return useCache<T>(
-      "cards-game/from-tag" + props?.requestParams?.tagIds.join(),
-      () => defaultHttpRequest("cards-game/from-tag", "GET", { token }),
+      "cards-game/from-tag-" + props?.requestParams?.tagId,
+      () => defaultHttpRequest("cards-game/from-tag", "GET", { ...props?.requestParams, token }),
       {
          ...(props?.config ?? {}),
          enabled: token != null && props?.config?.enabled !== false

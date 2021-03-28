@@ -17,13 +17,16 @@ import { CardsSource } from "./tools/types";
 import { useSendAttractionsAndRequestMoreCards } from "./tools/useSendAttractionsAndRequestMoreCards";
 import { useCardsFromServer } from "./tools/useCardsFromServer";
 
+// TODO: Cuando se terminan las cartas de una tematica queda cargando
+
 export interface ParamsCardsPage {
    cardsSource?: CardsSource;
    tagId?: string;
    tagName?: string;
+   /** This should contain a random number changed on each navigate() to trigger useEffect every time when coming from tag modal */
+   comingFromTagModal?: number;
 }
 
-// TODO: Testear que las recomendaciones de tags funcionan
 const CardsPage: FC = () => {
    const [cardsSource, setCardsSource] = useState<CardsSource>(CardsSource.Recommendations);
    const { params } = useRoute<RouteProps<ParamsCardsPage>>();
@@ -52,20 +55,28 @@ const CardsPage: FC = () => {
       if (params?.cardsSource != null) {
          setCardsSource(params.cardsSource);
       }
-   }, [params?.cardsSource, params?.tagId]);
+   }, [params?.cardsSource, params?.tagId, params?.comingFromTagModal]);
 
    // Effect to go back to recommendations when there are no more users on the current mode
    useEffect(() => {
-      if (cardsSource === CardsSource.Recommendations || cardsFromServer?.length > 0) {
+      if (cardsSource === CardsSource.Recommendations) {
+         return;
+      }
+
+      if (cardsFromServer == null) {
+         return;
+      }
+
+      if (cardsFromServer.length > 0) {
          return;
       }
 
       if (cardsSource === CardsSource.DislikedUsers) {
-         Alert.alert("", "No hay mas gente dejada de lado para mostrar");
+         Alert.alert("", "No hay mas personas dejadas de lado para mostrar");
       }
 
       if (cardsSource === CardsSource.Tag) {
-         Alert.alert("", `No hay mas gente para mostrar en ${params?.tagName}`);
+         Alert.alert("", `No hay mas personas para mostrar en ${params?.tagName}`);
       }
 
       setCardsSource(CardsSource.Recommendations);
@@ -121,7 +132,7 @@ const CardsPage: FC = () => {
                   <WatchingIndicator
                      name={
                         cardsSource === CardsSource.DislikedUsers
-                           ? "dejados de lado"
+                           ? "dejadxs de lado"
                            : params?.tagName
                      }
                      onPress={handleGoBackToRecommendations}

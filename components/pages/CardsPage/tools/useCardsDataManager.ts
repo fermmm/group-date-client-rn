@@ -39,7 +39,7 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
       let newUsersToRender = [];
 
       if (appendMode.current) {
-         newUsersToRender = mergeUsersList(usersToRender, cardsFromServer);
+         newUsersToRender = mergeUsersListWithDedup(usersToRender, cardsFromServer);
          appendMode.current = false;
       } else {
          newUsersToRender = cardsFromServer;
@@ -167,7 +167,7 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
 /**
  * Returns a new array where list2 elements are added at the end of list1 elements avoiding duplications.
  */
-function mergeUsersList(list1: User[], list2: User[]): User[] {
+function mergeUsersListWithDedup(list1: User[], list2: User[]): User[] {
    const result = [];
    const evaluated: Set<string> = new Set();
 

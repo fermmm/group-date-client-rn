@@ -19,9 +19,9 @@ export function useCardsFromServer(cardsSource: CardsSource, options?: { tagId?:
    });
 
    const { data: usersFromTag } = useCardsFromTag({
-      requestParams: { tagIds: [options.tagId] },
+      requestParams: { tagId: options?.tagId },
       config: {
-         enabled: cardsSource === CardsSource.Tag && options.tagId != null
+         enabled: cardsSource === CardsSource.Tag && options?.tagId != null
       }
    });
 

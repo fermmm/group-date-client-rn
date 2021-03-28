@@ -1,14 +1,7 @@
 import I18n from "i18n-js";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Alert, LogBox } from "react-native";
-import useSWR, {
-   cache,
-   ConfigInterface,
-   keyInterface,
-   mutate,
-   responseInterface,
-   SWRConfig
-} from "swr";
+import useSWR, { ConfigInterface, keyInterface, mutate, responseInterface, SWRConfig } from "swr";
 import { fetcherFn } from "swr/dist/types";
 import { tryToGetErrorMessage } from "./httpRequest";
 
@@ -30,6 +23,7 @@ export function useCache<Response = void, Error = any>(
    config?: UseCacheOptions<Response, Error>
 ): UseCache<Response, Error> {
    const newKey = key && config?.enabled !== false ? key : null;
+   const prevKey = useRef(newKey);
    let swr = useSWR<Response>(newKey, fn, config);
    swr = defaultErrorHandler(swr);
    const data = useAvoidNull(swr.data);
@@ -47,6 +41,14 @@ export function useCache<Response = void, Error = any>(
          swr.mutate();
       }
    }, [swr.data, swr.error, swr.isValidating, swr.mutate, newKey]);
+
+   // This is also for the same workaround. If key is different also mutate() otherwise a key change returns the same cache
+   useEffect(() => {
+      if (newKey !== prevKey.current) {
+         swr.mutate();
+      }
+      prevKey.current = newKey;
+   }, [newKey]);
 
    return {
       ...swr,

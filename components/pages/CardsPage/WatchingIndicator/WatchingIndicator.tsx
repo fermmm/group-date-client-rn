@@ -16,7 +16,7 @@ const WatchingIndicator: FC<PropsWatchingIndicator> = ({ name, onPress }) => {
    return (
       <ViewTouchable onPress={onPress} style={styles.mainContainer}>
          <Text style={styles.mainText}>
-            Estas viendo solo <Text style={styles.indicationText}>{name}</Text> toca para salir
+            Estas viendo <Text style={styles.indicationText}>{name}</Text> toca para salir
          </Text>
       </ViewTouchable>
    );
