@@ -26,22 +26,22 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Con el paso del tiempo las citas van siendo de mas personas ya que se necesita tiempo
-               dando likes para generar mas coincidencias.
+               Las citas tradicionales de 2 personas no son posibles en esta app ya que es solo de
+               poliamor grupal. El poliamor de multiples parejas y la monogamia tienen sus
+               respectivas apps.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Las citas tradicionales de 2 personas no son posibles an esta app ya que es solo de
-               poliamor grupal. El poliamor de multiples parejas y la monogamia tienen sus
-               respectivas apps.
+               Con el paso del tiempo las citas van siendo de mas personas ya que se necesita tiempo
+               dando likes para generar mas coincidencias.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es fácil que se genere una cita grupal?
             </TitleText>
             <Text style={styles.text}>
-               Si, matemáticamente es igual de fácil que en las apps tradicionales, aunque quienes
-               reciben muchos likes en esas apps aquí aveces necesitarán mas paciencia ya que muchos
-               likes no siempre se traducen en una coincidencia grupal.
+               Si, matemáticamente es igual de fácil que en las apps tradicionales. Quienes reciben
+               un resultado instantáneo en esas apps aquí aveces necesitarán paciencia ya que muchos
+               likes recibidos no siempre se traducen en un resultado de coincidencia grupal.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
@@ -75,8 +75,8 @@ const AboutPage: FC = () => {
                las personas de una comunidad, compartían la crianza y los recursos de forma
                igualitaria, potenciado por el sexo que solía ser grupal y muy abundante. Este pasado
                nos acompañó durante toda nuestra evolución por lo que se puede ignorar pero no
-               eliminar, un ejemplo curioso: Los "gemidos sexuales" son un instinto que en las otras
-               especies (primates) tiene la función de llamar a lxs que están cerca.
+               eliminar, un ejemplo representativo: Los "gemidos sexuales" son un instinto que en
+               las otras especies (primates) tiene el efecto de llamar a lxs que están cerca.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
