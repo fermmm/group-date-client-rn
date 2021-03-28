@@ -17,13 +17,13 @@ import { CardsSource } from "./tools/types";
 import { useSendAttractionsAndRequestMoreCards } from "./tools/useSendAttractionsAndRequestMoreCards";
 import { useCardsFromServer } from "./tools/useCardsFromServer";
 
-// TODO: Cuando se terminan las cartas de una tematica queda cargando
+// TODO: En vez de usar un numero random se podria ver si la referencia a params no cambia con igual patron
 
 export interface ParamsCardsPage {
    cardsSource?: CardsSource;
    tagId?: string;
    tagName?: string;
-   /** This should contain a random number changed on each navigate() to trigger useEffect every time when coming from tag modal */
+   /** This contain a random number changed on each navigate() to trigger useEffect every time when coming from tag modal */
    comingFromTagModal?: number;
 }
 

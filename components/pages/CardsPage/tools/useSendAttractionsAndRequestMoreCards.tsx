@@ -71,7 +71,7 @@ function requestMoreCardsIfNeeded(params: UseSendAttractionsParams) {
     */
    revalidate("cards-game/recommendations");
    revalidate("cards-game/disliked-users");
-   revalidate("cards-game/from-tag" + tagId);
+   revalidate("cards-game/from-tag-" + tagId);
 }
 
 interface UseSendAttractionsParams {
