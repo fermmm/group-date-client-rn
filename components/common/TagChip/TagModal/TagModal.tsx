@@ -50,8 +50,7 @@ export const TagModal: FC<TagModalProps> = props => {
       navigate("Cards", {
          cardsSource: CardsSource.Tag,
          tagId: tag.tagId,
-         tagName: tag.name,
-         comingFromTagModal: Math.random() // This math.random() is a required uniqueId for each message to navigate changing the cards source to tag cards
+         tagName: tag.name
       });
    };
 
@@ -68,7 +67,7 @@ export const TagModal: FC<TagModalProps> = props => {
 
       Alert.alert(
          "",
-         "¿Estas segurx?. Verás menos usuarios en la app, recomendamos usar esto solo si lo consideras realmente necesario",
+         "¿Estas segurx?. Verás menos personas en la app, recomendamos usar esto solo si lo consideras realmente necesario",
          [
             { text: "Cancelar" },
             {

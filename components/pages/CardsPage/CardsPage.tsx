@@ -1,12 +1,11 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import React, { FC, useCallback, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import ProfileCard from "../../common/ProfileCard/ProfileCard";
 import NoMoreUsersMessage from "./NoMoreUsersMessage/NoMoreUsersMessage";
 import LimitedChildrenRenderer from "../../common/LimitedChildrenRenderer/LimitedChildrenRenderer";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { currentTheme } from "../../../config";
-import { __String } from "typescript";
 import { useCardsDataManager } from "./tools/useCardsDataManager";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { AttractionType } from "../../../api/server/shared-tools/endpoints-interfaces/user";
@@ -16,28 +15,21 @@ import WatchingIndicator from "./WatchingIndicator/WatchingIndicator";
 import { CardsSource } from "./tools/types";
 import { useSendAttractionsAndRequestMoreCards } from "./tools/useSendAttractionsAndRequestMoreCards";
 import { useCardsFromServer } from "./tools/useCardsFromServer";
-
-// TODO: En vez de usar un numero random se podria ver si la referencia a params no cambia con igual patron
+import { useCardsSourceAutomaticChange } from "./tools/useCardsSourceAutomaticChange";
 
 export interface ParamsCardsPage {
    cardsSource?: CardsSource;
    tagId?: string;
    tagName?: string;
-   /** This contain a random number changed on each navigate() to trigger useEffect every time when coming from tag modal */
-   comingFromTagModal?: number;
 }
 
 const CardsPage: FC = () => {
-   const [cardsSource, setCardsSource] = useState<CardsSource>(CardsSource.Recommendations);
+   const [cardsSource, setCardsSource] = useState(CardsSource.Recommendations);
    const { params } = useRoute<RouteProps<ParamsCardsPage>>();
    const { token } = useFacebookToken();
    const cardsFromServer = useCardsFromServer(cardsSource, { tagId: params?.tagId });
    const manager = useCardsDataManager(cardsFromServer);
 
-   /**
-    * This hook sends the likes and dislikes when needed (after time or when running out of cards).
-    * Also requests more cards if needed
-    */
    useSendAttractionsAndRequestMoreCards({
       manager,
       token,
@@ -46,41 +38,11 @@ const CardsPage: FC = () => {
       tagId: params?.tagId
    });
 
+   useCardsSourceAutomaticChange({ cardsFromServer, params, cardsSource, setCardsSource });
+
    const isLoading =
       cardsFromServer == null ||
       (manager.currentUserDisplaying >= manager.usersToRender.length && !manager.noMoreUsersLeft);
-
-   // Effect that changes the card source when received on navigate params (currently only used for tags)
-   useEffect(() => {
-      if (params?.cardsSource != null) {
-         setCardsSource(params.cardsSource);
-      }
-   }, [params?.cardsSource, params?.tagId, params?.comingFromTagModal]);
-
-   // Effect to go back to recommendations when there are no more users on the current mode
-   useEffect(() => {
-      if (cardsSource === CardsSource.Recommendations) {
-         return;
-      }
-
-      if (cardsFromServer == null) {
-         return;
-      }
-
-      if (cardsFromServer.length > 0) {
-         return;
-      }
-
-      if (cardsSource === CardsSource.DislikedUsers) {
-         Alert.alert("", "No hay mas personas dejadas de lado para mostrar");
-      }
-
-      if (cardsSource === CardsSource.Tag) {
-         Alert.alert("", `No hay mas personas para mostrar en ${params?.tagName}`);
-      }
-
-      setCardsSource(CardsSource.Recommendations);
-   }, [cardsFromServer, cardsSource, params?.tagId]);
 
    const handleLikeOrDislikePress = (attractionType: AttractionType, userId: string) => {
       manager.addAttractionToQueue({ userId, attractionType });

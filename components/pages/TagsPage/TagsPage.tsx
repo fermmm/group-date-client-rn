@@ -43,7 +43,7 @@ export const TagsPage: FC = () => {
             showCloseButton
             rememberClose={false}
             text={
-               "Toca un tag para suscribirte, navegar sus subscriptores u ocultarlos. También puedes crear nuevos"
+               "Puedes crear tags y los usarán lxs demás. Toca un tag para suscribirte, navegar sus subscriptores u ocultarlos."
             }
          />
          <View style={styles.mainContainer}>
