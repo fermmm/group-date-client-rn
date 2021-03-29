@@ -1,5 +1,5 @@
 import { useLocalStorage } from "./../storage/useLocalStorage";
-import { useCache } from "./../../../api/tools/useCache";
+import { useCache } from "../../../api/tools/useCache/useCache";
 import * as Location from "expo-location";
 import {
    showLocationDisabledDialog,

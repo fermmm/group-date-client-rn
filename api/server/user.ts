@@ -1,4 +1,4 @@
-import { revalidate, useCache, UseCacheOptions } from "./../tools/useCache";
+import { revalidate, useCache, UseCacheOptions } from "../tools/useCache/useCache";
 import i18n from "i18n-js";
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";

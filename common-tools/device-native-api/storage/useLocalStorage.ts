@@ -1,4 +1,4 @@
-import { revalidate, useCache } from "./../../../api/tools/useCache";
+import { revalidate, useCache } from "../../../api/tools/useCache/useCache";
 import { useCallback } from "react";
 import { loadFromDevice, saveOnDevice } from "./storage";
 

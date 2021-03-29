@@ -1,4 +1,4 @@
-import { revalidate, useCache, UseCacheOptions } from "../tools/useCache";
+import { revalidate, useCache, UseCacheOptions } from "../tools/useCache/useCache";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
 import { defaultHttpRequest } from "../tools/httpRequest";
 import {

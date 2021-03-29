@@ -1,4 +1,4 @@
-import { mutateCache, revalidate } from "./../../../api/tools/useCache";
+import { mutateCache, revalidate } from "../../../api/tools/useCache/useCache";
 import * as Notifications from "expo-notifications";
 import { NotificationData } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 

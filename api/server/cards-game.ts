@@ -1,7 +1,7 @@
 import { BasicSingleTagParams, BasicTagParams } from "./shared-tools/endpoints-interfaces/tags";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
 import { defaultHttpRequest } from "../tools/httpRequest";
-import { useCache, UseCacheOptions } from "../tools/useCache";
+import { useCache, UseCacheOptions } from "../tools/useCache/useCache";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import { User } from "./shared-tools/endpoints-interfaces/user";
 

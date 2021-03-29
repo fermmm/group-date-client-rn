@@ -1,4 +1,4 @@
-import { useCache, UseCacheOptions } from "./../../tools/useCache";
+import { useCache, UseCacheOptions } from "../../tools/useCache/useCache";
 import { FacebookLoginResult, initializeAsync, logInWithReadPermissionsAsync } from "expo-facebook";
 import { Alert } from "react-native";
 import { Flatten } from "../../../common-tools/ts-tools/common-ts-tools";

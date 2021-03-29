@@ -1,4 +1,4 @@
-import { mutateCache, useCache } from "./../../../api/tools/useCache";
+import { mutateCache, useCache } from "../../../api/tools/useCache/useCache";
 import {
    NotificationData,
    NotificationType

@@ -1,11 +1,9 @@
 import I18n from "i18n-js";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { Alert, LogBox } from "react-native";
+import React, { FC, useEffect, useRef } from "react";
+import { Alert } from "react-native";
 import useSWR, { ConfigInterface, keyInterface, mutate, responseInterface, SWRConfig } from "swr";
 import { fetcherFn } from "swr/dist/types";
-import { tryToGetErrorMessage } from "./httpRequest";
-
-LogBox.ignoreLogs(["Setting a timer for"]);
+import { tryToGetErrorMessage } from "../../httpRequest";
 
 export const swrGlobalConfig: ConfigInterface = {
    refreshInterval: 0,
@@ -17,8 +15,8 @@ export const swrGlobalConfig: ConfigInterface = {
    compare: (a, b) => a === b
 };
 
-export function useCache<Response = void, Error = any>(
-   key: keyInterface,
+export function useCacheSwr<Response = void, Error = any>(
+   key: string,
    fn?: fetcherFn<Response>,
    config?: UseCacheOptions<Response, Error>
 ): UseCache<Response, Error> {
@@ -58,7 +56,7 @@ export function useCache<Response = void, Error = any>(
    };
 }
 
-export async function revalidate<T>(key: keyInterface | keyInterface[]) {
+export async function revalidateSwr<T>(key: keyInterface | keyInterface[]) {
    if (Array.isArray(key)) {
       for (const k of key) {
          await mutate(k, null, true);
@@ -68,13 +66,10 @@ export async function revalidate<T>(key: keyInterface | keyInterface[]) {
    }
 }
 
-export async function mutateCache<T>(key: keyInterface, newData: T) {
+// In React query this is queryClient.setQueryData
+export async function mutateCacheSwr<T>(key: keyInterface, newData: T) {
    await mutate(key, newData, false);
 }
-
-export const CacheConfigProvider: FC = ({ children }) => {
-   return <SWRConfig value={swrGlobalConfig}>{children}</SWRConfig>;
-};
 
 export function defaultErrorHandler<Response, Error extends RequestError>(
    queryResult: responseInterface<Response, Error>
@@ -124,12 +119,16 @@ function useAvoidNull<T>(data: T): T {
    return backup.current;
 }
 
+export const ConfigProviderSwr: FC = ({ children }) => {
+   return <SWRConfig value={swrGlobalConfig}>{children}</SWRConfig>;
+};
+
 export interface UseCacheOptions<Response, Error = any> extends ConfigInterface<Response, Error> {
    enabled?: boolean;
 }
 
 export interface UseCache<Response, Error> extends responseInterface<Response, Error> {
-   key: keyInterface;
+   key: string;
    isLoading: boolean;
    isEnabled: boolean;
 }

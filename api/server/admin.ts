@@ -1,5 +1,5 @@
 import { defaultHttpRequest } from "../tools/httpRequest";
-import { revalidate, UseCacheOptions, useCache } from "../tools/useCache";
+import { revalidate, UseCacheOptions, useCache } from "../tools/useCache/useCache";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 
 export async function sendCreateFakeUsers(

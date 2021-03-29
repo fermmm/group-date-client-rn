@@ -20,7 +20,7 @@ import { useUser } from "../../../api/server/user";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import color from "color";
 import Avatar from "../../common/Avatar/Avatar";
-import { revalidate } from "../../../api/tools/useCache";
+import { revalidate } from "../../../api/tools/useCache/useCache";
 import { DAY_IN_SECONDS } from "../../../api/tools/date-tools";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { getColorForUser, getUnknownUsersFromChat } from "./tools/chat-tools";

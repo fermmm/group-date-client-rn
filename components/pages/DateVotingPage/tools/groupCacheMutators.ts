@@ -1,6 +1,6 @@
 import { Group } from "../../../../api/server/shared-tools/endpoints-interfaces/groups";
 import { VoteChange } from "../../../common/VotingPoll/VotingPoll";
-import { mutateCache } from "../../../../api/tools/useCache";
+import { mutateCache } from "../../../../api/tools/useCache/useCache";
 
 export function mutateGroupCacheDayVote(specificChange: VoteChange, userId: string, group: Group) {
    const dayOptions = [...group.dayOptions];

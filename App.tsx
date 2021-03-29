@@ -18,7 +18,7 @@ import AboutPage from "./components/pages/AboutPage/AboutPage";
 import AdminPage from "./components/pages/AdminPage/AdminPage";
 import { listenForPushNotifications } from "./common-tools/device-native-api/notifications/listenForPushNotifications";
 import { usePushNotificationRedirectWhileUsingApp } from "./common-tools/device-native-api/notifications/usePushNotificationRedirectWhileUsingApp";
-import { CacheConfigProvider } from "./api/tools/useCache";
+import { CacheConfigProvider } from "./api/tools/useCache/useCache";
 import { en } from "./texts/en/en";
 import { es } from "./texts/es/es";
 import "intl";

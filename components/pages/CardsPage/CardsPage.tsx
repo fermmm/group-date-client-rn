@@ -17,6 +17,7 @@ import { useSendAttractionsAndRequestMoreCards } from "./tools/useSendAttraction
 import { useCardsFromServer } from "./tools/useCardsFromServer";
 import { useCardsSourceAutomaticChange } from "./tools/useCardsSourceAutomaticChange";
 
+// TODO: Volver a react-query me va a hacer ahorrar requests en useCardsFromServer por que el workaround de useCache ya esta agotado
 export interface ParamsCardsPage {
    cardsSource?: CardsSource;
    tagId?: string;
@@ -29,7 +30,6 @@ const CardsPage: FC = () => {
    const { token } = useFacebookToken();
    const cardsFromServer = useCardsFromServer(cardsSource, { tagId: params?.tagId });
    const manager = useCardsDataManager(cardsFromServer);
-
    useSendAttractionsAndRequestMoreCards({
       manager,
       token,
@@ -37,7 +37,6 @@ const CardsPage: FC = () => {
       cardsFromServer,
       tagId: params?.tagId
    });
-
    useCardsSourceAutomaticChange({ cardsFromServer, params, cardsSource, setCardsSource });
 
    const isLoading =

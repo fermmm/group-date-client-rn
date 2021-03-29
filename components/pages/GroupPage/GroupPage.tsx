@@ -23,7 +23,7 @@ import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { useUser } from "../../../api/server/user";
 import { useGroup, useUnreadMessagesAmount, useVoteResults } from "../../../api/server/groups";
 import { useVotingResultToRender } from "../DateVotingPage/tools/useVotingResults";
-import { revalidate } from "../../../api/tools/useCache";
+import { revalidate } from "../../../api/tools/useCache/useCache";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 

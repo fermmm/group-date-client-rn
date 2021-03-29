@@ -1,7 +1,7 @@
-import { revalidate, useCache } from "./../tools/useCache";
+import { revalidate, useCache } from "../tools/useCache/useCache";
 import { useFacebookToken } from "../third-party/facebook/facebook-login";
 import { defaultHttpRequest } from "../tools/httpRequest";
-import { UseCacheOptions } from "../tools/useCache";
+import { UseCacheOptions } from "../tools/useCache/useCache";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import {
    BasicGroupParams,

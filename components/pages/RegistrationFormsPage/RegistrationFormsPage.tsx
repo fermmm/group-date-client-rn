@@ -25,7 +25,7 @@ import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { BackHandler } from "react-native";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
-import { mutateCache, revalidate } from "../../../api/tools/useCache";
+import { mutateCache, revalidate } from "../../../api/tools/useCache/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
 import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
 

@@ -18,7 +18,7 @@ import { sendDayVotes, sendIdeasVotes, useGroup } from "../../../api/server/grou
 import { mutateGroupCacheDayVote, mutateGroupCacheIdeaVote } from "./tools/groupCacheMutators";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
-import { revalidate } from "../../../api/tools/useCache";
+import { revalidate } from "../../../api/tools/useCache/useCache";
 
 export interface DateVotingPageParams {
    group: Group;

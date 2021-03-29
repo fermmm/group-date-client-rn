@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { sendAttraction } from "../../../../api/server/user";
-import { revalidate } from "../../../../api/tools/useCache";
+import { revalidate } from "../../../../api/tools/useCache/useCache";
 import { CardsSource } from "./types";
 import { AttractionsSendReason, UseCardsDataManager } from "./useCardsDataManager";
 
