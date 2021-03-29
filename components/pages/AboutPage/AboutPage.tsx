@@ -26,14 +26,13 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Las citas tradicionales de 2 personas no son posibles en esta app ya que es solo de
-               poliamor grupal. El poliamor de multiples parejas y la monogamia tienen sus
-               respectivas apps.
+               Con el paso del tiempo las citas van siendo de mas personas ya que se necesita tiempo
+               dando likes para generar mas coincidencias.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Con el paso del tiempo las citas van siendo de mas personas ya que se necesita tiempo
-               dando likes para generar mas coincidencias.
+               Las citas tradicionales de 2 personas no suceden en esta app, solo tiene soporte para
+               poliamor grupal.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es fácil que se genere una cita grupal?
@@ -74,16 +73,15 @@ const AboutPage: FC = () => {
                pasado. En la prehistoria del humano inteligente los padres de lxs hijxs eran todas
                las personas de una comunidad, compartían la crianza y los recursos de forma
                igualitaria, potenciado por el sexo que solía ser grupal y muy abundante. Este pasado
-               nos acompañó durante toda nuestra evolución por lo que se puede ignorar pero no
-               eliminar, un ejemplo representativo: Los "gemidos sexuales" son un instinto que en
+               nos acompañó durante toda nuestra evolución por lo que se puede ignorar pero es parte
+               de nosotros, un ejemplo representativo: Los "gemidos sexuales" son un instinto que en
                las otras especies (primates) tiene el efecto de llamar a lxs que están cerca.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
                Las parejas como única forma posible de relación y con ella la familia nuclear
-               aparecen durante la costosa revolución neolítica, la que trajo por primera vez muchas
-               problemáticas como las diferencias de clase, patriarcado, explotación, avance contra
-               la ecología, etc. Problemas que se van abordando a medida que se genera conciencia.
+               aparecen al mismo tiempo que el patriarcado y la propiedad privada, en la revolución
+               neolítica.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
