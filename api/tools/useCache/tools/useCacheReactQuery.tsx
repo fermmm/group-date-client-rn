@@ -1,6 +1,12 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { AppState } from "react-native";
-import { QueryClientProvider, QueryClient, focusManager, useQuery } from "react-query";
+import {
+   QueryClientProvider,
+   QueryClient,
+   focusManager,
+   useQuery,
+   UseQueryOptions
+} from "react-query";
 import { FetcherFn, UseCache, UseCacheOptions } from "../useCache";
 import { addDefaultErrorHandling } from "./addDefaultErrorHandling";
 
@@ -18,8 +24,16 @@ export function useCacheRq<Response = void, Error = any>(
    fn?: FetcherFn<Response>,
    config?: UseCacheOptions<Error>
 ): UseCache<Response, Error> {
-   let query = useQuery<Response, Error>(key, fn, config);
+   // Translate generic config props to React Query config props when the names are different
+   const configRq: UseQueryOptions<Response, Error, Response> = {
+      ...config,
+      refetchInterval: config?.refreshInterval,
+      refetchOnMount: config?.revalidateOnMount
+   };
 
+   let query = useQuery<Response, Error>(key, fn, configRq);
+
+   // Translate generic return props to React Query when the names are different
    const result = {
       key,
       isLoading: query.isLoading,

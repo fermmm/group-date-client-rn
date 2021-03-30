@@ -3,6 +3,7 @@ import i18n from "i18n-js";
 import React, { useEffect, useState } from "react";
 import { AppLoading } from "expo";
 import { Provider as PaperProvider } from "react-native-paper";
+import { NavigationContainerWithNotifications } from "./components/common/NavigationContainerWithNotifications/NavigationContainerWithNotifications";
 import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
@@ -10,14 +11,12 @@ import ProfilePage from "./components/pages/ProfilePage/ProfilePage";
 import RegistrationFormsPage from "./components/pages/RegistrationFormsPage/RegistrationFormsPage";
 import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
 import { currentTheme } from "./config";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import DateVotingPage from "./components/pages/DateVotingPage/DateVotingPage";
 import ChatPage from "./components/pages/ChatPage/ChatPage";
 import AboutPage from "./components/pages/AboutPage/AboutPage";
 import AdminPage from "./components/pages/AdminPage/AdminPage";
 import { listenForPushNotifications } from "./common-tools/device-native-api/notifications/listenForPushNotifications";
-import { usePushNotificationRedirectWhileUsingApp } from "./common-tools/device-native-api/notifications/usePushNotificationRedirectWhileUsingApp";
 import { CacheConfigProvider } from "./api/tools/useCache/useCache";
 import { en } from "./texts/en/en";
 import { es } from "./texts/es/es";
@@ -54,16 +53,6 @@ listenForPushNotifications();
 
 const App = () => {
    const [resourcesLoaded, setResourcesLoaded] = useState(false);
-   const {
-      navigationRef,
-      onNavigationReady,
-      onNavigationStateChange
-   } = usePushNotificationRedirectWhileUsingApp({
-      disableRedirectWhen: [
-         { currentRoute: "Login" },
-         { previousRoute: "Login", currentRoute: "RegistrationForms" }
-      ]
-   });
 
    useEffect(() => {
       (async () => {
@@ -79,12 +68,7 @@ const App = () => {
    return (
       <CacheConfigProvider>
          <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
-            <NavigationContainer
-               theme={testTheme}
-               ref={navigationRef}
-               onReady={onNavigationReady}
-               onStateChange={onNavigationStateChange}
-            >
+            <NavigationContainerWithNotifications theme={testTheme}>
                <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
                   <Stack.Screen name="Login" component={LoginPage} />
                   <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
@@ -96,7 +80,7 @@ const App = () => {
                   <Stack.Screen name="DateVoting" component={DateVotingPage} />
                   <Stack.Screen name="Admin" component={AdminPage} />
                </Stack.Navigator>
-            </NavigationContainer>
+            </NavigationContainerWithNotifications>
          </PaperProvider>
       </CacheConfigProvider>
    );

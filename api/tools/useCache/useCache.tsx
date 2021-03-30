@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { LogBox } from "react-native";
 import {
    ConfigProviderRq,
+   initFocusManagerRq,
    mutateCacheRq,
    revalidateRq,
    useCacheRq
@@ -13,7 +14,7 @@ export enum CacheLibrary {
    Swr
 }
 
-const cacheLibraryToUse: CacheLibrary = CacheLibrary.Swr;
+let cacheLibraryToUse: CacheLibrary = CacheLibrary.ReactQuery;
 
 LogBox.ignoreLogs(["Setting a timer for"]);
 
@@ -74,6 +75,10 @@ export const CacheConfigProvider: FC = ({ children }) => {
       return <ConfigProviderRq>{children}</ConfigProviderRq>;
    }
 };
+
+if (cacheLibraryToUse === CacheLibrary.ReactQuery) {
+   initFocusManagerRq();
+}
 
 export declare type FetcherFn<Data> = ((...args: any) => Data | Promise<Data>) | null;
 
