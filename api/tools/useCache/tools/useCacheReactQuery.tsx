@@ -1,28 +1,71 @@
 import { FC } from "react";
+import { AppState } from "react-native";
+import { QueryClientProvider, QueryClient, focusManager, useQuery } from "react-query";
 import { FetcherFn, UseCache, UseCacheOptions } from "../useCache";
+import { addDefaultErrorHandling } from "./addDefaultErrorHandling";
+
+export const queryClient = new QueryClient({
+   defaultOptions: {
+      queries: {
+         staleTime: Infinity,
+         structuralSharing: false
+      }
+   }
+});
 
 export function useCacheRq<Response = void, Error = any>(
    key: string,
    fn?: FetcherFn<Response>,
    config?: UseCacheOptions<Error>
 ): UseCache<Response, Error> {
-   return null;
+   let query = useQuery<Response, Error>(key, fn, config);
+
+   const result = {
+      key,
+      isLoading: query.isLoading,
+      isEnabled: config?.enabled ?? true,
+      data: query.data,
+      error: query.error as Error,
+      revalidate: async () => {
+         await query.refetch();
+      },
+      isValidating: query.isFetching
+   };
+
+   return addDefaultErrorHandling(result);
 }
 
-/**
- * Pass one or multiple keys and the requests for these keys are going to be made again to update the cache data
- */
-export async function revalidateRq<T>(key: string | string[]) {}
+export async function revalidateRq<T>(key: string | string[]) {
+   if (Array.isArray(key)) {
+      key.forEach(query => queryClient.invalidateQueries(query));
+   } else {
+      queryClient.invalidateQueries(key);
+   }
+}
 
-/**
- * Writes the cache data locally. Useful when you have updated data from another request and want to update
- * all caches that contains the same object without making more unnecessary requests.
- */
 export async function mutateCacheRq<T>(key: string, newData: T) {
-   // TODO: In React query this is queryClient.setQueryData
-   return null;
+   return queryClient.setQueryData<T>(key, newData);
 }
 
 export const ConfigProviderRq: FC = ({ children }) => {
-   return null;
+   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };
+
+/**
+ * This replaces the default focus manager (browser compatible) with a react native focus manager
+ */
+export function initFocusManagerRq() {
+   focusManager.setEventListener(setFocus => {
+      const handleAppStateChange = appState => {
+         if (appState === "active") {
+            setFocus();
+         }
+      };
+
+      AppState.addEventListener("change", handleAppStateChange);
+
+      return () => {
+         AppState.removeEventListener("change", handleAppStateChange);
+      };
+   });
+}

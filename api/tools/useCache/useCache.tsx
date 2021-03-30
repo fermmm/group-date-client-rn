@@ -91,6 +91,11 @@ export interface UseCache<Response, Error> {
    isEnabled: boolean;
    data?: Response;
    error?: Error;
-   revalidate: () => Promise<boolean>;
+   revalidate: () => Promise<void | boolean>;
    isValidating: boolean;
+}
+
+export interface RequestError {
+   message: string;
+   response: any;
 }
