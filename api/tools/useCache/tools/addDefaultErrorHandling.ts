@@ -16,10 +16,7 @@ export function addDefaultErrorHandling<Response = void, Error = any>(
    };
 
    if (error.response == null) {
-      showRequestErrorAlert({
-         errorMsg: I18n.t("There seems to be a connection problem"),
-         retryFn: () => queryResult.revalidate()
-      });
+      showRequestErrorAlert({ retryFn: () => queryResult.revalidate() });
    } else {
       showRequestErrorAlert({ errorMsg: result.message });
    }

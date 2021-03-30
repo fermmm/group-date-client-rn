@@ -4,6 +4,7 @@ import { Alert } from "react-native";
 import I18n from "i18n-js";
 import Constants from "expo-constants";
 import { SERVER_URL } from "@env";
+import { showRequestErrorAlert } from "./showRequestErrorAlert";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
    handleErrors?: boolean;
@@ -43,12 +44,10 @@ export async function httpRequest<Response>(
          console.debug("Request error:", error.response);
 
          if (!options.errorResponseSilent) {
-            Alert.alert(
-               `ಠ_ಠ ${error.response.status}`,
-               tryToGetErrorMessage(error),
-               [{ text: "OK" }],
-               { cancelable: false }
-            );
+            showRequestErrorAlert({
+               title: error.response.status,
+               errorMsg: tryToGetErrorMessage(error)
+            });
          }
 
          promiseResolve(null);
@@ -56,18 +55,11 @@ export async function httpRequest<Response>(
          // Something else happened while setting up the request
          // triggered the error
          console.debug("Request error:", error.message);
+
          if (!options.hideRetryAlertOnConnectionFail) {
-            Alert.alert(
-               "ಠ_ಠ",
-               I18n.t("There seems to be a connection problem"),
-               [
-                  {
-                     text: "Reintentar",
-                     onPress: async () => promiseResolve(await httpRequest(options))
-                  }
-               ],
-               { cancelable: false }
-            );
+            showRequestErrorAlert({
+               retryFn: async () => promiseResolve(await httpRequest(options))
+            });
          } else {
             promiseResolve(null);
          }

@@ -18,6 +18,7 @@ import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
 import { Alert } from "react-native";
 import { defaultHttpRequest, getServerUrl } from "../tools/httpRequest";
+import { showRequestErrorAlert } from "../tools/showRequestErrorAlert";
 
 export function useServerProfileStatus<T extends ProfileStatusServerResponse>(props?: {
    requestParams?: TokenParameter;
@@ -129,21 +130,11 @@ export async function uploadImage(
       }
    } catch (error) {
       let retryResult = { isError: true };
-      Alert.alert(
-         `ಠ_ಠ ${i18n.t("Error when uploading the image")}`,
-         i18n.t("There seems to be a connection problem"),
-         [
-            {
-               text: i18n.t("Try again"),
-               onPress: async () =>
-                  (retryResult = await uploadImage(resizeResult?.uri ?? localUrl, token, false))
-            },
-            {
-               text: i18n.t("Cancel")
-            }
-         ],
-         { cancelable: true }
-      );
+      showRequestErrorAlert({
+         title: i18n.t("Error when uploading the image"),
+         retryFn: async () =>
+            (retryResult = await uploadImage(resizeResult?.uri ?? localUrl, token, false))
+      });
       return retryResult;
    }
 }
