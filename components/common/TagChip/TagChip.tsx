@@ -39,8 +39,6 @@ const TagChip: FC<PropsTagChip> = ({
          result = {
             ...result,
             borderLeftWidth: 2,
-            borderRightWidth: 2,
-            elevation: 6,
             borderColor: color(colors.accent3).string()
          };
       }
@@ -49,8 +47,6 @@ const TagChip: FC<PropsTagChip> = ({
          result = {
             ...result,
             borderLeftWidth: 2,
-            borderRightWidth: 2,
-            elevation: 6,
             borderColor: color(colors.statusBad).lighten(0.3).string()
          };
       }

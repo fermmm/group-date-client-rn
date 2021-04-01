@@ -69,33 +69,33 @@ const AboutPage: FC = () => {
                Breve historia del poliamor grupal
             </TitleText>
             <Text style={styles.text}>
-               El poliamor grupal es la manera original en la que todxs nos relacionábamos en el
-               pasado. En la prehistoria del humano inteligente los padres de lxs hijxs eran todas
-               las personas de una comunidad, compartían la crianza y los recursos de forma
-               igualitaria, potenciado por el sexo que solía ser grupal y muy abundante. Este pasado
-               nos acompañó durante toda nuestra evolución por lo que se puede ignorar pero es parte
-               de nosotros, un ejemplo representativo: Los "gemidos sexuales" son un instinto que en
-               las otras especies (primates) tiene el efecto de llamar a lxs que están cerca.
+               En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
+               personas de una comunidad, compartían la crianza y los recursos de forma igualitaria,
+               potenciado por el sexo que era muy abundante, libre y podía ser grupal tanto como en
+               pareja. Este pasado nos acompañó durante toda nuestra evolución por lo que se puede
+               ignorar pero ya es parte de nosotros, un ejemplo representativo: Los "gemidos
+               sexuales" son un instinto que en las otras especies (primates) tiene el efecto de
+               llamar a lxs que están cerca.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Las parejas como única forma posible de relación y con ella la familia nuclear
-               aparecen al mismo tiempo que el patriarcado y la propiedad privada, en la revolución
-               neolítica.
+               Las parejas como única forma posible de relación, con ella la monogamia y la familia
+               nuclear aparecen al mismo tiempo junto con el patriarcado y la propiedad privada, en
+               la revolución neolítica.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Hay grandes libros de divulgación sobre el tema respaldados por la comunidad
-               científica, algunos muy conocidos como los de Cacilda Jethá y Christopher Ryan en
-               primer lugar o de Friedrich Engels: "El origen de la familia, la propiedad privada y
-               el estado"
+               Hay muchos libros de divulgación científica sobre el tema respaldados por la
+               comunidad científica, algunos muy conocidos como los de Cacilda Jethá y Christopher
+               Ryan o de Friedrich Engels: "El origen de la familia, la propiedad privada y el
+               estado".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es anti natural conocer gente en una app?
             </TitleText>
             <Text style={styles.text}>
                Probablemente si, pero sirve como una herramienta más en nuestra forma de vida
-               moderna que no le queda mucho de natural u original.
+               moderna que no le queda mucho de su forma original.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
