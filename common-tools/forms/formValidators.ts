@@ -11,11 +11,23 @@ export const formValidators: FormValidators = {
       new Validation(t)
          .noLettersAllowed(true)
          .maxChars(3, true)
-         .noSpecialCharactersAllowed(false, [], true)
+         .noSpecialCharactersAllowed(false, [], true),
+   tagName: t =>
+      new Validation(t)
+         .noInvalidSpacesAllowed(true)
+         .noNumbersAllowed(true)
+         .noSpecialCharactersAllowed(),
+   tagCategory: t =>
+      new Validation(t)
+         .noInvalidSpacesAllowed(true)
+         .noNumbersAllowed(true)
+         .noSpecialCharactersAllowed()
 };
 
 export interface FormValidators {
    name: (t: string) => Validation;
    birthYear: (t: string) => Validation;
    bodyHeight: (t: string) => Validation;
+   tagName: (t: string) => Validation;
+   tagCategory: (t: string) => Validation;
 }

@@ -3,19 +3,20 @@ import i18n from "i18n-js";
 import React, { useEffect, useState } from "react";
 import { AppLoading } from "expo";
 import { Provider as PaperProvider } from "react-native-paper";
+import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
+import { currentTheme } from "./config";
+import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainerWithNotifications } from "./components/common/NavigationContainerWithNotifications/NavigationContainerWithNotifications";
 import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import GroupPage from "./components/pages/GroupPage/GroupPage";
 import ProfilePage from "./components/pages/ProfilePage/ProfilePage";
 import RegistrationFormsPage from "./components/pages/RegistrationFormsPage/RegistrationFormsPage";
-import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
-import { currentTheme } from "./config";
-import { createStackNavigator } from "@react-navigation/stack";
 import DateVotingPage from "./components/pages/DateVotingPage/DateVotingPage";
 import ChatPage from "./components/pages/ChatPage/ChatPage";
 import AboutPage from "./components/pages/AboutPage/AboutPage";
 import AdminPage from "./components/pages/AdminPage/AdminPage";
+import CreateTagPage from "./components/pages/CreateTagPage/CreateTagPage";
 import { listenForPushNotifications } from "./common-tools/device-native-api/notifications/listenForPushNotifications";
 import { CacheConfigProvider } from "./api/tools/useCache/useCache";
 import { en } from "./texts/en/en";
@@ -79,6 +80,7 @@ const App = () => {
                   <Stack.Screen name="Chat" component={ChatPage} />
                   <Stack.Screen name="DateVoting" component={DateVotingPage} />
                   <Stack.Screen name="Admin" component={AdminPage} />
+                  <Stack.Screen name="CreateTag" component={CreateTagPage} />
                </Stack.Navigator>
             </NavigationContainerWithNotifications>
          </PaperProvider>

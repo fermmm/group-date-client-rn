@@ -13,7 +13,7 @@ const EDITABLE_TAG_PROPS_SCHEMA = {
    name: { type: "string", min: 2, max: 35, optional: false } as V,
    category: { type: "string", min: 2, max: 35, optional: false } as V,
    country: { type: "string", optional: true } as V,
-   global: { type: "boolean", optional: true } as V,
+   global: { type: "boolean", optional: true } as V
 };
 
 // Export the same object casted with more type information
@@ -33,7 +33,7 @@ export type EditableTagPropKey = keyof typeof EDITABLE_TAG_PROPS_SCHEMA;
 
 // The editable props as string list
 export const editableTagPropsList: EditableTagPropKey[] = Object.keys(
-   EDITABLE_TAG_PROPS_SCHEMA,
+   EDITABLE_TAG_PROPS_SCHEMA
 ) as EditableTagPropKey[];
 
 // Function to validate tag props
