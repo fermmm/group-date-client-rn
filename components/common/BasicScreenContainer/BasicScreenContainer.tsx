@@ -50,7 +50,7 @@ const BasicScreenContainer: FC<BasicScreenProps> = props => {
                {showBackButton && (
                   <Button
                      mode="outlined"
-                     onPress={() => props.onBackPress()}
+                     onPress={props.onBackPress}
                      color={currentTheme.colors.accent2}
                      style={styles.button}
                   >
@@ -59,7 +59,7 @@ const BasicScreenContainer: FC<BasicScreenProps> = props => {
                )}
                {showContinueButton && (
                   <Button
-                     onPress={() => props.onContinuePress()}
+                     onPress={props.onContinuePress}
                      mode="outlined"
                      color={currentTheme.colors.accent2}
                      style={styles.button}

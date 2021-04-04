@@ -8,6 +8,7 @@ import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { currentTheme } from "../../../config";
 import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
+import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 
 export interface PropsTagChip {
    tag: Tag;
@@ -61,9 +62,11 @@ const TagChip: FC<PropsTagChip> = ({
                <>
                   <View>
                      {!hideCategory && (
-                        <Caption style={styles.categoryText}>{tag.category}</Caption>
+                        <Caption style={styles.categoryText}>
+                           {toFirstUpperCase(tag.category)}
+                        </Caption>
                      )}
-                     <Text style={styles.nameText}>{tag.name}</Text>
+                     <Text style={styles.nameText}>{toFirstUpperCase(tag.name)}</Text>
                   </View>
                   {showSubscribersAmount && (
                      <Text style={styles.subscribersText}>+{tag.subscribersAmount ?? 0}</Text>

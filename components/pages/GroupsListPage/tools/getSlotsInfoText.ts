@@ -1,7 +1,7 @@
-import I18n from "i18n-js";
 import moment from "moment";
 import { Group, Slot } from "../../../../api/server/shared-tools/endpoints-interfaces/groups";
 import { ServerInfoResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/server-info";
+import { humanizeUnixTime } from "../../../../common-tools/strings/humanizeUnixTime";
 
 export function getSlotStatusInfoText(
    serverInfo: ServerInfoResponse,
@@ -20,10 +20,9 @@ export function getSlotStatusInfoText(
       if (groupsOfSlot.length >= slot.amount) {
          result = `Se permite ${slot.amount} cita${
             slot.amount > 1 ? "s" : ""
-         } al mismo tiempo, dentro de ${moment
-            .duration(slot.releaseTime, "seconds")
-            .locale(I18n.locale)
-            .humanize()} podrás tener una nueva. Si se forma una cita grande se ignora la restricción.`;
+         } al mismo tiempo, dentro de ${humanizeUnixTime(
+            slot.releaseTime
+         )} podrás tener una nueva. Si se forma una cita grande se ignora la restricción.`;
       }
    });
 

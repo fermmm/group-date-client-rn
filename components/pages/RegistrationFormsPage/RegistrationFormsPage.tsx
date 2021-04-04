@@ -7,7 +7,7 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
 import { sendUserProps, useServerProfileStatus } from "../../../api/server/user";
-import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import {
    EditableUserPropKey,
@@ -23,11 +23,11 @@ import { useUnifiedTagsToUpdate } from "./tools/useUnifiedTagsToUpdate";
 import { sendTags, TagEditAction, useTagsAsQuestions } from "../../../api/server/tags";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
-import { BackHandler } from "react-native";
 import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
 import { mutateCache, revalidate } from "../../../api/tools/useCache/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
 import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
+import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -89,15 +89,6 @@ const RegistrationFormsPage: FC = () => {
       }
    }, [profileStatus]);
 
-   useFocusEffect(
-      React.useCallback(() => {
-         BackHandler.addEventListener("hardwareBackPress", handleBackButton);
-         return () => {
-            BackHandler.removeEventListener("hardwareBackPress", handleBackButton);
-         };
-      }, [])
-   );
-
    const handleChangeOnForm = useCallback(
       (
          formName: RegistrationFormName | string,
@@ -139,7 +130,7 @@ const RegistrationFormsPage: FC = () => {
    }, []);
 
    // Called when the back button/gesture on the device is pressed before leaving the screen
-   const handleBackButton = useCallback(() => {
+   const handleGoBack = useCustomBackButtonAction(() => {
       if (canGoBack() && Object.keys(propsGathered.current).length > 0 && isFocused()) {
          showExitDialog();
       } else {
@@ -276,7 +267,7 @@ const RegistrationFormsPage: FC = () => {
 
    return (
       <>
-         <AppBarHeader onBackPress={handleBackButton} showBackButton={params != null} />
+         <AppBarHeader onBackPress={handleGoBack} showBackButton={params != null} />
          {isLoading ? (
             <LoadingAnimation renderMethod={RenderMethod.FullScreen} />
          ) : (

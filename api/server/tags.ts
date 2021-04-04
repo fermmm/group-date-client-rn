@@ -4,9 +4,11 @@ import { defaultHttpRequest } from "../tools/httpRequest";
 import {
    BasicTagParams,
    Tag,
+   TagCreateParams,
    TagGetParams,
    TagsAsQuestion
 } from "./shared-tools/endpoints-interfaces/tags";
+import { showNativeFeedbackMessage } from "../../common-tools/device-native-api/native-ui/nativeFeedbackMessage";
 
 export function useTags<T extends Tag[]>(props?: {
    requestParams?: TagGetParams;
@@ -39,6 +41,27 @@ export async function sendTags(params: TagParams, autoRevalidateRelated: boolean
    if (autoRevalidateRelated) {
       revalidate("user");
    }
+   return resp;
+}
+
+export async function createTag(
+   params: TagCreateParams,
+   settings?: { autoRevalidateRelated?: boolean; feedbackText?: string }
+) {
+   const { autoRevalidateRelated = true, feedbackText } = settings ?? {};
+
+   const resp = await defaultHttpRequest<TagCreateParams, Tag>("tags/create", "POST", params, {
+      handleErrors: true
+   });
+
+   if (autoRevalidateRelated) {
+      revalidate("tags");
+   }
+
+   if (settings?.feedbackText) {
+      showNativeFeedbackMessage(settings?.feedbackText);
+   }
+
    return resp;
 }
 
