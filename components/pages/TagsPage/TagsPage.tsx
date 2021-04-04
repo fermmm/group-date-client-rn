@@ -15,11 +15,6 @@ import TagChipList from "../../common/TagChipList/TagChipList";
 import { useUserTags } from "./tools/useUserTags";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 
-// TODO:
-// Tal vez seria bueno volver a mostrar el modal del tag cuando se vuelve atras de navegar los tags
-// puede ser que sin cerrarlo se oculte si el modal es de alguna manera child del componente, probar
-// Cuando esta todo terminado y se ve bien activar que recuerde que cerraste el HelpBanner
-
 export const TagsPage: FC = () => {
    const [searchString, setSearchString] = useState("");
    const [showUserTags, setShowUserTags] = useState(false);
@@ -44,7 +39,7 @@ export const TagsPage: FC = () => {
       <BasicScreenContainer wrapChildrenInScrollView={false}>
          <HelpBanner
             showCloseButton
-            rememberClose={false}
+            rememberClose
             text={
                "Puedes crear tags y los usarán lxs demás. Toca un tag para suscribirte, navegar sus subscriptores u ocultarlos."
             }
