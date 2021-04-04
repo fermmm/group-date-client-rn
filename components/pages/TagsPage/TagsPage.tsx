@@ -16,7 +16,6 @@ import { useUserTags } from "./tools/useUserTags";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 
 // TODO:
-// Implementar formulario de crear tag
 // Tal vez seria bueno volver a mostrar el modal del tag cuando se vuelve atras de navegar los tags
 // puede ser que sin cerrarlo se oculte si el modal es de alguna manera child del componente, probar
 // Cuando esta todo terminado y se ve bien activar que recuerde que cerraste el HelpBanner

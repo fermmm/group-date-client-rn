@@ -93,11 +93,10 @@ const CreateTagPage: FC = () => {
    const handleBackPress = useCustomBackButtonAction(() => {
       if (getFormError()) {
          goBack();
-         return;
+         return true;
       }
 
       setExitDialogVisible(true);
-
       return true;
    }, [name, category, subName]);
 
@@ -138,7 +137,7 @@ const CreateTagPage: FC = () => {
                />
                <TitleText style={styles.title}>Sub-nombre (opcional)</TitleText>
                <TextInputExtended
-                  title="Se incluye en el nombre final, ejemplo: Nombre: 'Ciudades' Sub-nombre: 'no me gustan' queda: 'Ciudades: no me gustan'. Este campo permite emojis."
+                  title="Extiende el nombre, por ejemplo con nombre: 'Bailar' y sub-nombre: 'no me gusta' queda: 'Bailar: no me gusta'. Este campo permite emojis."
                   errorText={getCharactersError(subName, { optional: true, minCharacters: 0 })}
                   value={subName}
                   onChangeText={t => setSubName(t)}
@@ -182,7 +181,7 @@ const CreateTagPage: FC = () => {
             onDismiss={() => setExitDialogVisible(false)}
             buttons={[
                { label: "Descartar", onTouch: goBack },
-               { label: "Guardar", onTouch: handleSavePress }
+               { label: "Crear tag", onTouch: handleSavePress }
             ]}
          >
             ¿Guardar cambios?
@@ -207,7 +206,8 @@ const styles: Styles = StyleSheet.create({
    },
    tagPreviewContainer: {
       alignItems: "center",
-      transform: [{ scale: 1.1 }]
+      transform: [{ scale: 1.1 }],
+      marginBottom: 10
    },
    tagPreview: {
       elevation: 3
