@@ -1,7 +1,6 @@
-import React, { FC, ReactNode, useEffect, useState } from "react";
-import { StyleSheet, Text, View, ImageBackground } from "react-native";
+import React, { FC, useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { LinearGradient } from "expo-linear-gradient";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 import { currentTheme } from "../../../config";
@@ -20,6 +19,7 @@ import { removeFromDevice } from "../../../common-tools/device-native-api/storag
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useSendPropsToUpdateAtLogin } from "./tools/useSendPropsToUpdateAtLogin";
 import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
+import BackgroundArtistic from "../../common/BackgroundArtistic/BackgroundArtistic";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -97,7 +97,7 @@ const LoginPage: FC = () => {
       (tokenLoading || tokenCheckLoading || serverInfoLoading || !profileStatusData);
 
    return (
-      <Background useImageBackground={true}>
+      <BackgroundArtistic useImageBackground={true}>
          <View style={styles.mainContainer}>
             <LoadingAnimation visible={showLoadingAnimation} />
             <View style={styles.logo}>
@@ -176,33 +176,9 @@ const LoginPage: FC = () => {
                </ButtonStyled>
             )}
          </View>
-      </Background>
+      </BackgroundArtistic>
    );
 };
-
-function Background(props: { children?: ReactNode; useImageBackground: boolean }): JSX.Element {
-   if (props.useImageBackground) {
-      return (
-         <ImageBackground source={currentTheme.backgroundImage} style={styles.background}>
-            {props.children}
-         </ImageBackground>
-      );
-   } else {
-      return (
-         <LinearGradient
-            colors={[
-               currentTheme.colors.specialBackground1,
-               currentTheme.colors.specialBackground2
-            ]}
-            style={styles.background}
-            start={[0, 0.5]}
-            end={[0, 1.3]}
-         >
-            {props.children}
-         </LinearGradient>
-      );
-   }
-}
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
@@ -211,12 +187,6 @@ const styles: Styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "flex-end",
       padding: 36
-   },
-   background: {
-      flex: 1,
-      width: "100%",
-      alignItems: "center",
-      justifyContent: "flex-end"
    },
    logo: {
       position: "absolute",

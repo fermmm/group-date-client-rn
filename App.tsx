@@ -17,6 +17,7 @@ import ChatPage from "./components/pages/ChatPage/ChatPage";
 import AboutPage from "./components/pages/AboutPage/AboutPage";
 import AdminPage from "./components/pages/AdminPage/AdminPage";
 import CreateTagPage from "./components/pages/CreateTagPage/CreateTagPage";
+import WelcomeTourPage from "./components/pages/WelcomeTourPage/WelcomeTourPage";
 import { listenForPushNotifications } from "./common-tools/device-native-api/notifications/listenForPushNotifications";
 import { CacheConfigProvider } from "./api/tools/useCache/useCache";
 import { en } from "./texts/en/en";
@@ -71,6 +72,7 @@ const App = () => {
          <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
             <NavigationContainerWithNotifications theme={testTheme}>
                <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
+                  <Stack.Screen name="WelcomeTour" component={WelcomeTourPage} />
                   <Stack.Screen name="Login" component={LoginPage} />
                   <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
                   <Stack.Screen name="Main" component={MainPage} />
