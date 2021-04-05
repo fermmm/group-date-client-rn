@@ -1,6 +1,6 @@
 import * as Localization from "expo-localization";
 import i18n from "i18n-js";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { AppLoading } from "expo";
 import { Provider as PaperProvider } from "react-native-paper";
 import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
@@ -20,6 +20,7 @@ import CreateTagPage from "./components/pages/CreateTagPage/CreateTagPage";
 import WelcomeTourPage from "./components/pages/WelcomeTourPage/WelcomeTourPage";
 import { listenForPushNotifications } from "./common-tools/device-native-api/notifications/listenForPushNotifications";
 import { CacheConfigProvider } from "./api/tools/useCache/useCache";
+import { welcomeWasShowed } from "./components/pages/WelcomeTourPage/tools/useWelcomeShowed";
 import { en } from "./texts/en/en";
 import { es } from "./texts/es/es";
 import "intl";
@@ -53,12 +54,14 @@ const Stack = createStackNavigator();
 
 listenForPushNotifications();
 
-const App = () => {
+const App: FC = () => {
    const [resourcesLoaded, setResourcesLoaded] = useState(false);
+   const [welcomeShowed, setWelcomeShowed] = useState(false);
 
    useEffect(() => {
       (async () => {
          await loadFontMontserrat();
+         setWelcomeShowed(await welcomeWasShowed());
          setResourcesLoaded(true);
       })();
    }, []);
@@ -71,7 +74,10 @@ const App = () => {
       <CacheConfigProvider>
          <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
             <NavigationContainerWithNotifications theme={testTheme}>
-               <Stack.Navigator initialRouteName="Login" headerMode={"none"}>
+               <Stack.Navigator
+                  initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}
+                  headerMode={"none"}
+               >
                   <Stack.Screen name="WelcomeTour" component={WelcomeTourPage} />
                   <Stack.Screen name="Login" component={LoginPage} />
                   <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />

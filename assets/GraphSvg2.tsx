@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import Svg, { Path, SvgProps, G, Circle } from "react-native-svg";
 import { View, StyleProp, ViewStyle } from "react-native";
 
@@ -9,9 +9,9 @@ export interface GraphSvg2Props extends SvgProps {
    svgStyle?: StyleProp<ViewStyle>;
 }
 
-const GraphSvg2: FunctionComponent<GraphSvg2Props> = (props: GraphSvg2Props) => {
+const GraphSvg2: FC<GraphSvg2Props> = (props: GraphSvg2Props) => {
    return (
-      <View style={{ ...props.style as {}, aspectRatio: 1 }}>
+      <View style={{ ...(props.style as {}), aspectRatio: 1 }}>
          <Svg
             width={"100%"}
             height={"100%"}
@@ -71,6 +71,6 @@ GraphSvg2.defaultProps = {
    lineColor: "#252525",
    circleColor: "#b3cc77",
    filled: true
-}
+};
 
 export default GraphSvg2;

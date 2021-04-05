@@ -1,10 +1,9 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import { Themed } from "../../../common-tools/themes/types/Themed";
+import { Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { GiftedChat, Bubble, Send, IMessage } from "react-native-gifted-chat";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
-import { StackScreenProps } from "@react-navigation/stack";
 import Dialog from "../../common/Dialog/Dialog";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
@@ -21,13 +20,11 @@ import { useFacebookToken } from "../../../api/third-party/facebook/facebook-log
 import color from "color";
 import Avatar from "../../common/Avatar/Avatar";
 import { revalidate } from "../../../api/tools/useCache/useCache";
-import { DAY_IN_SECONDS } from "../../../api/tools/date-tools";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { getColorForUser, getUnknownUsersFromChat } from "./tools/chat-tools";
 import { stringIsEmptyOrSpacesOnly } from "../../../common-tools/js-tools/js-tools";
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 
-export interface ChatPageProps extends Themed, StackScreenProps<{}> {}
 export interface ChatPageState {
    messages: IMessage[];
    adviseBannerVisible: boolean;
@@ -41,7 +38,7 @@ interface ParamsChat {
    introDialogText?: string;
 }
 
-const ChatPage: FC<ChatPageProps> = () => {
+const ChatPage: FC = () => {
    const { colors, font, chatNamesColors } = useTheme();
    const { params } = useRoute<RouteProps<ParamsChat>>();
    const [messages, setMessages] = useState<IMessage[]>([]);
@@ -118,6 +115,17 @@ const ChatPage: FC<ChatPageProps> = () => {
       },
       [group?.groupId]
    );
+
+   if (isContactChat) {
+      return (
+         <>
+            <AppBarHeader title={!isContactChat ? "" : "Contáctanos"} onBackPress={goBack} />
+            <PageBackgroundGradient>
+               <Text style={{ padding: 45, fontSize: 20 }}>Sección sin terminar =(</Text>
+            </PageBackgroundGradient>
+         </>
+      );
+   }
 
    if (isLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;

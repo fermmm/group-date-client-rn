@@ -3,8 +3,19 @@ import { LinearGradient } from "expo-linear-gradient";
 import color from "color";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 
-export const PageBackgroundGradient: FC = ({ children }) => {
+interface PropsPageBackgroundGradient {
+   visible?: boolean;
+}
+
+export const PageBackgroundGradient: FC<PropsPageBackgroundGradient> = ({
+   children,
+   visible = true
+}) => {
    const { colors } = useTheme();
+
+   if (!visible) {
+      return null;
+   }
 
    return (
       <LinearGradient

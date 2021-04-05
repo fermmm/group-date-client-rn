@@ -49,9 +49,7 @@ const AdminPage: FC = () => {
    };
 
    const handleTemp = () => {
-      navigate("Main", {
-         screen: "Notifications"
-      });
+      navigate("WelcomeTour");
    };
 
    if (!localUser) {

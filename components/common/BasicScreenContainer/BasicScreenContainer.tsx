@@ -14,6 +14,7 @@ export interface BasicScreenProps extends ScrollViewExtendedProps {
    continueButtonTextFinishMode?: boolean;
    showBottomGradient?: boolean;
    wrapChildrenInScrollView?: boolean;
+   showBackground?: boolean;
    onContinuePress?(): void;
    onBackPress?(): void;
 }
@@ -24,11 +25,12 @@ const BasicScreenContainer: FC<BasicScreenProps> = props => {
       showContinueButton = false,
       continueButtonTextFinishMode = false,
       showBottomGradient = false,
-      wrapChildrenInScrollView = true
+      wrapChildrenInScrollView = true,
+      showBackground = true
    }: Partial<BasicScreenProps> = props;
 
    return (
-      <PageBackgroundGradient>
+      <PageBackgroundGradient visible={showBackground}>
          {!wrapChildrenInScrollView ? (
             props.children
          ) : (

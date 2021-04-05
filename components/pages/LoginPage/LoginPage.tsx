@@ -139,27 +139,7 @@ const LoginPage: FC = () => {
                <>
                   <ButtonStyled
                      color={colors.textLogin}
-                     style={{
-                        borderColor: colors.textLogin
-                     }}
-                     onPress={() => navigate("Main")}
-                  >
-                     App UI
-                  </ButtonStyled>
-                  <ButtonStyled
-                     color={colors.textLogin}
-                     style={{
-                        borderColor: colors.textLogin
-                     }} // onPress={() => navigate("Questions")}
-                     onPress={() => navigate("RegistrationForms")}
-                  >
-                     Nueva cuenta UI
-                  </ButtonStyled>
-                  <ButtonStyled
-                     color={colors.textLogin}
-                     style={{
-                        borderColor: colors.textLogin
-                     }}
+                     style={styles.button}
                      onPress={() => removeFromDevice("pdfbtoken")}
                   >
                      Debug button
@@ -169,7 +149,7 @@ const LoginPage: FC = () => {
             {showLoginButton && (
                <ButtonStyled
                   color={colors.textLogin}
-                  style={{ borderColor: colors.textLogin }}
+                  style={styles.button}
                   onPress={handleLoginButtonClick}
                >
                   Iniciar sesión con Facebook
@@ -201,6 +181,9 @@ const styles: Styles = StyleSheet.create({
    secondTextBlock: {
       marginBottom: 65,
       textAlign: "center"
+   },
+   button: {
+      borderColor: currentTheme.colors.textLogin
    }
 });
 
