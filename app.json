@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Polyamory Dates",
-    "slug": "polyamory-mobile",
+    "name": "Poly",
+    "slug": "Poly",
     "privacy": "public",
     "platforms": [
       "ios",
@@ -13,8 +13,8 @@
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#FFF"
+      "resizeMode": "cover",
+      "backgroundColor": "#000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -26,11 +26,11 @@
       "turboModules": true
     },
     "android": {
-      "package": "com.polydates.polydates",
+      "package": "com.poly.poly",
       "useNextNotificationsApi": true
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
     }
   }
 }
