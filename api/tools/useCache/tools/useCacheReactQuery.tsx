@@ -14,7 +14,9 @@ export const queryClient = new QueryClient({
    defaultOptions: {
       queries: {
          staleTime: Infinity,
-         structuralSharing: false
+         structuralSharing: false,
+         retry: false,
+         refetchOnWindowFocus: false
       }
    }
 });
