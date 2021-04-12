@@ -33,7 +33,7 @@ const WelcomeTourPage: FC = () => {
       setAsShowed();
       Alert.alert(
          "",
-         "Esta es una versión de la app hecha para pruebas, todavía no esta difundida y puede que no encuentres a nadie por tu zona",
+         "Esta app acaba de ser terminada y es para pruebas. Hasta después de la pandemia no la vamos a difundir. Puede que no encuentres a nadie por tu zona",
          [
             {
                text: "Entendido"
