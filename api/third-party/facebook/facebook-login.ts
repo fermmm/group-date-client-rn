@@ -87,8 +87,8 @@ async function getTokenFromFacebook(): Promise<string | null> {
  * server error is more complex. If the token is not valid then getTokenFromFacebook() should be called
  * to get a new token from Facebook.
  */
-export function useFacebookTokenCheck(token: string, config?: UseCacheOptions<boolean>) {
-   return useCache<boolean>(
+export function useFacebookTokenCheck(token: string, config?: UseCacheOptions<{ valid: boolean }>) {
+   return useCache<{ valid: boolean }>(
       `graph.facebook.com/me?access_token=${token}`,
       async () => {
          const response: { id: string; name: string } = await httpRequest({
@@ -97,7 +97,7 @@ export function useFacebookTokenCheck(token: string, config?: UseCacheOptions<bo
             handleErrors: true
          });
 
-         return response?.name != null;
+         return { valid: response?.name != null };
       },
       { ...config }
    );

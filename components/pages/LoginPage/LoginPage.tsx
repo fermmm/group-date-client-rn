@@ -37,7 +37,10 @@ const LoginPage: FC = () => {
    const { token, isLoading: tokenLoading, getNewTokenFromFacebook } = useFacebookToken();
 
    // Check the user token is valid
-   const { data: tokenIsValid, isLoading: tokenCheckLoading } = useFacebookTokenCheck(token, {
+   const {
+      data: { valid: tokenIsValid } = { valid: false },
+      isLoading: tokenCheckLoading
+   } = useFacebookTokenCheck(token, {
       enabled: token != null
    });
 
