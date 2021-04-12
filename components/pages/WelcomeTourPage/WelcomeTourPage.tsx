@@ -94,7 +94,8 @@ const WelcomeTourPage: FC = () => {
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
                      Poly es nueva para todxs, no se espera que sepas o hagas nada en particular,
-                     solo ganas de conocer gente en una comunidad donde todo puede ser diferente.
+                     solo tener ganas de conocer gente en una comunidad donde todo puede ser
+                     diferente.
                   </Text>
                </View>
             </View>
