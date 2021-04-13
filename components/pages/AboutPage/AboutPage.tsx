@@ -44,9 +44,9 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Que las citas sean grupales ayuda: en la lógica de conocerse en pareja te ves con una
-               sola persona por lo que tiene que "tener todo lo posible en uno" pero en las citas de
-               poliamor grupal hay otra lógica donde se puede generar más likes y coincidencias.
+               El poliamor ayuda: en la lógica de conocerse en pareja te ves con una sola persona
+               por lo que tiene que "tener todo lo posible en uno" pero con el poliamor hay otra
+               lógica que lleva a que tengas mas likes y coincidencias.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
@@ -71,11 +71,11 @@ const AboutPage: FC = () => {
             <Text style={styles.text}>
                En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
                personas de una comunidad, compartían la crianza y los recursos de forma igualitaria,
-               potenciado por el sexo que era muy abundante, libre y podía ser grupal tanto como en
-               pareja. Este pasado nos acompañó durante toda nuestra evolución por lo que se puede
-               ignorar pero ya es parte de nosotros, un ejemplo representativo: Los "gemidos
-               sexuales" son un instinto que en las otras especies (primates) tiene el efecto de
-               llamar a lxs que están cerca.
+               potenciado por el sexo que era muy abundante, público y podía ser grupal tanto como
+               en pareja. Este pasado se puede ignorar pero nos acompañó durante toda nuestra
+               evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo representativo: Los
+               "gemidos sexuales" son un instinto que en las otras especies (primates) tiene el
+               efecto de llamar a lxs que están cerca.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
@@ -85,10 +85,9 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Hay muchos libros de divulgación científica sobre el tema respaldados por la
-               comunidad científica, algunos muy conocidos como los de Cacilda Jethá y Christopher
-               Ryan o de Friedrich Engels: "El origen de la familia, la propiedad privada y el
-               estado".
+               Hay muchos libros sobre el tema escritos y respaldados por la comunidad científica,
+               algunos muy conocidos como los de Cacilda Jethá y Christopher Ryan o de Friedrich
+               Engels: "El origen de la familia, la propiedad privada y el estado".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es anti natural conocer gente en una app?
