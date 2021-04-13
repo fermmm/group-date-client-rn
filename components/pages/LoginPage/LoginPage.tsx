@@ -47,7 +47,8 @@ const LoginPage: FC = () => {
    // If we have a valid user token and finished updating the login props we check if there is any user
    // property missing (caused by unfinished registration or new props)
    const { data: profileStatusData, error: profileStatusError } = useServerProfileStatus({
-      config: { enabled: tokenIsValid === true }
+      config: { enabled: tokenIsValid === true },
+      requestParams: { token }
    });
 
    // If we have a valid token we can send the user props that needs to be updated at each login
