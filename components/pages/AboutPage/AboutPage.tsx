@@ -79,7 +79,7 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Las parejas como única forma posible de relación, con ella la monogamia y la familia
+               Las parejas como única forma posible de relación, con ello la monogamia y la familia
                nuclear aparecen al mismo tiempo junto con la propiedad privada y el patriarcado, en
                la revolución neolítica.
             </Text>
