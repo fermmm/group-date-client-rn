@@ -38,15 +38,15 @@ const AboutPage: FC = () => {
                ¿Es fácil que se genere una cita grupal?
             </TitleText>
             <Text style={styles.text}>
-               Si, matemáticamente es igual de fácil que en las apps tradicionales. Quienes reciben
-               un resultado instantáneo en esas apps aquí aveces necesitarán paciencia ya que muchos
-               likes recibidos no siempre se traducen en un resultado de coincidencia grupal.
+               Si, matemáticamente es igual de fácil que en las apps tradicionales. A quienes les va
+               muy bien en esas apps y reciben resultados instantáneos, aquí necesitarán paciencia
+               ya que muchos likes recibidos no siempre se traducen en una coincidencia grupal.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               El poliamor ayuda: en la lógica de conocerse en pareja te ves con una sola persona
-               por lo que tiene que "tener todo lo posible en uno" pero con el poliamor hay otra
-               lógica que lleva a que tengas mas likes y coincidencias.
+               El poliamor ayuda: en las citas tradicionales te ves con una sola persona por lo que
+               tiene que tener todo lo que buscas, en el poliamor te ves con multiples personas en
+               una lógica diferente que genera más likes y coincidencias en la app.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
@@ -58,7 +58,7 @@ const AboutPage: FC = () => {
                menos la misma.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿En la cita grupal van a ser todxs del género que me gusta?
+               ¿En la cita grupal van a ser todxs del género y sexualidad que me gusta?
             </TitleText>
             <Text style={styles.text}>
                No. Para estar en una cita grupal te tienes que gustar con un mínimo porcentaje de
@@ -80,7 +80,7 @@ const AboutPage: FC = () => {
             <EmptySpace height={15} />
             <Text style={styles.text}>
                Las parejas como única forma posible de relación, con ella la monogamia y la familia
-               nuclear aparecen al mismo tiempo junto con el patriarcado y la propiedad privada, en
+               nuclear aparecen al mismo tiempo junto con la propiedad privada y el patriarcado, en
                la revolución neolítica.
             </Text>
             <EmptySpace height={15} />
