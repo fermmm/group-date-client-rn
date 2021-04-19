@@ -118,7 +118,8 @@ const AboutPage: FC = () => {
             </TitleText>
             <Text style={styles.text}>
                El algoritmo busca un grupo de usuarios al azar que te pusieron like y otro que aún
-               no, luego combina ambos en una sola lista con orden al azar, eso es todo por ahora.
+               no, luego combina ambos en una sola lista con orden al azar, eso es todo lo que hace
+               por ahora.
             </Text>
             <EmptySpace height={80} />
          </BasicScreenContainer>
