@@ -113,6 +113,13 @@ const AboutPage: FC = () => {
                amor libre, feminismo, profesionales de diferentes disciplinas: desde ciencias
                sociales hasta otrxs informáticxs.
             </Text>
+            <TitleText extraSize style={styles.title}>
+               ¿En base a que criterios me recomienda personas la app?
+            </TitleText>
+            <Text style={styles.text}>
+               El algoritmo busca un grupo de usuarios al azar que te pusieron like y otro que aún
+               no, luego combina ambos en una sola lista con orden al azar, eso es todo.
+            </Text>
             <EmptySpace height={80} />
          </BasicScreenContainer>
       </>
