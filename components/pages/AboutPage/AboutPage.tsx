@@ -80,8 +80,8 @@ const AboutPage: FC = () => {
             <EmptySpace height={15} />
             <Text style={styles.text}>
                Las parejas como única forma posible de relación, con ello la monogamia y la familia
-               nuclear aparecen al mismo tiempo junto con la propiedad privada y el patriarcado, en
-               la revolución neolítica.
+               nuclear aparecen al mismo tiempo junto con la propiedad privada y el patriarcado,
+               durante la revolución neolítica.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
