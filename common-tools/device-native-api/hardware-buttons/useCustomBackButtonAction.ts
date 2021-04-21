@@ -11,14 +11,15 @@ import { BackHandler } from "react-native";
  * @param deps The dependency list to pass as the second argument of useCallback.
  */
 export function useCustomBackButtonAction(fn: () => boolean, deps: React.DependencyList) {
-   const fnWithUseCallback = useCallback(() => {
-      BackHandler.addEventListener("hardwareBackPress", fn);
+   const fnWithUseCallback = useCallback(fn, deps);
+   const fnForFocusEffect = useCallback(() => {
+      BackHandler.addEventListener("hardwareBackPress", fnWithUseCallback);
       return () => {
-         BackHandler.removeEventListener("hardwareBackPress", fn);
+         BackHandler.removeEventListener("hardwareBackPress", fnWithUseCallback);
       };
    }, deps);
 
-   useFocusEffect(fnWithUseCallback);
+   useFocusEffect(fnForFocusEffect);
 
    return fnWithUseCallback;
 }
