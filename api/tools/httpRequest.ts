@@ -1,9 +1,7 @@
-import { responseInterface } from "swr";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from "axios";
-import { Alert } from "react-native";
 import I18n from "i18n-js";
 import Constants from "expo-constants";
-import { SERVER_URL } from "@env";
+import { SERVER_URL_DEVELOPMENT, SERVER_URL_PRODUCTION } from "@env";
 import { showRequestErrorAlert } from "./showRequestErrorAlert";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
@@ -135,7 +133,11 @@ export function prepareUrl(url: string): string {
 }
 
 export function getServerUrl(): string {
-   return prepareUrl(SERVER_URL);
+   if (__DEV__) {
+      return prepareUrl(SERVER_URL_DEVELOPMENT);
+   } else {
+      return prepareUrl(SERVER_URL_PRODUCTION);
+   }
 }
 
 export interface RequestError {
