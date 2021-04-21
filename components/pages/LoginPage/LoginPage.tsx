@@ -31,7 +31,11 @@ const LoginPage: FC = () => {
    const { navigateWithoutHistory, navigate } = useNavigation();
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
    const isFocused = useIsFocused();
-   const { data: serverInfoData, isLoading: serverInfoLoading } = useServerInfo();
+   const { data: serverInfoData, isLoading: serverInfoLoading, error } = useServerInfo();
+   const serverOperating: boolean = serverInfoLoading
+      ? null
+      : serverInfoData?.serverOperating ?? error == null;
+   const canContinue = serverOperating && serverInfoData?.versionIsCompatible;
 
    // Get the user token
    const { token, isLoading: tokenLoading, getNewTokenFromFacebook } = useFacebookToken();
@@ -47,13 +51,13 @@ const LoginPage: FC = () => {
    // If we have a valid user token and finished updating the login props we check if there is any user
    // property missing (caused by unfinished registration or new props)
    const { data: profileStatusData, error: profileStatusError } = useServerProfileStatus({
-      config: { enabled: tokenIsValid === true && serverInfoData?.serverOperating === true },
+      config: { enabled: tokenIsValid === true && canContinue === true },
       requestParams: { token }
    });
 
    // If we have a valid token we can send the user props that needs to be updated at each login
    const sendLoginPropsCompleted = useSendPropsToUpdateAtLogin(token, serverInfoData, {
-      enabled: tokenIsValid === true && serverInfoData != null && profileStatusData != null
+      enabled: tokenIsValid === true && canContinue === true && profileStatusData != null
    });
 
    // If the user has props missing redirect to RegistrationForms otherwise redirect to Main or notification press
@@ -83,18 +87,17 @@ const LoginPage: FC = () => {
       getNewTokenFromFacebook();
    };
 
-   const serverOperating: boolean = serverInfoData?.serverOperating ?? null;
-
    const showLoginButton: boolean =
       forceShowConnectButton ||
       profileStatusError ||
-      (serverOperating &&
+      (canContinue &&
          (token == null || tokenIsValid === false) &&
          !tokenCheckLoading &&
          !tokenLoading &&
          !serverInfoLoading);
 
    const showLoadingAnimation: boolean =
+      canContinue &&
       logoAnimCompleted &&
       !showLoginButton &&
       !profileStatusError &&
@@ -110,34 +113,14 @@ const LoginPage: FC = () => {
                </LogoAnimator>
             </View>
             {serverOperating === false && (
-               <>
-                  <Text
-                     style={[
-                        styles.textBlock,
-                        {
-                           marginBottom: 15
-                        }
-                     ]}
-                  >
-                     <Text
-                        style={{
-                           fontWeight: "bold"
-                        }}
-                     >
-                        Lo sentimos, la app no esta disponible en este momento, intenta más tarde
-                     </Text>
-                  </Text>
-                  <Text
-                     style={[
-                        styles.textBlock,
-                        {
-                           marginBottom: 100
-                        }
-                     ]}
-                  >
-                     {serverInfoData?.serverMessage}
-                  </Text>
-               </>
+               <Text style={styles.textBlock}>
+                  {serverInfoData?.serverMessage
+                     ? serverInfoData?.serverMessage
+                     : "No se puede conectar con el servidor, intenta mas tarde y si el problema persiste actualiza la app o buscanos en las redes sociales para saber si hubo algún problema"}
+               </Text>
+            )}
+            {serverInfoData?.versionIsCompatible === false && (
+               <Text style={styles.textBlock}>Debes actualizar la app.</Text>
             )}
             {__DEV__ && showDebugButtons && (
                <>
@@ -179,8 +162,10 @@ const styles: Styles = StyleSheet.create({
    },
    textBlock: {
       textAlign: "center",
-      fontFamily: currentTheme.font.light,
-      color: currentTheme.colors.textLogin
+      fontFamily: currentTheme.font.medium,
+      color: currentTheme.colors.textLogin,
+      fontSize: 15,
+      marginBottom: 150
    },
    secondTextBlock: {
       marginBottom: 65,
