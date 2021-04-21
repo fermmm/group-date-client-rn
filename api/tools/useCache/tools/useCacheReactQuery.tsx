@@ -8,7 +8,7 @@ import {
    UseQueryOptions
 } from "react-query";
 import { FetcherFn, UseCache, UseCacheOptions } from "../useCache";
-import { addDefaultErrorHandling } from "./addDefaultErrorHandling";
+import { useDefaultErrorHandling } from "./useDefaultErrorHandling";
 
 export const queryClient = new QueryClient({
    defaultOptions: {
@@ -16,7 +16,9 @@ export const queryClient = new QueryClient({
          staleTime: Infinity,
          structuralSharing: false,
          retry: false,
-         refetchOnWindowFocus: false
+         refetchOnWindowFocus: false,
+         refetchOnMount: false,
+         retryOnMount: false
       }
    }
 });
@@ -48,7 +50,9 @@ export function useCacheRq<Response = void, Error = any>(
       isValidating: query.isFetching
    };
 
-   return addDefaultErrorHandling(result);
+   const resultWIthErrorHandling = useDefaultErrorHandling(result);
+
+   return resultWIthErrorHandling;
 }
 
 export async function revalidateRq<T>(key: string | string[]) {

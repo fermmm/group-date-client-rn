@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef } from "react";
 import useSWR, { ConfigInterface, keyInterface, mutate, responseInterface, SWRConfig } from "swr";
 import { fetcherFn } from "swr/dist/types";
 import { UseCache, UseCacheOptions } from "../useCache";
-import { addDefaultErrorHandling } from "./addDefaultErrorHandling";
+import { useDefaultErrorHandling } from "./useDefaultErrorHandling";
 
 export const swrGlobalConfig: ConfigInterface = {
    refreshInterval: 0,
@@ -53,7 +53,7 @@ export function useCacheSwr<Response = void, Error = any>(
       isLoading: (swr.data == null || swr.isValidating) && !swr.error && newKey != null
    };
 
-   result = addDefaultErrorHandling(result);
+   result = useDefaultErrorHandling(result);
 
    return result;
 }

@@ -23,7 +23,7 @@ export function useFacebookToken(externallyProvidedToken?: string): UseFacebookT
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const [token, setToken] = useState<string>(externallyProvidedToken);
    const [fetchingNewToken, setFetchingNewToken] = useState<boolean>(false);
-   const [loadingFromDevice, setLoadingFromDevice] = useState<boolean>(false);
+   const [attemptedFromDevice, setAttemptedFromDevice] = useState<boolean>(false);
 
    const getNewTokenFromFacebook = () => {
       fasterTokenCache = null;
@@ -33,7 +33,7 @@ export function useFacebookToken(externallyProvidedToken?: string): UseFacebookT
 
       getTokenFromFacebook().then(newToken => {
          saveOnDevice(LocalStorageKey.FacebookToken, newToken, { secure: true }).then(() => {
-            console.log("new token: ", newToken);
+            // console.log("new token: ", newToken);
             fasterTokenCache = newToken;
             setToken(newToken);
             setIsLoading(false);
@@ -50,12 +50,14 @@ export function useFacebookToken(externallyProvidedToken?: string): UseFacebookT
       return { token: fasterTokenCache, isLoading: false, getNewTokenFromFacebook };
    }
 
-   if (!fetchingNewToken && !loadingFromDevice) {
-      setLoadingFromDevice(true);
+   if (!fetchingNewToken && !attemptedFromDevice) {
+      setAttemptedFromDevice(true);
       // Try to get stored token from previous session
       loadFromDevice(LocalStorageKey.FacebookToken, { secure: true }).then(tokenFromDevice => {
          setIsLoading(false);
-         setLoadingFromDevice(false);
+         if (tokenFromDevice == null) {
+            return;
+         }
          fasterTokenCache = tokenFromDevice;
          setToken(tokenFromDevice);
       });
