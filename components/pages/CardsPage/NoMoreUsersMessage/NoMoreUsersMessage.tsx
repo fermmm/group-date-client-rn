@@ -98,10 +98,10 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
             />
             <EmptySpace />
             <Text style={styles.text}>
-               Si te sirve puedes repasar a lxs usuarixs que dejaste de lado:
+               Si te sirve puedes repasar a las personas que ocultaste:
             </Text>
             <Button mode="text" onPress={onViewDislikedUsersPress}>
-               Repasar usuarixs
+               Repasar ocultadxs
             </Button>
          </View>
       </LinearGradient>

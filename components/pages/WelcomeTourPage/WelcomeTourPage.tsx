@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { Alert, Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -31,15 +31,6 @@ const WelcomeTourPage: FC = () => {
 
    useEffect(() => {
       setAsShowed();
-      Alert.alert(
-         "",
-         "Esta app acaba de ser terminada y es para pruebas. Hasta después de la pandemia no la vamos a difundir. Puede que no encuentres a nadie por tu zona",
-         [
-            {
-               text: "Entendido"
-            }
-         ]
-      );
    }, []);
 
    return (

@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
@@ -74,6 +74,15 @@ const LoginPage: FC = () => {
             } else {
                navigateWithoutHistory("Main");
             }
+            Alert.alert(
+               "",
+               "Esta app acaba de ser terminada y es para pruebas. La vamos a difundir después de la pandemia. Puede que no encuentres a nadie por tu zona",
+               [
+                  {
+                     text: "Entendido"
+                  }
+               ]
+            );
          }
       }
    }, [profileStatusData, sendLoginPropsCompleted, logoAnimCompleted]);
