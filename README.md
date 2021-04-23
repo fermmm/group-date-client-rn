@@ -1,6 +1,6 @@
 # Poly - Mobile Android / IOS app.
 
-This project uses TypeScript + React Native + Expo with "managed" workflow. For final build and publishing of the app you must search the instructions on the Expo documentation and also read "Publishing the app" section in this readme.
+This project uses TypeScript + React Native + Expo with "managed" workflow. For final build and publishing of the app you may find useful the [instructions on the Expo documentation](https://docs.expo.io/distribution/introduction/) and also read "Publishing the app" section in this readme.
 
 ## Installation
 
