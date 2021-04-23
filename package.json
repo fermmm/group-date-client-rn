@@ -1,6 +1,7 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "preinstall": "npm install -g expo-cli",
     "start": "expo start",
     "clean": "expo r -c",
     "inspector": "react-devtools",
