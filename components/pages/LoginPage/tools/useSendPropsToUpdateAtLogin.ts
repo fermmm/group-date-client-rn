@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { getPermissionTokenForNotifications } from "../../../../common-tools/device-native-api/notifications/getPermissionTokenForNotifications";
 import { sendUserProps } from "../../../../api/server/user";
 import { ServerInfoResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/server-info";
+import { EditableUserPropKey } from "../../../../api/server/shared-tools/validators/user";
+import { UserPropsValueTypes } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 
 /**
  * At every login there are some user props that need to be updated: The user may be in a different
@@ -18,6 +20,7 @@ export function useSendPropsToUpdateAtLogin(
    const [completed, setCompleted] = useState<boolean>(false);
    const { geolocation } = useGeolocation();
    const [notificationsToken, setNotificationsToken] = useState<string>();
+   const [notificationsTokenRequested, setNotificationTokenRequested] = useState(false);
    const [locationLat, setLocationLat] = useState<number>();
    const [locationLon, setLocationLon] = useState<number>();
    const [country, setCountry] = useState<string>();
@@ -42,31 +45,47 @@ export function useSendPropsToUpdateAtLogin(
       }
 
       (async () => {
-         setNotificationsToken(
-            await getPermissionTokenForNotifications(serverInfo.pushNotificationsChannels)
+         const notificationsToken = await getPermissionTokenForNotifications(
+            serverInfo.pushNotificationsChannels
          );
+         setNotificationsToken(notificationsToken);
+         setNotificationTokenRequested(true);
       })();
    }, [serverInfo?.pushNotificationsChannels]);
 
    // Effect to send the data to the server when all the information is gathered
    useEffect(() => {
       if (
-         notificationsToken != null &&
+         notificationsTokenRequested &&
          locationLat != null &&
          locationLon != null &&
          country != null &&
          token != null &&
          settings.enabled
       ) {
+         const props: Partial<Record<EditableUserPropKey, UserPropsValueTypes>> = {
+            locationLat,
+            locationLon,
+            country
+         };
+         if (notificationsToken) {
+            props.notificationsToken = notificationsToken;
+         }
+
          (async () => {
-            await sendUserProps(
-               { token, props: { locationLat, locationLon, country, notificationsToken } },
-               false
-            );
+            await sendUserProps({ token, props }, false);
             setCompleted(true);
          })();
       }
-   }, [notificationsToken, locationLat, locationLon, country, token, settings.enabled]);
+   }, [
+      notificationsToken,
+      locationLat,
+      locationLon,
+      country,
+      token,
+      settings.enabled,
+      notificationsTokenRequested
+   ]);
 
    return completed;
 }
