@@ -20,7 +20,8 @@
       "package": "com.poly.poly",
       "versionCode": 1,
       "useNextNotificationsApi": true,
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": []
     },
     "ios": {
       "bundleIdentifier": "com.poly.poly",
