@@ -47,7 +47,7 @@ const WelcomeTourPage: FC = () => {
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
                      Poly es una app de citas grupales: Cuando se gustan varias personas se habilita
-                     un chat grupal. Es la primera app con este funcionamiento de poliamor.
+                     un chat grupal.
                   </Text>
                </View>
             </View>
@@ -62,7 +62,7 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Hasta ahora cuando pensamos en una cita nos imaginábamos a solo 2 personas
+                     Hasta ahora cuando pensábamos en una cita nos imaginábamos a solo 2 personas
                      conociéndose, el poliamor habilita citas de diversos tamaños.
                   </Text>
                </View>
@@ -98,7 +98,7 @@ const WelcomeTourPage: FC = () => {
                   <Text style={styles.text}>
                      Si te gusta la app no olvides mencionarla en las redes sociales o donde lo
                      creas oportuno, que esto funcione depende de eso ya que la app es gratuita, sin
-                     animo de lucro y de código abierto.
+                     fines comerciales y de código abierto.
                   </Text>
                </View>
             </View>
