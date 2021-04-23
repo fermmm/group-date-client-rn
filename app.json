@@ -27,7 +27,8 @@
     },
     "android": {
       "package": "com.poly.poly",
-      "useNextNotificationsApi": true
+      "useNextNotificationsApi": true,
+      "googleServicesFile": "./google-services.json"
     },
     "ios": {
       "supportsTablet": false
