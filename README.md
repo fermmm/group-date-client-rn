@@ -1,6 +1,6 @@
 # Poly - Mobile Android / IOS app.
 
-This project uses React Native + Expo + TypeScript. For final build and publishing of the app you must search the instructions on the Expo documentation.
+This project uses TypeScript + React Native + Expo with "managed" workflow. For final build and publishing of the app you must search the instructions on the Expo documentation and also read "Publishing the app" section in this readme.
 
 ## Installation
 
@@ -17,3 +17,13 @@ This project uses React Native + Expo + TypeScript. For final build and publishi
 ```
 npm start
 ```
+
+----
+
+## Publishing the app
+
+Before publishing the app there are some task required.
+
+1. **Facebook login**: In step 4 of the installation process you added a key hash in your Facebook app settings, that is the key hash for the Expo Go app, you need to also add the key hash of your built application. To get the key hash make an android build and then run `expo fetch:android:hashes`. 
+
+2. **Push notifications**: Push notifications works on Expo Go but in the built app you need to read and follow instructions under "Client Setup" on [this page](https://docs.expo.io/push-notifications/push-notifications-setup/#credentials).
