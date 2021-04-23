@@ -8,13 +8,24 @@
       "android",
       "web"
     ],
-    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#000"
+    },
+    "version": "0.1.0",
+    "android": {
+      "package": "com.poly.poly",
+      "versionCode": 1,
+      "useNextNotificationsApi": true,
+      "googleServicesFile": "./google-services.json"
+    },
+    "ios": {
+      "bundleIdentifier": "com.poly.poly",
+      "buildNumber": "0.1.0",
+      "supportsTablet": false
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,14 +35,6 @@
     ],
     "experiments": {
       "turboModules": true
-    },
-    "android": {
-      "package": "com.poly.poly",
-      "useNextNotificationsApi": true,
-      "googleServicesFile": "./google-services.json"
-    },
-    "ios": {
-      "supportsTablet": false
     }
   }
 }

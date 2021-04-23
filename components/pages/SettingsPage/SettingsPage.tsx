@@ -1,8 +1,9 @@
 import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
+import Constants from "expo-constants";
 import * as IntentLauncher from "expo-intent-launcher";
+import { List, Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { List } from "react-native-paper";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
@@ -12,6 +13,7 @@ import { ParamsRegistrationFormsPage } from "../RegistrationFormsPage/Registrati
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { openDeviceAction } from "../../../common-tools/device-native-api/device-action/openDeviceAction";
+import { currentTheme } from "../../../config";
 
 const SettingsPage: FC = () => {
    const { navigate } = useNavigation();
@@ -129,6 +131,7 @@ const SettingsPage: FC = () => {
                onPress={() => navigate("Admin")}
             />
          )}
+         <Text style={styles.versionText}>Versión: beta {Constants.manifest.version}</Text>
       </BasicScreenContainer>
    );
 };
@@ -140,6 +143,12 @@ const styles: Styles = StyleSheet.create({
    optionIcon: {
       marginLeft: 5,
       marginRight: 8
+   },
+   versionText: {
+      fontFamily: currentTheme.font.light,
+      textAlign: "center",
+      marginTop: 20,
+      marginBottom: 20
    }
 });
 
