@@ -1,4 +1,4 @@
-# Poly - Mobile Andorid / IOS app.
+# Poly - Mobile Android / IOS app.
 
 This project uses React Native + Expo + TypeScript. For final build and publishing of the app you must search the instructions on the Expo documentation.
 
