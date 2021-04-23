@@ -7,6 +7,7 @@ import {
 } from "./dialogLocationDisabled/dialogLocationDisabled";
 import * as Permissions from "expo-permissions";
 import { usePermission } from "../permissions/askForPermissions";
+import { LocalStorageKey } from "../../strings/LocalStorageKey";
 
 /**
  * Gets geolocation data, asks for permissions Permissions.LOCATION. If the geolocation
@@ -22,28 +23,29 @@ export function useGeolocation(settings?: GetGeolocationParams) {
       value: storedGeolocation,
       setValue: setStoredGeolocation,
       isLoading: localStorageLoading
-   } = useLocalStorage<LocationData>("__geolocation__");
+   } = useLocalStorage<LocationData>(LocalStorageKey.Geolocation);
 
-   const enabled = settings?.enabled !== false && permissionGranted && !localStorageLoading;
+   const request =
+      settings?.enabled !== false &&
+      permissionGranted &&
+      !localStorageLoading &&
+      storedGeolocation == null;
 
-   const { data: geolocation, isLoading, error } = useCache(
+   const { data: requestedGeolocation } = useCache(
       "_geolocation_",
-      () =>
-         getGeolocation({
+      () => {
+         return getGeolocation({
             ...settings,
             errorDialogSettings: { cancelable: storedGeolocation != null }
-         }),
-      { enabled, onSuccess: geo => setStoredGeolocation(geo) }
+         });
+      },
+      { enabled: request, onSuccess: geo => setStoredGeolocation(geo) }
    );
 
-   if (!enabled) {
-      return { isLoading: true, geolocation: null };
-   }
-
-   // TODO: This error handling and local storage usage is not yet working correctly
-   // console.log(isLoading, error);
-
-   return { isLoading, geolocation: geolocation ?? storedGeolocation };
+   return {
+      isLoading: requestedGeolocation == null && storedGeolocation == null,
+      geolocation: requestedGeolocation ?? storedGeolocation
+   };
 }
 
 /**
