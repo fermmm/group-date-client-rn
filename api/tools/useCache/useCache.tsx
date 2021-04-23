@@ -28,7 +28,7 @@ LogBox.ignoreLogs(["Setting a timer for"]);
 export function useCache<Response = void, Error = any>(
    key: string,
    fn?: FetcherFn<Response>,
-   config?: UseCacheOptions<Error>
+   config?: UseCacheOptions<Response, Error>
 ): UseCache<Response, Error> {
    if (cacheLibraryToUse === CacheLibrary.Swr) {
       return useCacheSwr(key, fn, config);
@@ -82,10 +82,11 @@ if (cacheLibraryToUse === CacheLibrary.ReactQuery) {
 
 export declare type FetcherFn<Data> = ((...args: any) => Data | Promise<Data>) | null;
 
-export interface UseCacheOptions<Error = any> {
+export interface UseCacheOptions<Response = void, Error = any> {
    enabled?: boolean;
    refreshInterval?: number;
    revalidateOnMount?: boolean;
+   onSuccess?: (data: Response) => void;
    onError?: (err: Error) => void;
    onErrorRetry?: (err: Error) => void;
 }

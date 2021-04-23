@@ -17,7 +17,7 @@ export const swrGlobalConfig: ConfigInterface = {
 export function useCacheSwr<Response = void, Error = any>(
    key: string,
    fn?: fetcherFn<Response>,
-   config?: UseCacheOptions<Error>
+   config?: UseCacheOptions<Response, Error>
 ): UseCache<Response, Error> {
    const newKey = key && config?.enabled !== false ? key : null;
    const prevKey = useRef(newKey);

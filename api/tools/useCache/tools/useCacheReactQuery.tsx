@@ -26,7 +26,7 @@ export const queryClient = new QueryClient({
 export function useCacheRq<Response = void, Error = any>(
    key: string,
    fn?: FetcherFn<Response>,
-   config?: UseCacheOptions<Error>
+   config?: UseCacheOptions<Response, Error>
 ): UseCache<Response, Error> {
    // Translate generic config props to React Query config props when the names are different
    const configRq: UseQueryOptions<Response, Error, Response> = {
