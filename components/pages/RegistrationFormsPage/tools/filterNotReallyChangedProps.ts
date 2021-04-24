@@ -29,9 +29,13 @@ export function filterNotReallyChangedProps(
       }
       if (typeof propsGathered[key] === "number") {
          let reducedNumber1 = removeDigitsFromNumber(propsGathered[key], {
+            digitsToKeepInIntegerPart: 4,
             digitsToKeepInDecimalPart: 2
          });
-         let reducedNumber2 = removeDigitsFromNumber(user[key], { digitsToKeepInDecimalPart: 2 });
+         let reducedNumber2 = removeDigitsFromNumber(user[key], {
+            digitsToKeepInIntegerPart: 4,
+            digitsToKeepInDecimalPart: 2
+         });
          return reducedNumber1 !== reducedNumber2;
       }
       return propsGathered[key] !== user[key];
