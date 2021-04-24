@@ -18,11 +18,16 @@ import {
  */
 export function usePermission(
    permissionSource: PermissionSource,
-   settings?: AskPermissionSettings
+   settings?: AskPermissionSettings & { enabled?: boolean }
 ) {
    const [granted, setGranted] = useState(false);
    const mounted = useRef(true);
+   const { enabled = true } = settings ?? {};
    useEffect(() => {
+      if (!enabled) {
+         return;
+      }
+
       if (!granted) {
          askForPermission(permissionSource, settings).then(() => {
             if (mounted.current) {
@@ -31,7 +36,7 @@ export function usePermission(
          });
       }
       return () => (mounted.current = false);
-   }, []);
+   }, [enabled]);
    return granted;
 }
 

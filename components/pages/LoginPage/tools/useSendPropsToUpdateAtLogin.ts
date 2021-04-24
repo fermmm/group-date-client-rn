@@ -17,8 +17,9 @@ export function useSendPropsToUpdateAtLogin(
    serverInfo: ServerInfoResponse,
    settings: { enabled: boolean }
 ): boolean {
+   const { enabled = true } = settings ?? {};
    const [completed, setCompleted] = useState<boolean>(false);
-   const { geolocation } = useGeolocation();
+   const { geolocation } = useGeolocation({ enabled });
    const [notificationsToken, setNotificationsToken] = useState<string>();
    const [notificationsTokenRequested, setNotificationTokenRequested] = useState(false);
    const [locationLat, setLocationLat] = useState<number>();
@@ -61,7 +62,7 @@ export function useSendPropsToUpdateAtLogin(
          locationLon != null &&
          country != null &&
          token != null &&
-         settings.enabled
+         enabled == true
       ) {
          const props: Partial<Record<EditableUserPropKey, UserPropsValueTypes>> = {
             locationLat,
@@ -83,7 +84,7 @@ export function useSendPropsToUpdateAtLogin(
       locationLon,
       country,
       token,
-      settings.enabled,
+      enabled,
       notificationsTokenRequested
    ]);
 

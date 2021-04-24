@@ -55,17 +55,27 @@ const LoginPage: FC = () => {
       requestParams: { token }
    });
 
+   const finishedRegistration = userFinishedRegistration(profileStatusData);
+
    // If we have a valid token we can send the user props that needs to be updated at each login
    const sendLoginPropsCompleted = useSendPropsToUpdateAtLogin(token, serverInfoData, {
-      enabled: tokenIsValid === true && canContinue === true && profileStatusData != null
+      enabled:
+         tokenIsValid === true &&
+         canContinue === true &&
+         profileStatusData != null &&
+         finishedRegistration === true
    });
 
    // If the user has props missing redirect to RegistrationForms otherwise redirect to Main or notification press
    useEffect(() => {
-      if (profileStatusData != null && sendLoginPropsCompleted && logoAnimCompleted && isFocused) {
-         if (!userFinishedRegistration(profileStatusData)) {
+      if (profileStatusData != null && logoAnimCompleted && isFocused) {
+         if (!finishedRegistration) {
             navigateWithoutHistory("RegistrationForms");
          } else {
+            if (!sendLoginPropsCompleted) {
+               return;
+            }
+
             if (redirectFromPushNotificationPress != null) {
                const redirected = redirectFromPushNotificationPress();
                if (!redirected) {

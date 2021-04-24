@@ -18,10 +18,14 @@ import { removeDigitsFromNumber } from "../../math/math-tools";
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 export function useGeolocation(settings?: GetGeolocationParams) {
-   const permissionGranted = usePermission({
-      getter: () => Location.getForegroundPermissionsAsync(),
-      requester: () => Location.requestForegroundPermissionsAsync()
-   });
+   const { enabled = true } = settings ?? {};
+   const permissionGranted = usePermission(
+      {
+         getter: () => Location.getForegroundPermissionsAsync(),
+         requester: () => Location.requestForegroundPermissionsAsync()
+      },
+      { enabled }
+   );
    const {
       value: storedGeolocation,
       setValue: setStoredGeolocation,
@@ -29,10 +33,7 @@ export function useGeolocation(settings?: GetGeolocationParams) {
    } = useLocalStorage<LocationData>(LocalStorageKey.Geolocation);
 
    const request =
-      settings?.enabled !== false &&
-      permissionGranted &&
-      !localStorageLoading &&
-      storedGeolocation == null;
+      enabled && permissionGranted && !localStorageLoading && storedGeolocation == null;
 
    const { data: requestedGeolocation } = useCache(
       "_geolocation_",
