@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
+import color from "color";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
@@ -33,6 +34,8 @@ const WelcomeTourPage: FC = () => {
       setAsShowed();
    }, []);
 
+   const topColor = color(colors.background).lightness(82).toString();
+
    return (
       <BackgroundArtistic>
          <ScreensStepper
@@ -42,7 +45,7 @@ const WelcomeTourPage: FC = () => {
          >
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
-                  <Text style={styles.bigText}>¡Bienvenidx!</Text>
+                  <Text style={[styles.bigText, { color: topColor }]}>¡Bienvenidx!</Text>
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
@@ -54,8 +57,8 @@ const WelcomeTourPage: FC = () => {
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
                   <GraphSvg2
-                     lineColor={colors.logoColor}
-                     circleColor={colors.logoColor}
+                     lineColor={topColor}
+                     circleColor={topColor}
                      filled={false}
                      style={styles.logoSvg}
                   />
@@ -69,7 +72,7 @@ const WelcomeTourPage: FC = () => {
             </View>
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
-                  <Icon name={"calendar-star"} color={colors.logoColor} size={iconSize} />
+                  <Icon name={"calendar-star"} color={topColor} size={iconSize} />
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
@@ -80,7 +83,7 @@ const WelcomeTourPage: FC = () => {
             </View>
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
-                  <LogoSvg color={colors.logoColor} style={styles.logoSvg} />
+                  <LogoSvg color={topColor} style={styles.logoSvg} />
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
@@ -92,7 +95,7 @@ const WelcomeTourPage: FC = () => {
             </View>
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
-                  <Icon name={"account-multiple-plus"} color={colors.logoColor} size={iconSize} />
+                  <Icon name={"account-multiple-plus"} color={topColor} size={iconSize} />
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
@@ -141,8 +144,7 @@ const styles: Styles = StyleSheet.create({
    bigText: {
       textAlign: "center",
       fontFamily: currentTheme.font.medium,
-      fontSize: 40,
-      color: currentTheme.colors.logoColor
+      fontSize: 40
    },
    button: {
       position: "absolute",
