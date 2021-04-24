@@ -21,12 +21,15 @@
       "versionCode": 1,
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
-      "permissions": []
+      "permissions": ["CAMERA", "CAMERA_ROLL", "ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
     },
     "ios": {
       "bundleIdentifier": "com.poly.poly",
       "buildNumber": "0.1.0",
-      "supportsTablet": false
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera when the user wants to upload photos to his/her profile."
+      }
     },
     "updates": {
       "fallbackToCacheTimeout": 0

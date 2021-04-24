@@ -67,7 +67,15 @@ export async function getGeolocation(settings?: GetGeolocationParams): Promise<L
    let locationData: LocationData = null;
 
    try {
+      /*
+       * We only require the position in a city precision, not the exact location of the user, but
+       * if I use getCurrentPositionAsync({accuracy: Location.LocationAccuracy.Lowest}) the
+       * accuracy it's still very high, so it's better for performance to use getLastKnownPositionAsync().
+       * Getting very low accuracy "coarse location" seems to be not available in the Android and IOS devices.
+       */
       const position = await Location.getLastKnownPositionAsync();
+
+      // Sadly reverseGeocodeAsync() requires full Location permissions:
       const reverseGeocoding = await Location.reverseGeocodeAsync(position.coords);
       let info: Location.LocationGeocodedAddress = null;
       if (reverseGeocoding != null && reverseGeocoding.length > 0) {

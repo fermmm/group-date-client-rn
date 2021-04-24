@@ -13,18 +13,18 @@ import {
  * Also the promise resolves if the user already granted the permissions in the past.
  * To change dialog texts use the settings parameter.
  * Official info about this flow in the following video: https://youtu.be/iZqDdvhTZj0?list=PLWz5rJ2EKKc-YUddw59dYq61o3ynn3A4X&t=283
- * @param permissions The permission to ask, example: Permissions.LOCATION with this import: import * as Permissions from "expo-permissions";
+ * @param permissionsSource The permission to ask, example: Permissions.LOCATION with this import: import * as Permissions from "expo-permissions"; Also can be an object with a getter and requester: {getter: () => Location.getPermissionsAsync(), requester: () => Location.requestPermissionsAsync()}
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 export function usePermission(
-   permissions: Permissions.PermissionType,
+   permissionSource: PermissionSource,
    settings?: AskPermissionSettings
 ) {
    const [granted, setGranted] = useState(false);
    const mounted = useRef(true);
    useEffect(() => {
       if (!granted) {
-         askForPermission(permissions, settings).then(() => {
+         askForPermission(permissionSource, settings).then(() => {
             if (mounted.current) {
                setGranted(true);
             }
@@ -43,11 +43,11 @@ export function usePermission(
  * Also the promise resolves if the user already granted the permissions in the past.
  * To change dialog texts use the settings parameter.
  * Official info about this flow in the following video: https://youtu.be/iZqDdvhTZj0?list=PLWz5rJ2EKKc-YUddw59dYq61o3ynn3A4X&t=283
- * @param permissions The permission to ask, example: Permissions.LOCATION with this import: import * as Permissions from "expo-permissions";
+ * @param permissionsSource The permission to ask, example: Permissions.LOCATION with this import: import * as Permissions from "expo-permissions"; Also can be an object with a getter and requester: {getter: () => Location.getPermissionsAsync(), requester: () => Location.requestPermissionsAsync()}
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 export async function askForPermission(
-   permissions: Permissions.PermissionType,
+   permissionsSource: PermissionSource,
    settings?: AskPermissionSettings
 ): Promise<void> {
    if (settings == null) {
@@ -56,10 +56,16 @@ export async function askForPermission(
    settings.allowContinueWithoutAccepting = settings.allowContinueWithoutAccepting || false;
    settings.rejectedDialogTexts = settings.rejectedDialogTexts || {};
 
-   let result: Permissions.PermissionResponse = await Permissions.getAsync(permissions);
+   let result: Permissions.PermissionResponse =
+      typeof permissionsSource === "string"
+         ? await Permissions.getAsync(permissionsSource)
+         : await permissionsSource.getter();
 
    if (result.status !== "granted") {
-      result = await Permissions.askAsync(permissions);
+      result =
+         typeof permissionsSource === "string"
+            ? await Permissions.askAsync(permissionsSource)
+            : await permissionsSource.requester();
    }
 
    if (result.status !== "granted") {
@@ -67,7 +73,7 @@ export async function askForPermission(
          return Promise.resolve(null);
       }
       await showRejectedPermissionsDialog(settings.rejectedDialogTexts);
-      return askForPermission(permissions, settings);
+      return askForPermission(permissionsSource, settings);
    }
 
    return Promise.resolve(null);
@@ -83,3 +89,10 @@ export interface AskPermissionSettings {
     */
    rejectedDialogTexts?: RejectedDialogSettings;
 }
+
+export type PermissionSource =
+   | Permissions.PermissionType
+   | {
+        getter: () => Promise<Permissions.PermissionResponse>;
+        requester: () => Promise<Permissions.PermissionResponse>;
+     };
