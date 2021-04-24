@@ -1,3 +1,4 @@
+import { removeDigitsFromNumber } from "./../../../../common-tools/math/math-tools";
 import { User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { EditableUserProps } from "../../../../api/server/shared-tools/validators/user";
 
@@ -27,8 +28,10 @@ export function filterNotReallyChangedProps(
          return propsGathered[key].join() !== user[key].join();
       }
       if (typeof propsGathered[key] === "number") {
-         let reducedNumber1 = String(Math.abs(propsGathered[key])).substring(0, 5);
-         let reducedNumber2 = String(Math.abs(user[key])).substring(0, 5);
+         let reducedNumber1 = removeDigitsFromNumber(propsGathered[key], {
+            digitsToKeepInDecimalPart: 2
+         });
+         let reducedNumber2 = removeDigitsFromNumber(user[key], { digitsToKeepInDecimalPart: 2 });
          return reducedNumber1 !== reducedNumber2;
       }
       return propsGathered[key] !== user[key];

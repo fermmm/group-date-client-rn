@@ -7,6 +7,7 @@ import {
 } from "./dialogLocationDisabled/dialogLocationDisabled";
 import { usePermission } from "../permissions/askForPermissions";
 import { LocalStorageKey } from "../../strings/LocalStorageKey";
+import { removeDigitsFromNumber } from "../../math/math-tools";
 
 /**
  * Gets geolocation data, asks for permissions Permissions.LOCATION. If the geolocation
@@ -63,8 +64,9 @@ export async function getGeolocation(settings?: GetGeolocationParams): Promise<L
    }
 
    settings.allowContinueWithGeolocationDisabled =
-      settings.allowContinueWithGeolocationDisabled || false;
-   settings.errorDialogSettings = settings.errorDialogSettings || {};
+      settings.allowContinueWithGeolocationDisabled ?? false;
+   settings.errorDialogSettings = settings.errorDialogSettings ?? {};
+   settings.removePrecisionInCoordinates = settings.removePrecisionInCoordinates ?? true;
 
    let locationData: LocationData = null;
 
@@ -85,9 +87,18 @@ export async function getGeolocation(settings?: GetGeolocationParams): Promise<L
       }
 
       locationData = {
-         coords: position.coords,
+         coords: { ...position.coords },
          info
       };
+
+      if (settings.removePrecisionInCoordinates) {
+         locationData.coords.latitude = removeDigitsFromNumber(locationData.coords.latitude, {
+            digitsToKeepInDecimalPart: 2
+         });
+         locationData.coords.longitude = removeDigitsFromNumber(locationData.coords.longitude, {
+            digitsToKeepInDecimalPart: 2
+         });
+      }
 
       return Promise.resolve(locationData);
    } catch (error) {
@@ -116,6 +127,10 @@ export interface GetGeolocationParams {
     * Default = {}. Texts to show in the location not available error dialog, if this is not set then english generic texts are used.
     */
    errorDialogSettings?: DisabledLocationDialogSettings;
+   /**
+    * Default = true. Removes latitude and longitude number precision to 2 decimal places in order to protect user privacy.
+    */
+   removePrecisionInCoordinates?: boolean;
 }
 
 export interface LocationData {
