@@ -1,16 +1,22 @@
 import * as ImagePicker from "expo-image-picker";
-import * as Permissions from "expo-permissions";
+import { Camera } from "expo-camera";
 import { askForPermission } from "../permissions/askForPermissions";
 import i18n from "i18n-js";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import { IMAGES_ASPECT_RATIO, LOCK_IMAGES_ASPECT_RATIO } from "../../../config";
 
 export const callCameraPicture = async (): Promise<string | null> => {
-   await askForPermission(Permissions.CAMERA, {
-      rejectedDialogTexts: {
-         instructionsToastText: i18n.t("Touch on Camera")
+   await askForPermission(
+      {
+         getter: () => Camera.getPermissionsAsync(),
+         requester: () => Camera.requestPermissionsAsync()
+      },
+      {
+         rejectedDialogTexts: {
+            instructionsToastText: i18n.t("Touch on Camera")
+         }
       }
-   });
+   );
 
    const result: ImageInfo = ((await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,

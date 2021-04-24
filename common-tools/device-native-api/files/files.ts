@@ -1,5 +1,4 @@
 import * as ImagePicker from "expo-image-picker";
-import * as Permissions from "expo-permissions";
 import { askForPermission } from "../permissions/askForPermissions";
 import i18n from "i18n-js";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";

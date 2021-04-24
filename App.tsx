@@ -1,7 +1,7 @@
 import * as Localization from "expo-localization";
 import i18n from "i18n-js";
 import React, { FC, useEffect, useState } from "react";
-import { AppLoading } from "expo";
+import AppLoading from "expo-app-loading";
 import { Provider as PaperProvider } from "react-native-paper";
 import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
 import { currentTheme } from "./config";

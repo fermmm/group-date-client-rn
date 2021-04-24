@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import * as Permissions from "expo-permissions";
+import { PermissionResponse } from "unimodules-permissions-interface";
 import {
    showRejectedPermissionsDialog,
    RejectedDialogSettings
@@ -13,7 +13,7 @@ import {
  * Also the promise resolves if the user already granted the permissions in the past.
  * To change dialog texts use the settings parameter.
  * Official info about this flow in the following video: https://youtu.be/iZqDdvhTZj0?list=PLWz5rJ2EKKc-YUddw59dYq61o3ynn3A4X&t=283
- * @param permissionsSource The permission to ask, example: Permissions.LOCATION with this import: import * as Permissions from "expo-permissions"; Also can be an object with a getter and requester: {getter: () => Location.getPermissionsAsync(), requester: () => Location.requestPermissionsAsync()}
+ * @param permissionsSource An object with a getter and requester: {getter: () => Location.getPermissionsAsync(), requester: () => Location.requestPermissionsAsync()}
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 export function usePermission(
@@ -43,7 +43,7 @@ export function usePermission(
  * Also the promise resolves if the user already granted the permissions in the past.
  * To change dialog texts use the settings parameter.
  * Official info about this flow in the following video: https://youtu.be/iZqDdvhTZj0?list=PLWz5rJ2EKKc-YUddw59dYq61o3ynn3A4X&t=283
- * @param permissionsSource The permission to ask, example: Permissions.LOCATION with this import: import * as Permissions from "expo-permissions"; Also can be an object with a getter and requester: {getter: () => Location.getPermissionsAsync(), requester: () => Location.requestPermissionsAsync()}
+ * @param permissionsSource An object with a getter and requester: {getter: () => Location.getPermissionsAsync(), requester: () => Location.requestPermissionsAsync()}
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 export async function askForPermission(
@@ -56,16 +56,10 @@ export async function askForPermission(
    settings.allowContinueWithoutAccepting = settings.allowContinueWithoutAccepting || false;
    settings.rejectedDialogTexts = settings.rejectedDialogTexts || {};
 
-   let result: Permissions.PermissionResponse =
-      typeof permissionsSource === "string"
-         ? await Permissions.getAsync(permissionsSource)
-         : await permissionsSource.getter();
+   let result: PermissionResponse = await permissionsSource.getter();
 
    if (result.status !== "granted") {
-      result =
-         typeof permissionsSource === "string"
-            ? await Permissions.askAsync(permissionsSource)
-            : await permissionsSource.requester();
+      result = await permissionsSource.requester();
    }
 
    if (result.status !== "granted") {
@@ -90,9 +84,7 @@ export interface AskPermissionSettings {
    rejectedDialogTexts?: RejectedDialogSettings;
 }
 
-export type PermissionSource =
-   | Permissions.PermissionType
-   | {
-        getter: () => Promise<Permissions.PermissionResponse>;
-        requester: () => Promise<Permissions.PermissionResponse>;
-     };
+export interface PermissionSource {
+   getter: () => Promise<PermissionResponse>;
+   requester: () => Promise<PermissionResponse>;
+}

@@ -5,7 +5,6 @@ import {
    showLocationDisabledDialog,
    DisabledLocationDialogSettings
 } from "./dialogLocationDisabled/dialogLocationDisabled";
-import * as Permissions from "expo-permissions";
 import { usePermission } from "../permissions/askForPermissions";
 import { LocalStorageKey } from "../../strings/LocalStorageKey";
 
@@ -18,7 +17,10 @@ import { LocalStorageKey } from "../../strings/LocalStorageKey";
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 export function useGeolocation(settings?: GetGeolocationParams) {
-   const permissionGranted = usePermission(Permissions.LOCATION);
+   const permissionGranted = usePermission({
+      getter: () => Location.getForegroundPermissionsAsync(),
+      requester: () => Location.requestForegroundPermissionsAsync()
+   });
    const {
       value: storedGeolocation,
       setValue: setStoredGeolocation,
