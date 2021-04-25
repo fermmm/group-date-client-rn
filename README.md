@@ -4,7 +4,7 @@ This project uses TypeScript + React Native + Expo with "managed" workflow. For 
 
 ## Installation
 
-1. Make sure you have Node.js installed at least version 12, if you don't have it download from nodejs.org or [using NVM (Node Version Manager)](https://tecadmin.net/install-nodejs-with-nvm/)
+1. Make sure you have Node.js installed at least version 14, to verify run `node -v`. If you don't have it download from nodejs.org or better: [using NVM (Node Version Manager)](https://tecadmin.net/install-nodejs-with-nvm/)
 2. Clone the repo, in the repo folder run `npm install`
 3. Duplicate the file `.env.example` and rename it: `.env`. In Linux and MacOS you can use this command: 
   `cp .env.example .env`.
