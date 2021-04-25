@@ -8,6 +8,8 @@ This project uses TypeScript + React Native + Expo with "managed" workflow. For 
 2. Clone the repo, in the repo folder run `npm install`
 3. Duplicate the file `.env.example` and rename it: `.env`. In Linux and MacOS you can use this command: 
   `cp .env.example .env`.
+4. Create a file named `google-services.json` in the root of the project (where .env file is located).
+This is required by expo to compile, you will replace this file with a real one when you publish the app in the future.
 5. The login on this app works with Facebook, so you must create a Facebook app as Facebook developer and complete `FACEBOOK_APP_ID` and `FACEBOOK_APP_NAME` in the .env file. Also add `rRW++LUjmZZ+58EbN5DVhGAnkX4=` on the "Key Hashes" field in your Facebook app configuration. [More info here](https://docs.expo.io/versions/v36.0.0/sdk/facebook/#registering-your-app-with-facebook).
 6. Install "Expo Go" app from your phone store, you will need it to test the app in your phone.
 
