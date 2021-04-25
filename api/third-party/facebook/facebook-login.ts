@@ -2,7 +2,6 @@ import { useCache, UseCacheOptions } from "../../tools/useCache/useCache";
 import { FacebookLoginResult, initializeAsync, logInWithReadPermissionsAsync } from "expo-facebook";
 import { Alert } from "react-native";
 import { Flatten } from "../../../common-tools/ts-tools/common-ts-tools";
-import { FACEBOOK_APP_ID, FACEBOOK_APP_NAME } from "@env";
 import {
    loadFromDevice,
    saveOnDevice
@@ -72,7 +71,10 @@ export function useFacebookToken(externallyProvidedToken?: string): UseFacebookT
  */
 async function getTokenFromFacebook(): Promise<string | null> {
    try {
-      await initializeAsync({ appId: FACEBOOK_APP_ID, appName: FACEBOOK_APP_NAME });
+      await initializeAsync({
+         appId: process.env.FACEBOOK_APP_ID,
+         appName: process.env.FACEBOOK_APP_NAME
+      });
 
       let loginResult: FacebookLoginResult = null;
 

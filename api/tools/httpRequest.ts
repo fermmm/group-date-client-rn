@@ -1,7 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import I18n from "i18n-js";
 import Constants from "expo-constants";
-import { SERVER_URL_DEVELOPMENT, SERVER_URL_PRODUCTION } from "@env";
 import { showRequestErrorAlert } from "./showRequestErrorAlert";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
@@ -134,9 +133,9 @@ export function prepareUrl(url: string): string {
 
 export function getServerUrl(): string {
    if (__DEV__) {
-      return prepareUrl(SERVER_URL_DEVELOPMENT);
+      return prepareUrl(process.env.SERVER_URL_DEVELOPMENT);
    } else {
-      return prepareUrl(SERVER_URL_PRODUCTION);
+      return prepareUrl(process.env.SERVER_URL_PRODUCTION);
    }
 }
 
