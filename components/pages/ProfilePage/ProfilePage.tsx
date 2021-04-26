@@ -6,6 +6,7 @@ import { useRoute } from "@react-navigation/native";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useUser } from "../../../api/server/user";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
+import { Alert } from "react-native";
 
 export interface ParamsProfilePage {
    user?: User;
@@ -26,6 +27,14 @@ const ProfilePage: FC = () => {
    const isDeviceUser = user?.userId === deviceUser?.userId;
    const isLoading = !user || !deviceUser;
 
+   const handleLikePress = () => {
+      Alert.alert("", "Dar o quitar likes en este contexto todavía no esta programado =(");
+   };
+
+   const handleDislikePress = () => {
+      Alert.alert("", "Dar o quitar likes en este contexto todavía no esta programado =(");
+   };
+
    return (
       <>
          <ButtonBack />
@@ -33,6 +42,8 @@ const ProfilePage: FC = () => {
             <LoadingAnimation renderMethod={RenderMethod.FullScreen} />
          ) : (
             <ProfileCard
+               onLikePress={handleLikePress}
+               onDislikePress={handleLikePress}
                showLikeDislikeButtons={!isDeviceUser}
                user={user}
                editMode={editMode}
