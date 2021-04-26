@@ -27,11 +27,7 @@ const ProfilePage: FC = () => {
    const isDeviceUser = user?.userId === deviceUser?.userId;
    const isLoading = !user || !deviceUser;
 
-   const handleLikePress = () => {
-      Alert.alert("", "Dar o quitar likes en este contexto todavía no esta programado =(");
-   };
-
-   const handleDislikePress = () => {
+   const handleLikeDislikePress = () => {
       Alert.alert("", "Dar o quitar likes en este contexto todavía no esta programado =(");
    };
 
@@ -42,8 +38,8 @@ const ProfilePage: FC = () => {
             <LoadingAnimation renderMethod={RenderMethod.FullScreen} />
          ) : (
             <ProfileCard
-               onLikePress={handleLikePress}
-               onDislikePress={handleLikePress}
+               onLikePress={handleLikeDislikePress}
+               onDislikePress={handleLikeDislikePress}
                showLikeDislikeButtons={!isDeviceUser}
                user={user}
                editMode={editMode}
