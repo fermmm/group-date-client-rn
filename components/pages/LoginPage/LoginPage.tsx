@@ -20,6 +20,7 @@ import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useSendPropsToUpdateAtLogin } from "./tools/useSendPropsToUpdateAtLogin";
 import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
 import BackgroundArtistic from "../../common/BackgroundArtistic/BackgroundArtistic";
+import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -84,15 +85,7 @@ const LoginPage: FC = () => {
             } else {
                navigateWithoutHistory("Main");
             }
-            Alert.alert(
-               "",
-               "Esta app acaba de ser terminada y es para pruebas. La vamos a difundir después de la pandemia. Puede que no encuentres a nadie por tu zona",
-               [
-                  {
-                     text: "Entendido"
-                  }
-               ]
-            );
+            showBetaVersionMessage();
          }
       }
    }, [profileStatusData, sendLoginPropsCompleted, logoAnimCompleted]);

@@ -28,6 +28,8 @@ import { mutateCache, revalidate } from "../../../api/tools/useCache/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
 import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
 import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
+import { Alert } from "react-native";
+import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -85,6 +87,7 @@ const RegistrationFormsPage: FC = () => {
             } else {
                navigateWithoutHistory("Main");
             }
+            showBetaVersionMessage();
          }
       }
    }, [profileStatus]);
