@@ -62,6 +62,7 @@ const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
                         <RadioButtonImproved
                            checked={reportType === ReportUserType.MissingPicture}
                            onPress={() => setReportType(ReportUserType.MissingPicture)}
+                           style={styles.radioButton}
                         >
                            <Text style={styles.responseText}>No hay foto de la persona</Text>
                            <Text style={styles.responseExtraText}>
@@ -71,6 +72,7 @@ const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
                         <RadioButtonImproved
                            checked={reportType === ReportUserType.NonEthical}
                            onPress={() => setReportType(ReportUserType.NonEthical)}
+                           style={styles.radioButton}
                         >
                            <Text style={styles.responseText}>Perfil no ético</Text>
                            <Text style={styles.responseExtraText}>
@@ -149,6 +151,10 @@ const styles: Styles = StyleSheet.create({
    button: {
       borderColor: currentTheme.colors.accent2,
       minWidth: 180
+   },
+   radioButton: {
+      paddingLeft: 40,
+      paddingRight: 50
    }
 });
 

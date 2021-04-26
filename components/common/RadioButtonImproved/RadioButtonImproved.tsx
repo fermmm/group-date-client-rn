@@ -54,8 +54,6 @@ const RadioButtonImproved: FC<RadioButtonImprovedProps> = props => {
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
-      paddingLeft: 40,
-      paddingRight: 50,
       flexDirection: "row",
       alignItems: "center"
    },

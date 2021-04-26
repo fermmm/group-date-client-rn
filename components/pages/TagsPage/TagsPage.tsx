@@ -14,6 +14,7 @@ import { Button, FAB } from "react-native-paper";
 import TagChipList from "../../common/TagChipList/TagChipList";
 import { useUserTags } from "./tools/useUserTags";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
+import EmptySpace from "../../common/EmptySpace/EmptySpace";
 
 export const TagsPage: FC = () => {
    const [searchString, setSearchString] = useState("");
@@ -85,13 +86,16 @@ export const TagsPage: FC = () => {
                />
             )}
             {listToShow === TagListType.SearchResult && (
-               <TagChipList
-                  flatList={tagsOfSearchResult}
-                  showSubscribersAmount={false}
-                  showSubscribersAmountOnModal={false}
-                  hideCategory={true}
-                  hideCategoryOnModal={false}
-               />
+               <>
+                  <EmptySpace />
+                  <TagChipList
+                     flatList={tagsOfSearchResult}
+                     showSubscribersAmount={false}
+                     showSubscribersAmountOnModal={false}
+                     hideCategory={true}
+                     hideCategoryOnModal={false}
+                  />
+               </>
             )}
             {listToShow === TagListType.UserTags && (
                <TagChipList
