@@ -129,8 +129,7 @@ const styles: Styles = StyleSheet.create({
       textAlign: "center"
    },
    listScroll: {
-      paddingTop: 90,
-      paddingBottom: 90
+      paddingBottom: 160
    },
    tagChip: { marginLeft: 15 }
 });

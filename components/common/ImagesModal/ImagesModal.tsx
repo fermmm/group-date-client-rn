@@ -58,7 +58,7 @@ const styles: Styles = StyleSheet.create({
    },
    closeButton: {
       position: "absolute",
-      opacity: 0.35,
+      opacity: 0.8,
       marginLeft: 10,
       marginTop: 10
    }

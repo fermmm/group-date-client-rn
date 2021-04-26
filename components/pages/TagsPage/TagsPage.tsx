@@ -119,10 +119,9 @@ const styles: Styles = StyleSheet.create({
       flex: 1
    },
    header: {
-      position: "absolute",
       flexDirection: "row",
       alignItems: "center",
-      top: 20,
+      marginTop: 20,
       zIndex: 10,
       width: "100%",
       paddingLeft: 15,

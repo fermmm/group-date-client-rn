@@ -57,7 +57,11 @@ const TagChip: FC<PropsTagChip> = ({
 
    return (
       <>
-         <ViewTouchable onPress={interactive ? () => onPress(tag) : null} defaultAlpha={0.1}>
+         <ViewTouchable
+            style={styles.touchableContainer}
+            onPress={interactive ? () => onPress(tag) : null}
+            defaultAlpha={0.1}
+         >
             <View style={[styles.mainContainer, styleBasedOnUserTags, style]}>
                <>
                   <View>
@@ -78,6 +82,9 @@ const TagChip: FC<PropsTagChip> = ({
    );
 };
 const styles: Styles = StyleSheet.create({
+   touchableContainer: {
+      marginBottom: 6
+   },
    mainContainer: {
       alignSelf: "flex-start",
       flexDirection: "row",
@@ -86,7 +93,6 @@ const styles: Styles = StyleSheet.create({
       paddingLeft: 17,
       paddingRight: 17,
       marginRight: 5,
-      marginBottom: 5,
       borderRadius: currentTheme.roundness,
       backgroundColor: color(currentTheme.colors.background).darken(0.05).string()
    },
