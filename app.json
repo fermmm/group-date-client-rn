@@ -18,7 +18,7 @@
     "version": "0.1.0",
     "android": {
       "package": "com.poly.poly",
-      "versionCode": 1,
+      "versionCode": 2,
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
       "permissions": ["CAMERA", "CAMERA_ROLL", "ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]

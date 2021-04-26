@@ -55,7 +55,7 @@ export enum Gender {
    Man = "Man",
    TransgenderWoman = "TransgenderWoman",
    TransgenderMan = "TransgenderMan",
-   Other = "Other",
+   Other = "Other"
 }
 
 export interface ProfileStatusServerResponse {
@@ -90,12 +90,12 @@ export interface Attraction {
 
 export enum AttractionType {
    Like = "Like",
-   Dislike = "Dislike",
+   Dislike = "Dislike"
 }
 
 export enum MatchType {
    Like = "Match",
-   Dislike = "SeenMatch",
+   Dislike = "SeenMatch"
 }
 
 export interface Notification {
@@ -115,7 +115,7 @@ export enum NotificationType {
    ContactChat,
    NearbyPartyOrEvent,
    CardsGame,
-   About,
+   About
 }
 
 export type UserPropsAsQuestionsTypes = boolean | Gender;
@@ -142,7 +142,7 @@ export enum NotificationChannelId {
    ChatMessages = "chat",
    Events = "events",
    NewUsers = "newUsers",
-   DateReminders = "dateReminders",
+   DateReminders = "dateReminders"
 }
 
 export interface NotificationChannelInfo {
@@ -154,4 +154,15 @@ export interface NotificationData {
    targetId: string;
    type: NotificationType;
    notificationId: string;
+}
+
+export interface ReportUserPostParams extends TokenParameter {
+   reportedUserId: string;
+   reportType: ReportUserType;
+   notes?: string;
+}
+
+export enum ReportUserType {
+   NonEthical = "non-ethical",
+   MissingPicture = "missing-picture"
 }

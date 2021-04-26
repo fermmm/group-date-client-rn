@@ -12,7 +12,8 @@ import {
    UserGetParams,
    UserPostParams,
    UserPropAsQuestion,
-   Notification
+   Notification,
+   ReportUserPostParams
 } from "./shared-tools/endpoints-interfaces/user";
 import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
@@ -86,6 +87,10 @@ export async function sendUserProps(params: UserPostParams, autoRevalidateRelate
 
 export async function sendAttraction(params: SetAttractionParams) {
    return await defaultHttpRequest("user/set-attraction", "POST", params, { handleErrors: true });
+}
+
+export async function sendReportUser(params: ReportUserPostParams) {
+   return await defaultHttpRequest("user/report", "POST", params, { handleErrors: true });
 }
 
 export async function uploadImage(

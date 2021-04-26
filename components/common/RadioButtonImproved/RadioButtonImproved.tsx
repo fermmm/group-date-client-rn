@@ -2,6 +2,7 @@ import React, { FC, useState } from "react";
 import { StyleSheet, View, StyleProp, ViewStyle, LayoutChangeEvent } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { RadioButton, TouchableRipple } from "react-native-paper";
+import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 export interface RadioButtonImprovedProps {
    checked: boolean;
@@ -27,47 +28,39 @@ const RadioButtonImproved: FC<RadioButtonImprovedProps> = props => {
    };
 
    const measureView = (event: LayoutChangeEvent) => {
-      const responseHeight: number = event.nativeEvent.layout.height;
+      const height: number = event.nativeEvent.layout.height;
       if (margin == null) {
-         setMargin(translateBetweenRanges(responseHeight, 20, 64, 0, 9));
+         setMargin(translateBetweenRanges(height, 20, 64, 0, 9));
       }
    };
 
    return (
-      <TouchableRipple onPress={() => props.onPress()}>
-         <View
-            pointerEvents={"none"}
-            style={[
-               props.style,
-               styles.mainContainer,
-               margin != null && {
-                  marginBottom: margin,
-                  marginTop: margin
-               }
-            ]}
-         >
-            <View>
+      <ViewTouchable onPress={() => props.onPress()}>
+         <View pointerEvents={"none"} style={[props.style, styles.mainContainer]}>
+            <View style={{ marginRight: 15 }}>
                {props.iconElement != null ? (
                   props.iconElement(props.checked)
                ) : (
                   <RadioButton value={""} status={props.checked ? "checked" : "unchecked"} />
                )}
             </View>
-            <View style={styles.childrenContainer} onLayout={e => measureView(e)}>
+            <View style={styles.childrenContainer} onLayout={measureView}>
                {props.children}
             </View>
          </View>
-      </TouchableRipple>
+      </ViewTouchable>
    );
 };
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
+      paddingLeft: 40,
+      paddingRight: 50,
       flexDirection: "row",
       alignItems: "center"
    },
    childrenContainer: {
-      flex: 1
+      flexShrink: 1
    }
 });
 

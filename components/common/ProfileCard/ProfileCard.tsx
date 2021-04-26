@@ -32,6 +32,9 @@ import { getGenderName } from "../../../common-tools/strings/gender";
 import { prepareUrl } from "../../../api/tools/httpRequest";
 import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 import TagChipList from "../TagChipList/TagChipList";
+import MoreModal from "./MoreModal/MoreModal";
+import { useCallback } from "react";
+import { userFinishedRegistration } from "../../../api/tools/userTools";
 
 export interface ProfileCardProps {
    user: User;
@@ -55,6 +58,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
 
    const {
       name,
+      userId,
       images,
       birthDate,
       cityName,
@@ -65,10 +69,12 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       tagsSubscribed,
       tagsBlocked
    }: Partial<User> = props.user;
+
    const genderText: string = getGenderName(gender, isCoupleProfile);
 
    const { navigate } = useNavigation();
    const [renderImageModal, setRenderImageModal] = useState(false);
+   const [showMoreOptionsModal, setShowMoreOptionsModal] = useState(false);
    const [imageSelected, setImageSelected] = useState(0);
    const [animate, setAnimate] = useState<CardAnimationType>(null);
    const [onAnimationFinish, setOnAnimationFinish] = useState<{ func: () => void }>(null);
@@ -86,26 +92,37 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       [localUser, tagsSubscribed, allTags]
    );
 
-   const tagsBlockedInCommon: Tag[] = useMemo(
-      () =>
-         tagsBlocked
-            ?.filter(t => localUser?.tagsBlocked.find(ut => ut.tagId === t.tagId) != null)
-            .map(t => allTags?.find(at => at.tagId === t.tagId))
-            .filter(t => t != null),
-      [localUser, tagsSubscribed, allTags]
+   // const tagsBlockedInCommon: Tag[] = useMemo(
+   //    () =>
+   //       tagsBlocked
+   //          ?.filter(t => localUser?.tagsBlocked.find(ut => ut.tagId === t.tagId) != null)
+   //          .map(t => allTags?.find(at => at.tagId === t.tagId))
+   //          .filter(t => t != null),
+   //    [localUser, tagsSubscribed, allTags]
+   // );
+
+   const finalImagesUri = useMemo(
+      () => images.map(uri => prepareUrl(serverInfo.imagesHost + uri)),
+      [images]
    );
 
-   const finalImagesUri = images.map(uri => prepareUrl(serverInfo.imagesHost + uri));
-
-   const handleLikeClick = () => {
+   const handleLikePress = useCallback(() => {
       setOnAnimationFinish({ func: onLikePress });
       setAnimate(CardAnimationType.Like);
-   };
+   }, [onLikePress]);
 
-   const handleDislikeClick = () => {
+   const handleDislikePress = useCallback(() => {
       setOnAnimationFinish({ func: onDislikePress });
       setAnimate(CardAnimationType.Dislike);
-   };
+   }, [onDislikePress]);
+
+   const handleMoreOptionsPress = useCallback(() => {
+      setShowMoreOptionsModal(true);
+   }, []);
+
+   const handleMoreOptionsClose = useCallback(() => {
+      setShowMoreOptionsModal(false);
+   }, []);
 
    if (!localUser || tagsLoading || serverInfoLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
@@ -239,9 +256,10 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                {showLikeDislikeButtons && (
                   <LikeDislikeButtons
                      style={styles.likeDislikeButtons}
-                     onLikePress={handleLikeClick}
-                     onDislikePress={handleDislikeClick}
+                     onLikePress={handleLikePress}
+                     onDislikePress={handleDislikePress}
                      onUndoPress={onUndoPress}
+                     onMorePress={handleMoreOptionsPress}
                   />
                )}
             </View>
@@ -253,6 +271,9 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                initialPage={imageSelected}
                onClose={() => setRenderImageModal(false)}
             />
+         )}
+         {showMoreOptionsModal === true && (
+            <MoreModal userToReportId={userId} onClose={handleMoreOptionsClose} />
          )}
       </>
    );

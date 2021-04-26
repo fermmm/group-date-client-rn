@@ -12,6 +12,7 @@ export interface LikeDislikeProps {
    onLikePress?: () => void;
    onDislikePress?: () => void;
    onUndoPress?: () => void;
+   onMorePress?: () => void;
 }
 
 const LikeDislikeButtons: FC<LikeDislikeProps> = props => {
@@ -20,19 +21,17 @@ const LikeDislikeButtons: FC<LikeDislikeProps> = props => {
    return (
       <>
          <View style={[styles.container, props.style]}>
-            <View style={styles.button}>
+            <View style={styles.buttonContainer}>
                <FAB
-                  style={{
-                     backgroundColor: color(colors.surface).darken(0.1).desaturate(0.2).string()
-                  }}
+                  style={styles.dislikeButton}
                   color={color(colors.background).darken(0.4).string()}
                   icon="close"
                   onPress={props.onDislikePress}
                />
             </View>
-            <View style={styles.button}>
+            <View style={styles.buttonContainer}>
                <FAB
-                  style={{ backgroundColor: colors.accent2 }}
+                  style={styles.likeButton}
                   color={color(colors.accent).darken(0.04).string()}
                   icon={({ color: c }) => <LogoSvg color={c} style={styles.logo} />}
                   onPress={props.onLikePress}
@@ -41,19 +40,18 @@ const LikeDislikeButtons: FC<LikeDislikeProps> = props => {
          </View>
          {props.onUndoPress != null && (
             <FAB
-               style={{
-                  position: "absolute",
-                  left: 67,
-                  bottom: 22,
-                  backgroundColor: "transparent",
-                  elevation: 0,
-                  shadowOpacity: 0
-               }}
+               style={styles.undoButton}
                color={color(colors.background).darken(0.4).string()}
                icon="undo-variant"
                onPress={props.onUndoPress}
             />
          )}
+         <FAB
+            style={styles.moreButton}
+            color={color(colors.background).darken(0.4).string()}
+            icon="dots-horizontal"
+            onPress={props.onMorePress}
+         />
       </>
    );
 };
@@ -69,8 +67,28 @@ const styles: Styles = StyleSheet.create({
       padding: 5,
       borderRadius: currentTheme.roundness
    },
-   button: {
+   buttonContainer: {
       width: "auto"
+   },
+   likeButton: { backgroundColor: currentTheme.colors.accent2 },
+   dislikeButton: {
+      backgroundColor: color(currentTheme.colors.surface).darken(0.1).desaturate(0.2).string()
+   },
+   undoButton: {
+      position: "absolute",
+      left: 60,
+      bottom: 22,
+      backgroundColor: "transparent",
+      elevation: 0,
+      shadowOpacity: 0
+   },
+   moreButton: {
+      position: "absolute",
+      right: 60,
+      bottom: 22,
+      backgroundColor: "transparent",
+      elevation: 0,
+      shadowOpacity: 0
    }
 });
 

@@ -16,10 +16,10 @@ export const ViewTouchable: FC<
       <TouchableRipple
          borderless
          rippleColor={color(props?.defaultRippleColor ?? "black")
-            .alpha(props?.defaultAlpha ?? 0.32)
+            .alpha(props?.defaultAlpha ?? 0.2)
             .toString()}
          {...props}
-         style={[{ borderRadius: roundness }, props.style]}
+         style={[{ borderRadius: roundness, flexShrink: 1 }, props.style]}
       >
          {props.children}
       </TouchableRipple>

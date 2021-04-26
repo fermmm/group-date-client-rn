@@ -16,20 +16,28 @@ export interface ParamsProfilePage {
 const ProfilePage: FC = () => {
    const { params } = useRoute<RouteProps<ParamsProfilePage>>();
    const { user: userFromParams, requestFullInfo, editMode } = params ?? {};
+   const { data: deviceUser } = useUser();
    const { data: userRequested } = useUser(
       requestFullInfo && userFromParams
          ? { requestParams: { userId: userFromParams.userId } }
          : null
    );
    const user = !requestFullInfo && userFromParams ? userFromParams : userRequested;
+   const isDeviceUser = user?.userId === deviceUser?.userId;
+   const isLoading = !user || !deviceUser;
 
    return (
       <>
          <ButtonBack />
-         {!user ? (
+         {isLoading ? (
             <LoadingAnimation renderMethod={RenderMethod.FullScreen} />
          ) : (
-            <ProfileCard user={user} editMode={editMode} statusBarPadding />
+            <ProfileCard
+               showLikeDislikeButtons={!isDeviceUser}
+               user={user}
+               editMode={editMode}
+               statusBarPadding
+            />
          )}
       </>
    );
