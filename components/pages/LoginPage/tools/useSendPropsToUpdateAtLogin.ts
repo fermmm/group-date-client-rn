@@ -31,11 +31,11 @@ export function useSendPropsToUpdateAtLogin(
       if (
          geolocation?.coords?.latitude != null &&
          geolocation?.coords?.longitude != null &&
-         geolocation?.info?.isoCountryCode != null
+         geolocation?.address?.isoCountryCode != null
       ) {
          setLocationLat(geolocation.coords.latitude);
          setLocationLon(geolocation.coords.longitude);
-         setCountry(geolocation.info.isoCountryCode);
+         setCountry(geolocation.address.isoCountryCode);
       }
    }, [geolocation]);
 

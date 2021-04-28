@@ -3,5 +3,5 @@ export enum LocalStorageKey {
    SeenNotificationsIds = "seenNotificationsIds",
    FacebookToken = "pdfbtoken",
    WelcomeShowed = "welcomeShowed",
-   Geolocation = "__geolocation__"
+   GeolocationAddress = "__geolocationAddress__"
 }

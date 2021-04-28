@@ -59,7 +59,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
             height: height ?? 0,
             locationLat: geolocation?.coords?.latitude,
             locationLon: geolocation?.coords?.longitude,
-            country: geolocation?.info?.isoCountryCode,
+            country: geolocation?.address?.isoCountryCode,
             cityName
          },
          getError()
@@ -68,7 +68,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
 
    useEffect(() => {
       if (!cityName && !cityNameModified) {
-         setCityName(geolocation?.info?.district ?? geolocation?.info?.region ?? "");
+         setCityName(geolocation?.address?.district ?? geolocation?.address?.region ?? "");
       }
    }, [geolocation]);
 
@@ -154,7 +154,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
       if (
          !geolocation?.coords?.latitude ||
          !geolocation?.coords?.longitude ||
-         !geolocation?.info?.isoCountryCode
+         !geolocation?.address?.isoCountryCode
       ) {
          return "No se puede obtener tu localización, revisa los permisos de la app";
       }
