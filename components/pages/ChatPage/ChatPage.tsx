@@ -176,12 +176,12 @@ const ChatPage: FC = () => {
                         right: {
                            color: colors.text2,
                            fontFamily: font.regular,
-                           fontSize: 15
+                           fontSize: 16
                         },
                         left: {
                            color: colors.text2,
                            fontFamily: font.regular,
-                           fontSize: 15
+                           fontSize: 16
                         }
                      }}
                      usernameStyle={{
@@ -196,11 +196,13 @@ const ChatPage: FC = () => {
                      wrapperStyle={{
                         right: {
                            backgroundColor: props.currentMessage.pending
-                              ? color(colors.primary).alpha(0.5).toString()
-                              : colors.primary
+                              ? color(colors.specialBackground1).alpha(0.5).toString()
+                              : color(colors.specialBackground1).darken(0.4).toString(),
+                           padding: 3
                         },
                         left: {
-                           backgroundColor: colors.primary
+                           backgroundColor: color(colors.specialBackground1).darken(0.4).toString(),
+                           padding: 3
                         }
                      }}
                   />
