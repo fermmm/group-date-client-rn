@@ -51,13 +51,20 @@ function useGeolocationCoords(params: {
 }) {
    const { permissionGranted, settings } = params;
 
-   const { data: coords } = useCache(
-      "_geolocationPos_",
-      () => getGeolocationPosition({ ...settings }),
-      { enabled: permissionGranted }
+   const { value: storedCoords, setValue: setStoredCoords } = useLocalStorage<LocationCoords>(
+      LocalStorageKey.GeolocationCoords
    );
 
-   return coords;
+   const { data: coords, error } = useCache(
+      "_geolocationPos_",
+      () => getGeolocationPosition({ ...settings }),
+      {
+         enabled: permissionGranted === true,
+         onSuccess: coords => setStoredCoords(coords)
+      }
+   );
+
+   return error == null ? coords : storedCoords;
 }
 
 /**
@@ -130,11 +137,18 @@ export async function getGeolocationPosition(
    try {
       /*
        * We only require the position in a city precision, not the exact location of the user, but
-       * if I use getCurrentPositionAsync({accuracy: Location.LocationAccuracy.Lowest}) the
-       * accuracy it's still very high, so it's better for performance to use getLastKnownPositionAsync().
-       * Getting very low accuracy "coarse location" seems to be not available in the Android and IOS devices.
+       * getCurrentPositionAsync({accuracy: Location.LocationAccuracy.Lowest}) the accuracy it's still
+       * very high, so it's better for performance to use getLastKnownPositionAsync() when is available,
+       * otherwise we use getCurrentPositionAsync().
+       * Getting much lower accuracy "coarse location" like a city level precision seems to be not possible
+       * so we "manually" remove digits to get that result, this is better to protect users' privacy.
        */
-      const position = await Location.getLastKnownPositionAsync();
+      let position = await Location.getLastKnownPositionAsync();
+      if (position == null) {
+         position = await Location.getCurrentPositionAsync({
+            accuracy: Location.LocationAccuracy.Lowest
+         });
+      }
       result = { ...position.coords };
 
       if (settings.removePrecisionInCoordinates) {
@@ -148,6 +162,7 @@ export async function getGeolocationPosition(
 
       return Promise.resolve(result);
    } catch (error) {
+      console.error(error);
       if (settings.allowContinueWithGeolocationDisabled) {
          return Promise.resolve(null);
       }
@@ -189,6 +204,7 @@ export async function getGeolocationAddress(
 
       return Promise.resolve(result);
    } catch (error) {
+      console.error(error);
       if (settings.allowContinueWithGeolocationDisabled) {
          return Promise.resolve(null);
       }

@@ -55,11 +55,7 @@ export async function askForPermission(
    permissionsSource: PermissionSource,
    settings?: AskPermissionSettings
 ): Promise<void> {
-   if (settings == null) {
-      settings = {};
-   }
-   settings.allowContinueWithoutAccepting = settings.allowContinueWithoutAccepting || false;
-   settings.rejectedDialogTexts = settings.rejectedDialogTexts || {};
+   const { allowContinueWithoutAccepting = false, rejectedDialogTexts = {} } = settings ?? {};
 
    let result: PermissionResponse = await permissionsSource.getter();
 
@@ -68,14 +64,14 @@ export async function askForPermission(
    }
 
    if (result.status !== "granted") {
-      if (settings.allowContinueWithoutAccepting) {
-         return Promise.resolve(null);
+      if (allowContinueWithoutAccepting) {
+         return Promise.resolve();
       }
-      await showRejectedPermissionsDialog(settings.rejectedDialogTexts);
+      await showRejectedPermissionsDialog(rejectedDialogTexts);
       return askForPermission(permissionsSource, settings);
    }
 
-   return Promise.resolve(null);
+   return Promise.resolve();
 }
 
 export interface AskPermissionSettings {
