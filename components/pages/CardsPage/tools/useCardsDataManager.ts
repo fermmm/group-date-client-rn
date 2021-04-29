@@ -22,12 +22,14 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
    const [usersToRender, setUsersToRender] = useState<User[]>([]);
    const attractionsQueue = useRef<Attraction[]>([]);
    const appendMode = useRef(false);
-   const [attractionsShouldBeSentReason, setAttractionsShouldBeSentReason] = useState<{
-      reason: AttractionsSendReason;
-   }>({ reason: AttractionsSendReason.None });
-   const [shouldRequestMoreUsersReason, setShouldRequestMoreUsersReason] = useState<{
-      reason: RequestMoreUsersReason;
-   }>({ reason: RequestMoreUsersReason.None });
+   const [
+      attractionsShouldBeSentReason,
+      setAttractionsShouldBeSentReason
+   ] = useState<AttractionsSendReason>(AttractionsSendReason.None);
+   const [
+      shouldRequestMoreUsersReason,
+      setShouldRequestMoreUsersReason
+   ] = useState<RequestMoreUsersReason>(RequestMoreUsersReason.None);
    const noMoreUsersLeft =
       currentUserDisplaying >= usersToRender.length && cardsFromServer?.length === 0;
 
@@ -70,9 +72,9 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
    useEffectExceptOnMount(() => {
       if (attractionsFromStorage != null) {
          attractionsQueue.current = attractionsFromStorage;
-         setAttractionsShouldBeSentReason({
-            reason: AttractionsSendReason.PendingAttractionsToSendFromPreviousSession
-         });
+         setAttractionsShouldBeSentReason(
+            AttractionsSendReason.PendingAttractionsToSendFromPreviousSession
+         );
       }
    }, [attractionsFromStorage]);
 
@@ -81,9 +83,7 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
     */
    useEffect(() => {
       if (attractionsQueue.current.length > MAX_ATTRACTIONS_QUEUE_SIZE) {
-         setAttractionsShouldBeSentReason({
-            reason: AttractionsSendReason.AttractionsQueueSizeReachedMaximum
-         });
+         setAttractionsShouldBeSentReason(AttractionsSendReason.AttractionsQueueSizeReachedMaximum);
          return;
       }
    }, [currentUserDisplaying]);
@@ -93,16 +93,12 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
     */
    useEffect(() => {
       if (currentUserDisplaying >= usersToRender.length && usersToRender.length > 0) {
-         setShouldRequestMoreUsersReason({
-            reason: RequestMoreUsersReason.NoMoreUsersButServerMayHave
-         });
+         setShouldRequestMoreUsersReason(RequestMoreUsersReason.NoMoreUsersButServerMayHave);
          return;
       }
 
       if (currentUserDisplaying === usersToRender.length - 1 - REQUEST_MORE_CARDS_ANTICIPATION) {
-         setShouldRequestMoreUsersReason({
-            reason: RequestMoreUsersReason.NearlyRunningOutOfUsers
-         });
+         setShouldRequestMoreUsersReason(RequestMoreUsersReason.NearlyRunningOutOfUsers);
          return;
       }
    }, [currentUserDisplaying]);
@@ -112,7 +108,7 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
     */
    useEffect(() => {
       if (!isFocused) {
-         setAttractionsShouldBeSentReason({ reason: AttractionsSendReason.UserMovedToOtherScreen });
+         setAttractionsShouldBeSentReason(AttractionsSendReason.UserMovedToOtherScreen);
       }
    }, [isFocused]);
 
@@ -121,7 +117,7 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
     */
    useEffect(() => {
       if (!isActive) {
-         setAttractionsShouldBeSentReason({ reason: AttractionsSendReason.AppMinimized });
+         setAttractionsShouldBeSentReason(AttractionsSendReason.AppMinimized);
       }
    }, [isActive]);
 
@@ -129,9 +125,7 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
     * An effect to check whether the attractions queue should be sent based on a time interval
     */
    useInterval(() => {
-      setAttractionsShouldBeSentReason({
-         reason: AttractionsSendReason.TooMuchTimePassedWithoutSending
-      });
+      setAttractionsShouldBeSentReason(AttractionsSendReason.TooMuchTimePassedWithoutSending);
    }, SEND_ATTRACTIONS_AFTER_TIME);
 
    const addAttractionToQueue = useCallback((attraction: Attraction) => {
@@ -143,6 +137,7 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
       attractionsQueue.current = attractionsQueue.current.filter(
          el => toRemove.find(tr => tr.userId === el.userId) == null
       );
+
       saveOnStorage(attractionsQueue.current);
    }, []);
 
@@ -210,8 +205,8 @@ export interface UseCardsDataManager {
    usersToRender: User[];
    currentUserDisplaying: number;
    attractionsQueue: React.MutableRefObject<Attraction[]>;
-   attractionsShouldBeSentReason: { reason: AttractionsSendReason };
-   shouldRequestMoreUsersReason: { reason: RequestMoreUsersReason };
+   attractionsShouldBeSentReason: AttractionsSendReason;
+   shouldRequestMoreUsersReason: RequestMoreUsersReason;
    noMoreUsersLeft: boolean;
    moveToNextUser: (currentUserId: string) => void;
    goBackToPreviousUser: (currentUserId: string) => void;
@@ -222,8 +217,8 @@ export interface UseCardsDataManager {
     * list instead of replacing it. This only applies once so it needs to be called again when needed.
     */
    inNextUpdateAppendNewUsersToRenderList: () => void;
-   setAttractionsShouldBeSentReason: Dispatch<SetStateAction<{ reason: AttractionsSendReason }>>;
-   setShouldRequestMoreUsersReason: Dispatch<SetStateAction<{ reason: RequestMoreUsersReason }>>;
+   setAttractionsShouldBeSentReason: Dispatch<SetStateAction<AttractionsSendReason>>;
+   setShouldRequestMoreUsersReason: Dispatch<SetStateAction<RequestMoreUsersReason>>;
 }
 
 export enum AttractionsSendReason {

@@ -32,10 +32,11 @@ export function useSendAttractionsQueueIfNeeded(params: UseSendAttractionsParams
    const { token } = useFacebookToken();
 
    useEffect(() => {
-      const reason = params.manager.attractionsShouldBeSentReason.reason;
+      const reason = params.manager.attractionsShouldBeSentReason;
       if (reason === AttractionsSendReason.None) {
          return;
       }
+
       sendAttractions(token, params);
    }, [params.manager.attractionsShouldBeSentReason]);
 }
@@ -43,7 +44,7 @@ export function useSendAttractionsQueueIfNeeded(params: UseSendAttractionsParams
 async function sendAttractions(token: string, params: UseSendAttractionsParams) {
    const { manager } = params;
 
-   manager.setAttractionsShouldBeSentReason({ reason: AttractionsSendReason.None });
+   manager.setAttractionsShouldBeSentReason(AttractionsSendReason.None);
 
    // If there no attractions queue to send
    if (manager.attractionsQueue.current == null || manager.attractionsQueue.current.length === 0) {
@@ -58,9 +59,9 @@ async function sendAttractions(token: string, params: UseSendAttractionsParams) 
 
 function requestMoreCardsIfNeeded(params: UseRequestMoreCardsParams) {
    const { manager, cardsSource, cardsFromServer, tagId } = params;
-   const reason = manager.shouldRequestMoreUsersReason.reason;
+   const reason = manager.shouldRequestMoreUsersReason;
 
-   manager.setShouldRequestMoreUsersReason({ reason: RequestMoreUsersReason.None });
+   manager.setShouldRequestMoreUsersReason(RequestMoreUsersReason.None);
 
    if (reason == RequestMoreUsersReason.None) {
       return;
