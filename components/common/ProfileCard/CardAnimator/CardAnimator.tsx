@@ -29,11 +29,16 @@ const CardAnimator: FC<CardAnimatorProps> = props => {
    const [containerAnimValue, setContainerAnimValue] = useState(new Animated.Value(0));
    const [logoAnimValue, setLogoAnimValue] = useState(new Animated.Value(0));
    const [cardAnimation, setCardAnimation] = useState<CardAnimation>(null);
+   const [shadowAnimValue, setShadowAnimValue] = useState(new Animated.Value(0));
    const animStyles = useRef<CardAnimatedStyles>(null);
    const { colors } = useTheme();
 
    if (cardAnimation != null) {
-      animStyles.current = cardAnimation.interpolation(containerAnimValue, logoAnimValue);
+      animStyles.current = cardAnimation.interpolation(
+         containerAnimValue,
+         logoAnimValue,
+         shadowAnimValue
+      );
    }
 
    if (animStyles.current == null) {
@@ -60,10 +65,11 @@ const CardAnimator: FC<CardAnimatorProps> = props => {
    const animate = async (animation: CardAnimationType, onComplete: () => void = null) => {
       const anim = getAnimationInstance(animation);
       setCardAnimation(anim);
-      await anim.trigger(containerAnimValue, logoAnimValue);
+      await anim.trigger(containerAnimValue, logoAnimValue, shadowAnimValue);
       setCardAnimation(null);
       setContainerAnimValue(new Animated.Value(0));
       setLogoAnimValue(new Animated.Value(0));
+      setShadowAnimValue(new Animated.Value(0));
       if (onComplete != null) {
          onComplete();
       }
@@ -76,16 +82,28 @@ const CardAnimator: FC<CardAnimatorProps> = props => {
    }, [props.animate]);
 
    return (
-      <Animated.View style={[{ flex: 1 }, animStyles.current.cardStyle]}>
-         {props.children}
-         {animStyles.current.logoStyle != null && (
-            <Animated.View style={[styles.logoAnimationContainer, animStyles.current.logoStyle]}>
-               <View style={styles.logoContainer}>
-                  <LogoSvg color={colors.primary2} style={styles.logo} />
-               </View>
-            </Animated.View>
-         )}
-      </Animated.View>
+      <>
+         <Animated.View
+            style={[styles.shadow, animStyles.current.shadowStyle]}
+            pointerEvents="none"
+         />
+         <Animated.View
+            style={[{ flex: 1 }, animStyles.current.cardStyle]}
+            pointerEvents={props.animate != null ? "none" : null}
+         >
+            {props.children}
+            {animStyles.current.logoStyle != null && (
+               <Animated.View
+                  style={[styles.logoAnimationContainer, animStyles.current.logoStyle]}
+                  pointerEvents="none"
+               >
+                  <View style={styles.logoContainer} pointerEvents="none">
+                     <LogoSvg color={colors.primary2} style={styles.logo} />
+                  </View>
+               </Animated.View>
+            )}
+         </Animated.View>
+      </>
    );
 };
 
@@ -108,6 +126,14 @@ const styles: Styles = StyleSheet.create({
    },
    logo: {
       paddingTop: 16
+   },
+   shadow: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      backgroundColor: "black"
    }
 });
 
