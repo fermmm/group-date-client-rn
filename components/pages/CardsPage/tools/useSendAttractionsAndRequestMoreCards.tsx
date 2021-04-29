@@ -1,29 +1,49 @@
 import { useEffect } from "react";
 import { User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { sendAttraction } from "../../../../api/server/user";
+import { useFacebookToken } from "../../../../api/third-party/facebook/facebook-login";
 import { revalidate } from "../../../../api/tools/useCache/useCache";
 import { CardsSource } from "./types";
-import { AttractionsSendReason, UseCardsDataManager } from "./useCardsDataManager";
+import {
+   AttractionsSendReason,
+   RequestMoreUsersReason,
+   UseCardsDataManager
+} from "./useCardsDataManager";
 
 /**
  * Sends attractions and request more cards when needed
  */
-export function useSendAttractionsAndRequestMoreCards(params: UseSendAttractionsParams) {
+export function useRequestMoreCardsWhenNeeded(params: UseRequestMoreCardsParams) {
+   const { token } = useFacebookToken();
+
    useEffect(() => {
       (async () => {
-         await sendAttractionsIfNeeded(params);
+         /**
+          * We need to first send all the attraction queue contents otherwise the new user
+          * list will contain already evaluated users that where not sent yet.
+          */
+         await sendAttractions(token, params);
          requestMoreCardsIfNeeded(params);
       })();
+   }, [params.manager.shouldRequestMoreUsersReason]);
+}
+
+export function useSendAttractionsQueueIfNeeded(params: UseSendAttractionsParams) {
+   const { token } = useFacebookToken();
+
+   useEffect(() => {
+      const reason = params.manager.attractionsShouldBeSentReason.reason;
+      if (reason === AttractionsSendReason.None) {
+         return;
+      }
+      sendAttractions(token, params);
    }, [params.manager.attractionsShouldBeSentReason]);
 }
 
-async function sendAttractionsIfNeeded(params: UseSendAttractionsParams) {
-   const { token, manager } = params;
-   const reason = manager.attractionsShouldBeSentReason.reason;
+async function sendAttractions(token: string, params: UseSendAttractionsParams) {
+   const { manager } = params;
 
-   if (reason === AttractionsSendReason.None) {
-      return;
-   }
+   manager.setAttractionsShouldBeSentReason({ reason: AttractionsSendReason.None });
 
    // If there no attractions queue to send
    if (manager.attractionsQueue.current == null || manager.attractionsQueue.current.length === 0) {
@@ -36,18 +56,13 @@ async function sendAttractionsIfNeeded(params: UseSendAttractionsParams) {
    manager.removeFromAttractionsQueue(attractions);
 }
 
-function requestMoreCardsIfNeeded(params: UseSendAttractionsParams) {
+function requestMoreCardsIfNeeded(params: UseRequestMoreCardsParams) {
    const { manager, cardsSource, cardsFromServer, tagId } = params;
-   const reason = manager.attractionsShouldBeSentReason.reason;
+   const reason = manager.shouldRequestMoreUsersReason.reason;
 
-   /**
-    * Revalidation is only needed when there are no more cards or nearly there are no more cards.
-    * Sending because time passed or other reasons doesn't require to get more cards.
-    */
-   if (
-      reason !== AttractionsSendReason.NoMoreUsersButServerMayHave &&
-      reason !== AttractionsSendReason.NearlyRunningOutOfUsers
-   ) {
+   manager.setShouldRequestMoreUsersReason({ reason: RequestMoreUsersReason.None });
+
+   if (reason == RequestMoreUsersReason.None) {
       return;
    }
 
@@ -67,7 +82,8 @@ function requestMoreCardsIfNeeded(params: UseSendAttractionsParams) {
 
    /**
     * This triggers the request of new users by invalidating the cache. We invalidate all kinds of users list
-    * because sending the attractions may affect the result of all types of users lists.
+    * because sending the attractions may affect the result of all types of users lists. This will only trigger
+    * a server request on the endpoint being used.
     */
    revalidate("cards-game/recommendations");
    revalidate("cards-game/disliked-users");
@@ -75,9 +91,11 @@ function requestMoreCardsIfNeeded(params: UseSendAttractionsParams) {
 }
 
 interface UseSendAttractionsParams {
-   token: string;
-   cardsSource: CardsSource;
    manager: UseCardsDataManager;
+}
+
+interface UseRequestMoreCardsParams extends UseSendAttractionsParams {
+   cardsSource: CardsSource;
    cardsFromServer: User[];
    tagId?: string;
 }

@@ -1,10 +1,10 @@
 import { useLocalStorage } from "../../../../common-tools/device-native-api/storage/useLocalStorage";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { useEffectExceptOnMount } from "../../../../common-tools/common-hooks/useEffectExceptoOnMount";
 import { Attraction, User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import {
    MAX_ATTRACTIONS_QUEUE_SIZE,
-   REQUEST_MORE_CARDS_AFTER_TIME,
+   SEND_ATTRACTIONS_AFTER_TIME,
    REQUEST_MORE_CARDS_ANTICIPATION
 } from "../../../../config";
 import { useIsFocused } from "@react-navigation/native";
@@ -25,9 +25,15 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
    const [attractionsShouldBeSentReason, setAttractionsShouldBeSentReason] = useState<{
       reason: AttractionsSendReason;
    }>({ reason: AttractionsSendReason.None });
+   const [shouldRequestMoreUsersReason, setShouldRequestMoreUsersReason] = useState<{
+      reason: RequestMoreUsersReason;
+   }>({ reason: RequestMoreUsersReason.None });
    const noMoreUsersLeft =
       currentUserDisplaying >= usersToRender.length && cardsFromServer?.length === 0;
 
+   const isLoading =
+      cardsFromServer == null ||
+      (currentUserDisplaying >= usersToRender.length && !noMoreUsersLeft);
    /**
     * If more users are coming from server replace usersToRender or add them at the end of it
     */
@@ -80,17 +86,22 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
          });
          return;
       }
+   }, [currentUserDisplaying]);
 
+   /**
+    * An effect to check if more users needs to be requested and the reasons
+    */
+   useEffect(() => {
       if (currentUserDisplaying >= usersToRender.length && usersToRender.length > 0) {
-         setAttractionsShouldBeSentReason({
-            reason: AttractionsSendReason.NoMoreUsersButServerMayHave
+         setShouldRequestMoreUsersReason({
+            reason: RequestMoreUsersReason.NoMoreUsersButServerMayHave
          });
          return;
       }
 
       if (currentUserDisplaying === usersToRender.length - 1 - REQUEST_MORE_CARDS_ANTICIPATION) {
-         setAttractionsShouldBeSentReason({
-            reason: AttractionsSendReason.NearlyRunningOutOfUsers
+         setShouldRequestMoreUsersReason({
+            reason: RequestMoreUsersReason.NearlyRunningOutOfUsers
          });
          return;
       }
@@ -121,7 +132,7 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
       setAttractionsShouldBeSentReason({
          reason: AttractionsSendReason.TooMuchTimePassedWithoutSending
       });
-   }, REQUEST_MORE_CARDS_AFTER_TIME);
+   }, SEND_ATTRACTIONS_AFTER_TIME);
 
    const addAttractionToQueue = useCallback((attraction: Attraction) => {
       attractionsQueue.current.push(attraction);
@@ -133,7 +144,6 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
          el => toRemove.find(tr => tr.userId === el.userId) == null
       );
       saveOnStorage(attractionsQueue.current);
-      setAttractionsShouldBeSentReason({ reason: AttractionsSendReason.None });
    }, []);
 
    const inNextUpdateAppendNewUsersToRenderList = useCallback(() => {
@@ -151,16 +161,20 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
    };
 
    return {
+      isLoading,
       usersToRender,
       currentUserDisplaying,
       attractionsQueue,
       attractionsShouldBeSentReason,
+      shouldRequestMoreUsersReason,
       noMoreUsersLeft,
       moveToNextUser,
       goBackToPreviousUser,
       addAttractionToQueue,
       removeFromAttractionsQueue,
-      inNextUpdateAppendNewUsersToRenderList
+      inNextUpdateAppendNewUsersToRenderList,
+      setAttractionsShouldBeSentReason,
+      setShouldRequestMoreUsersReason
    };
 }
 
@@ -192,10 +206,12 @@ function removeUsersFromPendingAttractions(usersList: User[], attractions: Attra
 }
 
 export interface UseCardsDataManager {
+   isLoading: boolean;
    usersToRender: User[];
    currentUserDisplaying: number;
    attractionsQueue: React.MutableRefObject<Attraction[]>;
    attractionsShouldBeSentReason: { reason: AttractionsSendReason };
+   shouldRequestMoreUsersReason: { reason: RequestMoreUsersReason };
    noMoreUsersLeft: boolean;
    moveToNextUser: (currentUserId: string) => void;
    goBackToPreviousUser: (currentUserId: string) => void;
@@ -206,15 +222,21 @@ export interface UseCardsDataManager {
     * list instead of replacing it. This only applies once so it needs to be called again when needed.
     */
    inNextUpdateAppendNewUsersToRenderList: () => void;
+   setAttractionsShouldBeSentReason: Dispatch<SetStateAction<{ reason: AttractionsSendReason }>>;
+   setShouldRequestMoreUsersReason: Dispatch<SetStateAction<{ reason: RequestMoreUsersReason }>>;
 }
 
 export enum AttractionsSendReason {
    None = "None",
-   NearlyRunningOutOfUsers = "NearlyRunningOutOfUsers",
-   NoMoreUsersButServerMayHave = "NoMoreUsersButServerMayHave",
    AttractionsQueueSizeReachedMaximum = "AttractionsQueueSizeReachedMaximum",
    UserMovedToOtherScreen = "UserMovedToOtherScreen",
    AppMinimized = "AppMinimized",
    TooMuchTimePassedWithoutSending = "TooMuchTimePassedWithoutSending",
    PendingAttractionsToSendFromPreviousSession = "PendingAttractionsToSendFromPreviousSession"
+}
+
+export enum RequestMoreUsersReason {
+   None = "None",
+   NearlyRunningOutOfUsers = "NearlyRunningOutOfUsers",
+   NoMoreUsersButServerMayHave = "NoMoreUsersButServerMayHave"
 }

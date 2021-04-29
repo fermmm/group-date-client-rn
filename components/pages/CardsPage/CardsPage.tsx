@@ -7,17 +7,18 @@ import LimitedChildrenRenderer from "../../common/LimitedChildrenRenderer/Limite
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { currentTheme } from "../../../config";
 import { useCardsDataManager } from "./tools/useCardsDataManager";
-import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
-import { AttractionType } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { AttractionType, User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useRoute } from "@react-navigation/native";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import WatchingIndicator from "./WatchingIndicator/WatchingIndicator";
 import { CardsSource } from "./tools/types";
-import { useSendAttractionsAndRequestMoreCards } from "./tools/useSendAttractionsAndRequestMoreCards";
+import {
+   useRequestMoreCardsWhenNeeded,
+   useSendAttractionsQueueIfNeeded
+} from "./tools/useSendAttractionsAndRequestMoreCards";
 import { useCardsFromServer } from "./tools/useCardsFromServer";
 import { useCardsSourceAutomaticChange } from "./tools/useCardsSourceAutomaticChange";
 
-// TODO: Volver a react-query me va a hacer ahorrar requests en useCardsFromServer por que el workaround de useCache ya esta agotado
 export interface ParamsCardsPage {
    cardsSource?: CardsSource;
    tagId?: string;
@@ -25,23 +26,18 @@ export interface ParamsCardsPage {
 }
 
 const CardsPage: FC = () => {
-   const [cardsSource, setCardsSource] = useState(CardsSource.Recommendations);
    const { params } = useRoute<RouteProps<ParamsCardsPage>>();
-   const { token } = useFacebookToken();
+   const [cardsSource, setCardsSource] = useState(CardsSource.Recommendations);
    const cardsFromServer = useCardsFromServer(cardsSource, { tagId: params?.tagId });
    const manager = useCardsDataManager(cardsFromServer);
-   useSendAttractionsAndRequestMoreCards({
+   useRequestMoreCardsWhenNeeded({
       manager,
-      token,
       cardsSource,
       cardsFromServer,
       tagId: params?.tagId
    });
+   useSendAttractionsQueueIfNeeded({ manager });
    useCardsSourceAutomaticChange({ cardsFromServer, params, cardsSource, setCardsSource });
-
-   const isLoading =
-      cardsFromServer == null ||
-      (manager.currentUserDisplaying >= manager.usersToRender.length && !manager.noMoreUsersLeft);
 
    const handleLikeOrDislikePress = (attractionType: AttractionType, userId: string) => {
       manager.addAttractionToQueue({ userId, attractionType });
@@ -50,8 +46,8 @@ const CardsPage: FC = () => {
 
    const handleUndoPress = (userId: string) => {
       const positionInList = manager.usersToRender.findIndex(u => u.userId === userId);
-      const previousUserId: string = manager.usersToRender[positionInList - 1].userId;
-      manager.removeFromAttractionsQueue([{ userId: previousUserId }]);
+      const previousUser: User = manager.usersToRender[positionInList - 1];
+      manager.removeFromAttractionsQueue([{ userId: previousUser.userId }]);
       manager.goBackToPreviousUser(userId);
    };
 
@@ -63,7 +59,7 @@ const CardsPage: FC = () => {
       setCardsSource(CardsSource.Recommendations);
    }, []);
 
-   if (isLoading) {
+   if (manager.isLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 

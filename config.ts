@@ -91,7 +91,7 @@ export const IMAGE_QUALITY_WHEN_UPLOADING: number = 0.9;
 // How many cards left for evaluation before calling for more cards in the background
 export const REQUEST_MORE_CARDS_ANTICIPATION: number = 10;
 // How often in time the user evaluations are sent to the server in milliseconds
-export const REQUEST_MORE_CARDS_AFTER_TIME: number = 60 * 1000;
+export const SEND_ATTRACTIONS_AFTER_TIME: number = 60 * 1000;
 // The maximum amount of user evaluations pending to send before sending them
 export const MAX_ATTRACTIONS_QUEUE_SIZE: number = 20;
 // How often group list refreshes, this also reveals new groups to the user

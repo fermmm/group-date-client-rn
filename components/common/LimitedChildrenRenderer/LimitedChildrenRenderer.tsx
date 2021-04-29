@@ -24,17 +24,31 @@ const LimitedChildrenRenderer: FC<LimitedChildrenRendererProps> = props => {
    // This is useful to know if the children list really changed because props.children always has a reference change
    const childrenKeysAsString = childrenAsArray.map(c => c.key).join();
 
+   const getChildToFocus = () => {
+      return childrenAsArray[props.childToFocus];
+   };
+
+   const getNextChildIfAny = () => {
+      if (childrenAsArray == null || childrenAsArray.length === 0) {
+         return null;
+      }
+
+      return props.childToFocus + 1 < childrenAsArray.length
+         ? childrenAsArray[props.childToFocus + 1]
+         : null;
+   };
+
    const reset = () => {
       if (childrenAsArray == null || childrenAsArray.length === 0) {
          return;
       }
-      setChildB(childrenAsArray[props.childToFocus]);
-      setChildAtFront(childrenAsArray[props.childToFocus]);
-      const nextChildren: React.ReactNode =
-         props.childToFocus + 1 < childrenAsArray.length
-            ? childrenAsArray[props.childToFocus + 1]
-            : null;
-      setChildA(nextChildren);
+
+      const childToFocus = getChildToFocus();
+      const nextChildToTheFocused = getNextChildIfAny();
+
+      setChildAtFront(childToFocus);
+      setChildB(childToFocus);
+      setChildA(nextChildToTheFocused);
    };
 
    useEffect(() => {
@@ -55,20 +69,17 @@ const LimitedChildrenRenderer: FC<LimitedChildrenRendererProps> = props => {
    }, [props.childToFocus]);
 
    const showNextChildAndPreloadFollowing = () => {
-      const nextChildren: React.ReactNode =
-         props.childToFocus + 1 < childrenAsArray.length
-            ? childrenAsArray[props.childToFocus + 1]
-            : null;
+      const nextChildToTheFocused = getNextChildIfAny();
+
       /*
          This childB == null is here to make sure a new child goes to the null holder when it's necessary.
-         New children meaning when new elements are added to the props.children
       */
       if (childAtFront === childB || childB == null) {
          setChildAtFront(childA);
-         setChildB(nextChildren);
+         setChildB(nextChildToTheFocused);
       } else {
          setChildAtFront(childB);
-         setChildA(nextChildren);
+         setChildA(nextChildToTheFocused);
       }
    };
 
