@@ -88,8 +88,7 @@ const WelcomeTourPage: FC = () => {
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
                      Poly es nueva para todxs, no se espera que sepas o hagas nada en particular,
-                     solo tener ganas de conocer gente en una comunidad donde todo puede ser
-                     diferente.
+                     solo ganas de conocer gente en una comunidad donde todo puede ser diferente.
                   </Text>
                </View>
             </View>
@@ -99,9 +98,8 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Si te gusta la app no olvides mencionarla en las redes sociales o donde lo
-                     creas oportuno, que esto funcione depende de eso ya que la app es gratuita, sin
-                     fines comerciales y de código abierto.
+                     Si te gusta la app no olvides mencionarla en las redes o a quienes creas
+                     oportuno, todo depende de ese tipo de aportes.
                   </Text>
                </View>
             </View>
@@ -119,7 +117,7 @@ const styles: Styles = StyleSheet.create({
       width: "100%",
       alignItems: "center",
       justifyContent: "center",
-      padding: 36
+      padding: 30
    },
    logoContainer: {
       width: "100%",
