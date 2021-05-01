@@ -29,4 +29,4 @@ Before publishing the app there are some tasks required.
 
 1. **Facebook login**: In step 4 of the installation process you added a key hash in your Facebook app settings, that is the key hash for the Expo Go app, you need to also add the key hash of your built application. To get the key hash make an android build and then run `expo fetch:android:hashes`. 
 
-2. **Push notifications**: Push notifications works on Expo Go but in the built app you need to read and follow instructions under "Credentials" on [this page](https://docs.expo.io/push-notifications/push-notifications-setup/#credentials).
+2. **Push notifications**: Push notifications works on Expo Go but in the built app you need to read and follow instructions under "Credentials" on [this page](https://docs.expo.io/push-notifications/push-notifications-setup/#credentials). After that you need to follow instructions on [this page](https://docs.expo.io/push-notifications/using-fcm/), specially the section "Uploading Server Credentials".
