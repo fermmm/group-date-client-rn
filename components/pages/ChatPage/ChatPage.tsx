@@ -176,32 +176,52 @@ const ChatPage: FC = () => {
                         right: {
                            color: colors.text2,
                            fontFamily: font.regular,
-                           fontSize: 16
+                           fontSize: 14
                         },
                         left: {
                            color: colors.text2,
                            fontFamily: font.regular,
-                           fontSize: 16
+                           fontSize: 14
                         }
                      }}
                      usernameStyle={{
-                        color: getColorForUser(
-                           props.currentMessage.user._id as string,
-                           group,
-                           chatNamesColors
-                        ),
+                        color: color(
+                           getColorForUser(
+                              props.currentMessage.user._id as string,
+                              group,
+                              chatNamesColors
+                           )
+                        )
+                           .desaturate(0.3)
+                           .lighten(0.3)
+                           .toString(),
                         fontFamily: font.semiBold,
                         fontSize: 10
                      }}
                      wrapperStyle={{
                         right: {
                            backgroundColor: props.currentMessage.pending
-                              ? color(colors.specialBackground1).alpha(0.5).toString()
-                              : color(colors.specialBackground1).darken(0.4).toString(),
+                              ? color(colors.specialBackground1)
+                                   .alpha(0.5)
+                                   .desaturate(0.5)
+                                   .toString()
+                              : color(colors.specialBackground1)
+                                   .darken(0.4)
+                                   .desaturate(0.5)
+                                   .toString(),
                            padding: 3
                         },
                         left: {
-                           backgroundColor: color(colors.specialBackground1).darken(0.4).toString(),
+                           backgroundColor: color(
+                              getColorForUser(
+                                 props.currentMessage.user._id as string,
+                                 group,
+                                 chatNamesColors
+                              )
+                           )
+                              .darken(0.4)
+                              .desaturate(0.8)
+                              .toString(),
                            padding: 3
                         }
                      }}
