@@ -52,7 +52,7 @@ export function useSendPropsToUpdateAtLogin(
          setNotificationsToken(notificationsToken);
          setNotificationTokenRequested(true);
       })();
-   }, [serverInfo?.pushNotificationsChannels]);
+   }, [serverInfo?.pushNotificationsChannels, enabled]);
 
    // Effect to send the data to the server when all the information is gathered
    useEffect(() => {
@@ -62,7 +62,8 @@ export function useSendPropsToUpdateAtLogin(
          locationLon != null &&
          country != null &&
          token != null &&
-         enabled == true
+         enabled === true &&
+         completed === false
       ) {
          const props: Partial<Record<EditableUserPropKey, UserPropsValueTypes>> = {
             locationLat,
@@ -85,7 +86,8 @@ export function useSendPropsToUpdateAtLogin(
       country,
       token,
       enabled,
-      notificationsTokenRequested
+      notificationsTokenRequested,
+      completed
    ]);
 
    return completed;

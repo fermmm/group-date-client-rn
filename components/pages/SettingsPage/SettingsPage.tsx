@@ -131,7 +131,7 @@ const SettingsPage: FC = () => {
                onPress={() => navigate("Admin")}
             />
          )}
-         <Text style={styles.versionText}>Versión: beta {Constants.manifest.version} b</Text>
+         <Text style={styles.versionText}>Versión: beta {Constants.manifest.version}</Text>
       </BasicScreenContainer>
    );
 };

@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
@@ -60,23 +60,15 @@ const LoginPage: FC = () => {
 
    // If we have a valid token we can send the user props that needs to be updated at each login
    const sendLoginPropsCompleted = useSendPropsToUpdateAtLogin(token, serverInfoData, {
-      enabled:
-         tokenIsValid === true &&
-         canContinue === true &&
-         profileStatusData != null &&
-         finishedRegistration === true
+      enabled: profileStatusData != null
    });
 
    // If the user has props missing redirect to RegistrationForms otherwise redirect to Main or notification press
    useEffect(() => {
-      if (profileStatusData != null && logoAnimCompleted && isFocused) {
+      if (profileStatusData != null && logoAnimCompleted && isFocused && sendLoginPropsCompleted) {
          if (!finishedRegistration) {
             navigateWithoutHistory("RegistrationForms");
          } else {
-            if (!sendLoginPropsCompleted) {
-               return;
-            }
-
             if (redirectFromPushNotificationPress != null) {
                const redirected = redirectFromPushNotificationPress();
                if (!redirected) {
