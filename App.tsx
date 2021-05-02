@@ -18,7 +18,7 @@ import AboutPage from "./components/pages/AboutPage/AboutPage";
 import AdminPage from "./components/pages/AdminPage/AdminPage";
 import CreateTagPage from "./components/pages/CreateTagPage/CreateTagPage";
 import WelcomeTourPage from "./components/pages/WelcomeTourPage/WelcomeTourPage";
-import { listenForPushNotifications } from "./common-tools/device-native-api/notifications/listenForPushNotifications";
+import { setupNotificationPressListener } from "./common-tools/device-native-api/notifications/setupNotificationPressListener";
 import { CacheConfigProvider } from "./api/tools/useCache/useCache";
 import { welcomeWasShowed } from "./components/pages/WelcomeTourPage/tools/useWelcomeShowed";
 import { en } from "./texts/en/en";
@@ -52,7 +52,7 @@ const testTheme = {
 
 const Stack = createStackNavigator();
 
-listenForPushNotifications();
+setupNotificationPressListener();
 
 const App: FC = () => {
    const [resourcesLoaded, setResourcesLoaded] = useState(false);

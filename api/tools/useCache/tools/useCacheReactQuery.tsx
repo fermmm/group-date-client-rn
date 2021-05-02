@@ -59,7 +59,26 @@ export async function revalidateRq<T>(key: string | string[]) {
    if (Array.isArray(key)) {
       key.forEach(query => queryClient.invalidateQueries(query));
    } else {
-      queryClient.invalidateQueries(key);
+      /**
+       * Matching a query that starts with a string is not implemented in React Query, the
+       * documentation seems to suggest that it is, but it seems that only works with
+       * array type of keys. To solve that we implement here a custom comparar function that
+       * allows to select a query if the query starts with the key provided.
+       */
+      queryClient.invalidateQueries({
+         predicate: query => {
+            if (!Array.isArray(query.queryKey)) {
+               if (((query.queryKey as string) ?? "").startsWith(key)) {
+                  return true;
+               }
+            } else {
+               if ((query.queryKey[0] ?? "").startsWith(key)) {
+                  return true;
+               }
+            }
+            return false;
+         }
+      });
    }
 }
 
