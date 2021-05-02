@@ -11,8 +11,8 @@ export interface PropsShadowBottom {
  * Displays an image at the bottom of an element. Made for png bottom shadows.
  */
 const ShadowBottom: FC<PropsShadowBottom> = props => {
-   const [height, setHeight] = useState(0);
-   const [aspectRatio, setAspectRatio] = useState<number>(null);
+   const [height, setHeight] = useState(20);
+   const [aspectRatio, setAspectRatio] = useState<number>(1);
    const { imageSource, style, imageStyle }: PropsShadowBottom = props;
 
    return (
@@ -23,14 +23,13 @@ const ShadowBottom: FC<PropsShadowBottom> = props => {
             {
                position: "absolute",
                bottom: 0,
-               zIndex: 1,
+               zIndex: 2000,
                width: "100%",
                transform: [{ translateY: height }]
             },
             style,
-            (!aspectRatio || !height) && { opacity: 0 }
+            (aspectRatio == null || height == null) && { opacity: 0 }
          ]}
-         key={height}
       >
          <Image
             source={imageSource}
@@ -39,7 +38,7 @@ const ShadowBottom: FC<PropsShadowBottom> = props => {
             style={[
                {
                   width: "100%",
-                  height: undefined,
+                  // height: undefined,
                   aspectRatio
                },
                imageStyle
