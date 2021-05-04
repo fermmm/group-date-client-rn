@@ -1,5 +1,7 @@
 import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { UseAuthentication } from "../../../../api/authentication/useAuthentication";
 import { AuthenticationProvider } from "../../../../api/server/shared-tools/authentication/AuthenticationProvider";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
@@ -8,14 +10,20 @@ import { currentTheme } from "../../../../config";
 import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
 
 interface PropsAuthenticationButtons {
+   show: boolean;
    authentication: UseAuthentication;
 }
 
-// TODO: Activar botones si están las .env requeridas GOOGLE_CLIENT_ID_ANDROID, GOOGLE_CLIENT_WEB_EXPO, FACEBOOK_APP_ID y FACEBOOK_APP_NAME
-// TODO: Tambien los botones se tienen que poder desactivar segun plataforma y segun la configuracion en algun lado
 export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authentication }) => {
    const { getNewToken } = authentication;
    const { colors } = useTheme();
+   const color = colors.textLogin;
+   const facebookLoginAvailable =
+      Boolean(process.env.FACEBOOK_APP_ID) && Boolean(process.env.FACEBOOK_APP_NAME);
+   const googleLoginAvailable =
+      Boolean(process.env.GOOGLE_CLIENT_ID_ANDROID) && Boolean(process.env.GOOGLE_CLIENT_WEB_EXPO);
+
+   const anyLoginAvailable = facebookLoginAvailable || googleLoginAvailable;
 
    const handleGoogleButtonPress = () => {
       getNewToken(AuthenticationProvider.Google);
@@ -26,50 +34,51 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authenti
    };
 
    return (
-      <View>
-         <ButtonStyled
-            color={colors.textLogin}
-            style={styles.button}
-            onPress={handleGoogleButtonPress}
-         >
-            Iniciar sesión con Google
-         </ButtonStyled>
-         <ButtonStyled
-            color={colors.textLogin}
-            style={styles.button}
-            onPress={handleFacebookButtonPress}
-         >
-            Iniciar sesión con Facebook
-         </ButtonStyled>
+      <View style={styles.mainContainer}>
+         {googleLoginAvailable && (
+            <ButtonStyled
+               color={color}
+               style={styles.button}
+               contentStyle={styles.buttonContent}
+               icon={() => <Icon name={"google"} color={color} size={22} />}
+               onPress={handleGoogleButtonPress}
+            >
+               Iniciar sesión con Google
+            </ButtonStyled>
+         )}
+         {facebookLoginAvailable && (
+            <ButtonStyled
+               color={color}
+               style={styles.button}
+               contentStyle={styles.buttonContent}
+               icon={() => <Icon name={"facebook"} color={color} size={23} />}
+               onPress={handleFacebookButtonPress}
+            >
+               Iniciar sesión con Facebook
+            </ButtonStyled>
+         )}
+         {!anyLoginAvailable && (
+            <Text style={styles.errorText}>
+               Error: No login providers configured, you must create and complete the .env file.
+            </Text>
+         )}
       </View>
    );
 };
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
-      flex: 1,
-      width: "100%",
       alignItems: "center",
-      justifyContent: "flex-end",
-      padding: 36
-   },
-   logo: {
-      position: "absolute",
-      top: "30%",
-      width: "55%"
-   },
-   textBlock: {
-      textAlign: "center",
-      fontFamily: currentTheme.font.medium,
-      color: currentTheme.colors.textLogin,
-      fontSize: 15,
-      marginBottom: 150
-   },
-   secondTextBlock: {
-      marginBottom: 65,
-      textAlign: "center"
+      width: "100%"
    },
    button: {
-      borderColor: currentTheme.colors.textLogin
+      borderColor: currentTheme.colors.textLogin,
+      width: "100%"
+   },
+   buttonContent: {
+      justifyContent: "flex-start"
+   },
+   errorText: {
+      color: currentTheme.colors.textLogin
    }
 });

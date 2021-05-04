@@ -23,7 +23,6 @@ import { AuthenticationButtons } from "./AuthenticationButtons/AuthenticationBut
 const LoginPage: FC = () => {
    // These are constants for debugging:
    const showDebugButtons: boolean = false;
-   const forceShowConnectButton: boolean = false;
 
    const [logoAnimCompleted, setLogoAnimCompleted] = useState(false);
    const { colors } = useTheme();
@@ -81,7 +80,6 @@ const LoginPage: FC = () => {
    }, [profileStatusData, sendLoginPropsCompleted, logoAnimCompleted]);
 
    const showAuthenticationButtons: boolean =
-      forceShowConnectButton ||
       profileStatusError ||
       (canUseServer &&
          (auth.token == null || auth.tokenIsValid === false) &&
@@ -125,7 +123,7 @@ const LoginPage: FC = () => {
                   </ButtonStyled>
                </>
             )}
-            {showAuthenticationButtons && <AuthenticationButtons authentication={auth} />}
+            <AuthenticationButtons show={showAuthenticationButtons} authentication={auth} />
          </View>
       </BackgroundArtistic>
    );
