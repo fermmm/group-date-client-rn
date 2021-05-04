@@ -34,7 +34,6 @@ import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags"
 import TagChipList from "../TagChipList/TagChipList";
 import MoreModal from "./MoreModal/MoreModal";
 import { useCallback } from "react";
-import { userFinishedRegistration } from "../../../api/tools/userTools";
 
 export interface ProfileCardProps {
    user: User;

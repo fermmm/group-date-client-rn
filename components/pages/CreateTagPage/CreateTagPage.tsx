@@ -5,7 +5,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useServerInfo } from "../../../api/server/server-info";
 import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { createTag, sendTags, TagEditAction } from "../../../api/server/tags";
-import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
+import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
 import { formValidators } from "../../../common-tools/forms/formValidators";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
@@ -29,7 +29,7 @@ const CreateTagPage: FC = () => {
    const [exitDialogVisible, setExitDialogVisible] = useState(false);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
    const [subscribeChecked, setSubscribeChecked] = useState(true);
-   const { token } = useFacebookToken();
+   const { token } = useAuthentication();
    const { goBack } = useNavigation();
    const { data: serverInfo } = useServerInfo();
 

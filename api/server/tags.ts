@@ -1,5 +1,5 @@
 import { revalidate, useCache, UseCacheOptions } from "../tools/useCache/useCache";
-import { useFacebookToken } from "../third-party/facebook/facebook-login";
+import { useAuthentication } from "../authentication/useAuthentication";
 import { defaultHttpRequest } from "../tools/httpRequest";
 import {
    BasicTagParams,
@@ -14,7 +14,7 @@ export function useTags<T extends Tag[]>(props?: {
    requestParams?: TagGetParams;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.requestParams?.token);
+   const { token } = useAuthentication(props?.requestParams?.token);
 
    return useCache<T>(
       "tags",

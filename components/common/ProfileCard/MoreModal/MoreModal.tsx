@@ -4,7 +4,7 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { ReportUserType } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { sendReportUser } from "../../../../api/server/user";
-import { useFacebookToken } from "../../../../api/third-party/facebook/facebook-login";
+import { useAuthentication } from "../../../../api/authentication/useAuthentication";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
 import { LoadingAnimation } from "../../LoadingAnimation/LoadingAnimation";
@@ -24,7 +24,7 @@ const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
    const [requestLoading, setRequestLoading] = useState(false);
    const [notes, setNotes] = useState<string>();
    const [reportType, setReportType] = useState<ReportUserType>();
-   const { token, isLoading: tokenLoading } = useFacebookToken();
+   const { token, isLoading: tokenLoading } = useAuthentication();
    const isLoading = tokenLoading || requestLoading;
 
    const handleSendReport = async () => {

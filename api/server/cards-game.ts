@@ -1,5 +1,5 @@
 import { BasicSingleTagParams, BasicTagParams } from "./shared-tools/endpoints-interfaces/tags";
-import { useFacebookToken } from "../third-party/facebook/facebook-login";
+import { useAuthentication } from "../authentication/useAuthentication";
 import { defaultHttpRequest } from "../tools/httpRequest";
 import { useCache, UseCacheOptions } from "../tools/useCache/useCache";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
@@ -9,7 +9,7 @@ export function useCardsRecommendations<T extends User[]>(props?: {
    requestParams?: TokenParameter;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.requestParams?.token);
+   const { token } = useAuthentication(props?.requestParams?.token);
 
    return useCache<T>(
       "cards-game/recommendations",
@@ -25,7 +25,7 @@ export function useCardsFromTag<T extends User[]>(props?: {
    requestParams?: Partial<BasicSingleTagParams>;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.requestParams?.token);
+   const { token } = useAuthentication(props?.requestParams?.token);
 
    return useCache<T>(
       "cards-game/from-tag-" + props?.requestParams?.tagId,
@@ -41,7 +41,7 @@ export function useCardsDisliked<T extends User[]>(props?: {
    requestParams?: TokenParameter;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.requestParams?.token);
+   const { token } = useAuthentication(props?.requestParams?.token);
 
    return useCache<T>(
       "cards-game/disliked-users",

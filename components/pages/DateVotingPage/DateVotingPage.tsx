@@ -16,7 +16,7 @@ import { useGroupVotingOptions } from "./tools/useGroupVotingOptions";
 import { useUser } from "../../../api/server/user";
 import { sendDayVotes, sendIdeasVotes, useGroup } from "../../../api/server/groups";
 import { mutateGroupCacheDayVote, mutateGroupCacheIdeaVote } from "./tools/groupCacheMutators";
-import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
+import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { revalidate } from "../../../api/tools/useCache/useCache";
 
@@ -29,7 +29,7 @@ const DateVotingPage: FC = () => {
    const { colors } = useTheme();
    const { goBack } = useNavigation();
    const { data: user } = useUser();
-   const { token } = useFacebookToken();
+   const { token } = useAuthentication();
    const { params } = useRoute<RouteProps<DateVotingPageParams>>();
    const { data: group } = useGroup({ groupId: params?.group?.groupId });
    const votingOptions = useGroupVotingOptions(group);

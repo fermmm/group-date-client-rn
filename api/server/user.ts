@@ -2,7 +2,7 @@ import { revalidate, useCache, UseCacheOptions } from "../tools/useCache/useCach
 import i18n from "i18n-js";
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
-import { useFacebookToken } from "../third-party/facebook/facebook-login";
+import { useAuthentication } from "../authentication/useAuthentication";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 import {
    FileUploadResponse,
@@ -25,7 +25,7 @@ export function useServerProfileStatus<T extends ProfileStatusServerResponse>(pr
    requestParams?: TokenParameter;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.requestParams?.token);
+   const { token } = useAuthentication(props?.requestParams?.token);
 
    return useCache<T>(
       "user/profile-status",
@@ -38,7 +38,7 @@ export function useUser<T extends User>(props?: {
    requestParams?: Partial<UserGetParams>;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.requestParams?.token);
+   const { token } = useAuthentication(props?.requestParams?.token);
    return useCache<T>(
       "user" + (props?.requestParams?.userId ?? ""),
       () => defaultHttpRequest("user", "GET", { ...(props?.requestParams ?? {}), token }),
@@ -63,7 +63,7 @@ export function useNotifications<T extends Notification[]>(props?: {
    requestParams?: TokenParameter;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.requestParams?.token);
+   const { token } = useAuthentication(props?.requestParams?.token);
    return useCache<T>(
       "user/notifications",
       () =>

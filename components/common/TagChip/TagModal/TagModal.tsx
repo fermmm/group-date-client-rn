@@ -5,7 +5,7 @@ import { Button } from "react-native-paper";
 import { Tag } from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { sendTags, TagEditAction } from "../../../../api/server/tags";
 import { useUser } from "../../../../api/server/user";
-import { useFacebookToken } from "../../../../api/third-party/facebook/facebook-login";
+import { useAuthentication } from "../../../../api/authentication/useAuthentication";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
@@ -26,7 +26,7 @@ export const TagModal: FC<TagModalProps> = props => {
    const { colors } = useTheme();
    const { navigate } = useNavigation();
    const { data: user } = useUser();
-   const { token } = useFacebookToken(user?.token);
+   const { token } = useAuthentication(user?.token);
    const isSubscribed = useMemo(
       () => user?.tagsSubscribed?.find(t => t.tagId === tag.tagId) != null,
       [user]

@@ -13,7 +13,7 @@ import { useUser } from "../../../api/server/user";
 import { firstBy } from "thenby";
 import { useServerInfo } from "../../../api/server/server-info";
 import { getSlotStatusInfoText } from "./tools/getSlotsInfoText";
-import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
+import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 
 const GroupsListPage: FC = () => {
@@ -22,7 +22,7 @@ const GroupsListPage: FC = () => {
    const { data: user } = useUser();
    const { data: serverInfo } = useServerInfo();
    const slotsStatusInfoText = getSlotStatusInfoText(serverInfo, groups);
-   const { token } = useFacebookToken(user?.token);
+   const { token } = useAuthentication(user?.token);
 
    // Effect to show a notification when the group is not seen and send the seen request so it doesn't appear again
    useEffect(() => {

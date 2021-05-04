@@ -4,16 +4,13 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 import { currentTheme } from "../../../config";
-import {
-   useFacebookToken,
-   useFacebookTokenCheck
-} from "../../../api/third-party/facebook/facebook-login";
+import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useIsFocused } from "@react-navigation/native";
 import { useServerInfo } from "../../../api/server/server-info";
 import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useServerProfileStatus } from "../../../api/server/user";
-import { userFinishedRegistration } from "../../../api/tools/userTools";
+import { userHasFinishedRegistration } from "../../../api/tools/userTools";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { removeFromDevice } from "../../../common-tools/device-native-api/storage/storage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
@@ -21,6 +18,7 @@ import { useSendPropsToUpdateAtLogin } from "./tools/useSendPropsToUpdateAtLogin
 import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
 import BackgroundArtistic from "../../common/BackgroundArtistic/BackgroundArtistic";
 import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
+import { AuthenticationButtons } from "./AuthenticationButtons/AuthenticationButtons";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -36,76 +34,66 @@ const LoginPage: FC = () => {
    const serverOperating: boolean = serverInfoLoading
       ? null
       : serverInfoData?.serverOperating ?? error == null;
-   const canContinue = serverOperating && serverInfoData?.versionIsCompatible;
+   const canUseServer = serverOperating && serverInfoData?.versionIsCompatible;
 
-   // Get the user token
-   const { token, isLoading: tokenLoading, getNewTokenFromFacebook } = useFacebookToken();
-
-   // Check the user token is valid
-   const {
-      data: { valid: tokenIsValid } = { valid: false },
-      isLoading: tokenCheckLoading
-   } = useFacebookTokenCheck(token, {
-      enabled: token != null
-   });
+   // Authenticate user
+   const auth = useAuthentication(null, { checkTokenIsValid: true });
 
    // If we have a valid user token and finished updating the login props we check if there is any user
    // property missing (caused by unfinished registration or new props)
    const { data: profileStatusData, error: profileStatusError } = useServerProfileStatus({
-      config: { enabled: tokenIsValid === true && canContinue === true },
-      requestParams: { token }
+      config: { enabled: auth.tokenIsValid === true && canUseServer === true },
+      requestParams: { token: auth.token }
    });
 
-   const finishedRegistration = userFinishedRegistration(profileStatusData);
+   const finishedRegistration = userHasFinishedRegistration(profileStatusData);
 
-   // If we have a valid token we can send the user props that needs to be updated at each login
-   const sendLoginPropsCompleted = useSendPropsToUpdateAtLogin(token, serverInfoData, {
+   // If we have a valid user we can send the user props that needs to be updated at each login
+
+   const sendLoginPropsCompleted = useSendPropsToUpdateAtLogin(auth.token, serverInfoData, {
       enabled: profileStatusData != null
    });
 
    // If the user has props missing redirect to RegistrationForms otherwise redirect to Main or notification press
    useEffect(() => {
-      if (profileStatusData != null && logoAnimCompleted && isFocused && sendLoginPropsCompleted) {
-         if (!finishedRegistration) {
-            navigateWithoutHistory("RegistrationForms");
-         } else {
-            if (redirectFromPushNotificationPress != null) {
-               const redirected = redirectFromPushNotificationPress();
-               if (!redirected) {
-                  navigateWithoutHistory("Main");
-               }
-            } else {
+      if (
+         profileStatusData == null ||
+         !logoAnimCompleted ||
+         !isFocused ||
+         !sendLoginPropsCompleted
+      ) {
+         return;
+      }
+
+      if (!finishedRegistration) {
+         navigateWithoutHistory("RegistrationForms");
+      } else {
+         if (redirectFromPushNotificationPress != null) {
+            const redirected = redirectFromPushNotificationPress();
+            if (!redirected) {
                navigateWithoutHistory("Main");
             }
-            showBetaVersionMessage();
+         } else {
+            navigateWithoutHistory("Main");
          }
+         showBetaVersionMessage();
       }
    }, [profileStatusData, sendLoginPropsCompleted, logoAnimCompleted]);
 
-   /**
-    * The login button is visible when we don't have the token or we don't have a valid token.
-    * The button calls the Facebook API to get a new Token, showing an authorization screen if
-    * the user never authorized the app.
-    */
-   const handleLoginButtonClick = () => {
-      getNewTokenFromFacebook();
-   };
-
-   const showLoginButton: boolean =
+   const showAuthenticationButtons: boolean =
       forceShowConnectButton ||
       profileStatusError ||
-      (canContinue &&
-         (token == null || tokenIsValid === false) &&
-         !tokenCheckLoading &&
-         !tokenLoading &&
+      (canUseServer &&
+         (auth.token == null || auth.tokenIsValid === false) &&
+         !auth.isLoading &&
          !serverInfoLoading);
 
    const showLoadingAnimation: boolean =
-      canContinue &&
+      canUseServer &&
       logoAnimCompleted &&
-      !showLoginButton &&
+      !showAuthenticationButtons &&
       !profileStatusError &&
-      (tokenLoading || tokenCheckLoading || serverInfoLoading || !profileStatusData);
+      (auth.isLoading || serverInfoLoading || !profileStatusData);
 
    return (
       <BackgroundArtistic useImageBackground={true}>
@@ -137,15 +125,7 @@ const LoginPage: FC = () => {
                   </ButtonStyled>
                </>
             )}
-            {showLoginButton && (
-               <ButtonStyled
-                  color={colors.textLogin}
-                  style={styles.button}
-                  onPress={handleLoginButtonClick}
-               >
-                  Iniciar sesión con Facebook
-               </ButtonStyled>
-            )}
+            {showAuthenticationButtons && <AuthenticationButtons authentication={auth} />}
          </View>
       </BackgroundArtistic>
    );

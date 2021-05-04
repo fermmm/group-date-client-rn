@@ -9,7 +9,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import color from "color";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { sendUserProps, useUser } from "../../../../api/server/user";
-import { useFacebookToken } from "../../../../api/third-party/facebook/facebook-login";
+import { useAuthentication } from "../../../../api/authentication/useAuthentication";
 import {
    CenteredMethod,
    LoadingAnimation
@@ -28,7 +28,7 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
    const [sendNotificationChecked, setSendNotificationChecked] = useState(true);
    const [sendNewUsersNotification, setSendNewUsersNotification] = useState<number>(null);
    const { colors } = useTheme();
-   const { token } = useFacebookToken();
+   const { token } = useAuthentication();
    const { data: user } = useUser();
 
    // Effect to mutate the server when the UI changes

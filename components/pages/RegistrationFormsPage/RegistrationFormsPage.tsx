@@ -23,7 +23,7 @@ import { useUnifiedTagsToUpdate } from "./tools/useUnifiedTagsToUpdate";
 import { sendTags, TagEditAction, useTagsAsQuestions } from "../../../api/server/tags";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
-import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
+import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import { mutateCache, revalidate } from "../../../api/tools/useCache/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
 import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
@@ -64,7 +64,7 @@ const RegistrationFormsPage: FC = () => {
    } = useRequiredFormList(
       params != null ? { fromParams: params } : { fromProfileStatus: profileStatus }
    );
-   const { token } = useFacebookToken(profileStatus?.user?.token);
+   const { token } = useAuthentication(profileStatus?.user?.token);
 
    useEffect(() => {
       if (profileStatus?.user != null && sendingToServer) {

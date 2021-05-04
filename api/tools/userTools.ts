@@ -1,6 +1,6 @@
 import { ProfileStatusServerResponse } from "../server/shared-tools/endpoints-interfaces/user";
 
-export function userFinishedRegistration(profileStatus: ProfileStatusServerResponse): boolean {
+export function userHasFinishedRegistration(profileStatus: ProfileStatusServerResponse): boolean {
    if (profileStatus == null) {
       return false;
    }

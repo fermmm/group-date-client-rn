@@ -16,7 +16,7 @@ import { sendChatMessage, useChat, useGroup } from "../../../api/server/groups";
 import moment from "moment";
 import { getGroupMember } from "../../../api/tools/groupTools";
 import { useUser } from "../../../api/server/user";
-import { useFacebookToken } from "../../../api/third-party/facebook/facebook-login";
+import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import color from "color";
 import Avatar from "../../common/Avatar/Avatar";
 import { revalidate } from "../../../api/tools/useCache/useCache";
@@ -44,7 +44,7 @@ const ChatPage: FC = () => {
    const [messages, setMessages] = useState<IMessage[]>([]);
    const [showIntroDialog, setShowIntroDialog] = useState(params?.introDialogText != null);
    const isContactChat = params?.contactChat ?? false;
-   const { token } = useFacebookToken();
+   const { token } = useAuthentication();
    const { data: user } = useUser();
    const { data: group } = useGroup({
       groupId: params?.groupId,

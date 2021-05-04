@@ -1,5 +1,5 @@
 import { revalidate, useCache } from "../tools/useCache/useCache";
-import { useFacebookToken } from "../third-party/facebook/facebook-login";
+import { useAuthentication } from "../authentication/useAuthentication";
 import { defaultHttpRequest } from "../tools/httpRequest";
 import { UseCacheOptions } from "../tools/useCache/useCache";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
@@ -18,7 +18,7 @@ export function useUserGroupList<T extends Group[]>(props?: {
    requestParams?: TokenParameter;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.requestParams?.token);
+   const { token } = useAuthentication(props?.requestParams?.token);
 
    return useCache<T>("user/groups", () => defaultHttpRequest("user/groups", "GET", { token }), {
       ...(props?.config ?? {}),
@@ -31,7 +31,7 @@ export function useGroup<T extends Group>(props?: {
    token?: string;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.token);
+   const { token } = useAuthentication(props?.token);
 
    return useCache<T>(
       "group" + (props?.groupId ?? ""),
@@ -52,7 +52,7 @@ export function useVoteResults<T extends Pick<Group, "mostVotedDate" | "mostVote
    token?: string;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.token);
+   const { token } = useAuthentication(props?.token);
 
    return useCache<T>(
       "group/votes/result" + (props?.groupId ?? ""),
@@ -73,7 +73,7 @@ export function useUnreadMessagesAmount<T extends UnreadMessagesAmount>(props?: 
    token?: string;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.token);
+   const { token } = useAuthentication(props?.token);
 
    return useCache<T>(
       "group/chat/unread/amount" + (props?.groupId ?? ""),
@@ -118,7 +118,7 @@ export function useChat<T extends GroupChat>(props?: {
    token?: string;
    config?: UseCacheOptions<T>;
 }) {
-   const { token } = useFacebookToken(props?.token);
+   const { token } = useAuthentication(props?.token);
 
    return useCache<T>(
       "group/chat" + (props?.groupId ?? ""),

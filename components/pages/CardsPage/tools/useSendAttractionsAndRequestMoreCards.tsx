@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { sendAttraction } from "../../../../api/server/user";
-import { useFacebookToken } from "../../../../api/third-party/facebook/facebook-login";
+import { useAuthentication } from "../../../../api/authentication/useAuthentication";
 import { revalidate } from "../../../../api/tools/useCache/useCache";
 import { CardsSource } from "./types";
 import {
@@ -14,7 +14,7 @@ import {
  * Sends attractions and request more cards when needed
  */
 export function useRequestMoreCardsWhenNeeded(params: UseRequestMoreCardsParams) {
-   const { token } = useFacebookToken();
+   const { token } = useAuthentication();
 
    useEffect(() => {
       (async () => {
@@ -29,7 +29,7 @@ export function useRequestMoreCardsWhenNeeded(params: UseRequestMoreCardsParams)
 }
 
 export function useSendAttractionsQueueIfNeeded(params: UseSendAttractionsParams) {
-   const { token } = useFacebookToken();
+   const { token } = useAuthentication();
 
    useEffect(() => {
       const reason = params.manager.attractionsShouldBeSentReason;

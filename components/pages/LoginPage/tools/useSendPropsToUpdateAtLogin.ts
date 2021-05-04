@@ -21,7 +21,7 @@ export function useSendPropsToUpdateAtLogin(
    const [completed, setCompleted] = useState<boolean>(false);
    const { geolocation } = useGeolocation({ enabled });
    const [notificationsToken, setNotificationsToken] = useState<string>();
-   const [notificationsTokenRequested, setNotificationTokenRequested] = useState(false);
+   const [notificationTokenRequested, setNotificationTokenRequested] = useState(false);
    const [locationLat, setLocationLat] = useState<number>();
    const [locationLon, setLocationLon] = useState<number>();
    const [country, setCountry] = useState<string>();
@@ -41,7 +41,7 @@ export function useSendPropsToUpdateAtLogin(
 
    // Effect to set notification state when is ready
    useEffect(() => {
-      if (serverInfo?.pushNotificationsChannels == null) {
+      if (serverInfo?.pushNotificationsChannels == null || notificationTokenRequested) {
          return;
       }
 
@@ -50,14 +50,14 @@ export function useSendPropsToUpdateAtLogin(
             serverInfo.pushNotificationsChannels
          );
          setNotificationsToken(notificationsToken);
-         setNotificationTokenRequested(true);
       })();
+      setNotificationTokenRequested(true);
    }, [serverInfo?.pushNotificationsChannels, enabled]);
 
    // Effect to send the data to the server when all the information is gathered
    useEffect(() => {
       if (
-         notificationsTokenRequested &&
+         notificationTokenRequested &&
          locationLat != null &&
          locationLon != null &&
          country != null &&
@@ -86,7 +86,7 @@ export function useSendPropsToUpdateAtLogin(
       country,
       token,
       enabled,
-      notificationsTokenRequested,
+      notificationTokenRequested,
       completed
    ]);
 
