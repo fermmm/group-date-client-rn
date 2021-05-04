@@ -14,7 +14,7 @@ interface PropsAuthenticationButtons {
    authentication: UseAuthentication;
 }
 
-export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authentication }) => {
+export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authentication, show }) => {
    const { getNewToken } = authentication;
    const { colors } = useTheme();
    const color = colors.textLogin;
@@ -32,6 +32,10 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authenti
    const handleFacebookButtonPress = () => {
       getNewToken(AuthenticationProvider.Facebook);
    };
+
+   if (!show) {
+      return null;
+   }
 
    return (
       <View style={styles.mainContainer}>
