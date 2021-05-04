@@ -12,7 +12,7 @@ export interface PropsShadowBottom {
  */
 const ShadowBottom: FC<PropsShadowBottom> = props => {
    const [positionY, setPositionY] = useState<number>(0);
-   const [aspectRatio, setAspectRatio] = useState<number>(1);
+   const [aspectRatio, setAspectRatio] = useState<number>(16);
    const { imageSource, style, imageStyle }: PropsShadowBottom = props;
 
    return (
@@ -39,7 +39,7 @@ const ShadowBottom: FC<PropsShadowBottom> = props => {
                {
                   width: "100%",
                   height: undefined,
-                  aspectRatio: aspectRatio ?? 1
+                  aspectRatio: aspectRatio ?? 16
                },
                imageStyle
             ]}
