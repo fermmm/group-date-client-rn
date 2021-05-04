@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { UseAuthentication } from "../../../../api/authentication/useAuthentication";
 import { AuthenticationProvider } from "../../../../api/server/shared-tools/authentication/AuthenticationProvider";
@@ -26,12 +28,26 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authenti
    const anyLoginAvailable = facebookLoginAvailable || googleLoginAvailable;
 
    const handleGoogleButtonPress = () => {
-      getNewToken(AuthenticationProvider.Google);
+      // getNewToken(AuthenticationProvider.Google);
+      promptAsync();
    };
 
    const handleFacebookButtonPress = () => {
       getNewToken(AuthenticationProvider.Facebook);
    };
+
+   const [request, response, promptAsync] = Google.useAuthRequest({
+      expoClientId: process.env.GOOGLE_CLIENT_WEB_EXPO,
+      androidClientId: process.env.GOOGLE_CLIENT_ID_ANDROID
+   });
+
+   React.useEffect(() => {
+      console.log(response);
+      if (response?.type === "success") {
+         const { authentication } = response;
+         console.log(authentication);
+      }
+   }, [response]);
 
    if (!show) {
       return null;

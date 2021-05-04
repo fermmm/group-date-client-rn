@@ -2,6 +2,7 @@
   "expo": {
     "name": "Poly",
     "slug": "Poly",
+    "scheme": "poly",
     "privacy": "public",
     "platforms": [
       "ios",
