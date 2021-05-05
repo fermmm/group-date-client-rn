@@ -19,6 +19,7 @@ import { usePushNotificationPressRedirect } from "../../../common-tools/device-n
 import BackgroundArtistic from "../../common/BackgroundArtistic/BackgroundArtistic";
 import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 import { AuthenticationButtons } from "./AuthenticationButtons/AuthenticationButtons";
+import { LocalStorageKey } from "../../../common-tools/strings/LocalStorageKey";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -117,7 +118,9 @@ const LoginPage: FC = () => {
                   <ButtonStyled
                      color={colors.textLogin}
                      style={styles.button}
-                     onPress={() => removeFromDevice("pdfbtoken")}
+                     onPress={() => {
+                        removeFromDevice(LocalStorageKey.AuthenticationToken);
+                     }}
                   >
                      Debug button
                   </ButtonStyled>

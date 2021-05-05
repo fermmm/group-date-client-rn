@@ -5,7 +5,7 @@ import { LocalStorageKey } from "../../common-tools/strings/LocalStorageKey";
 import { getFacebookToken } from "./providers/facebook/getFacebookToken";
 import { checkFacebookToken } from "./providers/facebook/checkFacebookToken";
 import { checkGoogleToken } from "./providers/google/checkGoogleToken";
-import { getGoogleToken } from "./providers/google/getGoogleToken";
+import { useGetGoogleToken } from "./providers/google/getGoogleToken";
 import { AuthenticationProvider } from "../server/shared-tools/authentication/AuthenticationProvider";
 import {
    createExtendedInfoToken,
@@ -54,6 +54,7 @@ function useToken(externallyProvidedToken?: string): UseToken {
    const [token, setToken] = useState<string>(null);
    const [fetchingNewToken, setFetchingNewToken] = useState<boolean>(false);
    const [attemptedFromDevice, setAttemptedFromDevice] = useState<boolean>(false);
+   const getGoogleToken = useGetGoogleToken();
 
    const getNewToken = (provider: AuthenticationProvider) => {
       fasterTokenCache = null;
@@ -72,6 +73,14 @@ function useToken(externallyProvidedToken?: string): UseToken {
       }
 
       tokenGetter().then(newToken => {
+         if (Boolean(newToken) === false) {
+            fasterTokenCache = null;
+            setToken(null);
+            setIsLoading(false);
+            setFetchingNewToken(false);
+            return;
+         }
+
          newToken = createExtendedInfoToken({ originalToken: newToken, provider });
          saveOnDevice(LocalStorageKey.AuthenticationToken, newToken, { secure: true }).then(() => {
             // console.log("new token: ", newToken);

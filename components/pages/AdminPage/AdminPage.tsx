@@ -14,10 +14,9 @@ import {
    sendForceGroupsSearch
 } from "../../../api/server/admin";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
-import { LocalStorageKey } from "../../../common-tools/strings/LocalStorageKey";
-import { removeFromDevice } from "../../../common-tools/device-native-api/storage/storage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
+import { removeAllLocalStorage } from "../../../common-tools/device-native-api/storage/removeAllLocalStorage";
 
 const AdminPage: FC = () => {
    const { colors } = useTheme();
@@ -37,10 +36,7 @@ const AdminPage: FC = () => {
    };
 
    const handleRemoveLocalStorage = async () => {
-      Object.values(LocalStorageKey).forEach(value => {
-         removeFromDevice(value);
-         removeFromDevice(value, { secure: true });
-      });
+      removeAllLocalStorage();
    };
 
    const handleCreateFakeTagsPress = async () => {
