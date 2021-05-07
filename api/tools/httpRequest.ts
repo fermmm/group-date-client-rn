@@ -42,7 +42,7 @@ export async function httpRequest<Response>(
 
          if (!options.errorResponseSilent) {
             showRequestErrorAlert({
-               title: error.response.status,
+               title: error?.response?.status,
                errorMsg: tryToGetErrorMessage(error)
             });
          }

@@ -1,5 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
+import Constants from "expo-constants";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
@@ -20,10 +22,11 @@ import BackgroundArtistic from "../../common/BackgroundArtistic/BackgroundArtist
 import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 import { AuthenticationButtons } from "./AuthenticationButtons/AuthenticationButtons";
 import { LocalStorageKey } from "../../../common-tools/strings/LocalStorageKey";
+import { removeAllLocalStorage } from "../../../common-tools/device-native-api/storage/removeAllLocalStorage";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
-   const showDebugButtons: boolean = false;
+   const showDebugButtons: boolean = true;
 
    const [logoAnimCompleted, setLogoAnimCompleted] = useState(false);
    const { colors } = useTheme();
@@ -113,20 +116,23 @@ const LoginPage: FC = () => {
             {serverInfoData?.versionIsCompatible === false && (
                <Text style={styles.textBlock}>Debes actualizar la app.</Text>
             )}
-            {__DEV__ && showDebugButtons && (
-               <>
-                  <ButtonStyled
-                     color={colors.textLogin}
-                     style={styles.button}
-                     onPress={() => {
-                        removeFromDevice(LocalStorageKey.AuthenticationToken);
-                     }}
-                  >
-                     Debug button
-                  </ButtonStyled>
-               </>
-            )}
+            {
+               /*__DEV__ && */ showDebugButtons && (
+                  <>
+                     <ButtonStyled
+                        color={colors.textLogin}
+                        style={styles.button}
+                        onPress={() => {
+                           removeAllLocalStorage();
+                        }}
+                     >
+                        Debug button
+                     </ButtonStyled>
+                  </>
+               )
+            }
             <AuthenticationButtons show={showAuthenticationButtons} authentication={auth} />
+            <Text style={styles.text}>Versión: {Constants.manifest.version} p</Text>
          </View>
       </BackgroundArtistic>
    );
@@ -151,6 +157,10 @@ const styles: Styles = StyleSheet.create({
       color: currentTheme.colors.textLogin,
       fontSize: 15,
       marginBottom: 150
+   },
+   text: {
+      fontFamily: currentTheme.font.light,
+      color: currentTheme.colors.textLogin
    },
    secondTextBlock: {
       marginBottom: 65,

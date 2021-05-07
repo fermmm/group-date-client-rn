@@ -2,7 +2,7 @@
   "expo": {
     "name": "Poly",
     "slug": "Poly",
-    "scheme": "poly",
+    "scheme": "com.poly.poly",
     "privacy": "public",
     "platforms": [
       "ios",
@@ -21,8 +21,8 @@
       "package": "com.poly.poly",
       "versionCode": 6,
       "useNextNotificationsApi": true,
-      "googleServicesFile": "./google-services.json",
-      "permissions": ["CAMERA", "CAMERA_ROLL", "ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+      "permissions": ["CAMERA", "CAMERA_ROLL", "ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "googleServicesFile": "./google-services.json"
     },
     "ios": {
       "bundleIdentifier": "com.poly.poly",
