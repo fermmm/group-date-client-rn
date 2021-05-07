@@ -7,7 +7,7 @@
     "inspector": "react-devtools",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "build": "expo build:android",
+    "build": "eas build:android",
     "publish": "expo publish"
   },
   "dependencies": {
