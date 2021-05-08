@@ -3,12 +3,16 @@
     "preinstall": "npm install -g expo-cli",
     "start": "expo start",
     "start:clean": "expo r -c",
-    "start:native": "react-native start",
     "inspector": "react-devtools",
+    "start:native": "react-native start",
     "android": "react-native run-android",
+    "logcat": "adb logcat *:W",
     "ios": "react-native run-ios",
-    "build": "eas build:android",
-    "publish": "expo publish"
+    "build:apk": "cd android && ./gradlew assembleRelease",
+    "build:bundle": "cd android && ./gradlew bundleRelease",
+    "build:eas": "eas build:android",
+    "publish": "expo publish",
+    "credentials" : "expo credentials:manager"
   },
   "dependencies": {
     "@breeffy/react-native-popup-menu": "^0.8.0",
