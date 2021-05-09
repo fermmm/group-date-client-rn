@@ -69,3 +69,5 @@ buck-out/
 web-build/
 
 # @end expo-cli
+android/keystore.properties
+android/app/release

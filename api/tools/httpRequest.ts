@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import I18n from "i18n-js";
-import Constants from "expo-constants";
+import Constants, { AppOwnership } from "expo-constants";
 import { showRequestErrorAlert } from "./showRequestErrorAlert";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
@@ -132,11 +132,11 @@ export function prepareUrl(url: string): string {
 }
 
 export function getServerUrl(): string {
-   if (__DEV__) {
+   if (__DEV__ && Constants.appOwnership === AppOwnership.Expo) {
       return prepareUrl(process.env.SERVER_URL_DEVELOPMENT);
-   } else {
-      return prepareUrl(process.env.SERVER_URL_PRODUCTION);
    }
+
+   return prepareUrl(process.env.SERVER_URL_PRODUCTION);
 }
 
 export interface RequestError {

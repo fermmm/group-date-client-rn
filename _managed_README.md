@@ -1,6 +1,6 @@
 # Poly - Mobile Android / IOS app.
 
-This project uses TypeScript + React Native + Expo with "bare" workflow (not the "managed" workflow).
+This project uses TypeScript + React Native + Expo with "managed" workflow (not the "bare" workflow).
 
 ## Installation
 
@@ -13,14 +13,11 @@ This project uses TypeScript + React Native + Expo with "bare" workflow (not the
 
 4. Create an empty file named `google-services.json` in the root of the project (where .env file is located).
 This is required by expo to compile, the file will be empty but you will replace it with a real one when you publish the app in the future.
-
 5. Install "Expo Go" app from your phone store, you will need it to test the app in your phone.
 
 6. The login on this app works with Facebook and/or Google and you need to do some work to get any of the login systems up and running. The easiest to configure is Facebook: Create a Facebook app as Facebook developer and then use your app info to complete `FACEBOOK_APP_ID` and `FACEBOOK_APP_NAME` in the .env file. Also add `rRW++LUjmZZ+58EbN5DVhGAnkX4=` on the "Key Hashes" field in your Facebook app configuration (required to authorize Expo Go to use your Facebook app). [More info here](https://docs.expo.io/versions/v36.0.0/sdk/facebook/#registering-your-app-with-facebook).
 
-7. Open the Android folder with Android Studio, that will trigger a downloading of many things required to build the project and also packages required by Android Studio and the emulator.
-
-8. **(Optional)** Setup Google login: [Open this link](https://docs.expo.io/guides/authentication/#development-in-the-expo-go-app), follow the instructions under "Development in the Expo Go app" and "Android Native". First you may need to create the app in Google Cloud Platform. If you see an instruction that says "select 'Generate new keystore' option" don't follow it, it's incorrect and dangerous. Complete the .env file with the keys you get when following those steps, both keys should look like: ```123456789123-abcd123abcd123abcd123abcd123abcd123.apps.googleusercontent.com```
+7. **(Optional)** Setup Google login: [Open this link](https://docs.expo.io/guides/authentication/#development-in-the-expo-go-app), follow the instructions under "Development in the Expo Go app" and "Android Native". First you may need to create the app in Google Cloud Platform. If you see an instruction that says "select 'Generate new keystore' option" don't follow it, it's incorrect and dangerous. Complete the .env file with the keys you get when following those steps, both keys should look like: ```123456789123-abcd123abcd123abcd123abcd123abcd123.apps.googleusercontent.com```
 
 ----
 
@@ -33,45 +30,12 @@ This displays a QR. On Android Scan the QR with the Expo Go app. In IOS create a
 
 ----
 
-## Run in emulator:
+## Make a build
 
 ```
-npm run start:native
+npm run build
 ```
-
-In another terminal:
-
-```
-npm run emulator:android
-```
-
-## Make a release build
-
-To make a release build you must open at least once the android folder with Android Studio because it installs required packages. Also you must run ```npm run emulator:android``` at least once because also installs some required packages. After that you must follow these steps:
-
-1. Download a keystore or generate one if you don't have it using the credentials manager:  ```npm run credentials```
-2. When finished previous step you should get a .jks file, and the 3 passwords required to use this file, these are called: "Store password", "Key alias" and "Key password".
-3. Rename the .jks file to upload_keystore.jks and move it to the android folder
-4. Create a file inside the android folder called keystore.properties with the following content (don't use any quotes ""):
-
-```
-  storeFile=../upload_keystore.jks
-  storePassword=THE STORE PASSWORD FROM STEP 2
-  keyAlias=THE KEY ALIAS FROM STEP 2
-  keyPassword=THE KEY PASSWORD FROM STEP 2
-```
-
-Create .apk file:
-```
-npm run build:apk
-```
-The build will be on android/app/build/outputs/apk/release
-
-Create bundle .aab to upload to Google Play
-```
-npm run build:bundle
-```
-The build will be on android/app/build/outputs/bundle/release
+Then select to build an .apk (or .pem if you want to upload to Google Play)
 
 ----
 
