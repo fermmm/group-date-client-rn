@@ -42,13 +42,13 @@ export function useCache<Response = void, Error = any>(
 /**
  * Pass one or multiple keys and the requests for these keys are going to be made again to update the cache data
  */
-export async function revalidate<T>(key: string | string[]) {
+export async function revalidate<T>(key: string | string[], settings?: { exactMatch?: boolean }) {
    if (cacheLibraryToUse === CacheLibrary.Swr) {
-      revalidateSwr(key);
+      await revalidateSwr(key);
    }
 
    if (cacheLibraryToUse === CacheLibrary.ReactQuery) {
-      revalidateRq(key);
+      await revalidateRq(key, settings);
    }
 }
 

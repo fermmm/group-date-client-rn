@@ -61,6 +61,7 @@ export function useSendPropsToUpdateAtLogin(
          locationLat != null &&
          locationLon != null &&
          country != null &&
+         notificationsToken != null &&
          token != null &&
          enabled === true &&
          completed === false
@@ -68,11 +69,9 @@ export function useSendPropsToUpdateAtLogin(
          const props: Partial<Record<EditableUserPropKey, UserPropsValueTypes>> = {
             locationLat,
             locationLon,
-            country
+            country,
+            notificationsToken
          };
-         if (notificationsToken) {
-            props.notificationsToken = notificationsToken;
-         }
 
          (async () => {
             await sendUserProps({ token, props }, false);

@@ -11,10 +11,9 @@ import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useIsFocused } from "@react-navigation/native";
 import { useServerInfo } from "../../../api/server/server-info";
 import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
-import { useServerProfileStatus } from "../../../api/server/user";
+import { useUserProfileStatus } from "../../../api/server/user";
 import { userHasFinishedRegistration } from "../../../api/tools/userTools";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
-import { removeFromDevice } from "../../../common-tools/device-native-api/storage/storage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useSendPropsToUpdateAtLogin } from "./tools/useSendPropsToUpdateAtLogin";
 import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
@@ -43,7 +42,7 @@ const LoginPage: FC = () => {
 
    // If we have a valid user token and finished updating the login props we check if there is any user
    // property missing (caused by unfinished registration or new props)
-   const { data: profileStatusData, error: profileStatusError } = useServerProfileStatus({
+   const { data: profileStatusData, error: profileStatusError } = useUserProfileStatus({
       config: { enabled: auth.tokenIsValid === true && canUseServer === true },
       requestParams: { token: auth.token }
    });
@@ -51,7 +50,6 @@ const LoginPage: FC = () => {
    const finishedRegistration = userHasFinishedRegistration(profileStatusData);
 
    // If we have a valid user we can send the user props that needs to be updated at each login
-
    const sendLoginPropsCompleted = useSendPropsToUpdateAtLogin(auth.token, serverInfoData, {
       enabled: profileStatusData != null
    });

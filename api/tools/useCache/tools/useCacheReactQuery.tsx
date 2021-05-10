@@ -55,30 +55,38 @@ export function useCacheRq<Response = void, Error = any>(
    return resultWIthErrorHandling;
 }
 
-export async function revalidateRq<T>(key: string | string[]) {
+export async function revalidateRq<T>(key: string | string[], settings?: { exactMatch?: boolean }) {
    if (Array.isArray(key)) {
-      key.forEach(query => queryClient.invalidateQueries(query));
+      for (const query of key) {
+         await queryClient.invalidateQueries(query);
+      }
    } else {
-      /**
-       * Matching a query that starts with a string is not implemented in React Query, the
-       * documentation seems to suggest that it is, but it seems that only works with
-       * array type of keys. To solve that we implement here a custom comparar function that
-       * allows to select a query if the query starts with the key provided.
-       */
-      queryClient.invalidateQueries({
-         predicate: query => {
-            if (!Array.isArray(query.queryKey)) {
-               if (((query.queryKey as string) ?? "").startsWith(key)) {
-                  return true;
+      if (settings?.exactMatch === true) {
+         await queryClient.invalidateQueries(key);
+      } else {
+         /**
+          * Matching a query that starts with a string is not implemented in React Query, the
+          * documentation seems to suggest that it is, but it seems that only works with
+          * array type of keys. This is good because for example you want to update the "user"
+          * key and by mistake you will update all "user/...". Although here is an implementation
+          * of partial matching that can be disabled with exactMatch setting. This is not a good
+          * feature and it's a good idea to remove it in the future and use array keys instead.
+          */
+         await queryClient.invalidateQueries({
+            predicate: query => {
+               if (!Array.isArray(query.queryKey)) {
+                  if (((query.queryKey as string) ?? "").startsWith(key)) {
+                     return true;
+                  }
+               } else {
+                  if ((query.queryKey[0] ?? "").startsWith(key)) {
+                     return true;
+                  }
                }
-            } else {
-               if ((query.queryKey[0] ?? "").startsWith(key)) {
-                  return true;
-               }
+               return false;
             }
-            return false;
-         }
-      });
+         });
+      }
    }
 }
 

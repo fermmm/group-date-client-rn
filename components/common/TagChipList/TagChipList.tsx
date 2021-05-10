@@ -80,7 +80,7 @@ const TagChipList: FC<PropsTagChipList> = props => {
             hideCategory={hideCategory}
          />
       ),
-      [showSubscribersAmount, user]
+      [showSubscribersAmount, user, userIsSubscribedToTag]
    );
 
    return (

@@ -39,7 +39,7 @@ export function useTagsAsQuestions<T extends TagsAsQuestion[]>(props?: {
 export async function sendTags(params: TagParams, autoRevalidateRelated: boolean = true) {
    const resp = await defaultHttpRequest(params.action, "POST", params, { handleErrors: true });
    if (autoRevalidateRelated) {
-      revalidate("user");
+      revalidate("user", { exactMatch: true });
    }
    return resp;
 }

@@ -21,7 +21,7 @@ import { Alert } from "react-native";
 import { defaultHttpRequest, getServerUrl } from "../tools/httpRequest";
 import { showRequestErrorAlert } from "../tools/showRequestErrorAlert";
 
-export function useServerProfileStatus<T extends ProfileStatusServerResponse>(props?: {
+export function useUserProfileStatus<T extends ProfileStatusServerResponse>(props?: {
    requestParams?: TokenParameter;
    config?: UseCacheOptions<T>;
 }) {
@@ -80,7 +80,7 @@ export function useNotifications<T extends Notification[]>(props?: {
 export async function sendUserProps(params: UserPostParams, autoRevalidateRelated: boolean = true) {
    const resp = await defaultHttpRequest("user", "POST", params, { handleErrors: true });
    if (autoRevalidateRelated) {
-      revalidate("user");
+      await revalidate("user", { exactMatch: true });
    }
    return resp;
 }

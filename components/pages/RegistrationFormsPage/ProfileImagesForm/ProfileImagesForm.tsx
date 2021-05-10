@@ -11,6 +11,7 @@ import { RegistrationFormName } from "../tools/useRequiredFormList";
 export interface PropsProfileImagesForm {
    formName: RegistrationFormName;
    initialData?: { images?: string[]; token: string };
+   isCoupleProfile: boolean;
    onChange(
       formName: RegistrationFormName,
       formData: { images: string[] },
@@ -18,7 +19,8 @@ export interface PropsProfileImagesForm {
    ): void;
 }
 
-const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange, formName }) => {
+const ProfileImagesForm: FC<PropsProfileImagesForm> = props => {
+   const { initialData, onChange, formName, isCoupleProfile } = props;
    const [placeholdersState, setPlaceholdersState] = useState<ImagePlaceholderState[]>(
       new Array(PROFILE_IMAGES_AMOUNT).fill(null).map((e, i) => ({
          uri: initialData?.images?.[i] || null,
@@ -108,9 +110,11 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = ({ initialData, onChange, 
       <>
          <View style={styles.topContainer}>
             <TitleText extraMarginLeft>Tus fotos</TitleText>
-            <TitleSmallText style={styles.titleSmall}>
-               Si irías acompañadx a las citas no olvides subir fotos de tus acompañantes.
-            </TitleSmallText>
+            {isCoupleProfile && (
+               <TitleSmallText style={styles.titleSmall}>
+                  No olvides incluir una foto de tu pareja.
+               </TitleSmallText>
+            )}
          </View>
          <View style={styles.imagesContainer}>
             {placeholdersState.map((state, i) => (

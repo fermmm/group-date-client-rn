@@ -32,17 +32,17 @@ export function useNotificationsInfo() {
       loadingSetNotificationsAsSeen || loadingSeenNotifications || notifications == null;
 
    useEffect(() => {
-      if (isLoading) {
+      if (isLoading || !notifications) {
          return;
       }
 
       setSeenNotifications(
-         notifications?.filter(notification =>
+         notifications.filter(notification =>
             seenNotificationsIds?.includes(notification.notificationId)
          )
       );
       setNotSeenNotifications(
-         notifications?.filter(
+         notifications.filter(
             notification => !seenNotificationsIds?.includes(notification.notificationId)
          )
       );

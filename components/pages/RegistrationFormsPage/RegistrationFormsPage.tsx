@@ -1,4 +1,4 @@
-import React, { useState, FC, useRef, useCallback, useEffect } from "react";
+import React, { useState, FC, useRef, useCallback } from "react";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import ProfileDescriptionForm from "./ProfileDescriptionForm/ProfileDescriptionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
@@ -6,7 +6,7 @@ import Dialog from "../../common/Dialog/Dialog";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
-import { sendUserProps, useServerProfileStatus } from "../../../api/server/user";
+import { sendUserProps, useUserProfileStatus } from "../../../api/server/user";
 import { useRoute } from "@react-navigation/native";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import {
@@ -24,11 +24,10 @@ import { sendTags, TagEditAction, useTagsAsQuestions } from "../../../api/server
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
-import { mutateCache, revalidate } from "../../../api/tools/useCache/useCache";
+import { revalidate } from "../../../api/tools/useCache/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
 import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
 import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
-import { Alert } from "react-native";
 import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 
 export interface ParamsRegistrationFormsPage {
@@ -37,9 +36,9 @@ export interface ParamsRegistrationFormsPage {
 }
 
 /**
- * This component shows one or more registration forms, is by both the registration process and also when
- * changing the profile. It can receive a list of required forms to show from the params (when modifying
- * profile) or from server (on registration)
+ * This component shows one or more registration forms, is used by both the registration process and also when
+ * changing the profile. It can receive a list of required forms to show in the params. Currently when modifying
+ * profile only one form is showed because of how the UI flow is designed.
  */
 const RegistrationFormsPage: FC = () => {
    const { params } = useRoute<RouteProps<ParamsRegistrationFormsPage>>();
@@ -47,13 +46,13 @@ const RegistrationFormsPage: FC = () => {
    const [currentStep, setCurrentStep] = useState(0);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
    const [exitDialogVisible, setExitDialogVisible] = useState(false);
-   const [sendingToServer, setSendingToServer] = useState(false);
+   const [sendingToServer, setSendingToServer] = useState(null);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
    const tagsToUpdate = useRef<Record<string, TagsToUpdate>>({});
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
    const { unifiedTagsToUpdate, questionsShowed } = useUnifiedTagsToUpdate(tagsToUpdate.current);
-   const { data: profileStatus } = useServerProfileStatus();
+   const { data: profileStatus } = useUserProfileStatus();
    const { data: tagsAsQuestions } = useTagsAsQuestions();
    const {
       isLoading: requiredFormListLoading,
@@ -65,32 +64,6 @@ const RegistrationFormsPage: FC = () => {
       params != null ? { fromParams: params } : { fromProfileStatus: profileStatus }
    );
    const { token } = useAuthentication(profileStatus?.user?.token);
-
-   useEffect(() => {
-      if (profileStatus?.user != null && sendingToServer) {
-         mutateCache("user", profileStatus.user);
-      }
-
-      if (
-         isFocused() &&
-         sendingToServer &&
-         (profileStatus?.user?.profileCompleted || params != null)
-      ) {
-         if (params != null) {
-            goBack();
-         } else {
-            if (redirectFromPushNotificationPress != null) {
-               const redirected = redirectFromPushNotificationPress();
-               if (!redirected) {
-                  navigateWithoutHistory("Main");
-               }
-            } else {
-               navigateWithoutHistory("Main");
-            }
-            showBetaVersionMessage();
-         }
-      }
-   }, [profileStatus]);
 
    const handleChangeOnForm = useCallback(
       (
@@ -145,7 +118,23 @@ const RegistrationFormsPage: FC = () => {
       return true;
    }, []);
 
-   const handleContinueButtonClick = useCallback(() => {
+   const exit = () => {
+      if (params != null) {
+         goBack();
+      } else {
+         if (redirectFromPushNotificationPress != null) {
+            const redirected = redirectFromPushNotificationPress();
+            if (!redirected) {
+               navigateWithoutHistory("Main");
+            }
+         } else {
+            navigateWithoutHistory("Main");
+         }
+         showBetaVersionMessage();
+      }
+   };
+
+   const handleContinueButtonClick = useCallback(async () => {
       if (getCurrentFormError()) {
          showErrorDialog();
          return;
@@ -155,7 +144,8 @@ const RegistrationFormsPage: FC = () => {
          setCurrentStep(currentStep + 1);
       } else {
          if (userChangedSomething(propsGathered.current, unifiedTagsToUpdate, questionsShowed)) {
-            sendDataToServer();
+            await sendDataToServer();
+            exit();
          } else {
             if (canGoBack()) {
                goBack();
@@ -166,7 +156,7 @@ const RegistrationFormsPage: FC = () => {
 
    const sendDataToServer = async () => {
       let propsToSend: EditableUserProps = propsGathered.current;
-      let tagsWereChanged: boolean = false;
+      let thereAreTagsChanges: boolean = false;
 
       if (questionsShowed?.length > 0) {
          propsToSend.questionsShowed = questionsShowed;
@@ -177,7 +167,7 @@ const RegistrationFormsPage: FC = () => {
 
       if (unifiedTagsToUpdate?.tagsToSubscribe?.length > 0) {
          setSendingToServer(true);
-         tagsWereChanged = true;
+         thereAreTagsChanges = true;
          await sendTags({
             action: TagEditAction.Subscribe,
             tagIds: unifiedTagsToUpdate.tagsToSubscribe,
@@ -186,7 +176,7 @@ const RegistrationFormsPage: FC = () => {
       }
       if (unifiedTagsToUpdate?.tagsToBlock?.length > 0) {
          setSendingToServer(true);
-         tagsWereChanged = true;
+         thereAreTagsChanges = true;
          await sendTags({
             action: TagEditAction.Block,
             tagIds: unifiedTagsToUpdate.tagsToBlock,
@@ -195,7 +185,7 @@ const RegistrationFormsPage: FC = () => {
       }
       if (unifiedTagsToUpdate?.tagsToUnsubscribe?.length > 0) {
          setSendingToServer(true);
-         tagsWereChanged = true;
+         thereAreTagsChanges = true;
          await sendTags({
             action: TagEditAction.RemoveSubscription,
             tagIds: unifiedTagsToUpdate.tagsToUnsubscribe,
@@ -205,20 +195,12 @@ const RegistrationFormsPage: FC = () => {
 
       if (unifiedTagsToUpdate?.tagsToUnblock?.length > 0) {
          setSendingToServer(true);
-         tagsWereChanged = true;
+         thereAreTagsChanges = true;
          await sendTags({
             action: TagEditAction.RemoveBlock,
             tagIds: unifiedTagsToUpdate.tagsToUnblock,
             token
          });
-      }
-
-      // We send user props last because it contains questionsShowed prop, which means that the tags were sent
-      if (Object.keys(propsToSend).length > 0) {
-         setSendingToServer(true);
-         mutateCache("user", { ...(profileStatus?.user ?? {}), ...propsToSend });
-         await sendUserProps({ token, props: propsToSend }, false);
-         revalidate("user/profile-status");
       }
 
       /**
@@ -237,11 +219,25 @@ const RegistrationFormsPage: FC = () => {
          "birthDate"
       ];
       const keysMutated = Object.keys(propsToSend) as EditableUserPropKey[];
-      const recommendationsRelatedChanges = keysMutated.filter(key =>
+      const recommendationsRelatedProps = keysMutated.filter(key =>
          recommendationsRelatedKeys.includes(key)
       );
-      if (recommendationsRelatedChanges.length > 0 || tagsWereChanged) {
+      const thereAreRecommendationsRelatedChanges = recommendationsRelatedProps.length > 0;
+      const thereArePropsToSend = Object.keys(propsToSend).length > 0;
+
+      // We send user props last because it contains questionsShowed prop, which means that the tags were sent
+      if (thereArePropsToSend) {
+         setSendingToServer(true);
+         await sendUserProps({ token, props: propsToSend, updateProfileCompletedProp: true }, true);
+      }
+
+      if (thereAreRecommendationsRelatedChanges || thereAreTagsChanges) {
          revalidate("cards-game/recommendations");
+      }
+
+      if (thereArePropsToSend || thereAreTagsChanges) {
+         // This component uses profileStatus.user to update the components status so this is required to have the updated data next time this component mounts
+         revalidate("user/profile-status");
       }
    };
 
@@ -308,6 +304,10 @@ const RegistrationFormsPage: FC = () => {
                         <ProfileImagesForm
                            formName={formName}
                            initialData={profileStatus.user as User}
+                           isCoupleProfile={
+                              (propsGathered.current?.isCoupleProfile as boolean) ??
+                              profileStatus.user?.isCoupleProfile
+                           }
                            onChange={handleChangeOnForm}
                         />
                      )}

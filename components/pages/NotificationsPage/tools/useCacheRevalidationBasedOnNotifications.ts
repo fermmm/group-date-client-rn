@@ -10,7 +10,7 @@ export function useCacheRevalidationBasedOnNotifications(notifications: Notifica
    const { data: groupList } = useUserGroupList();
 
    useEffect(() => {
-      if (notifications == null || groupList == null) {
+      if (!notifications || !groupList) {
          return;
       }
 
