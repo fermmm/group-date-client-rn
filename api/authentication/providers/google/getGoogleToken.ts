@@ -1,8 +1,8 @@
+import { Alert } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import Constants, { AppOwnership } from "expo-constants";
 import { showRequestErrorAlert } from "../../../tools/showRequestErrorAlert";
-import { Alert } from "react-native";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -33,7 +33,9 @@ export function useGetGoogleToken(): () => Promise<string | null> {
 
       getGoogleToken = async () => {
          try {
-            GoogleSignin.configure();
+            GoogleSignin.configure({
+               // offlineAccess: true  // This may be part of the solution to the short life token bug, otherwise remove it
+            });
             await GoogleSignin.hasPlayServices();
             await GoogleSignin.signIn();
             const tokens = await GoogleSignin.getTokens();

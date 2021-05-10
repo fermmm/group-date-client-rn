@@ -6,8 +6,8 @@ import { PUSH_NOTIFICATIONS_SETTINGS } from "../../../config";
 
 export async function getPermissionTokenForNotifications(
    notificationsChannels: NotificationChannelInfo[]
-): Promise<string | null> {
-   let result: string;
+): Promise<GetPermissionTokenForNotifications | null> {
+   let result: GetPermissionTokenForNotifications;
    if (Constants.isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
       let status = existingStatus;
@@ -16,12 +16,19 @@ export async function getPermissionTokenForNotifications(
          status = afterRequestStatus;
       }
       if (status !== "granted") {
-         console.warn("Cannot get permission for push notifications!");
+         Alert.alert("Error", "Cannot get permission for push notifications!");
          return null;
       }
-      result = (await Notifications.getExpoPushTokenAsync()).data;
+      result = {
+         notificationsToken: (await Notifications.getExpoPushTokenAsync()).data,
+         notificationsArePossible: true
+      };
    } else {
       console.warn("Must use physical device for Push Notifications");
+      result = {
+         notificationsToken: null,
+         notificationsArePossible: false
+      };
    }
 
    if (Platform.OS === "android") {
@@ -36,4 +43,9 @@ export async function getPermissionTokenForNotifications(
    }
 
    return result;
+}
+
+interface GetPermissionTokenForNotifications {
+   notificationsArePossible: boolean;
+   notificationsToken: string;
 }

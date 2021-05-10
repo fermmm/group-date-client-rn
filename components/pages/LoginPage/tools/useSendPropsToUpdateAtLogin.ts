@@ -21,6 +21,7 @@ export function useSendPropsToUpdateAtLogin(
    const [completed, setCompleted] = useState<boolean>(false);
    const { geolocation } = useGeolocation({ enabled });
    const [notificationsToken, setNotificationsToken] = useState<string>();
+   const [notificationsPossible, setNotificationsPossible] = useState<boolean>();
    const [notificationTokenRequested, setNotificationTokenRequested] = useState(false);
    const [locationLat, setLocationLat] = useState<number>();
    const [locationLon, setLocationLon] = useState<number>();
@@ -46,10 +47,11 @@ export function useSendPropsToUpdateAtLogin(
       }
 
       (async () => {
-         const notificationsToken = await getPermissionTokenForNotifications(
+         const notificationsTokenResponse = await getPermissionTokenForNotifications(
             serverInfo.pushNotificationsChannels
          );
-         setNotificationsToken(notificationsToken);
+         setNotificationsToken(notificationsTokenResponse.notificationsToken);
+         setNotificationsPossible(notificationsTokenResponse.notificationsArePossible);
       })();
       setNotificationTokenRequested(true);
    }, [serverInfo?.pushNotificationsChannels, enabled]);
@@ -61,17 +63,20 @@ export function useSendPropsToUpdateAtLogin(
          locationLat != null &&
          locationLon != null &&
          country != null &&
-         notificationsToken != null &&
+         (notificationsToken != null || notificationsPossible === false) &&
          token != null &&
          enabled === true &&
          completed === false
       ) {
-         const props: Partial<Record<EditableUserPropKey, UserPropsValueTypes>> = {
+         let props: Partial<Record<EditableUserPropKey, UserPropsValueTypes>> = {
             locationLat,
             locationLon,
-            country,
-            notificationsToken
+            country
          };
+
+         if (notificationsPossible) {
+            props.notificationsToken = notificationsToken;
+         }
 
          (async () => {
             await sendUserProps({ token, props }, false);
