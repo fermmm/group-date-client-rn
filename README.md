@@ -42,13 +42,11 @@ This displays a QR. On Android Scan the QR with the Expo Go app. In IOS create a
 
 Up until now you were running the app in Expo Go. But that is just a wrapper app of the JS code just for debugging and coding. The real app needs to be built in a different way:
 
-1. You must at least once open the android folder with [Android Studio](https://developer.android.com/studio) because that installs required packages. After that you must run ```npm run emulator:android``` at least once because also installs some required packages.
+1. You need a keystore file to sign the app build: We recommend to use Expo service to generate and store the keystore: Create an account on [expo.io](https://expo.io/) and create a project.
 
-2. You need a keystore file to sign the app build: We recommend to use Expo service to generate and store the keystore: Create an account on [expo.io](https://expo.io/) and create a project.
+2. Run credentials manager: ```npm run credentials``` -> Android -> Select your project
 
-3. Run credentials manager: ```npm run credentials``` -> Android -> Select your project
-
-4. If you see "----------------" under "Upload keystore hashes" it means you don't have a keystore, so you can generate a new one: Select: "Update upload Keystore" -> "Generate new keystore" -> "Go back to experience overview" -> Select your project -> Download keystore from the expo servers -> Answer Yes to display the keystore credentials, now you should see something like this: 
+3. If you see "----------------" under "Upload keystore hashes" it means you don't have a keystore, so you can generate a new one: Select: "Update upload Keystore" -> "Generate new keystore" -> "Go back to experience overview" -> Select your project -> Download keystore from the expo servers -> Answer Yes to display the keystore credentials, now you should see something like this: 
 
 ```
 Keystore credentials
@@ -57,11 +55,11 @@ Keystore credentials
   Key password:      123456789abc
 ```
 
-5. Copy that information in a safe place because that is like a "triple password" required to sign your build, signing your build means to be recognized as the author of the app and being able to send updates.
+4. Copy that information in a safe place because that is like a "triple password" required to sign your build, signing your build means to be recognized as the author of the app and being able to send updates.
 
-6. Also to sign your build you need a file that you only have, the .jks file, you should have it in the root of your project. Rename the .jks file to upload_keystore.jks and move it to the android folder
+5. Also to sign your build you need a file that you only have, the .jks file, you should have it in the root of your project. Rename the .jks file to upload_keystore.jks and move it to the android folder
 
-7. Create a file inside the android folder called keystore.properties with the following content (don't use any quotes ""):
+6. Create a file inside the android folder called keystore.properties with the following content (don't use any quotes ""):
 
 ```
   storeFile=../upload_keystore.jks
@@ -69,6 +67,9 @@ Keystore credentials
   keyAlias=THE KEY ALIAS FROM STEP 4
   keyPassword=THE KEY PASSWORD FROM STEP 4
 ```
+
+7. You must at least once open the android folder with [Android Studio](https://developer.android.com/studio) because that installs required packages. After that you must run ```npm run emulator:android``` at least once because also installs some required packages.
+
 8. **Facebook login**: In the last part of step 6 of "Installation" in this readme you added the Expo Go "Facebook Key Hash" in your Facebook app settings, that is the key hash to authorize the Expo Go app to login with your Facebook app. When building your standalone .apk or .pem it has it's own Facebook Key Hash, you need to also authorize that. To get the Facebook Key Hash of your build run `expo fetch:android:hashes`, and repeat the last part of step 6 with that key.
 
 9. **Push notifications**: Push notifications works on Expo Go but in the built app you need to read and follow instructions under "Credentials" on [this page](https://docs.expo.io/push-notifications/push-notifications-setup/#credentials). After that you need to follow instructions on [this page](https://docs.expo.io/push-notifications/using-fcm/), and don't forget to follow instructions on the section "Uploading Server Credentials". Note: The google-services file goes into android/app folder.
