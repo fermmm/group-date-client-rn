@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Constants from "expo-constants";
 import { Styles } from "../../../common-tools/ts-tools/Styles";

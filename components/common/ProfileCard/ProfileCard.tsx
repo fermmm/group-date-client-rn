@@ -2,7 +2,6 @@ import React, { FC, useMemo, useState } from "react";
 import {
    ImageProps,
    Image,
-   StatusBar,
    StyleSheet,
    View,
    Dimensions,
@@ -39,7 +38,6 @@ export interface ProfileCardProps {
    user: User;
    showLikeDislikeButtons?: boolean;
    editMode?: boolean;
-   statusBarPadding?: boolean;
    onLikePress?: () => void;
    onDislikePress?: () => void;
    onUndoPress?: () => void;
@@ -51,7 +49,6 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       onLikePress,
       onDislikePress,
       onUndoPress,
-      statusBarPadding,
       editMode
    }: Partial<ProfileCardProps> = props;
 
@@ -132,7 +129,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
          <CardAnimator animate={animate} onAnimationFinish={onAnimationFinish?.func}>
             <View style={styles.mainContainer}>
                <ScrollViewExtended
-                  style={[styles.scrollView]}
+                  style={styles.scrollView}
                   showBottomGradient={true}
                   bottomGradientColor={colors.background}
                   indicatorStyle={"white"}
@@ -141,10 +138,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                      <View>
                         <ImagesScroll
                            images={finalImagesUri}
-                           style={[
-                              styles.galleryScroll,
-                              statusBarPadding && { marginTop: StatusBar.currentHeight }
-                           ]}
+                           style={[styles.galleryScroll]}
                            onImageClick={(i: number) => {
                               setImageSelected(i);
                               setRenderImageModal(true);

@@ -69,7 +69,7 @@ const styles: Styles = StyleSheet.create({
    mainContainer: {
       position: "relative",
       width: "100%",
-      height: 85
+      height: 75
    },
    imageBackground: {
       flex: 1,

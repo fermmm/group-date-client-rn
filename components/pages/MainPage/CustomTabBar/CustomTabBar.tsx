@@ -123,7 +123,7 @@ export default CustomTabBar;
 const styles: Styles = StyleSheet.create({
    tabBar: {
       flexDirection: "row",
-      height: 78,
+      height: 75,
       paddingTop: StatusBar.currentHeight,
       zIndex: 1
    },

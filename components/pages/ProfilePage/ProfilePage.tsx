@@ -43,7 +43,6 @@ const ProfilePage: FC = () => {
                showLikeDislikeButtons={!isDeviceUser}
                user={user}
                editMode={editMode}
-               statusBarPadding
             />
          )}
       </>

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { StyleSheet, Modal, Image, ImageProps } from "react-native";
+import { StyleSheet, Modal, Image, ImageProps, StatusBar } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Gallery from "./Gallery/Gallery";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -27,6 +27,7 @@ const ImagesModal: FC<ImagesModalProps> = props => {
          visible={props.visible}
          animationType={"fade"}
          onRequestClose={() => props.onClose && props.onClose()}
+         statusBarTranslucent
       >
          <Gallery
             style={styles.gallery}
@@ -60,7 +61,8 @@ const styles: Styles = StyleSheet.create({
       position: "absolute",
       opacity: 0.8,
       marginLeft: 10,
-      marginTop: 10
+      marginTop: 10,
+      paddingTop: StatusBar.currentHeight
    }
 });
 

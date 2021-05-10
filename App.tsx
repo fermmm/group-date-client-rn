@@ -29,6 +29,8 @@ import "intl/locale-data/jsonp/es";
 import "dayjs/locale/en";
 import "dayjs/locale/es";
 
+import { StatusBar } from "expo-status-bar";
+
 i18n.fallbacks = true;
 i18n.translations = {
    en,
@@ -37,18 +39,6 @@ i18n.translations = {
 i18n.defaultLocale = "en";
 i18n.locale = Localization.locale.split("-")[0];
 // i18n.locale = "en";    // Uncomment to force setting a language for debugging
-
-const testTheme = {
-   dark: false,
-   colors: {
-      primary: "rgb(255, 45, 85)",
-      background: "rgb(0, 0, 0)",
-      card: "rgb(0, 0, 0)",
-      text: "rgb(28, 28, 30)",
-      border: "rgb(199, 199, 204)",
-      notification: "rgb(255, 69, 58)"
-   }
-};
 
 const Stack = createStackNavigator();
 
@@ -73,7 +63,8 @@ const App: FC = () => {
    return (
       <CacheConfigProvider>
          <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
-            <NavigationContainerWithNotifications theme={testTheme}>
+            <StatusBar style="light" />
+            <NavigationContainerWithNotifications>
                <Stack.Navigator
                   initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}
                   headerMode={"none"}
