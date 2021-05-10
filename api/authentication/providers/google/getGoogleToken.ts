@@ -46,10 +46,10 @@ export function useGetGoogleToken(): () => Promise<string | null> {
          } catch (error) {
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                // user cancelled the login flow
-               Alert.alert("Error", "statusCodes.SIGN_IN_CANCELLED");
+               Alert.alert("", "statusCodes.SIGN_IN_CANCELLED");
             } else if (error.code === statusCodes.IN_PROGRESS) {
                // operation (e.g. sign in) is in progress already
-               Alert.alert("Error", "statusCodes.IN_PROGRESS");
+               Alert.alert("", "statusCodes.IN_PROGRESS");
             } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
                // play services not available or outdated
                Alert.alert("Error", "statusCodes.PLAY_SERVICES_NOT_AVAILABLE");
