@@ -21,7 +21,7 @@ This is required by expo to compile, the file will be empty but you will replace
 7. **(Optional)** Setup Google login: First you need to create a signed build of the app because the credentials when signing are used by Google login, so follow the "Required setup steps to make a debug or release build" in this readme. After that follow these steps:
     1. [Open this link](https://docs.expo.io/guides/authentication/#development-in-the-expo-go-app), follow the instructions under "Development in the Expo Go app" and "Android Native". First you may need to create the app in Google Cloud Platform. Also if you see an instruction that says "select 'Generate new keystore' option" follow it only if you see "----------------" under "Upload keystore hashes", otherwise use the ones displayed.
   
-    2. Complete the .env file with the keys you get when following those steps, both keys should look like: ```123456789123-abcd123abcd123abcd123abcd123abcd123.apps.googleusercontent.com```.
+    2. Complete the GOOGLE_CLIENT_WEB_EXPO value in the .env file with the key you get when following "Development in the Expo Go app", the key should look like: ```123456789123-abcd123abcd123abcd123abcd123abcd123.apps.googleusercontent.com```.
 
     3. After making these changes the google-services.json file changes, so you must re-download it. To do that go to [firebase console](https://console.firebase.google.com/), create a project if you don't have it and go to the gear button on the top left next to the "Project Overview" and then click on "Project Settings", scroll down and click on the google-services.json button to download the updated file, copy the file to android/app folder.
 
