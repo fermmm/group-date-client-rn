@@ -14,7 +14,6 @@ import { firstBy } from "thenby";
 import { useServerInfo } from "../../../api/server/server-info";
 import { getSlotStatusInfoText } from "./tools/getSlotsInfoText";
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
-import EmptySpace from "../../common/EmptySpace/EmptySpace";
 
 const GroupsListPage: FC = () => {
    const { navigate } = useNavigation();
@@ -52,30 +51,27 @@ const GroupsListPage: FC = () => {
    }
 
    return (
-      <BasicScreenContainer>
-         {slotsStatusInfoText != null && (
-            <>
-               <HelpBanner text={slotsStatusInfoText} />
-               <EmptySpace height={10} />
-            </>
-         )}
-         <TitleText> Activas </TitleText>
-         <List.Section>
-            {groups.sort(firstBy(g => g.creationDate, "desc")).map(group => (
-               <List.Item
-                  title={group.name}
-                  left={props => (
-                     <List.Icon
-                        {...props}
-                        icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} />}
-                     />
-                  )}
-                  onPress={() => navigate("Group", { groupId: group.groupId })}
-                  key={group.groupId}
-               />
-            ))}
-         </List.Section>
-      </BasicScreenContainer>
+      <>
+         {slotsStatusInfoText != null && <HelpBanner text={slotsStatusInfoText} />}
+         <BasicScreenContainer>
+            <TitleText> Activas </TitleText>
+            <List.Section>
+               {groups.sort(firstBy(g => g.creationDate, "desc")).map(group => (
+                  <List.Item
+                     title={group.name}
+                     left={props => (
+                        <List.Icon
+                           {...props}
+                           icon={({ color: c }) => <GraphSvg2 circleColor={c} lineColor={c} />}
+                        />
+                     )}
+                     onPress={() => navigate("Group", { groupId: group.groupId })}
+                     key={group.groupId}
+                  />
+               ))}
+            </List.Section>
+         </BasicScreenContainer>
+      </>
    );
 };
 

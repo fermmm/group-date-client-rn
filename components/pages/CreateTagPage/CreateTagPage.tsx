@@ -110,6 +110,17 @@ const CreateTagPage: FC = () => {
    return (
       <>
          <AppBarHeader />
+         {serverInfo != null && (
+            <HelpBanner
+               showCloseButton
+               rememberClose
+               text={`Puedes crear hasta ${
+                  serverInfo.serverConfigurations?.tagsPerTimeFrame
+               } tags cada ${humanizeUnixTime(
+                  serverInfo.serverConfigurations?.tagCreationTimeFrame
+               )}`}
+            />
+         )}
          <BasicScreenContainer
             showBottomGradient
             showContinueButton
@@ -117,17 +128,6 @@ const CreateTagPage: FC = () => {
             onContinuePress={handleSavePress}
             onBackPress={handleBackPress}
          >
-            {serverInfo != null && (
-               <HelpBanner
-                  showCloseButton
-                  rememberClose
-                  text={`Puedes crear hasta ${
-                     serverInfo.serverConfigurations?.tagsPerTimeFrame
-                  } tags cada ${humanizeUnixTime(
-                     serverInfo.serverConfigurations?.tagCreationTimeFrame
-                  )}`}
-               />
-            )}
             <View style={styles.mainContainer}>
                <TitleText style={styles.title}>Nombre</TitleText>
                <TextInputExtended

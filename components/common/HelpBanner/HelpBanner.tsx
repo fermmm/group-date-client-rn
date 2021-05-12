@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import { Banner } from "react-native-paper";
+import { Banner, Text } from "react-native-paper";
 import color from "color";
 import moment from "moment";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -61,18 +61,13 @@ export const HelpBanner: FC<PropsHelpBanner> = ({
       //@ts-ignore
       <Banner
          visible={visible}
-         style={[
-            styles.banner,
-            coverContent ? styles.cover : {},
-            visible ? { marginBottom: 20 } : {}
-         ]}
+         style={[styles.banner, coverContent ? styles.cover : {}]}
          actions={
             showCloseButton
                ? [
                     {
                        //@ts-ignore
                        labelStyle: styles.buttonStyle,
-                       //@ts-ignore
                        color: colors.specialBackground1,
                        label: "Entendido",
                        onPress: handleClose
@@ -81,7 +76,7 @@ export const HelpBanner: FC<PropsHelpBanner> = ({
                : []
          }
       >
-         {text}
+         <Text style={styles.text}>{text}</Text>
       </Banner>
    );
 };
@@ -89,7 +84,6 @@ export const HelpBanner: FC<PropsHelpBanner> = ({
 const styles: Styles = StyleSheet.create({
    banner: {
       backgroundColor: color(currentTheme.colors.background).darken(0.1).toString()
-      // elevation: 12
    },
    cover: {
       position: "absolute",
@@ -98,5 +92,9 @@ const styles: Styles = StyleSheet.create({
    },
    buttonStyle: {
       color: currentTheme.colors.specialBackground1
+   },
+   text: {
+      fontFamily: currentTheme.font.light,
+      lineHeight: 19
    }
 });
