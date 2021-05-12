@@ -8,7 +8,6 @@ WebBrowser.maybeCompleteAuthSession();
 
 export function useGetGoogleToken(): () => Promise<string | null> {
    const [request, response, promptAsync] = Google.useAuthRequest({
-      androidClientId: process.env.GOOGLE_CLIENT_ID_ANDROID,
       expoClientId: process.env.GOOGLE_CLIENT_WEB_EXPO,
       scopes: ["email"]
    });

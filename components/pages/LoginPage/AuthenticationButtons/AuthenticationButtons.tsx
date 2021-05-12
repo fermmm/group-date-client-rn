@@ -20,8 +20,7 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authenti
    const color = colors.textLogin;
    const facebookLoginAvailable =
       Boolean(process.env.FACEBOOK_APP_ID) && Boolean(process.env.FACEBOOK_APP_NAME);
-   const googleLoginAvailable =
-      Boolean(process.env.GOOGLE_CLIENT_ID_ANDROID) && Boolean(process.env.GOOGLE_CLIENT_WEB_EXPO);
+   const googleLoginAvailable = Boolean(process.env.GOOGLE_CLIENT_WEB_EXPO);
 
    const anyLoginAvailable = facebookLoginAvailable || googleLoginAvailable;
 
