@@ -19,7 +19,8 @@ export function getSlotStatusInfoText(
 
       if (groupsOfSlot.length >= slot.amount) {
          const creationDate = Math.min(...groupsOfSlot.map(g => g.creationDate));
-         const releaseDaysLeft = creationDate + slot.releaseTime - moment().unix();
+         const timeSinceGroupCreated = moment().unix() - creationDate;
+         const releaseDaysLeft = slot.releaseTime - timeSinceGroupCreated;
 
          result = `Se permite ${slot.amount} cita${
             slot.amount > 1 ? "s" : ""
