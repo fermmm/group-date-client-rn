@@ -66,7 +66,7 @@ const WelcomeTourPage: FC = () => {
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
                      Hasta ahora cuando pensábamos en una cita nos imaginábamos a solo 2 personas
-                     conociéndose, el poliamor habilita citas de diversos tamaños.
+                     conociéndose, el poliamor habilita citas en grupos de diversos tamaños.
                   </Text>
                </View>
             </View>
