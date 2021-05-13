@@ -1,6 +1,6 @@
 import { useCache, UseCacheOptions } from "../tools/useCache/useCache";
 import { loadFromDevice, saveOnDevice } from "../../common-tools/device-native-api/storage/storage";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LocalStorageKey } from "../../common-tools/strings/LocalStorageKey";
 import { getFacebookToken } from "./providers/facebook/getFacebookToken";
 import { checkFacebookToken } from "./providers/facebook/checkFacebookToken";
@@ -27,18 +27,21 @@ export function useAuthentication(
    externallyProvidedToken?: string,
    options?: UseAuthenticationOptions
 ): UseAuthentication {
+   const { checkTokenIsValid = false } = options ?? {};
+
    const token = useToken(externallyProvidedToken);
-   const tokenCheck = useTokenCheck(token.token, {
-      enabled: (options?.checkTokenIsValid ?? false) && token.token != null
+   const { data: tokenCheck, isLoading: tokenCheckLoading } = useTokenCheck(token.token, {
+      enabled: checkTokenIsValid && token.token != null
    });
+   useAutomaticReLogin({ token, enabled: tokenCheck?.valid === false && checkTokenIsValid });
 
    const isLoading =
-      token.isLoading || (options?.checkTokenIsValid === true ? tokenCheck.isLoading : false);
+      token.isLoading || (options?.checkTokenIsValid === true ? tokenCheckLoading : false);
 
    return {
       token: token.token,
       isLoading,
-      tokenIsValid: tokenCheck.data?.valid,
+      tokenIsValid: tokenCheck?.valid,
       getNewToken: token.getNewToken
    };
 }
@@ -142,6 +145,27 @@ function useTokenCheck(token: string, config?: UseCacheOptions<TokenCheckResult>
       () => tokenChecker(tokenInfo.originalToken),
       config
    );
+}
+
+/**
+ * Calls getNewToken() only once if cannot login but the token is present, has the same effect of
+ * the user pressing the login button (once) but without requiring the user to do it. If cannot login
+ * after this automatic attempt then the user will need to press the login button next time.
+ * In Google login the token becomes invalid too soon, without this hook the user needs to press
+ * the login button every couple of days.
+ */
+function useAutomaticReLogin(params: { token: UseToken; enabled: boolean }) {
+   const { token, enabled } = params;
+   const attemptedSilentLogin = useRef(false);
+
+   useEffect(() => {
+      if (attemptedSilentLogin.current === true || token?.token == null || enabled !== true) {
+         return;
+      }
+      let tokenInfo = getTokenInfo(token.token);
+      token.getNewToken(tokenInfo.provider);
+      attemptedSilentLogin.current = true;
+   }, [enabled]);
 }
 
 export interface UseAuthentication extends UseToken {

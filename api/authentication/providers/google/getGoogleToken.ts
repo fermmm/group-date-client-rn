@@ -7,14 +7,14 @@ import { showRequestErrorAlert } from "../../../tools/showRequestErrorAlert";
 WebBrowser.maybeCompleteAuthSession();
 
 export function useGetGoogleToken(): () => Promise<string | null> {
-   const [request, response, promptAsync] = Google.useAuthRequest({
-      expoClientId: process.env.GOOGLE_CLIENT_WEB_EXPO,
-      scopes: ["email"]
-   });
-
    let getGoogleToken: () => Promise<string | null>;
 
    if (Constants.appOwnership === AppOwnership.Expo) {
+      const [request, response, promptAsync] = Google.useAuthRequest({
+         expoClientId: process.env.GOOGLE_CLIENT_WEB_EXPO,
+         scopes: ["email"]
+      });
+
       getGoogleToken = async () => {
          try {
             const resp = await promptAsync();
@@ -32,9 +32,7 @@ export function useGetGoogleToken(): () => Promise<string | null> {
 
       getGoogleToken = async () => {
          try {
-            GoogleSignin.configure({
-               // offlineAccess: true  // This may be part of the solution to the short life token bug, otherwise remove it
-            });
+            GoogleSignin.configure({});
             await GoogleSignin.hasPlayServices();
             await GoogleSignin.signIn();
             const tokens = await GoogleSignin.getTokens();
