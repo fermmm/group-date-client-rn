@@ -11,12 +11,17 @@ import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/Lo
 import {
    sendCreateFakeTags,
    sendCreateFakeUsers,
-   sendForceGroupsSearch
+   sendForceGroupsSearch,
+   sendTestNotification
 } from "../../../api/server/admin";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
 import { removeAllLocalStorage } from "../../../common-tools/device-native-api/storage/removeAllLocalStorage";
+import {
+   NotificationChannelId,
+   NotificationType
+} from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
 const AdminPage: FC = () => {
    const { colors } = useTheme();
@@ -44,8 +49,18 @@ const AdminPage: FC = () => {
       Alert.alert("Hecho, respuesta:", response);
    };
 
-   const handleTemp = () => {
-      navigate("WelcomeTour");
+   const notificationsTest = async () => {
+      await sendTestNotification({
+         token: localUser.token,
+         channelId: NotificationChannelId.Default,
+         targetUserId: localUser.userId,
+         notification: {
+            title: "Holiii",
+            text: "Esto es una prueba amiguiii",
+            type: NotificationType.TextOnly
+         }
+      });
+      Alert.alert("", "Hecho");
    };
 
    if (!localUser) {
@@ -87,8 +102,8 @@ const AdminPage: FC = () => {
                </Button>
             </SurfaceStyled>
             <EmptySpace height={80} />
-            <Button onPress={handleTemp} mode="outlined" color={colors.accent2}>
-               temp
+            <Button onPress={notificationsTest} mode="outlined" color={colors.accent2}>
+               Mandar notificación
             </Button>
             <EmptySpace height={30} />
             <Button onPress={handleRemoveLocalStorage} mode="outlined" color={colors.accent2}>
