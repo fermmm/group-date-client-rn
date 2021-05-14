@@ -110,12 +110,14 @@ In another terminal:
 npm run emulator:android
 ```
 
+In this mode the app will connect to the server on the url of SERVER_URL_PRODUCTION (.env file)
+
 ## Make a quick update
 
 ```
 npm run publish
 ```
-What is this: The JS code of your app is hosted in the expo servers for free and can be updated in the already installed apps. The app downloads the latest code at boot and applies the new code on the next boot.This is useful to send updates quickly without approval waiting and without requiring the users to go to Google Play and update the app manually. Some native code changes require a new build, in that case the users need to update in the traditional way.
+**What is this**: The JS code of your app is hosted in the expo servers for free and can be updated in the already installed apps. The app downloads the latest code at boot and applies the new code on the next boot.This is useful to send updates quickly without approval waiting and without requiring the users to go to Google Play and update the app manually. Some native code changes require a new build, in that case the users need to update in the traditional way.
 Also new installations comes with the code at the moment of the build, so they will run the old version at first boot, and the new version on second boot. To prevent problems on new users because of this you should also upload each new version to the stores.
 
 ----
