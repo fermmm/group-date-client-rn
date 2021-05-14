@@ -38,7 +38,10 @@ const LoginPage: FC = () => {
    const canUseServer = serverOperating && serverInfoData?.versionIsCompatible;
 
    // Authenticate user
-   const auth = useAuthentication(null, { checkTokenIsValid: true });
+   const auth = useAuthentication(null, {
+      checkTokenIsValid: true,
+      enabled: canUseServer === true
+   });
 
    // If we have a valid user token and finished updating the login props we check if there is any user
    // property missing (caused by unfinished registration or new props)

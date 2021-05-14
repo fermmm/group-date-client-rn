@@ -27,13 +27,16 @@ export function useAuthentication(
    externallyProvidedToken?: string,
    options?: UseAuthenticationOptions
 ): UseAuthentication {
-   const { checkTokenIsValid = false } = options ?? {};
+   const { checkTokenIsValid = false, enabled = true } = options ?? {};
 
    const token = useToken(externallyProvidedToken);
    const { data: tokenCheck, isLoading: tokenCheckLoading } = useTokenCheck(token.token, {
-      enabled: checkTokenIsValid && token.token != null
+      enabled: checkTokenIsValid && token.token != null && enabled
    });
-   useAutomaticReLogin({ token, enabled: tokenCheck?.valid === false && checkTokenIsValid });
+   useAutomaticReLogin({
+      token,
+      enabled: tokenCheck?.valid === false && checkTokenIsValid && enabled
+   });
 
    const isLoading =
       token.isLoading || (options?.checkTokenIsValid === true ? tokenCheckLoading : false);
@@ -174,6 +177,7 @@ export interface UseAuthentication extends UseToken {
 
 export interface UseAuthenticationOptions {
    checkTokenIsValid?: boolean;
+   enabled?: boolean;
 }
 
 interface UseToken {
