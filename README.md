@@ -16,16 +16,17 @@ This is required by expo to compile, the file will be empty but you will replace
 
 5. Install "Expo Go" app from your phone store, you will need it to test the app in your phone.
 
-6. The login on this app works with Facebook and/or Google and you need to do some work to get any of the login systems up and running. The easiest to configure is Facebook: [Create a Facebook app as Facebook developer](https://developers.facebook.com/docs/development/create-an-app/) and then use the resulting app info to complete `FACEBOOK_APP_ID` and `FACEBOOK_APP_NAME` in the .env file. Also add `rRW++LUjmZZ+58EbN5DVhGAnkX4=` on the "Key Hashes" field in your Facebook app configuration (required to authorize Expo Go to use your Facebook app). [More info here](https://docs.expo.io/versions/v36.0.0/sdk/facebook/#registering-your-app-with-facebook).
+6. You need to create your own package identifier, it's a string identifier for your app, the current one is on app.json > ```expo.android.package```. Search for that package name inside all the project files using your code editor and replace the current one by a new one everywhere, the new identifier can be whatever you want in this format "com.whatever.anything", use your creativity, the only important thing is no other app published has the same identifier.
 
-7. **(Optional)** Setup Google login: First you need to create a signed build of the app because the credentials when signing are used by Google login, so follow the "Required setup steps to make a debug or release build" in this readme. After that follow these steps:
+7. The login on this app works with Facebook and/or Google and you need to do some work to get any of the login systems up and running. The easiest to configure is Facebook: [Create a Facebook app as Facebook developer](https://developers.facebook.com/docs/development/create-an-app/) and then use the resulting app info to complete `FACEBOOK_APP_ID` and `FACEBOOK_APP_NAME` in the .env file. Also add `rRW++LUjmZZ+58EbN5DVhGAnkX4=` on the "Key Hashes" field in your Facebook app configuration (required to authorize Expo Go to use your Facebook app). [More info here](https://docs.expo.io/versions/v36.0.0/sdk/facebook/#registering-your-app-with-facebook).
+
+8. **(Optional)** Setup Google login: First you need to create a signed build of the app because the credentials when signing are used by Google login, so follow the "Required setup steps to make a debug or release build" in this readme. After that follow these steps:
     1. [Open this link](https://docs.expo.io/guides/authentication/#development-in-the-expo-go-app), follow the instructions under "Development in the Expo Go app" and "Android Native". First you may need to create the app in Google Cloud Platform. Also if you see an instruction that says "select 'Generate new keystore' option" follow it only if you see "----------------" under "Upload keystore hashes", otherwise use the ones displayed.
   
     2. Complete the GOOGLE_CLIENT_WEB_EXPO value in the .env file with the key you get when following "Development in the Expo Go app", the key should look like: ```123456789123-abcd123abcd123abcd123abcd123abcd123.apps.googleusercontent.com```.
-
-    3. After making these changes the google-services.json file changes, so you must re-download it. To do that go to [firebase console](https://console.firebase.google.com/), create a project if you don't have it and go to the gear button on the top left next to the "Project Overview" and then click on "Project Settings", scroll down and click on the google-services.json button to download the updated file, copy the file to android/app folder.
-
     If you have any problem [this troubleshooting tutorial](https://github.com/react-native-google-signin/google-signin/blob/master/docs/android-guide.md#faq--troubleshooting) could help.
+
+    3. After doing the steps above you should see the "Login with Google" button if you are not logged in.
 
 ----
 
@@ -34,7 +35,8 @@ This is required by expo to compile, the file will be empty but you will replace
 ```
 npm start
 ```
-This displays a QR. On Android Scan the QR with the Expo Go app. In IOS create an Expo account.
+This displays a QR. On Android Scan the QR with the Expo Go app. In IOS create an Expo account first.
+You also need to have the server running on your local computer so the app can connect to something.
 
 ----
 
@@ -57,7 +59,7 @@ Keystore credentials
 
 4. Copy that information in a safe place because that is like a "triple password" required to sign your build, signing your build means to be recognized as the author of the app and being able to send updates.
 
-5. Also to sign your build you need a file that you only have, the .jks file, you should have it in the root of your project. Rename the .jks file to upload_keystore.jks and move it to the android folder
+5. Also to sign your build you need a file that only you should have, the .jks file, by following the previous step you should have it in the root of your project. Rename the .jks file to upload_keystore.jks and move it to the android folder
 
 6. Create a file inside the android folder called keystore.properties with the following content (don't use any quotes ""):
 
@@ -70,7 +72,7 @@ Keystore credentials
 
 7. You must at least once open the android folder with [Android Studio](https://developer.android.com/studio) because that installs required packages. After that you must run ```npm run emulator:android``` at least once because also installs some required packages.
 
-8. **Facebook login**: In the last part of step 6 of "Installation" in this readme you added the Expo Go "Facebook Key Hash" in your Facebook app settings, that is the key hash to authorize the Expo Go app to login with your Facebook app. When building your standalone .apk or .pem it has it's own Facebook Key Hash, you need to also authorize that. To get the Facebook Key Hash of your build run `expo fetch:android:hashes`, and repeat the last part of step 6 with that key.
+8. **Facebook login**: In the last part of step 7 of "Installation" in this readme you added the Expo Go "Facebook Key Hash" in your Facebook app settings, that is the key hash to authorize the Expo Go app to login with your Facebook app. When building your standalone .apk or .pem it has it's own Facebook Key Hash, you need to also authorize that. To get the Facebook Key Hash of your build run `expo fetch:android:hashes`, and repeat the last part of step 7 with that key.
 
 9. **Push notifications**: Push notifications works on Expo Go but in the built app you need to read and follow instructions under "Credentials" on [this page](https://docs.expo.io/push-notifications/push-notifications-setup/#credentials). After that you need to follow instructions on [this page](https://docs.expo.io/push-notifications/using-fcm/), and don't forget to follow instructions on the section "Uploading Server Credentials". Note: The google-services file goes into android/app folder.
 
@@ -113,14 +115,18 @@ npm run emulator:android
 ```
 npm run publish
 ```
-The users will download the latest JS code when booting the app and run it at restart if the code finished downloading in the background. Useful to send updates without requiring the users to go to Google Play. Some native code changes require a new build, not just the JS code in that case you need to create a .pem traditional build and upload it to google play.
-Also new installations comes with the code at the moment of .pem build. So they will run the old version at first boot, to prevent this you still have to upload each new version to Google Play.  
+What is this: The JS code of your app is hosted in the expo servers for free and can be updated in the already installed apps. The app downloads the latest code at boot and applies the new code on the next boot.This is useful to send updates quickly without approval waiting and without requiring the users to go to Google Play and update the app manually. Some native code changes require a new build, in that case the users need to update in the traditional way.
+Also new installations comes with the code at the moment of the build, so they will run the old version at first boot, and the new version on second boot. To prevent problems on new users because of this you should also upload each new version to the stores.
 
 ----
 
 ## Publishing the app
 
-For final build and publishing of the app you may find useful the [instructions on the Expo documentation](https://docs.expo.io/distribution/introduction/).
+For final build and publishing of the app you may find useful the [instructions on the Expo documentation](https://docs.expo.io/distribution/introduction/). Also you may need to do the following:
+
+1. **Change the icons**: Once you have your icon designed use "Asset Studio" inside Android Studio to export your icon in all the sizes required by an app. Open Android Studio, inside the "project" panel select the folder app/res, then click on File > New > Image asset, import the source asset (your icon image) and follow instructions to generate the images, the images will be generated in the correct folders, build and enjoy.
+
+2. **Change app bundle identifier**: If you didn't do this in the setup steps or the store required you to change the app package identifier, the current one is on app.json > ```expo.android.package```. Search for that package name inside all the project files using your code editor and replace the current one by the new one. If you followed the steps required to setup notifications you have to repeat all of them with the new package name, which implies creating a new app in Firebase. If you followed the steps required to setup google login you need to change the package name in the android client of the Google Cloud platform credentials setup. Also the Facebook app must have the updated identifier.
 
 
 
