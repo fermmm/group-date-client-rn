@@ -1,4 +1,4 @@
-package com.poly.poly;
+package com.poly.dates;
 import android.content.res.Configuration;
 import android.content.Intent;
 

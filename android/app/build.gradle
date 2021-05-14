@@ -139,7 +139,7 @@ android {
     }
 
     defaultConfig {
-        applicationId 'com.poly.poly'
+        applicationId 'com.poly.dates'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 6

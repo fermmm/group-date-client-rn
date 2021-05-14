@@ -2,7 +2,7 @@
   "expo": {
     "name": "Poly",
     "slug": "Poly",
-    "scheme": "com.poly.poly",
+    "scheme": "com.poly.dates",
     "privacy": "public",
     "platforms": [
       "ios",
@@ -18,14 +18,14 @@
     },
     "version": "0.0.6",
     "android": {
-      "package": "com.poly.poly",
+      "package": "com.poly.dates",
       "versionCode": 6,
       "useNextNotificationsApi": true,
       "permissions": ["CAMERA", "CAMERA_ROLL", "ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       "googleServicesFile": "./android/app/google-services.json"
     },
     "ios": {
-      "bundleIdentifier": "com.poly.poly",
+      "bundleIdentifier": "com.poly.dates",
       "buildNumber": "0.0.6",
       "supportsTablet": false,
       "infoPlist": {

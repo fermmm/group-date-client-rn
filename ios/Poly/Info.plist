@@ -80,8 +80,8 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.poly.poly</string>
-          <string>com.poly.poly</string>
+          <string>com.poly.dates</string>
+          <string>com.poly.dates</string>
         </array>
       </dict>
     </array>
