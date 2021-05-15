@@ -122,6 +122,12 @@ Also new installations comes with the code at the moment of the build, so they w
 
 ----
 
+## Increment version number
+
+1. Open ```app.json``` and change: ```expo.version```, ```expo.android.versionCode``` and ```expo.ios.buildNumber```
+2. Open ```build.gradle``` and change: ```android.defaultConfig.versionCode``` and ```android.defaultConfig.versionName```
+3. Open ```ios/Poly/info.plist``` and change the tag below ```CFBundleShortVersionString``` and ```CFBundleVersion```
+
 ## Publishing the app
 
 For final build and publishing of the app you may find useful the [instructions on the Expo documentation](https://docs.expo.io/distribution/introduction/). Also you may need to do the following:
