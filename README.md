@@ -24,9 +24,10 @@ This is required by expo to compile, the file will be empty but you will replace
     1. [Open this link](https://docs.expo.io/guides/authentication/#development-in-the-expo-go-app), follow the instructions under "Development in the Expo Go app" and "Android Native". First you may need to create the app in Google Cloud Platform. Also if you see an instruction that says "select 'Generate new keystore' option" follow it only if you see "----------------" under "Upload keystore hashes", otherwise use the ones displayed.
   
     2. Complete the GOOGLE_CLIENT_WEB_EXPO value in the .env file with the key you get when following "Development in the Expo Go app", the key should look like: ```123456789123-abcd123abcd123abcd123abcd123abcd123.apps.googleusercontent.com```.
-    If you have any problem [this troubleshooting tutorial](https://github.com/react-native-google-signin/google-signin/blob/master/docs/android-guide.md#faq--troubleshooting) could help.
 
     3. After doing the steps above you should see the "Login with Google" button if you are not logged in.
+
+    If you have any problem [this troubleshooting tutorial](https://github.com/react-native-google-signin/google-signin/blob/master/docs/android-guide.md#faq--troubleshooting) could help.
 
 ----
 
@@ -117,7 +118,7 @@ In this mode the app will connect to the server on the url of SERVER_URL_PRODUCT
 ```
 npm run publish
 ```
-**What is this**: The JS code of your app is hosted in the expo servers for free and can be updated in the already installed apps. The app downloads the latest code at boot and applies the new code on the next boot.This is useful to send updates quickly without approval waiting and without requiring the users to go to Google Play and update the app manually. Some native code changes require a new build, in that case the users need to update in the traditional way.
+**What is this**: The JS code of your app is hosted in the expo servers for free and can be updated in the already installed apps. The app downloads the latest code at boot and applies the new code on the next boot.This is useful to send updates quickly without approval waiting and without requiring the users to go to Google Play or App Store and update the app manually. Some native code changes require a new build, in that case the users need to update in the traditional way.
 Also new installations comes with the code at the moment of the build, so they will run the old version at first boot, and the new version on second boot. To prevent problems on new users because of this you should also upload each new version to the stores.
 
 ----
