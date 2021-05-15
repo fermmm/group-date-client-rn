@@ -128,6 +128,8 @@ Also new installations comes with the code at the moment of the build, so they w
 2. Open ```build.gradle``` and change: ```android.defaultConfig.versionCode``` and ```android.defaultConfig.versionName```
 3. Open ```ios/Poly/info.plist``` and change the tag below ```CFBundleShortVersionString``` and ```CFBundleVersion```
 
+The version number (except for android.versionCode) should be in [this format](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-102364)
+
 ## Publishing the app
 
 For final build and publishing of the app you may find useful the [instructions on the Expo documentation](https://docs.expo.io/distribution/introduction/). Also you may need to do the following:
