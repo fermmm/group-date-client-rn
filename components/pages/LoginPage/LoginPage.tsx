@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
-import Constants from "expo-constants";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
@@ -21,6 +20,7 @@ import BackgroundArtistic from "../../common/BackgroundArtistic/BackgroundArtist
 import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 import { AuthenticationButtons } from "./AuthenticationButtons/AuthenticationButtons";
 import { removeAllLocalStorage } from "../../../common-tools/device-native-api/storage/removeAllLocalStorage";
+import { getAppVersion } from "../../../common-tools/device-native-api/versions/versions";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -130,7 +130,7 @@ const LoginPage: FC = () => {
                </>
             )}
             <AuthenticationButtons show={showAuthenticationButtons} authentication={auth} />
-            <Text style={styles.text}>Versión: {Constants.manifest.version}</Text>
+            <Text style={styles.text}>{getAppVersion().codeVersion}</Text>
          </View>
       </BackgroundArtistic>
    );

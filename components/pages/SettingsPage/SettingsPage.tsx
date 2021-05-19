@@ -1,7 +1,5 @@
 import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
-import Constants from "expo-constants";
-import * as Application from "expo-application";
 import * as IntentLauncher from "expo-intent-launcher";
 import { List, Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -15,6 +13,7 @@ import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { openDeviceAction } from "../../../common-tools/device-native-api/device-action/openDeviceAction";
 import { currentTheme } from "../../../config";
+import { getAppVersion } from "../../../common-tools/device-native-api/versions/versions";
 
 const SettingsPage: FC = () => {
    const { navigate } = useNavigation();
@@ -132,10 +131,10 @@ const SettingsPage: FC = () => {
                onPress={() => navigate("Admin")}
             />
          )}
-         <Text style={styles.versionText}>Code version: {Constants.manifest.version}</Text>
-         <Text style={styles.versionText}>
-            Build version: {Application.nativeApplicationVersion}
-         </Text>
+         <View style={styles.versionsContainer}>
+            <Text style={styles.versionText}>Code version: {getAppVersion().codeVersion}</Text>
+            <Text style={styles.versionText}>App version: {getAppVersion().buildVersion}</Text>
+         </View>
       </BasicScreenContainer>
    );
 };
@@ -151,6 +150,9 @@ const styles: Styles = StyleSheet.create({
    versionText: {
       fontFamily: currentTheme.font.light,
       textAlign: "center",
+      marginTop: 5
+   },
+   versionsContainer: {
       marginTop: 20,
       marginBottom: 20
    }
