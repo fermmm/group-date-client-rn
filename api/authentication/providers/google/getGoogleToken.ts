@@ -54,7 +54,7 @@ export function useGetGoogleToken(): () => Promise<string | null> {
                Alert.alert("Error", "statusCodes.PLAY_SERVICES_NOT_AVAILABLE");
             } else {
                // some other error happened
-               Alert.alert(JSON.stringify(error));
+               Alert.alert("Unknown login error", error);
             }
          }
 
