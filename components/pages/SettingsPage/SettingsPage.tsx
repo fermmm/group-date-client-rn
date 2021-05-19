@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import Constants from "expo-constants";
+import * as Application from "expo-application";
 import * as IntentLauncher from "expo-intent-launcher";
 import { List, Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -131,7 +132,10 @@ const SettingsPage: FC = () => {
                onPress={() => navigate("Admin")}
             />
          )}
-         <Text style={styles.versionText}>Versión: {Constants.manifest.version}</Text>
+         <Text style={styles.versionText}>Code version: {Constants.manifest.version}</Text>
+         <Text style={styles.versionText}>
+            Build version: {Application.nativeApplicationVersion}
+         </Text>
       </BasicScreenContainer>
    );
 };
