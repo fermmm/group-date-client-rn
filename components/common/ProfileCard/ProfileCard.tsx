@@ -33,6 +33,7 @@ import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags"
 import TagChipList from "../TagChipList/TagChipList";
 import MoreModal from "./MoreModal/MoreModal";
 import { useCallback } from "react";
+import { removeSocialNetworkContact } from "../../../common-tools/strings/social";
 
 export interface ProfileCardProps {
    user: User;
@@ -78,6 +79,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    const { data: localUser } = useUser();
    const { data: allTags, isLoading: tagsLoading } = useTags();
    const { data: serverInfo, isLoading: serverInfoLoading } = useServerInfo();
+   const isOwnProfile = localUser?.userId === userId;
 
    const tagsSubscribedInCommon: Tag[] = useMemo(
       () =>
@@ -202,7 +204,9 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                      </View>
                      <Card.Content>
                         <Paragraph style={styles.descriptionParagraph}>
-                           {profileDescription}
+                           {isOwnProfile
+                              ? profileDescription
+                              : removeSocialNetworkContact(profileDescription)}
                         </Paragraph>
                         {editMode && (
                            <EditButton
