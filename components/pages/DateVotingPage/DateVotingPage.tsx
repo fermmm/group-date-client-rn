@@ -123,7 +123,7 @@ const DateVotingPage: FC = () => {
                   Vota la idea de la cita
                </TitleText>
                <TitleSmallText style={styles.titleSmall}>
-                  Estas son las recomendaciones escritas por los demás del grupo, puedes votar más
+                  Estas son las recomendaciones escritas por lxs demás del grupo, puedes votar más
                   de una opción
                </TitleSmallText>
                <VotingPoll
