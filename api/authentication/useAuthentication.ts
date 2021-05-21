@@ -89,7 +89,6 @@ function useToken(externallyProvidedToken?: string): UseToken {
 
          newToken = createExtendedInfoToken({ originalToken: newToken, provider });
          saveOnDevice(LocalStorageKey.AuthenticationToken, newToken, { secure: true }).then(() => {
-            // console.log("new token: ", newToken);
             fasterTokenCache = newToken;
             setToken(newToken);
             setIsLoading(false);

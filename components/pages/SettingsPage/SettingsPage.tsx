@@ -107,7 +107,7 @@ const SettingsPage: FC = () => {
                         icon="rowing" 
                      />
                   }
-                  onPress={() => console.log("pressed")}
+                  onPress={() => {}}
                /> 
                */}
          <List.Item
