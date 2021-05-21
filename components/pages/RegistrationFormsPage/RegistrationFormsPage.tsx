@@ -19,7 +19,7 @@ import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user
 import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
 import FiltersForm from "./FiltersForm/FiltersForm";
 import TagsAsQuestionForm from "./TagsAsQuestionForm/TagsAsQuestionForm";
-import { useUnifiedTagsToUpdate } from "./tools/useUnifiedTagsToUpdate";
+import { getUnifiedTagsToUpdate } from "./tools/useUnifiedTagsToUpdate";
 import { sendTags, TagEditAction, useTagsAsQuestions } from "../../../api/server/tags";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
@@ -29,6 +29,7 @@ import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps
 import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
 import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
 import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
+import GenderForm from "./GenderForm/GenderForm";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -50,8 +51,8 @@ const RegistrationFormsPage: FC = () => {
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
    const tagsToUpdate = useRef<Record<string, TagsToUpdate>>({});
+   const questionsShowed = useRef<string[]>(null);
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
-   const { unifiedTagsToUpdate, questionsShowed } = useUnifiedTagsToUpdate(tagsToUpdate.current);
    const { data: profileStatus } = useUserProfileStatus();
    const { data: tagsAsQuestions } = useTagsAsQuestions();
    const {
@@ -72,6 +73,8 @@ const RegistrationFormsPage: FC = () => {
          error: string | null,
          tagsToUpdateReceived?: TagsToUpdate
       ) => {
+         updateQuestionsShowed(formName);
+
          propsGathered.current = {
             ...propsGathered.current,
             ...newProps
@@ -85,8 +88,22 @@ const RegistrationFormsPage: FC = () => {
             tagsToUpdate.current[formName] = tagsToUpdateReceived;
          }
       },
-      []
+      [tagsAsQuestionsToShow]
    );
+
+   const updateQuestionsShowed = (formName: string) => {
+      if (
+         tagsAsQuestionsToShow.includes(formName) &&
+         !questionsShowed.current?.includes(formName) &&
+         !profileStatus?.user?.questionsShowed?.includes(formName)
+      ) {
+         questionsShowed.current = [
+            ...(questionsShowed.current ?? []),
+            ...(profileStatus?.user?.questionsShowed ?? []),
+            formName
+         ];
+      }
+   };
 
    const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
    const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
@@ -143,7 +160,13 @@ const RegistrationFormsPage: FC = () => {
       if (currentStep < formsRequired.length - 1) {
          setCurrentStep(currentStep + 1);
       } else {
-         if (userChangedSomething(propsGathered.current, unifiedTagsToUpdate, questionsShowed)) {
+         if (
+            userChangedSomething(
+               propsGathered.current,
+               getUnifiedTagsToUpdate(tagsToUpdate.current),
+               questionsShowed.current
+            )
+         ) {
             await sendDataToServer();
             exit();
          } else {
@@ -152,14 +175,21 @@ const RegistrationFormsPage: FC = () => {
             }
          }
       }
-   }, [currentStep, formsRequired, propsGathered.current, unifiedTagsToUpdate, questionsShowed]);
+   }, [
+      currentStep,
+      formsRequired,
+      propsGathered.current,
+      tagsToUpdate.current,
+      questionsShowed.current
+   ]);
 
    const sendDataToServer = async () => {
       let propsToSend: EditableUserProps = propsGathered.current;
+      const unifiedTagsToUpdate = getUnifiedTagsToUpdate(tagsToUpdate.current);
       let thereAreTagsChanges: boolean = false;
 
-      if (questionsShowed?.length > 0) {
-         propsToSend.questionsShowed = questionsShowed;
+      if (questionsShowed.current?.length > 0) {
+         propsToSend.questionsShowed = questionsShowed.current;
       }
       if ((propsToSend?.name as string)?.endsWith(" ")) {
          propsToSend.name = (propsToSend.name as string).slice(0, -1);
@@ -207,12 +237,6 @@ const RegistrationFormsPage: FC = () => {
        * Check if the user changed a prop that affects cards recommendation, in that case invalidate the query
        */
       const recommendationsRelatedKeys: EditableUserPropKey[] = [
-         "gender",
-         "likesMan",
-         "likesWoman",
-         "likesManTrans",
-         "likesWomanTrans",
-         "likesOtherGenders",
          "targetDistance",
          "targetAgeMin",
          "targetAgeMax",
@@ -326,18 +350,16 @@ const RegistrationFormsPage: FC = () => {
                         />
                      )}
                      {formName === "GenderForm" && (
-                        <PropAsQuestionForm
+                        <GenderForm
                            formName={formName}
-                           propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            initialData={profileStatus.user}
                            onChange={handleChangeOnForm}
                         />
                      )}
                      {formName === "TargetGenderForm" && (
-                        <PropAsQuestionForm
+                        <GenderForm
+                           genderTargetMode
                            formName={formName}
-                           propNamesToChange={knownFormsWithPropsTheyChange[formName]}
-                           defaultValueForNonSelectedAnswers={false}
                            initialData={profileStatus.user}
                            onChange={handleChangeOnForm}
                         />

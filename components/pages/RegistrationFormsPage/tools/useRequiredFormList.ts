@@ -3,7 +3,10 @@ import {
    ProfileStatusServerResponse,
    UserPropAsQuestion
 } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
-import { EditableUserPropKey } from "../../../../api/server/shared-tools/validators/user";
+import {
+   EditableUserPropKey,
+   RequiredUserPropKey
+} from "../../../../api/server/shared-tools/validators/user";
 import { usePropsAsQuestions } from "../../../../api/server/user";
 import { mergeArraysAt } from "../../../../common-tools/js-tools/js-tools";
 import { ParamsRegistrationFormsPage } from "../RegistrationFormsPage";
@@ -22,17 +25,11 @@ export const useRequiredFormList = (
     * Also this list determines the order in which the screens will be displayed.
     */
    const formsForProps: FormsAndTheirProps = {
-      GenderForm: ["gender"],
-      TargetGenderForm: [
-         "likesWoman",
-         "likesMan",
-         "likesWomanTrans",
-         "likesManTrans",
-         "likesOtherGenders"
-      ],
+      GenderForm: [],
+      TargetGenderForm: [],
       CoupleProfileForm: ["isCoupleProfile"],
-      TagsAsQuestionsForms: [],
-      UnknownPropsQuestionForms: [],
+      TagsAsQuestionsForms: [], // This empty element will be replaced later
+      UnknownPropsQuestionForms: [], // This empty element will be replaced later
       DateIdeaForm: ["dateIdea"],
       BasicInfoForm: [
          "name",
@@ -73,7 +70,7 @@ export const useRequiredFormList = (
       let _formsRequired: string[] = getOnlyRequired(
          Object.keys(formsForProps) as RegistrationFormName[],
          formsForProps,
-         requirementSource.fromProfileStatus.missingEditableUserProps
+         requirementSource.fromProfileStatus
       );
 
       /*
@@ -95,7 +92,7 @@ export const useRequiredFormList = (
          _formsRequired.indexOf("UnknownPropsQuestionForms"),
          unknownProps,
          _formsRequired,
-         { replace: true }
+         { replace: true } // In case nothing is merged because unknownProps = [] the UnknownPropsQuestionForms item is removed with this parameter
       );
 
       /**
@@ -183,15 +180,26 @@ function isUnknownQuestionProp(
 function getOnlyRequired(
    formNames: RegistrationFormName[],
    formsForProps: FormsAndTheirProps,
-   missingProps: EditableUserPropKey[]
+   profileStatus: ProfileStatusServerResponse
 ): RegistrationFormName[] {
    return formNames.filter(formName => {
       // These forms will be included always because are removed in another place
       if (formName === "UnknownPropsQuestionForms" || formName === "TagsAsQuestionsForms") {
          return true;
       }
-      const propsOfForm = formsForProps[formName] as EditableUserPropKey[];
-      const formIsRequired = propsOfForm.some(prop => missingProps.includes(prop));
+
+      if (formName === "GenderForm") {
+         return !profileStatus?.genderIsSelected;
+      }
+
+      if (formName === "TargetGenderForm") {
+         return !profileStatus?.targetGenderIsSelected;
+      }
+
+      const propsOfForm = formsForProps[formName] as RequiredUserPropKey[];
+      const formIsRequired = propsOfForm.some(prop =>
+         profileStatus?.missingEditableUserProps?.includes(prop)
+      );
       return formIsRequired;
    });
 }

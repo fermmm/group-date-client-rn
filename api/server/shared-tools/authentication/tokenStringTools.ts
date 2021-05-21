@@ -34,7 +34,7 @@ export function getTokenInfo(extendedInfoToken: string): TokenInfo {
 
    return {
       provider: spitted[0] as AuthenticationProvider,
-      originalToken: spitted[1]
+      originalToken: spitted[1],
    };
 }
 

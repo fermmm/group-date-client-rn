@@ -10,12 +10,12 @@ export function moveElementInArray<T>(arr: T[], from: number, to: number): void 
 }
 
 /**
- * Merges array1 into array2 at a specific index of array2. Returns the new array, original arrays are not modified.
+ * Appends elements of array1 into array2 in a specific index position of array2. Returns the new array, original arrays are not mutated.
  *
  * @param index
  * @param array1
  * @param array2
- * @param options If you set {replace : true} it will replace the item at the specified index by all the elements of array1
+ * @param options If you set {replace : true} it will also remove the item present in the specified index of array 2
  */
 export function mergeArraysAt<T>(
    index: number,

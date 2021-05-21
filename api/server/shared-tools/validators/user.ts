@@ -1,6 +1,6 @@
 import * as Validator from "fastest-validator";
 import { ValidationRule } from "fastest-validator";
-import { Gender, UserPropsValueTypes, User } from "../endpoints-interfaces/user";
+import { UserPropsValueTypes, User } from "../endpoints-interfaces/user";
 
 // fastest-validator TS fix
 const v = new ((Validator as unknown) as typeof Validator.default)();
@@ -25,15 +25,13 @@ const REGISTRATION_USER_PROPS_SCHEMA = {
    profileDescription: { type: "string", max: 4000, optional: true } as V,
    locationLat: { type: "number", optional: true } as V,
    locationLon: { type: "number", optional: true } as V,
-   likesWoman: { type: "boolean", optional: true } as V,
-   likesMan: { type: "boolean", optional: true } as V,
-   likesWomanTrans: { type: "boolean", optional: true } as V,
-   likesManTrans: { type: "boolean", optional: true } as V,
-   likesOtherGenders: { type: "boolean", optional: true } as V,
-   gender: { type: "enum", values: Object.values(Gender), optional: true } as V,
    height: { type: "number", min: 0, max: 300, optional: true } as V,
    sendNewUsersNotification: { type: "number", min: 0, max: 50, optional: true } as V,
    questionsShowed: { type: "array", items: { type: "string", min: 1, max: 20 }, max: 50, optional: true } as V,
+   targetGenderIsSelected: {
+      type: "boolean",
+      optional: true,
+   } as V,
 };
 
 const OTHER_USER_PROPS_SCHEMA = {
