@@ -1,14 +1,12 @@
-import I18n from "i18n-js";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { TagBasicInfo } from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { Gender, User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { getUserGenderSelection } from "../../../../api/server/shared-tools/user-tools/getUserGenderSelection";
 import { EditableUserProps } from "../../../../api/server/shared-tools/validators/user";
-import Question, { QuestionOnChange } from "../../../common/Question/Question";
 import { TagsToUpdate } from "../RegistrationFormsPage";
+import GendersChecklist from "./GendersChecklist/GendersChecklist";
 import { getGenderTagsToUpdate } from "./tools/getGenderTagsToUpdate";
 
-// TODO: Aca habria que reimplementar <Question> para que tenga una parte de las respuestas colapsadas o divididas por simplicidad
 export interface PropsGenderForm {
    formName: string;
    initialData: Partial<User>;
@@ -29,7 +27,6 @@ export interface GenderForm {
 const GenderForm: FC<PropsGenderForm> = props => {
    const { initialData, onChange, formName, genderTargetMode = false } = props;
    const [gendersSelected, setGendersSelected] = useState<Gender[]>(null);
-   const genderList = useMemo(() => Object.values(Gender), []);
    const initialGenderSelection = useMemo(() => getUserGenderSelection(initialData), [initialData]);
 
    useEffect(() => {
@@ -45,8 +42,8 @@ const GenderForm: FC<PropsGenderForm> = props => {
       );
    }, [gendersSelected]);
 
-   const handleQuestionChange = ({ selectedAnswerMultiple }: QuestionOnChange) => {
-      setGendersSelected(selectedAnswerMultiple as Gender[]);
+   const handleSelectionChange = (selection: Gender[]) => {
+      setGendersSelected(selection);
    };
 
    const getError = (): string | null => {
@@ -70,15 +67,10 @@ const GenderForm: FC<PropsGenderForm> = props => {
    };
 
    return (
-      <Question
-         questionText={genderTargetMode ? "¿Qué géneros te atraen?" : "¿Cuál es tu género?"}
-         answers={genderList.map(gender => ({
-            text: I18n.t(gender),
-            id: gender
-         }))}
-         multipleAnswersAllowed
+      <GendersChecklist
+         title={genderTargetMode ? "¿Qué géneros te atraen?" : "¿Cuál es tu género?"}
          initiallySelected={getInitialGenderSelection()}
-         onChange={handleQuestionChange}
+         onChange={handleSelectionChange}
       />
    );
 };

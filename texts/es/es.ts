@@ -44,7 +44,7 @@ export const es: { [key: string]: string } = {
    "Gender Nonconforming": "Género disconforme",
    Hijra: "Hijra",
    Intersex: "Intersexual",
-   "Non binary": "No binarix",
+   "Non binary": "No binario",
    Other: "Otro",
    Pangender: "Pangénero",
    "Two Spirit": "Género de los dos espíritus"
