@@ -90,13 +90,6 @@ const AboutPage: FC = () => {
                Engels: "El origen de la familia, la propiedad privada y el estado".
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Es anti natural conocer gente en una app?
-            </TitleText>
-            <Text style={styles.text}>
-               Probablemente si, pero sirve como una herramienta más en nuestra forma de vida
-               moderna que no le queda mucho de su forma original.
-            </Text>
-            <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
             </TitleText>
             <Text style={styles.text}>
