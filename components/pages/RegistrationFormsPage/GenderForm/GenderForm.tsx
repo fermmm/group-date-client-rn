@@ -1,3 +1,4 @@
+import I18n from "i18n-js";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { TagBasicInfo } from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { Gender, User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
@@ -72,7 +73,7 @@ const GenderForm: FC<PropsGenderForm> = props => {
       <Question
          questionText={genderTargetMode ? "¿Qué géneros te atraen?" : "¿Cuál es tu género?"}
          answers={genderList.map(gender => ({
-            text: gender,
+            text: I18n.t(gender),
             id: gender
          }))}
          multipleAnswersAllowed

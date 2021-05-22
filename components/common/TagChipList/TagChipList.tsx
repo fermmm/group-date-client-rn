@@ -2,6 +2,7 @@ import React, { FC, memo, useCallback, useState } from "react";
 import { FlatList, SectionList, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { useUser } from "../../../api/server/user";
+import { useOnlyVisibleTags } from "../../../common-tools/tags/useOnlyVisibleTags";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 import TagChip from "../TagChip/TagChip";

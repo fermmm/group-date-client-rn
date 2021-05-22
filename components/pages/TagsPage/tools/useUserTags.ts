@@ -2,21 +2,25 @@ import { useUser } from "./../../../../api/server/user";
 import { useMemo } from "react";
 import { Tag } from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { UseTagsDividedScrollFormat } from "./useTagsDividedScrollFormat";
+import { useOnlyVisibleTags } from "../../../../common-tools/tags/useOnlyVisibleTags";
 
 export function useUserTags(tagsFromServer: Tag[]) {
+   let tagList = useOnlyVisibleTags(tagsFromServer);
    const { data: user } = useUser();
+   const userTagsSubscribed = useOnlyVisibleTags(user?.tagsSubscribed);
+   const userTagsBlocked = useOnlyVisibleTags(user?.tagsBlocked);
 
    return useMemo<UseTagsDividedScrollFormat[]>(() => {
-      if (tagsFromServer == null || user == null) {
+      if (tagList == null || user == null) {
          return [];
       }
 
-      const tagsSubscribedCompleteInfo = user.tagsSubscribed.map(userTag =>
-         tagsFromServer.find(tag => userTag.tagId === tag.tagId)
+      const tagsSubscribedCompleteInfo = userTagsSubscribed?.map(userTag =>
+         tagList.find(tag => userTag.tagId === tag.tagId)
       );
 
-      const tagsBlockedCompleteInfo = user.tagsBlocked.map(userTag =>
-         tagsFromServer.find(tag => userTag.tagId === tag.tagId)
+      const tagsBlockedCompleteInfo = userTagsBlocked?.map(userTag =>
+         tagList.find(tag => userTag.tagId === tag.tagId)
       );
 
       return [
@@ -29,5 +33,5 @@ export function useUserTags(tagsFromServer: Tag[]) {
             data: tagsBlockedCompleteInfo
          }
       ];
-   }, [tagsFromServer, user]);
+   }, [tagList, userTagsSubscribed, userTagsBlocked]);
 }

@@ -30,5 +30,22 @@ export const es: { [key: string]: string } = {
    September: "Septiembre",
    October: "Octubre",
    November: "Noviembre",
-   December: "Diciembre"
+   December: "Diciembre",
+   Woman: "Mujer",
+   Man: "Hombre",
+   "Transgender Woman": "Mujer transexual",
+   "Transgender Man": "Hombre transexual",
+   "Group sex": "Group sex",
+   Agender: "Agénero",
+   Androgynous: "Androgenx",
+   Bigender: "Bigénero",
+   Genderfluid: "Género fluido",
+   Genderqueer: "Género queer",
+   "Gender Nonconforming": "Género disconforme",
+   Hijra: "Hijra",
+   Intersex: "Intersexual",
+   "Non binary": "No binarix",
+   Other: "Otro",
+   Pangender: "Pangénero",
+   "Two Spirit": "Género de los dos espíritus"
 };

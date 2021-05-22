@@ -34,6 +34,7 @@ import TagChipList from "../TagChipList/TagChipList";
 import MoreModal from "./MoreModal/MoreModal";
 import { useCallback } from "react";
 import { removeSocialNetworkContact } from "../../../common-tools/strings/social";
+import { useOnlyVisibleTags } from "../../../common-tools/tags/useOnlyVisibleTags";
 
 export interface ProfileCardProps {
    user: User;
@@ -60,14 +61,13 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       birthDate,
       cityName,
       height,
-      gender,
       profileDescription,
       isCoupleProfile,
       tagsSubscribed,
       tagsBlocked
    }: Partial<User> = props.user;
 
-   const genderText: string = getGenderName(gender, isCoupleProfile);
+   const genderText: string = getGenderName(tagsSubscribed, isCoupleProfile);
 
    const { navigate } = useNavigation();
    const [renderImageModal, setRenderImageModal] = useState(false);
@@ -81,23 +81,25 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    const { data: serverInfo, isLoading: serverInfoLoading } = useServerInfo();
    const isOwnProfile = localUser?.userId === userId;
 
-   const tagsSubscribedInCommon: Tag[] = useMemo(
-      () =>
-         tagsSubscribed
-            ?.filter(t => localUser?.tagsSubscribed.find(ut => ut.tagId === t.tagId) != null)
-            .map(t => allTags?.find(at => at.tagId === t.tagId))
-            .filter(t => t != null),
-      [localUser, tagsSubscribed, allTags]
+   const tagsSubscribedInCommon: Tag[] = useOnlyVisibleTags(
+      useMemo(
+         () =>
+            tagsSubscribed
+               ?.filter(t => localUser?.tagsSubscribed.find(ut => ut.tagId === t.tagId) != null)
+               .map(t => allTags?.find(at => at.tagId === t.tagId))
+               .filter(t => t != null),
+         [localUser, tagsSubscribed, allTags]
+      )
    );
 
-   // const tagsBlockedInCommon: Tag[] = useMemo(
+   // const tagsBlockedInCommon: Tag[] = useOnlyVisibleTags(useMemo(
    //    () =>
    //       tagsBlocked
    //          ?.filter(t => localUser?.tagsBlocked.find(ut => ut.tagId === t.tagId) != null)
    //          .map(t => allTags?.find(at => at.tagId === t.tagId))
    //          .filter(t => t != null),
    //    [localUser, tagsSubscribed, allTags]
-   // );
+   // ));
 
    const finalImagesUri = useMemo(
       () => images.map(uri => prepareUrl(serverInfo.imagesHost + uri)),

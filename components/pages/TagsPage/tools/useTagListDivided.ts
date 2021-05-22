@@ -1,3 +1,4 @@
+import { useOnlyVisibleTags } from "./../../../../common-tools/tags/useOnlyVisibleTags";
 import { useEffect, useState } from "react";
 import { firstBy } from "thenby";
 import { extractFromArray } from "./../../../../common-tools/js-tools/js-tools";
@@ -7,9 +8,10 @@ import { Tag } from "../../../../api/server/shared-tools/endpoints-interfaces/ta
  * Divides the list of tags into categories with a maximum size, leaving the remaining tags in the "rest" category
  */
 export function useTagListDivided(
-   tagList: Tag[],
+   tagListFromParams: Tag[],
    options?: { amountPerCategory?: number }
 ): UseTagListDivided {
+   let tagList = useOnlyVisibleTags(tagListFromParams);
    const [globals, setGlobals] = useState([]);
    const [withMoreSubscribers, setWithMoreSubscribers] = useState([]);
    const [withMoreBlockers, setWithMoreBlockers] = useState([]);
