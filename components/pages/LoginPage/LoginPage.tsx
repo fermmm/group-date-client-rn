@@ -114,7 +114,9 @@ const LoginPage: FC = () => {
                </Text>
             )}
             {serverInfoData?.versionIsCompatible === false && (
-               <Text style={styles.textBlock}>Debes actualizar la app.</Text>
+               <Text style={styles.textBlock}>
+                  Debes actualizar la app, reinicia y si no se actualiza sola ve a Google Play.
+               </Text>
             )}
             {showDebugButtons && (
                <>
