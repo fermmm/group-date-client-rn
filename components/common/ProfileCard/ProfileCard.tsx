@@ -188,6 +188,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                         {!editMode ? (
                            <View />
                         ) : (
+                           // Maybe copying Okc it's not a good idea, this features is probably useless:
                            // <Text style={[styles.compatibilityPercentage, {
                            //    borderColor: color(colors.statusOk).alpha(0.5).string(),
                            //    backgroundColor: color(colors.statusOk).alpha(0.5).string(),
