@@ -21,6 +21,7 @@ import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaV
 import { AuthenticationButtons } from "./AuthenticationButtons/AuthenticationButtons";
 import { removeAllLocalStorage } from "../../../common-tools/device-native-api/storage/removeAllLocalStorage";
 import { getAppVersion } from "../../../common-tools/device-native-api/versions/versions";
+import AppUpdateMessage from "./AppUpdateMessage/AppUpdateMessage";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -35,7 +36,10 @@ const LoginPage: FC = () => {
    const serverOperating: boolean = serverInfoLoading
       ? null
       : serverInfoData?.serverOperating ?? error == null;
-   const canUseServer = serverOperating && serverInfoData?.versionIsCompatible;
+   const canUseServer =
+      serverOperating &&
+      serverInfoData?.codeVersionIsCompatible &&
+      serverInfoData.buildVersionIsCompatible;
 
    // Authenticate user
    const auth = useAuthentication(null, {
@@ -113,11 +117,7 @@ const LoginPage: FC = () => {
                      : "No se puede conectar con el servidor, intenta mas tarde y si el problema persiste actualiza la app o buscanos en las redes sociales para saber si hubo algún problema"}
                </Text>
             )}
-            {serverInfoData?.versionIsCompatible === false && (
-               <Text style={styles.textBlock}>
-                  Debes actualizar la app, reinicia y si no se actualiza sola ve a Google Play.
-               </Text>
-            )}
+            <AppUpdateMessage serverInfo={serverInfoData} />
             {showDebugButtons && (
                <>
                   <ButtonStyled
