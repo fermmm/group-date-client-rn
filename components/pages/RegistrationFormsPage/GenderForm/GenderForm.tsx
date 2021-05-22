@@ -47,8 +47,8 @@ const GenderForm: FC<PropsGenderForm> = props => {
    };
 
    const getError = (): string | null => {
-      if (gendersSelected == null) {
-         return "Debes seleccionar al menos un genero para continuar";
+      if (gendersSelected == null || gendersSelected.length === 0) {
+         return "Debes seleccionar al menos un género para continuar";
       }
 
       return null;
