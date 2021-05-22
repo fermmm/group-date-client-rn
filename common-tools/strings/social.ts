@@ -3,18 +3,27 @@
  * removed. Example: "My instagram is @fer, see you there!" will be changed to:
  * "My see you there!".
  */
-export function removeSocialNetworkContact(str: string) {
+export function removeSocialNetworkContact(str: string): string {
+   if (str == null) {
+      return null;
+   }
+
    let result: string = str;
 
    // For the moment only instagram is banned
-   const clues = ["ig", "insta", "instagram"];
-   const punctuationsAfterClue = [" ", ".", ":"];
+   const removePhrasesStartingWith = ["ig", "insta", "instagram"];
+   const removeWordsContaining = ["@"];
+   const punctuationsUsedInBannedWords = [" ", ".", ":"];
    const maxRemovals = 50;
 
-   clues.forEach(clue => {
-      punctuationsAfterClue.forEach(punctuation => {
-         result = iterateRemovePhraseStartingWith(result, clue + punctuation, maxRemovals);
+   removePhrasesStartingWith.forEach(clue => {
+      punctuationsUsedInBannedWords.forEach(punctuation => {
+         result = iterateRemovePhraseThatStarsWith(result, clue + punctuation, maxRemovals);
       });
+   });
+
+   removeWordsContaining.forEach(bannedCharacter => {
+      result = removeWordsIncluding(result, bannedCharacter);
    });
 
    return result;
@@ -23,10 +32,10 @@ export function removeSocialNetworkContact(str: string) {
 /**
  * Executes removePhraseStartingWith() multiple times for each coincidence.
  */
-function iterateRemovePhraseStartingWith(str: string, clue: string, maxRemovals: number) {
+function iterateRemovePhraseThatStarsWith(str: string, clue: string, maxRemovals: number) {
    let result = str;
    for (let i = 0; i < maxRemovals; i++) {
-      const iterationRes = removePhraseStartingWith(result, clue);
+      const iterationRes = removePhraseThatStarsWith(result, clue);
       if (iterationRes === result) {
          return result;
       }
@@ -40,7 +49,7 @@ function iterateRemovePhraseStartingWith(str: string, clue: string, maxRemovals:
  * Removes a matched word, also removes the next word, if the next word has length of * 3 or
  * less then the next to that is also removed.
  */
-function removePhraseStartingWith(str: string, beginning: string) {
+function removePhraseThatStarsWith(str: string, beginning: string) {
    const beginningIndex = str.indexOf(beginning);
 
    if (beginningIndex === -1) {
@@ -62,4 +71,11 @@ function removePhraseStartingWith(str: string, beginning: string) {
    const textToRemove = wordsToRemove.join(" ");
 
    return str.replace(textToRemove, "");
+}
+
+function removeWordsIncluding(str: string, wordIncluding: string): string {
+   return str
+      .split(" ")
+      .filter(word => !word.includes(wordIncluding))
+      .join(" ");
 }
