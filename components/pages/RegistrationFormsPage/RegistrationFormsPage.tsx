@@ -50,6 +50,7 @@ const RegistrationFormsPage: FC = () => {
    const [sendingToServer, setSendingToServer] = useState(null);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
+   const goToNextStepIsPossible = useRef<() => Promise<boolean>>();
    const tagsToUpdate = useRef<Record<string, TagsToUpdate>>({});
    const questionsShowed = useRef<string[]>(null);
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
@@ -66,26 +67,25 @@ const RegistrationFormsPage: FC = () => {
    );
    const { token } = useAuthentication(profileStatus?.user?.token);
 
-   const handleChangeOnForm = useCallback(
-      (
-         formName: RegistrationFormName | string,
-         newProps: EditableUserProps,
-         error: string | null,
-         tagsToUpdateReceived?: TagsToUpdate
-      ) => {
-         updateQuestionsShowed(formName);
+   const handleOnChangeForm = useCallback(
+      (params: OnChangeFormParams) => {
+         goToNextStepIsPossible.current = params.goToNextStepIsPossible;
+         updateQuestionsShowed(params.formName);
 
          propsGathered.current = {
             ...propsGathered.current,
-            ...newProps
+            ...(params.newProps ?? {})
          };
+
          propsGathered.current = filterNotReallyChangedProps(
             propsGathered.current,
             profileStatus?.user
          );
-         errorOnForms.current[formName] = error;
-         if (tagsToUpdateReceived != null) {
-            tagsToUpdate.current[formName] = tagsToUpdateReceived;
+
+         errorOnForms.current[params.formName] = params.error;
+
+         if (params.tagsToUpdate != null) {
+            tagsToUpdate.current[params.formName] = params.tagsToUpdate;
          }
       },
       [tagsAsQuestionsToShow]
@@ -124,7 +124,7 @@ const RegistrationFormsPage: FC = () => {
 
    // Called when the back button/gesture on the device is pressed before leaving the screen
    const handleGoBack = useCustomBackButtonAction(() => {
-      if (canGoBack() && Object.keys(propsGathered.current).length > 0 && isFocused()) {
+      if (canGoBack() && userChangedSomething() && isFocused()) {
          showExitDialog();
       } else {
          if (canGoBack()) {
@@ -152,6 +152,10 @@ const RegistrationFormsPage: FC = () => {
    };
 
    const handleContinueButtonClick = useCallback(async () => {
+      if (goToNextStepIsPossible.current != null && !(await goToNextStepIsPossible.current())) {
+         return;
+      }
+
       if (getCurrentFormError()) {
          showErrorDialog();
          return;
@@ -160,13 +164,7 @@ const RegistrationFormsPage: FC = () => {
       if (currentStep < formsRequired.length - 1) {
          setCurrentStep(currentStep + 1);
       } else {
-         if (
-            userChangedSomething(
-               propsGathered.current,
-               getUnifiedTagsToUpdate(tagsToUpdate.current),
-               questionsShowed.current
-            )
-         ) {
+         if (userChangedSomething()) {
             await sendDataToServer();
             exit();
          } else {
@@ -265,18 +263,16 @@ const RegistrationFormsPage: FC = () => {
       }
    };
 
-   const userChangedSomething = (
-      propsToSend: EditableUserProps,
-      unifiedTagsToUpdate: TagsToUpdate,
-      questionsShowed: string[]
-   ) => {
+   const userChangedSomething = () => {
+      const unifiedTagsToUpdate = getUnifiedTagsToUpdate(tagsToUpdate.current);
+
       return (
-         questionsShowed?.length > 0 ||
+         questionsShowed.current?.length > 0 ||
          unifiedTagsToUpdate?.tagsToSubscribe?.length > 0 ||
          unifiedTagsToUpdate?.tagsToBlock?.length > 0 ||
          unifiedTagsToUpdate?.tagsToUnsubscribe?.length > 0 ||
          unifiedTagsToUpdate?.tagsToUnblock?.length > 0 ||
-         Object.keys(propsToSend).length > 0
+         Object.keys(propsGathered.current).length > 0
       );
    };
 
@@ -313,7 +309,7 @@ const RegistrationFormsPage: FC = () => {
                         <BasicInfoForm
                            formName={formName}
                            initialData={profileStatus.user}
-                           onChange={handleChangeOnForm}
+                           onChange={handleOnChangeForm}
                         />
                      )}
                      {formName === "FiltersForm" && (
@@ -321,7 +317,7 @@ const RegistrationFormsPage: FC = () => {
                            formName={formName}
                            initialData={profileStatus.user}
                            birthDateSelected={propsGathered?.current?.birthDate as number}
-                           onChange={handleChangeOnForm}
+                           onChange={handleOnChangeForm}
                         />
                      )}
                      {formName === "ProfileImagesForm" && (
@@ -332,28 +328,29 @@ const RegistrationFormsPage: FC = () => {
                               (propsGathered.current?.isCoupleProfile as boolean) ??
                               profileStatus.user?.isCoupleProfile
                            }
-                           onChange={handleChangeOnForm}
+                           onChange={handleOnChangeForm}
                         />
                      )}
                      {formName === "DateIdeaForm" && (
                         <DateIdeaForm
                            formName={formName}
                            initialData={profileStatus.user}
-                           onChange={handleChangeOnForm}
+                           onChange={handleOnChangeForm}
                         />
                      )}
                      {formName === "ProfileDescriptionForm" && (
                         <ProfileDescriptionForm
                            formName={formName}
                            initialData={profileStatus.user}
-                           onChange={handleChangeOnForm}
+                           onChange={handleOnChangeForm}
                         />
                      )}
                      {formName === "GenderForm" && (
                         <GenderForm
                            formName={formName}
                            initialData={profileStatus.user}
-                           onChange={handleChangeOnForm}
+                           isOnFocus={currentStep === i}
+                           onChange={handleOnChangeForm}
                         />
                      )}
                      {formName === "TargetGenderForm" && (
@@ -361,7 +358,8 @@ const RegistrationFormsPage: FC = () => {
                            genderTargetMode
                            formName={formName}
                            initialData={profileStatus.user}
-                           onChange={handleChangeOnForm}
+                           isOnFocus={currentStep === i}
+                           onChange={handleOnChangeForm}
                         />
                      )}
                      {formName === "CoupleProfileForm" && (
@@ -369,7 +367,7 @@ const RegistrationFormsPage: FC = () => {
                            formName={formName}
                            propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            initialData={profileStatus.user}
-                           onChange={handleChangeOnForm}
+                           onChange={handleOnChangeForm}
                         />
                      )}
                      {unknownPropsQuestions.includes(formName) && (
@@ -377,7 +375,7 @@ const RegistrationFormsPage: FC = () => {
                            formName={formName}
                            propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            initialData={profileStatus.user}
-                           onChange={handleChangeOnForm}
+                           onChange={handleOnChangeForm}
                         />
                      )}
                      {tagsAsQuestionsToShow.includes(formName) && (
@@ -387,7 +385,7 @@ const RegistrationFormsPage: FC = () => {
                            initialData={profileStatus.user}
                            mandatoryQuestion={true}
                            tagsAsQuestions={tagsAsQuestions}
-                           onChange={handleChangeOnForm}
+                           onChange={handleOnChangeForm}
                         />
                      )}
                   </BasicScreenContainer>
@@ -416,6 +414,14 @@ export interface TagsToUpdate {
    tagsToSubscribe?: string[];
    tagsToBlock?: string[];
    tagsToUnblock?: string[];
+}
+
+export interface OnChangeFormParams {
+   formName: RegistrationFormName | string;
+   newProps?: EditableUserProps;
+   error?: string | null;
+   tagsToUpdate?: TagsToUpdate;
+   goToNextStepIsPossible?: () => Promise<boolean>;
 }
 
 export default RegistrationFormsPage;

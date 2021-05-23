@@ -7,20 +7,24 @@ import {
    LoadingAnimation
 } from "../../../common/LoadingAnimation/LoadingAnimation";
 import Question, { QuestionOnChange } from "../../../common/Question/Question";
+import { OnChangeFormParams } from "../RegistrationFormsPage";
 
 export interface PropsPropAsQuestionForm {
    formName: string;
    initialData?: EditableUserProps;
    propNamesToChange: string[];
    defaultValueForNonSelectedAnswers?: UserPropsAsQuestionsTypes;
-   onChange: (formName: string, newProps: EditableUserProps, error: string | null) => void;
+   onChange: (props: OnChangeFormParams) => void;
 }
 
 const PropAsQuestionForm: FC<PropsPropAsQuestionForm> = props => {
    const { initialData, propNamesToChange, defaultValueForNonSelectedAnswers, onChange } = props;
    const [newProps, setNewProps] = useState<EditableUserProps>(null);
    const { data: allPropsAsQuestions } = usePropsAsQuestions();
-   useEffect(() => onChange(props.formName, newProps, getError()), [newProps, props.formName]);
+   useEffect(
+      () => onChange({ formName: props.formName, newProps, error: getError() }),
+      [newProps, props.formName]
+   );
 
    // Use the first propNamesToChange to find which question object will be used
    const question = allPropsAsQuestions?.find(

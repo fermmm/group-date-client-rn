@@ -7,16 +7,13 @@ import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import ImagePlaceholder, { ImagePlaceholderState } from "./ImagePlaceholder/ImagePlaceholder";
 import { moveElementInArray } from "../../../../common-tools/js-tools/js-tools";
 import { RegistrationFormName } from "../tools/useRequiredFormList";
+import { OnChangeFormParams } from "../RegistrationFormsPage";
 
 export interface PropsProfileImagesForm {
    formName: RegistrationFormName;
    initialData?: { images?: string[]; token: string };
    isCoupleProfile: boolean;
-   onChange(
-      formName: RegistrationFormName,
-      formData: { images: string[] },
-      error: string | null
-   ): void;
+   onChange: (props: OnChangeFormParams) => void;
 }
 
 const ProfileImagesForm: FC<PropsProfileImagesForm> = props => {
@@ -31,7 +28,7 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = props => {
    const [imageToReposition, setImageToReposition] = useState<string>(null);
 
    useEffect(() => {
-      onChange(formName, { images: getImagesArray() }, getErrors());
+      onChange({ formName, newProps: { images: getImagesArray() }, error: getErrors() });
    }, [placeholdersState, formName]);
 
    const handlePlaceholderChange = (newState: ImagePlaceholderState) => {

@@ -6,15 +6,12 @@ import TitleMediumText from "../../../common/TitleMediumText/TitleMediumText";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import { RegistrationFormName } from "../tools/useRequiredFormList";
 import { currentTheme } from "../../../../config";
+import { OnChangeFormParams } from "../RegistrationFormsPage";
 
 export interface DescriptionFormProps {
    formName: RegistrationFormName;
    initialData?: { profileDescription?: string };
-   onChange(
-      formName: RegistrationFormName,
-      formData: { profileDescription: string },
-      error: string | null
-   ): void;
+   onChange: (props: OnChangeFormParams) => void;
 }
 
 const ProfileDescriptionForm: FC<DescriptionFormProps> = ({ initialData, onChange, formName }) => {
@@ -24,7 +21,7 @@ const ProfileDescriptionForm: FC<DescriptionFormProps> = ({ initialData, onChang
    );
 
    useEffect(
-      () => onChange(formName, { profileDescription }, getError()),
+      () => onChange({ formName, newProps: { profileDescription }, error: getError() }),
       [profileDescription, formName]
    );
 

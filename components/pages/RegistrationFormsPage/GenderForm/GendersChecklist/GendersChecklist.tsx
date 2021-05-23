@@ -11,15 +11,18 @@ import TitleText from "../../../../common/TitleText/TitleText";
 import CheckboxButton from "../../../../common/CheckboxButton/CheckboxButton";
 import { Styles } from "../../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../../config";
+import ButtonStyled from "../../../../common/ButtonStyled/ButtonStyled";
 
 export interface PropsGendersChecklist {
    title: string;
    initiallySelected?: Gender[];
+   initiallyExpanded?: boolean;
    onChange: (newSelection: Gender[]) => void;
 }
 
 const GendersChecklist: FC<PropsGendersChecklist> = props => {
-   const { title, initiallySelected, onChange } = props;
+   const { title, initiallySelected, onChange, initiallyExpanded = true } = props;
+   const [expanded, setExpanded] = useState(initiallyExpanded);
    const { colors } = useTheme();
    const [selection, setSelection] = useState<Gender[]>(initiallySelected);
    const cisGenders = [Gender.Woman, Gender.Man];
@@ -64,16 +67,29 @@ const GendersChecklist: FC<PropsGendersChecklist> = props => {
                   <Text style={styles.responseText}>{I18n.t(gender)}</Text>
                </CheckboxButton>
             ))}
-            <TitleText style={styles.otherGendersTitleText}>Otros géneros</TitleText>
-            {nonCisGenders.map((gender: Gender) => (
-               <CheckboxButton
-                  checked={selection.includes(gender)}
-                  onPress={() => addOrRemoveFromSelection(gender)}
-                  key={gender}
+            {!expanded && (
+               <ButtonStyled
+                  color={colors.accent2}
+                  style={styles.expandButton}
+                  onPress={() => setExpanded(!expanded)}
                >
-                  <Text style={styles.responseText}>{I18n.t(gender)}</Text>
-               </CheckboxButton>
-            ))}
+                  Más opciones
+               </ButtonStyled>
+            )}
+            {expanded && (
+               <>
+                  <TitleText style={styles.otherGendersTitleText}>Otros géneros</TitleText>
+                  {nonCisGenders.map((gender: Gender) => (
+                     <CheckboxButton
+                        checked={selection.includes(gender)}
+                        onPress={() => addOrRemoveFromSelection(gender)}
+                        key={gender}
+                     >
+                        <Text style={styles.responseText}>{I18n.t(gender)}</Text>
+                     </CheckboxButton>
+                  ))}
+               </>
+            )}
          </View>
       </>
    );
@@ -122,6 +138,10 @@ const styles: Styles = StyleSheet.create({
    },
    responseText: {
       fontSize: 17
+   },
+   expandButton: {
+      marginTop: 30,
+      borderColor: currentTheme.colors.accent2
    }
 });
 

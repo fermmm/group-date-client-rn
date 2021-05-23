@@ -1,9 +1,14 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
+import { Alert } from "react-native";
 import { TagBasicInfo } from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
-import { Gender, User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
+import {
+   CIS_GENDERS,
+   Gender,
+   NON_CIS_GENDERS,
+   User
+} from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { getUserGenderSelection } from "../../../../api/server/shared-tools/user-tools/getUserGenderSelection";
-import { EditableUserProps } from "../../../../api/server/shared-tools/validators/user";
-import { TagsToUpdate } from "../RegistrationFormsPage";
+import { OnChangeFormParams } from "../RegistrationFormsPage";
 import GendersChecklist from "./GendersChecklist/GendersChecklist";
 import { getGenderTagsToUpdate } from "./tools/getGenderTagsToUpdate";
 
@@ -11,12 +16,8 @@ export interface PropsGenderForm {
    formName: string;
    initialData: Partial<User>;
    genderTargetMode?: boolean;
-   onChange: (
-      formName: string,
-      newProps: EditableUserProps,
-      error: string | null,
-      tagsToUpdate: TagsToUpdate
-   ) => void;
+   isOnFocus: boolean;
+   onChange: (props: OnChangeFormParams) => void;
 }
 
 export interface GenderForm {
@@ -24,23 +25,61 @@ export interface GenderForm {
    tagsBlocked?: TagBasicInfo[];
 }
 
+// TODO: El boton de guardar cambios no esta funcionando con este formulario
 const GenderForm: FC<PropsGenderForm> = props => {
-   const { initialData, onChange, formName, genderTargetMode = false } = props;
+   const { initialData, onChange, formName, genderTargetMode = false, isOnFocus } = props;
    const [gendersSelected, setGendersSelected] = useState<Gender[]>(null);
    const initialGenderSelection = useMemo(() => getUserGenderSelection(initialData), [initialData]);
 
+   const getInitialGenderSelection = () => {
+      if (!genderTargetMode) {
+         return initialGenderSelection.subscribed;
+      }
+
+      if (initialData?.targetGenderIsSelected) {
+         return initialGenderSelection.nonBlocked;
+      } else {
+         return [...NON_CIS_GENDERS];
+      }
+   };
+
+   const goToNextStepIsPossible = async () => {
+      if (!genderTargetMode) {
+         return true;
+      }
+
+      if (gendersSelected.find(g => CIS_GENDERS.includes(g)) != null) {
+         return true;
+      }
+
+      let resolvePromise: (bool: boolean) => void;
+      const promise = new Promise<boolean>(resolve => (resolvePromise = resolve));
+
+      Alert.alert("", "No verás ni mujeres ni hombres, ¿estas segurx?", [
+         { text: "Cancelar", onPress: () => resolvePromise(false) },
+         { text: "Continuar", onPress: () => resolvePromise(true) }
+      ]);
+
+      return promise;
+   };
+
    useEffect(() => {
-      onChange(
+      if (!isOnFocus) {
+         return;
+      }
+
+      onChange({
          formName,
-         genderTargetMode ? { targetGenderIsSelected: true } : null,
-         getError(),
-         getGenderTagsToUpdate({
+         newProps: genderTargetMode ? { targetGenderIsSelected: true } : null,
+         error: getError(),
+         tagsToUpdate: getGenderTagsToUpdate({
             gendersSelected,
             initialGenderSelection,
             genderTargetMode
-         })
-      );
-   }, [gendersSelected]);
+         }),
+         goToNextStepIsPossible
+      });
+   }, [gendersSelected, isOnFocus]);
 
    const handleSelectionChange = (selection: Gender[]) => {
       setGendersSelected(selection);
@@ -54,23 +93,12 @@ const GenderForm: FC<PropsGenderForm> = props => {
       return null;
    };
 
-   const getInitialGenderSelection = () => {
-      if (!genderTargetMode) {
-         return initialGenderSelection.subscribed;
-      }
-
-      if (initialData.targetGenderIsSelected) {
-         return initialGenderSelection.nonBlocked;
-      } else {
-         return [];
-      }
-   };
-
    return (
       <GendersChecklist
          title={genderTargetMode ? "¿Qué géneros te atraen?" : "¿Cuál es tu género?"}
          initiallySelected={getInitialGenderSelection()}
          onChange={handleSelectionChange}
+         initiallyExpanded={true}
       />
    );
 };

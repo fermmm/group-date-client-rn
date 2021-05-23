@@ -14,12 +14,13 @@ import { RegistrationFormName } from "../tools/useRequiredFormList";
 import TitleSmallText from "../../../common/TitleSmallText/TitleSmallText";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 import { fromBirthDateToAge } from "../../../../api/tools/date-tools";
+import { OnChangeFormParams } from "../RegistrationFormsPage";
 
 export interface PropsFiltersForm {
    formName: RegistrationFormName;
    initialData: Partial<FormDataFilters>;
    birthDateSelected?: number;
-   onChange(formName: RegistrationFormName, formData: FormDataFilters, error: string | null): void;
+   onChange: (props: OnChangeFormParams) => void;
 }
 
 export interface FormDataFilters {
@@ -54,15 +55,14 @@ export const FiltersForm: FC<PropsFiltersForm> = ({
 
    // Effect to send the changes
    useEffect(() => {
-      onChange(
+      onChange({
          formName,
-         {
+         newProps: {
             targetDistance,
             targetAgeMin: targetAgeMin ?? defaultTargetAgeMin,
             targetAgeMax: targetAgeMax ?? defaultTargetAgeMax
-         },
-         null
-      );
+         }
+      });
    }, [targetDistance, targetAgeMin, targetAgeMax, formName]);
 
    const normalizeAge = (num: number): number => {

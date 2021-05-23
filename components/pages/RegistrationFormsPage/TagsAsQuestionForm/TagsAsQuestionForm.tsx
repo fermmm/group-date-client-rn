@@ -3,13 +3,12 @@ import {
    TagBasicInfo,
    TagsAsQuestion
 } from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
-import { EditableUserProps } from "../../../../api/server/shared-tools/validators/user";
 import {
    CenteredMethod,
    LoadingAnimation
 } from "../../../common/LoadingAnimation/LoadingAnimation";
 import Question, { QuestionOnChange } from "../../../common/Question/Question";
-import { TagsToUpdate } from "../RegistrationFormsPage";
+import { OnChangeFormParams, TagsToUpdate } from "../RegistrationFormsPage";
 import { useTagAsQuestionInfo } from "./hooks/useTagAsQuestionInfo";
 
 export interface PropsTagsAsQuestionForm {
@@ -18,12 +17,7 @@ export interface PropsTagsAsQuestionForm {
    questionId: string;
    mandatoryQuestion: boolean;
    tagsAsQuestions: TagsAsQuestion[];
-   onChange: (
-      formName: string,
-      newProps: EditableUserProps,
-      error: string | null,
-      tagsToUpdate: TagsToUpdate
-   ) => void;
+   onChange: (props: OnChangeFormParams) => void;
 }
 
 export interface TagsInfo {
@@ -32,14 +26,8 @@ export interface TagsInfo {
 }
 
 const TagsAsQuestionForm: FC<PropsTagsAsQuestionForm> = props => {
-   const {
-      questionId,
-      initialData,
-      onChange,
-      formName,
-      mandatoryQuestion,
-      tagsAsQuestions
-   } = props;
+   const { questionId, initialData, onChange, formName, mandatoryQuestion, tagsAsQuestions } =
+      props;
    const [selectedAnswer, setSelectedAnswer] = useState<string>(null);
    const [itsImportantChecked, setItsImportantChecked] = useState<boolean>(null);
    const {
@@ -57,7 +45,7 @@ const TagsAsQuestionForm: FC<PropsTagsAsQuestionForm> = props => {
    );
 
    useEffect(() => {
-      onChange(formName, null, mandatoryQuestion ? getError() : null, tagsToUpdate);
+      onChange({ formName, error: mandatoryQuestion ? getError() : null, tagsToUpdate });
    }, [selectedAnswer, itsImportantChecked]);
 
    const handleQuestionChange = ({ selectedAnswer, itsImportantChecked }: QuestionOnChange) => {

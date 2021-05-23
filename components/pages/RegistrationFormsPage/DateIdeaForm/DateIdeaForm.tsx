@@ -6,22 +6,19 @@ import { currentTheme } from "../../../../config";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 import { RegistrationFormName } from "../tools/useRequiredFormList";
+import { OnChangeFormParams } from "../RegistrationFormsPage";
 
 export interface PropsDateIdeaForm {
    formName: RegistrationFormName;
    initialData?: { dateIdea?: string };
-   onChange(
-      formName: RegistrationFormName,
-      formData: { dateIdea: string },
-      error: string | null
-   ): void;
+   onChange: (props: OnChangeFormParams) => void;
 }
 
 const DateIdeaForm: FC<PropsDateIdeaForm> = ({ onChange, initialData, formName }) => {
    const maxCharactersAllowed: number = 300;
    const [dateIdea, setDateIdea] = useState(initialData?.dateIdea);
 
-   useEffect(() => onChange(formName, { dateIdea }, getError()), [dateIdea]);
+   useEffect(() => onChange({ formName, newProps: { dateIdea }, error: getError() }), [dateIdea]);
 
    const getError = (): string => {
       if (!dateIdea || dateIdea.length < 3) {

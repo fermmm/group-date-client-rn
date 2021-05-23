@@ -16,15 +16,12 @@ import {
    CenteredMethod,
    LoadingAnimation
 } from "../../../common/LoadingAnimation/LoadingAnimation";
+import { OnChangeFormParams } from "../RegistrationFormsPage";
 
 export interface PropsBasicInfoForm {
    formName: RegistrationFormName;
    initialData: Partial<FormDataBasicInfo>;
-   onChange(
-      formName: RegistrationFormName,
-      formData: FormDataBasicInfo,
-      error: string | null
-   ): void;
+   onChange: (props: OnChangeFormParams) => void;
 }
 
 export interface FormDataBasicInfo {
@@ -51,9 +48,9 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
    const [cityNameModified, setCityNameModified] = useState(false);
 
    useEffect(() => {
-      onChange(
+      onChange({
          formName,
-         {
+         newProps: {
             name,
             birthDate: birthYear ? moment().month(birthMonth).year(birthYear).unix() : null,
             height: height ?? 0,
@@ -62,8 +59,8 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
             country: geolocation?.address?.isoCountryCode,
             cityName
          },
-         getError()
-      );
+         error: getError()
+      });
    }, [name, birthMonth, birthYear, height, cityName, geolocation, formName]);
 
    useEffect(() => {
