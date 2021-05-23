@@ -26,12 +26,14 @@ export const currentTheme: ThemeExt = WhiteTheme as unknown as ThemeExt;
 export const PROFILE_IMAGES_AMOUNT = 6;
 
 /**
- * If USE_AUTOMATIC_TARGET_AGE is true then the target age is the user age +- this value
+ * If USE_AUTOMATIC_TARGET_AGE is true then the target age is the age of the user +- this value
+ * If USE_AUTOMATIC_TARGET_AGE is false then this is affects the default age selected witch is
+ * the age of the user +- this value
  */
-export const AUTOMATIC_TARGET_AGE: number = 10;
+export const AUTOMATIC_TARGET_AGE: number = 20;
 
 export const MIN_AGE_ALLOWED: number = 18;
-export const MAX_AGE_ALLOWED: number = 179;
+export const MAX_AGE_ALLOWED: number = 129;
 
 /**
  * Distances values available in KM
