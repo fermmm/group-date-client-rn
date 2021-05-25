@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
-import { Alert } from "react-native";
 import { TagBasicInfo } from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
 import {
    CIS_GENDERS,
@@ -8,6 +7,8 @@ import {
    User
 } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { getUserGenderSelection } from "../../../../api/server/shared-tools/user-tools/getUserGenderSelection";
+import { includesAnyOf } from "../../../../common-tools/array/arrayTools";
+import { AlertAsync } from "../../../../common-tools/device-native-api/dialogs/AlertAsync";
 import { OnChangeFormParams } from "../RegistrationFormsPage";
 import GendersChecklist from "./GendersChecklist/GendersChecklist";
 import { getGenderTagsToUpdate } from "./tools/getGenderTagsToUpdate";
@@ -25,7 +26,6 @@ export interface GenderForm {
    tagsBlocked?: TagBasicInfo[];
 }
 
-// TODO: El boton de guardar cambios no esta funcionando con este formulario
 const GenderForm: FC<PropsGenderForm> = props => {
    const { initialData, onChange, formName, genderTargetMode = false, isOnFocus } = props;
    const [gendersSelected, setGendersSelected] = useState<Gender[]>(null);
@@ -48,19 +48,19 @@ const GenderForm: FC<PropsGenderForm> = props => {
          return true;
       }
 
-      if (gendersSelected.find(g => CIS_GENDERS.includes(g)) != null) {
+      if (includesAnyOf(gendersSelected, CIS_GENDERS)) {
          return true;
       }
 
-      let resolvePromise: (bool: boolean) => void;
-      const promise = new Promise<boolean>(resolve => (resolvePromise = resolve));
+      const canContinue = await AlertAsync({
+         message: "No verás ni mujeres ni hombres, ¿estas segurx?",
+         buttons: [
+            { text: "Cancelar", onPressReturns: false },
+            { text: "Continuar", onPressReturns: true }
+         ]
+      });
 
-      Alert.alert("", "No verás ni mujeres ni hombres, ¿estas segurx?", [
-         { text: "Cancelar", onPress: () => resolvePromise(false) },
-         { text: "Continuar", onPress: () => resolvePromise(true) }
-      ]);
-
-      return promise;
+      return canContinue;
    };
 
    useEffect(() => {
