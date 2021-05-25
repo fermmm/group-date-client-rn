@@ -30,6 +30,7 @@ import { usePushNotificationPressRedirect } from "../../../common-tools/device-n
 import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
 import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 import GenderForm from "./GenderForm/GenderForm";
+import { IsCoupleQuestion } from "./IsCoupleQuestion/IsCoupleQuestion";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -363,10 +364,11 @@ const RegistrationFormsPage: FC = () => {
                         />
                      )}
                      {formName === "CoupleProfileForm" && (
-                        <PropAsQuestionForm
+                        <IsCoupleQuestion
                            formName={formName}
                            propNamesToChange={knownFormsWithPropsTheyChange[formName]}
                            initialData={profileStatus.user}
+                           isOnFocus={currentStep === i}
                            onChange={handleOnChangeForm}
                         />
                      )}
