@@ -24,7 +24,7 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
          }
 
          const isUnicornHunter = await AlertAsync({
-            message: "¿Estás buscando una chica para sumar a tu pareja o para trio?",
+            message: "¿Estás buscando una mujer para sumar a tu pareja o para trio?",
             buttons: [
                { text: "No", onPressReturns: false },
                { text: "Si", onPressReturns: true }
