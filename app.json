@@ -16,17 +16,17 @@
       "resizeMode": "cover",
       "backgroundColor": "#000"
     },
-    "version": "1.0.5",
+    "version": "1.0.6",
     "android": {
       "package": "com.poly.dates",
-      "versionCode": 105,
+      "versionCode": 106,
       "useNextNotificationsApi": true,
       "permissions": ["CAMERA", "CAMERA_ROLL", "ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       "googleServicesFile": "./android/app/google-services.json"
     },
     "ios": {
       "bundleIdentifier": "com.poly.dates",
-      "buildNumber": "1.0.5",
+      "buildNumber": "1.0.6",
       "supportsTablet": false,
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera when the user wants to upload photos to his/her profile."
