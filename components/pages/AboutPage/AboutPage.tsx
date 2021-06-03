@@ -35,20 +35,6 @@ const AboutPage: FC = () => {
                poliamor grupal.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Es fácil que se genere una cita grupal?
-            </TitleText>
-            <Text style={styles.text}>
-               Si, matemáticamente es igual de fácil que en las apps tradicionales. A quienes les va
-               muy bien en esas apps y reciben resultados instantáneos, aquí necesitarán paciencia
-               ya que muchos likes recibidos no siempre se traducen en una coincidencia grupal.
-            </Text>
-            <EmptySpace height={15} />
-            <Text style={styles.text}>
-               El poliamor ayuda: en las citas tradicionales te ves con una sola persona por lo que
-               tiene que tener todo lo que buscas, en el poliamor te ves con multiples personas en
-               una lógica diferente que genera más likes y coincidencias en la app.
-            </Text>
-            <TitleText extraSize style={styles.title}>
                ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
                gustan entre ellas
             </TitleText>
@@ -66,22 +52,36 @@ const AboutPage: FC = () => {
                en tus citas que pueden ser de cualquier género y sexualidad.
             </Text>
             <TitleText extraSize style={styles.title}>
-               Breve historia del poliamor grupal
+               ¿Es fácil que se genere una cita grupal?
             </TitleText>
             <Text style={styles.text}>
-               En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
-               personas de una comunidad, compartían la crianza y los recursos de forma igualitaria,
-               potenciado por el sexo que era muy abundante, público y podía ser grupal tanto como
-               en pareja. Este pasado se puede ignorar pero nos acompañó durante toda nuestra
-               evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo representativo: Los
-               "gemidos sexuales" son un instinto que en las otras especies (primates) tiene el
-               efecto de llamar a lxs que están cerca.
+               Si, matemáticamente es igual de fácil que en las apps tradicionales. A quienes les va
+               muy bien en esas apps y reciben resultados instantáneos, aquí necesitarán paciencia
+               ya que muchos likes recibidos no siempre se traducen en una coincidencia grupal.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Las parejas como única forma posible de relación, con ello la monogamia y la familia
-               nuclear aparecen al mismo tiempo junto con la propiedad privada y el patriarcado,
-               durante la revolución neolítica.
+               El poliamor ayuda: en las citas tradicionales te ves con una sola persona por lo que
+               tiene que tener todo lo que buscas, en el poliamor te ves con multiples personas en
+               una lógica diferente que genera más likes y coincidencias en la app.
+            </Text>
+            <TitleText extraSize style={styles.title}>
+               Breve historia del poliamor grupal
+            </TitleText>
+            <Text style={styles.text}>
+               En la prehistoria del humano inteligente actual los padres de lxs hijxs eran todas
+               las personas de una comunidad, compartían la crianza y los recursos de forma
+               igualitaria, potenciado por el sexo que era muy abundante, público y podía ser grupal
+               tanto como en pareja. Este pasado se puede ignorar pero nos acompañó durante toda
+               nuestra evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo
+               representativo: Los "gemidos sexuales" son un instinto que en las otras especies
+               (primates) tiene el efecto de llamar a lxs que están cerca.
+            </Text>
+            <EmptySpace height={15} />
+            <Text style={styles.text}>
+               Durante el neolítico aparece la propiedad privada y el patriarcado, al mismo tiempo y
+               para adaptarnos a ello aparece la monogamia, las relaciones solo de a 2 y con ello la
+               familia nuclear (solo 2 padres y sus hijos)
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
