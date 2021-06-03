@@ -69,13 +69,13 @@ const AboutPage: FC = () => {
                Breve historia del poliamor grupal
             </TitleText>
             <Text style={styles.text}>
-               En la prehistoria del humano inteligente actual los padres de lxs hijxs eran todas
-               las personas de una comunidad, compartían la crianza y los recursos de forma
-               igualitaria, potenciado por el sexo que era muy abundante, público y podía ser grupal
-               tanto como en pareja. Este pasado se puede ignorar pero nos acompañó durante toda
-               nuestra evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo
-               representativo: Los "gemidos sexuales" son un instinto que en las otras especies
-               (primates) tiene el efecto de llamar a lxs que están cerca.
+               En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
+               personas de una comunidad, compartían la crianza y los recursos de forma igualitaria,
+               potenciado por el sexo que era muy abundante, público y podía ser grupal tanto como
+               en pareja. Este pasado se puede ignorar pero nos acompañó durante toda nuestra
+               evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo representativo: Los
+               "gemidos sexuales" son un instinto que en las otras especies (primates) cumple la
+               función de llamar a lxs que están cerca.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
@@ -93,8 +93,8 @@ const AboutPage: FC = () => {
                ¿Hay que pagar algo?
             </TitleText>
             <Text style={styles.text}>
-               No, esta app es y será siempre gratis, sin fines comerciales, de código abierto y
-               financiada con donaciones a voluntad.
+               No, esta app es y será siempre gratis, sin fines comerciales y financiada con
+               donaciones a voluntad.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Quienes hicieron esta app?
