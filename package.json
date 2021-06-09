@@ -75,7 +75,8 @@
     "swr": "^0.4.1",
     "talisman": "^1.1.4",
     "thenby": "^1.3.4",
-    "ts-essentials": "^7.0.1"
+    "ts-essentials": "^7.0.1",
+    "expo-firebase-analytics": "~4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
