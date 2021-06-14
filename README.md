@@ -16,7 +16,7 @@ This is required by expo to compile, the file will be empty but you will replace
 
 5. Install "Expo Go" app from your phone store, you will need it to test the app in your phone.
 
-6. You need to create your own package identifier, it's a string identifier for your app, the current one is on app.json > ```expo.android.package```. Search for that package name inside all the project files using your code editor and replace the current one by a new one everywhere, the new identifier can be whatever you want in this format "com.whatever.anything", use your creativity, the only important thing is no other app published has the same identifier.
+6. You need to create your own package identifier, it's a string identifier for your app, the current one is on app.config.ts > ```android.package```. Search for that package name inside all the project files using your code editor and replace the current one by a new one everywhere, the new identifier can be whatever you want in this format "com.whatever.anything", use your creativity, the only important thing is no other app published has the same identifier.
 
 7. The login on this app works with Facebook and/or Google and you need to do some work to get any of the login systems up and running. The easiest to configure is Facebook: [Create a Facebook app as Facebook developer](https://developers.facebook.com/docs/development/create-an-app/) and then use the resulting app info to complete `FACEBOOK_APP_ID` and `FACEBOOK_APP_NAME` in the .env file. Also add `rRW++LUjmZZ+58EbN5DVhGAnkX4=` on the "Key Hashes" field in your Facebook app configuration (required to authorize Expo Go to use your Facebook app). [More info here](https://docs.expo.io/versions/v36.0.0/sdk/facebook/#registering-your-app-with-facebook).
 
@@ -125,7 +125,7 @@ Also new installations comes with the code at the moment of the build, so they w
 
 ## Increment version number
 
-1. Open ```app.json``` and change: ```expo.version```, ```expo.android.versionCode``` and ```expo.ios.buildNumber```
+1. Open ```app.config.ts``` and change: ```version```, ```android.versionCode``` and ```ios.buildNumber```
 2. Open ```build.gradle``` and change: ```android.defaultConfig.versionCode``` and ```android.defaultConfig.versionName```
 3. Open ```ios/Poly/info.plist``` and change the tag below ```CFBundleShortVersionString``` and ```CFBundleVersion```
 
@@ -137,7 +137,7 @@ For final build and publishing of the app you may find useful the [instructions 
 
 1. **Change the icons**: Once you have your icon designed use "Asset Studio" inside Android Studio to export your icon in all the sizes required by an app. Open Android Studio, inside the "project" panel select the folder app/res, then click on File > New > Image asset, import the source asset (your icon image) and follow instructions to generate the images, the images will be generated in the correct folders, build and enjoy.
 
-2. **Change app bundle identifier**: If you didn't do this in the setup steps or the store required you to change the app package identifier, the current one is on app.json > ```expo.android.package```. Search for that package name inside all the project files using your code editor and replace the current one by the new one. If you followed the steps required to setup notifications you have to repeat all of them with the new package name, which implies creating a new app in Firebase. If you followed the steps required to setup google login you need to change the package name in the android client of the Google Cloud platform credentials setup. Also the Facebook app must have the updated identifier.
+2. **Change app bundle identifier**: If you didn't do this in the setup steps or the store required you to change the app package identifier, the current one is on app.config.ts > ```android.package```. Search for that package name inside all the project files using your code editor and replace the current one by the new one. If you followed the steps required to setup notifications you have to repeat all of them with the new package name, which implies creating a new app in Firebase. If you followed the steps required to setup google login you need to change the package name in the android client of the Google Cloud platform credentials setup. Also the Facebook app must have the updated identifier.
 
 3. **Facebook login**: When you publish your app in Google Play and test it you'll notice a Key Hash error when login with Facebook, this is because when uploading an .aap bundle the final app is signed by Google Play with their own key, you need to add this key to the facebook app configuration:
     1. In Google Play Console, on the left panel under "Release" go to Setup -> App Integrity, copy the "SHA-1 certificate fingerprint", the one that is under "App signing key certificate"
