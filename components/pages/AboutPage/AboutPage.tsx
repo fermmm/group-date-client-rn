@@ -8,6 +8,8 @@ import TitleText from "../../common/TitleText/TitleText";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import { currentTheme } from "../../../config";
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
+import AnalyticsTrackWhenVisible from "../../common/AnalyticsTrackWhenVisible/AnalyticsTrackWhenVisible";
+import { logPolyHistory } from "../../../common-tools/analytics/aboutPage/logPolyHistory";
 
 const AboutPage: FC = () => {
    const { goBack } = useGoBackExtended({
@@ -65,18 +67,21 @@ const AboutPage: FC = () => {
                tiene que tener todo lo que buscas, en el poliamor te ves con multiples personas en
                una lógica diferente que genera más likes y coincidencias en la app.
             </Text>
+
             <TitleText extraSize style={styles.title}>
                Breve historia del poliamor grupal
             </TitleText>
-            <Text style={styles.text}>
-               En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
-               personas de una comunidad, compartían la crianza y los recursos de forma igualitaria,
-               potenciado por el sexo que era muy abundante, público y podía ser grupal tanto como
-               en pareja. Este pasado se puede ignorar pero nos acompañó durante toda nuestra
-               evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo representativo: Los
-               "gemidos sexuales" son un instinto que en las otras especies (primates) cumple la
-               función de llamar a lxs que están cerca.
-            </Text>
+            <AnalyticsTrackWhenVisible onLogShouldSend={logPolyHistory}>
+               <Text style={styles.text}>
+                  En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
+                  personas de una comunidad, compartían la crianza y los recursos de forma
+                  igualitaria, potenciado por el sexo que era muy abundante, público y podía ser
+                  grupal tanto como en pareja. Este pasado se puede ignorar pero nos acompañó
+                  durante toda nuestra evolución por lo que no se va a ir de nuestro cuerpo, un
+                  ejemplo representativo: Los "gemidos sexuales" son un instinto que en las otras
+                  especies (primates) cumple la función de llamar a lxs que están cerca.
+               </Text>
+            </AnalyticsTrackWhenVisible>
             <EmptySpace height={15} />
             <Text style={styles.text}>
                Durante el neolítico aparece la propiedad privada y el patriarcado, al mismo tiempo y
@@ -89,6 +94,7 @@ const AboutPage: FC = () => {
                algunos muy conocidos como los de Cacilda Jethá y Christopher Ryan o de Friedrich
                Engels: "El origen de la familia, la propiedad privada y el estado".
             </Text>
+
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
             </TitleText>

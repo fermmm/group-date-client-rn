@@ -1,4 +1,5 @@
 import { ExpoConfig, ConfigContext } from "@expo/config";
+import "dotenv/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
    ...config,
@@ -12,7 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
    splash: {
       image: "./assets/splash.png",
       resizeMode: "cover",
-      backgroundColor: "#000"
+      backgroundColor: "#000000"
    },
    version: "1.0.6",
    android: {
@@ -29,6 +30,19 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       infoPlist: {
          NSCameraUsageDescription:
             "This app uses the camera when the user wants to upload photos to his/her profile."
+      }
+   },
+   web: {
+      config: {
+         firebase: {
+            apiKey: process.env.API_KEY,
+            authDomain: process.env.AUTH_DOMAIN,
+            projectId: process.env.PROJECT_ID,
+            storageBucket: process.env.STORAGE_BUCKET,
+            messagingSenderId: process.env.MESSAGE_SENDER_ID,
+            appId: process.env.APP_ID,
+            measurementId: process.env.MEASUREMENT_ID
+         }
       }
    },
    updates: {

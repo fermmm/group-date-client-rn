@@ -25,6 +25,7 @@
     "@react-navigation/stack": "^5.12.6",
     "axios": "^0.19.0",
     "babel-plugin-inline-dotenv": "^1.6.0",
+    "dotenv": "^8.2.0",
     "expo": "^41.0.0",
     "expo-app-loading": "^1.0.3",
     "expo-application": "^3.1.2",
