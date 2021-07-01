@@ -31,6 +31,10 @@ const AboutPage: FC = () => {
                Con el paso del tiempo las citas van siendo de mas personas ya que se necesita tiempo
                dando likes para generar mas coincidencias.
             </Text>
+            <Text style={styles.text}>
+               No se puede elegir el tamaño de las citas por que no todxs en un grupo van a tener la
+               misma preferencia.
+            </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
                Las citas tradicionales de 2 personas no suceden en esta app, solo tiene soporte para
@@ -67,7 +71,6 @@ const AboutPage: FC = () => {
                tiene que tener todo lo que buscas, en el poliamor te ves con multiples personas en
                una lógica diferente que genera más likes y coincidencias en la app.
             </Text>
-
             <TitleText extraSize style={styles.title}>
                Breve historia del poliamor grupal
             </TitleText>
@@ -94,7 +97,6 @@ const AboutPage: FC = () => {
                algunos muy conocidos como los de Cacilda Jethá y Christopher Ryan o de Friedrich
                Engels: "El origen de la familia, la propiedad privada y el estado".
             </Text>
-
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
             </TitleText>
@@ -116,9 +118,9 @@ const AboutPage: FC = () => {
                ¿En base a que criterios me recomienda personas la app?
             </TitleText>
             <Text style={styles.text}>
-               El algoritmo busca un grupo de usuarios al azar que te pusieron like y otro que aún
-               no, luego combina ambos en una sola lista con orden al azar, eso es todo lo que hace
-               por ahora.
+               El algoritmo busca un grupo de usuarios activos al azar que te pusieron like y otro
+               que aún no, luego combina ambos en una sola lista con orden al azar, eso es todo lo
+               que hace por ahora.
             </Text>
             <EmptySpace height={80} />
          </BasicScreenContainer>
