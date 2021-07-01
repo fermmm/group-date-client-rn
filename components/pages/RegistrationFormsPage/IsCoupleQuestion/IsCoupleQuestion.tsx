@@ -37,7 +37,7 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
 
          Alert.alert(
             "",
-            "Entonces esta app no te sirve, aquí los encuentros son de a muchxs. Te recomendamos la app 3Fun. Si continuas tu búsqueda de 3 en nuestra app solo estarás haciendo spam y tu teléfono no podrá entrar nunca más.",
+            "Entonces esta app no te sirve, aquí los encuentros son de a muchxs y no se puede elegir entre cuantos. Te recomendamos la app 3Fun. Si continuas tu búsqueda de 3 en nuestra app solo estarás haciendo spam y tu teléfono no podrá entrar nunca más.",
             [
                {
                   text: "Descargar 3Fun",
