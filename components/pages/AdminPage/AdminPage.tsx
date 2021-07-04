@@ -9,6 +9,7 @@ import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useUser } from "../../../api/server/user";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import {
+   sendCreateFakeChat,
    sendCreateFakeTags,
    sendCreateFakeUsers,
    sendForceGroupsSearch,
@@ -37,6 +38,11 @@ const AdminPage: FC = () => {
 
    const handleSearchGroupsPress = async () => {
       const response = await sendForceGroupsSearch({ token: localUser.token });
+      Alert.alert("Hecho, respuesta:", response);
+   };
+
+   const handleCreateFakeChatPress = async () => {
+      const response = await sendCreateFakeChat({ token: localUser.token });
       Alert.alert("Hecho, respuesta:", response);
    };
 
@@ -104,6 +110,9 @@ const AdminPage: FC = () => {
             <EmptySpace height={80} />
             <Button onPress={notificationsTest} mode="outlined" color={colors.accent2}>
                Mandar notificación
+            </Button>
+            <Button onPress={handleCreateFakeChatPress} mode="outlined" color={colors.accent2}>
+               Crear chat fake
             </Button>
             <EmptySpace height={30} />
             <Button onPress={handleRemoveLocalStorage} mode="outlined" color={colors.accent2}>

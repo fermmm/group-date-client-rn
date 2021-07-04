@@ -53,6 +53,21 @@ export async function sendCreateFakeTags(
    return resp;
 }
 
+export async function sendCreateFakeChat(
+   params: TokenParameter,
+   autoRevalidateRelated: boolean = true
+) {
+   const resp = await defaultHttpRequest<typeof params, string>(
+      "testing/create-fake-chat",
+      "GET",
+      params,
+      { handleErrors: true }
+   );
+   if (autoRevalidateRelated) {
+   }
+   return resp;
+}
+
 export async function sendTestNotification(params: AdminNotificationPostParams) {
    const resp = await defaultHttpRequest<typeof params, string>(
       "admin/notification",
