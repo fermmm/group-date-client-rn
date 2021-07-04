@@ -1,11 +1,8 @@
-import * as Analytics from "expo-firebase-analytics";
+import { analyticsLog } from "../tools/analyticsLog";
 
 export function logPolyHistory(timeVisible: number) {
    const eventName = "group_polyamory_history_text_read";
-
-   console.log("Analytics log:", eventName);
-
-   Analytics.logEvent(eventName, {
-      timeReading: timeVisible
+   analyticsLog(eventName, {
+      secondsViewing: timeVisible
    });
 }

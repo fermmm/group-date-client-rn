@@ -11,6 +11,7 @@ const AnalyticsTrackWhenVisible: FC<PropsAnalyticsTrackWhenVisible> = ({
    onLogShouldSend
 }) => {
    const maxTimeRegistered = useRef(0);
+   const lastSentTime = useRef<number>(null);
    const startTime = useRef<number>(null);
 
    /* Measure and store the maximum time the component was visible */
@@ -31,11 +32,11 @@ const AnalyticsTrackWhenVisible: FC<PropsAnalyticsTrackWhenVisible> = ({
 
    const onDismount = () => {
       if (maxTimeRegistered.current > 0) {
-         const timeToLog = removeDigitsFromNumber(maxTimeRegistered.current / 1000, {
-            digitsToKeepInDecimalPart: 1
-         });
-
-         onLogShouldSend(timeToLog);
+         const timeToLog = Math.round(maxTimeRegistered.current / 1000);
+         if (lastSentTime.current != timeToLog) {
+            onLogShouldSend(timeToLog);
+            lastSentTime.current = timeToLog;
+         }
       }
    };
 

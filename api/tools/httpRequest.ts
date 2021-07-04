@@ -2,11 +2,14 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from 
 import I18n from "i18n-js";
 import Constants, { AppOwnership } from "expo-constants";
 import { showRequestErrorAlert } from "./showRequestErrorAlert";
+import { finishMeasureTime, measureTime } from "../../common-tools/js-tools/measureTime";
+import { analyticsResponseTimeLog } from "../../common-tools/analytics/tools/analyticsRequestTimeLog";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
    handleErrors?: boolean;
    hideRetryAlertOnConnectionFail?: boolean;
    errorResponseSilent?: boolean;
+   sendResponseTimeToAnalytics?: boolean;
 }
 
 /**
@@ -115,7 +118,22 @@ export async function defaultHttpRequest<Params = void, Response = void>(
       axiosObject.data = data;
    }
 
-   return httpRequest<Response>(axiosObject);
+   if (options?.sendResponseTimeToAnalytics !== false) {
+      measureTime({
+         measurementId: url,
+         executeMeasurementOnlyOnce: true,
+         maxTimeOfMeasurementMs: 15 * 1000,
+         onFinishMeasurement: (id, time) => analyticsResponseTimeLog(id, method.toLowerCase(), time)
+      });
+   }
+
+   const response = await httpRequest<Response>(axiosObject);
+
+   if (options?.sendResponseTimeToAnalytics !== false) {
+      finishMeasureTime(url);
+   }
+
+   return response;
 }
 
 /**
