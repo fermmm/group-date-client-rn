@@ -22,6 +22,11 @@ import { AuthenticationButtons } from "./AuthenticationButtons/AuthenticationBut
 import { removeAllLocalStorage } from "../../../common-tools/device-native-api/storage/removeAllLocalStorage";
 import { getAppVersion } from "../../../common-tools/device-native-api/versions/versions";
 import AppUpdateMessage from "./AppUpdateMessage/AppUpdateMessage";
+import {
+   logAnalyticsLoginStep,
+   LoginStep
+} from "../../../common-tools/analytics/loginPage/loginSteps";
+import { analyticsLogUser } from "../../../common-tools/analytics/tools/analyticsLogUser";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -29,7 +34,7 @@ const LoginPage: FC = () => {
 
    const [logoAnimCompleted, setLogoAnimCompleted] = useState(false);
    const { colors } = useTheme();
-   const { navigateWithoutHistory, navigate } = useNavigation();
+   const { navigateWithoutHistory } = useNavigation();
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
    const isFocused = useIsFocused();
    const { data: serverInfoData, isLoading: serverInfoLoading, error } = useServerInfo();
@@ -72,12 +77,15 @@ const LoginPage: FC = () => {
          return;
       }
 
+      analyticsLogUser(profileStatusData.user);
+      logAnalyticsLoginStep(LoginStep.LoginCompleted);
+
       if (!finishedRegistration) {
          navigateWithoutHistory("RegistrationForms");
       } else {
          if (redirectFromPushNotificationPress != null) {
-            const redirected = redirectFromPushNotificationPress();
-            if (!redirected) {
+            const isRedirecting = redirectFromPushNotificationPress();
+            if (!isRedirecting) {
                navigateWithoutHistory("Main");
             }
          } else {

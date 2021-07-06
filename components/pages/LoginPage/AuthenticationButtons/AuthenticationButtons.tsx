@@ -4,6 +4,10 @@ import { Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { UseAuthentication } from "../../../../api/authentication/useAuthentication";
 import { AuthenticationProvider } from "../../../../api/server/shared-tools/authentication/AuthenticationProvider";
+import {
+   LoginStep,
+   logAnalyticsLoginStep
+} from "../../../../common-tools/analytics/loginPage/loginSteps";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
@@ -26,10 +30,12 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authenti
 
    const handleGoogleButtonPress = () => {
       getNewToken(AuthenticationProvider.Google);
+      logAnalyticsLoginStep(LoginStep.ClickedLoginButtonGl);
    };
 
    const handleFacebookButtonPress = () => {
       getNewToken(AuthenticationProvider.Facebook);
+      logAnalyticsLoginStep(LoginStep.ClickedLoginButtonFb);
    };
 
    if (!show) {

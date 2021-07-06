@@ -6,7 +6,7 @@ import * as Analytics from "expo-firebase-analytics";
  * with an alphabetic character. Some event names are reserved. The "firebase_", "google_", and "ga_" prefixes
  * are reserved and should not be used.
  */
-export async function analyticsLog(
+export async function analyticsLogEvent(
    name: string,
    properties?: {
       [key: string]: any;

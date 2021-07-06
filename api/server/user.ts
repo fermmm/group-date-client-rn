@@ -20,6 +20,7 @@ import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } 
 import { Alert } from "react-native";
 import { defaultHttpRequest, getServerUrl } from "../tools/httpRequest";
 import { showRequestErrorAlert } from "../tools/showRequestErrorAlert";
+import { analyticsLogUser } from "../../common-tools/analytics/tools/analyticsLogUser";
 
 export function useUserProfileStatus<T extends ProfileStatusServerResponse>(props?: {
    requestParams?: TokenParameter;
@@ -41,7 +42,17 @@ export function useUser<T extends User>(props?: {
    const { token } = useAuthentication(props?.requestParams?.token);
    return useCache<T>(
       "user" + (props?.requestParams?.userId ?? ""),
-      () => defaultHttpRequest("user", "GET", { ...(props?.requestParams ?? {}), token }),
+      async () => {
+         const resp = await defaultHttpRequest<unknown, T>("user", "GET", {
+            ...(props?.requestParams ?? {}),
+            token
+         });
+         // If It's local user then send to analytics
+         if (props?.requestParams?.userId == null) {
+            analyticsLogUser(resp);
+         }
+         return resp;
+      },
       {
          ...(props?.config ?? {}),
          enabled: token != null && props?.config?.enabled !== false
