@@ -1,7 +1,12 @@
 import { analyticsLogEvent } from "../tools/analyticsLog";
 
-export function logAnalyticsLoginStep(loginStep: LoginStep) {
-   analyticsLogEvent(loginStep);
+export function logAnalyticsLoginStep(
+   loginStep: LoginStep,
+   props?: {
+      [key: string]: any;
+   }
+) {
+   analyticsLogEvent(loginStep, props);
 }
 
 export enum LoginStep {

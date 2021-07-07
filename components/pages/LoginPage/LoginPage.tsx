@@ -37,6 +37,7 @@ const LoginPage: FC = () => {
    const { navigateWithoutHistory } = useNavigation();
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
    const isFocused = useIsFocused();
+   const { buildVersion, codeVersion } = getAppVersion();
    const { data: serverInfoData, isLoading: serverInfoLoading, error } = useServerInfo();
    const serverOperating: boolean = serverInfoLoading
       ? null
@@ -78,7 +79,7 @@ const LoginPage: FC = () => {
       }
 
       analyticsLogUser(profileStatusData.user);
-      logAnalyticsLoginStep(LoginStep.LoginCompleted);
+      logAnalyticsLoginStep(LoginStep.LoginCompleted, { buildVersion, codeVersion });
 
       if (!finishedRegistration) {
          navigateWithoutHistory("RegistrationForms");
@@ -140,7 +141,7 @@ const LoginPage: FC = () => {
                </>
             )}
             <AuthenticationButtons show={showAuthenticationButtons} authentication={auth} />
-            <Text style={styles.text}>{getAppVersion().codeVersion}</Text>
+            <Text style={styles.text}>{codeVersion}</Text>
          </View>
       </BackgroundArtistic>
    );
