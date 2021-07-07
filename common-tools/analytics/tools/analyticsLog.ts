@@ -1,4 +1,5 @@
 import * as Analytics from "expo-firebase-analytics";
+import Constants, { AppOwnership } from "expo-constants";
 
 /**
  * Wrapper for Analytics.logEvent() that allows disabling analytics and/or logging in console what is sent.
@@ -18,5 +19,7 @@ export async function analyticsLogEvent(
       console.log(properties);
    }
    console.log("///////////////////////////////////////");
-   // Analytics.logEvent(name, properties);
+   if (Constants.appOwnership !== AppOwnership.Expo) {
+      Analytics.logEvent(name, properties);
+   }
 }

@@ -1,4 +1,5 @@
 import * as Analytics from "expo-firebase-analytics";
+import Constants, { AppOwnership } from "expo-constants";
 import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { fromBirthDateToAge } from "../../../api/tools/date-tools";
 import {
@@ -71,8 +72,10 @@ export function analyticsLogUser(user: Partial<User>) {
       userPropertiesReadyToSend[key] = String(userProperties[key]);
    });
 
-   // Analytics.setUserId(user.userId);
-   // Analytics.setUserProperties(userPropertiesReadyToSend);
+   if (Constants.appOwnership !== AppOwnership.Expo) {
+      Analytics.setUserId(user.userId);
+      Analytics.setUserProperties(userPropertiesReadyToSend);
+   }
 
    console.log("///////////////////////////////////////");
    console.log(`Analytics log user`);
