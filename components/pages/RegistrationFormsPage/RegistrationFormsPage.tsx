@@ -31,6 +31,8 @@ import { useCustomBackButtonAction } from "../../../common-tools/device-native-a
 import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 import GenderForm from "./GenderForm/GenderForm";
 import { IsCoupleQuestion } from "./IsCoupleQuestion/IsCoupleQuestion";
+import { useAnalyticsForRegistration } from "../../../common-tools/analytics/registrationFormsPage/useAnalyticsForRegistration";
+import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -67,6 +69,7 @@ const RegistrationFormsPage: FC = () => {
       params != null ? { fromParams: params } : { fromProfileStatus: profileStatus }
    );
    const { token } = useAuthentication(profileStatus?.user?.token);
+   useAnalyticsForRegistration(profileStatus.user, formsRequired, currentStep);
 
    const handleOnChangeForm = useCallback(
       (params: OnChangeFormParams) => {
@@ -261,6 +264,10 @@ const RegistrationFormsPage: FC = () => {
       if (thereArePropsToSend || thereAreTagsChanges) {
          // This component uses profileStatus.user to update the components status so this is required to have the updated data next time this component mounts
          revalidate("user/profile-status");
+      }
+
+      if (!profileStatus.user.profileCompleted) {
+         analyticsLogEvent(`registration_completed`);
       }
    };
 

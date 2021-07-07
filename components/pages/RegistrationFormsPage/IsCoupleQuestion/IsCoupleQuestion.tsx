@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { Alert, Linking } from "react-native";
+import { analyticsLogEvent } from "../../../../common-tools/analytics/tools/analyticsLog";
 import { AlertAsync } from "../../../../common-tools/device-native-api/dialogs/AlertAsync";
 import PropAsQuestionForm, {
    PropsPropAsQuestionForm
@@ -35,9 +36,11 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
             return true;
          }
 
+         analyticsLogEvent(`is_unicorn_hunter`);
+
          Alert.alert(
             "",
-            "Entonces esta app no te sirve, aquí los encuentros son de a muchxs y no se puede elegir entre cuantos. Te recomendamos la app 3Fun. Si continuas tu búsqueda de 3 en nuestra app solo estarás haciendo spam y tu teléfono no podrá entrar nunca más.",
+            "Entonces esta app no te sirve, aquí los encuentros son de a muchxs y no hay una función para limitar a 3, tampoco es la temática de la app. Si continuas tu búsqueda de 3 lo consideramos spam y seras invisible. Te recomendamos la app 3Fun.",
             [
                {
                   text: "Descargar 3Fun",

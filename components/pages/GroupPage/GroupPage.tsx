@@ -26,6 +26,7 @@ import { useVotingResultToRender } from "../DateVotingPage/tools/useVotingResult
 import { revalidate } from "../../../api/tools/useCache/useCache";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
+import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 
 export interface ParamsGroupPage {
    groupId: string;
@@ -52,6 +53,7 @@ const GroupPage: FC = () => {
    useFocusEffect(
       useCallback(() => {
          revalidate("group/chat/unread/amount" + params?.groupId);
+         analyticsLogEvent("group_page_opened");
       }, [])
    );
 

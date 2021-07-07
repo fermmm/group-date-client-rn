@@ -123,7 +123,7 @@ export async function defaultHttpRequest<Params = void, Response = void>(
          measurementId: url,
          executeMeasurementOnlyOnce: true,
          maxTimeOfMeasurementMs: 15 * 1000,
-         onFinishMeasurement: (id, time) => analyticsResponseTimeLog(id, method.toLowerCase(), time)
+         onFinishMeasurement: (id, time) => analyticsResponseTimeLog(id, method.toUpperCase(), time)
       });
    }
 

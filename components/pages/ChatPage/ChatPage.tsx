@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -24,6 +24,7 @@ import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/Lo
 import { getColorForUser, getUnknownUsersFromChat } from "./tools/chat-tools";
 import { stringIsEmptyOrSpacesOnly } from "../../../common-tools/js-tools/js-tools";
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
+import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 
 export interface ChatPageState {
    messages: IMessage[];
@@ -40,6 +41,7 @@ interface ParamsChat {
 
 const ChatPage: FC = () => {
    const { colors, font, chatNamesColors } = useTheme();
+   const analyticsSent = useRef(false);
    const { params } = useRoute<RouteProps<ParamsChat>>();
    const [messages, setMessages] = useState<IMessage[]>([]);
    const [showIntroDialog, setShowIntroDialog] = useState(params?.introDialogText != null);
@@ -94,6 +96,13 @@ const ChatPage: FC = () => {
       if (getUnknownUsersFromChat(group, groupChatFromServer.messages).length > 0) {
          revalidate("group" + params?.groupId);
       }
+
+      if (analyticsSent.current === false) {
+         analyticsLogEvent("chat_page_opened", {
+            messagesAmount: groupChatFromServer?.messages?.length ?? 0
+         });
+         analyticsSent.current = true;
+      }
    }, [groupChatFromServer, group]);
 
    const handleSend = useCallback(
@@ -112,6 +121,7 @@ const ChatPage: FC = () => {
             GiftedChat.append(previousMessages, [{ ...msg, pending: true }])
          );
          sendChatMessage({ token, groupId: group.groupId, message: messages[0].text });
+         analyticsLogEvent("chat_message_sent");
       },
       [group?.groupId]
    );

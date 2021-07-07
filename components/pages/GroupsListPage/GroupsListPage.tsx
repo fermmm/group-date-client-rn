@@ -14,6 +14,7 @@ import { firstBy } from "thenby";
 import { useServerInfo } from "../../../api/server/server-info";
 import { getSlotStatusInfoText } from "./tools/getSlotsInfoText";
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
+import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 
 const GroupsListPage: FC = () => {
    const { navigate } = useNavigation();
@@ -37,6 +38,9 @@ const GroupsListPage: FC = () => {
             "¡¡Se formó un grupo y estás en el!!. Ve a la sección de grupos para verlo."
          );
          sendSeenToGroup({ token, userId: user.userId, groupId: notSeenGroup.groupId });
+         analyticsLogEvent("user_has_new_group", {
+            groupMembersAmount: notSeenGroup.membersAmount
+         });
       }
    }, [groups, user, token]);
 

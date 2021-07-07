@@ -18,6 +18,8 @@ import {
 } from "./tools/useSendAttractionsAndRequestMoreCards";
 import { useCardsFromServer } from "./tools/useCardsFromServer";
 import { useCardsSourceAutomaticChange } from "./tools/useCardsSourceAutomaticChange";
+import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
+import { useAnalyticsForCardsPage } from "../../../common-tools/analytics/cardsPage/useAnalyticsForCardsPage";
 
 export interface ParamsCardsPage {
    cardsSource?: CardsSource;
@@ -38,10 +40,12 @@ const CardsPage: FC = () => {
    });
    useSendAttractionsQueueIfNeeded({ manager });
    useCardsSourceAutomaticChange({ cardsFromServer, params, cardsSource, setCardsSource });
+   useAnalyticsForCardsPage(manager.usersToRender);
 
    const handleLikeOrDislikePress = (attractionType: AttractionType, userId: string) => {
       manager.addAttractionToQueue({ userId, attractionType });
       manager.moveToNextUser(userId);
+      analyticsLogEvent(`${attractionType === AttractionType.Like ? "like" : "dislike"}_pressed`);
    };
 
    const handleUndoPress = (userId: string) => {
@@ -53,6 +57,7 @@ const CardsPage: FC = () => {
 
    const handleViewDislikedUsersPress = useCallback(() => {
       setCardsSource(CardsSource.DislikedUsers);
+      analyticsLogEvent("disliked_users_view_again_pressed");
    }, []);
 
    const handleGoBackToRecommendations = useCallback(() => {
