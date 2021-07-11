@@ -33,6 +33,8 @@ import GenderForm from "./GenderForm/GenderForm";
 import { IsCoupleQuestion } from "./IsCoupleQuestion/IsCoupleQuestion";
 import { useAnalyticsForRegistration } from "../../../common-tools/analytics/registrationFormsPage/useAnalyticsForRegistration";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
+import { getUserPropertiesInAnalyticsFormat } from "../../../common-tools/analytics/tools/analyticsLogUser";
+import { useTagsInfo } from "./tools/useTagsInfo";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -59,6 +61,7 @@ const RegistrationFormsPage: FC = () => {
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
    const { data: profileStatus } = useUserProfileStatus();
    const { data: tagsAsQuestions } = useTagsAsQuestions();
+   const { getTagInfoById } = useTagsInfo();
    const {
       isLoading: requiredFormListLoading,
       formsRequired,
@@ -267,7 +270,17 @@ const RegistrationFormsPage: FC = () => {
       }
 
       if (!profileStatus.user.profileCompleted) {
-         analyticsLogEvent(`registration_completed`);
+         analyticsLogEvent(
+            `registration_completed`,
+            getUserPropertiesInAnalyticsFormat({
+               ...profileStatus.user,
+               ...(propsToSend as User),
+               tagsSubscribed:
+                  unifiedTagsToUpdate?.tagsToSubscribe?.map(tagId => getTagInfoById(tagId)) ?? [],
+               tagsBlocked:
+                  unifiedTagsToUpdate?.tagsToBlock?.map(tagId => getTagInfoById(tagId)) ?? []
+            })
+         );
       }
    };
 

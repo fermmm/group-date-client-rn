@@ -15,46 +15,58 @@ export function analyticsLogUser(user: Partial<User>) {
       return;
    }
 
-   let userProperties: any = {
-      country: user.country
-   };
+   /**
+    * If we send props without profile completed the information
+    * related with the tags will be incorrect. Example: An incomplete
+    * profile has no tags subscribed, this means the user likes
+    * all genders but it's not the case.
+    */
+   const userPropertiesAnalytics = user.profileCompleted
+      ? getUserPropertiesInAnalyticsFormat(user)
+      : {};
 
-   if (user.profileCompleted) {
-      userProperties = {
-         ...userProperties,
-         age: user.birthDate ? fromBirthDateToAge(user.birthDate) : undefined,
-         cityName: user.cityName,
-         height: user.height,
-         isCoupleProfile: user.isCoupleProfile,
-         language: user.language,
-         targetAgeMin: user.targetAgeMin,
-         targetAgeMax: user.targetAgeMax,
-         targetDistance: user.targetDistance,
-         genderCis: getCisGenderName(user.tagsSubscribed ?? [], false),
-         genderFull: getGenderName(user.tagsSubscribed ?? [], false, false),
-         attractedToCis: getCisGendersUserIsAttractedTo(user.tagsBlocked ?? [], false),
-         attractedToFull: getGendersUserIsAttractedTo(user.tagsBlocked ?? [], false),
-         attractedToOppositeSex: isAttractedToOppositeSex(
-            user.tagsSubscribed,
-            user.tagsBlocked,
-            user.isCoupleProfile
-         ),
-         likesGroupSex: user.tagsSubscribed.find(tag => tag.tagId === "q01-a00") != null,
-         likesFeminism: user.tagsSubscribed.find(tag => tag.tagId === "q00-a00") != null,
-         likesToMeetPeopleAndNotSpam:
-            user.tagsSubscribed.find(tag => tag.tagId === "q02-a01") != null,
-         blocksPeopleWhoLikesGroupSex:
-            user.tagsBlocked.find(tag => tag.tagId === "q01-a00") != null,
-         blocksPeopleWhoDontLikeGroupSex:
-            user.tagsBlocked.find(tag => tag.tagId === "q01-a01") != null,
-         blocksPeopleWhoLikesFeminism:
-            user.tagsBlocked.find(tag => tag.tagId === "q00-a00") != null,
-         blocksPeopleWhoDontLikeFeminism:
-            user.tagsBlocked.find(tag => tag.tagId === "q00-a01") != null,
-         blocksPeopleWhoWantsToPromote:
-            user.tagsBlocked.find(tag => tag.tagId === "q02-a00") != null
-      };
+   if (Constants.appOwnership !== AppOwnership.Expo) {
+      Analytics.setUserId(user.userId);
+      Analytics.setUserProperties(userPropertiesAnalytics);
    }
+
+   console.log("///////////////////////////////////////");
+   console.log(`Analytics log user`);
+   console.log(userPropertiesAnalytics);
+   console.log("///////////////////////////////////////");
+}
+
+export function getUserPropertiesInAnalyticsFormat(user: Partial<User>): Record<string, string> {
+   const userProperties = {
+      country: user.country,
+      age: user.birthDate ? fromBirthDateToAge(user.birthDate) : undefined,
+      cityName: user.cityName,
+      height: user.height,
+      isCoupleProfile: user.isCoupleProfile,
+      language: user.language,
+      targetAgeMin: user.targetAgeMin,
+      targetAgeMax: user.targetAgeMax,
+      targetDistance: user.targetDistance,
+      genderCis: getCisGenderName(user.tagsSubscribed ?? [], false),
+      genderFull: getGenderName(user.tagsSubscribed ?? [], false, false),
+      attractedToCis: getCisGendersUserIsAttractedTo(user.tagsBlocked ?? [], false),
+      attractedToFull: getGendersUserIsAttractedTo(user.tagsBlocked ?? [], false),
+      attractedToOppositeSex: isAttractedToOppositeSex(
+         user.tagsSubscribed,
+         user.tagsBlocked,
+         user.isCoupleProfile
+      ),
+      likesGroupSex: user.tagsSubscribed.find(tag => tag.tagId === "q01-a00") != null,
+      likesFeminism: user.tagsSubscribed.find(tag => tag.tagId === "q00-a00") != null,
+      likesToMeetPeopleAndNotSpam: user.tagsSubscribed.find(tag => tag.tagId === "q02-a01") != null,
+      blocksPeopleWhoLikesGroupSex: user.tagsBlocked.find(tag => tag.tagId === "q01-a00") != null,
+      blocksPeopleWhoDontLikeGroupSex:
+         user.tagsBlocked.find(tag => tag.tagId === "q01-a01") != null,
+      blocksPeopleWhoLikesFeminism: user.tagsBlocked.find(tag => tag.tagId === "q00-a00") != null,
+      blocksPeopleWhoDontLikeFeminism:
+         user.tagsBlocked.find(tag => tag.tagId === "q00-a01") != null,
+      blocksPeopleWhoWantsToPromote: user.tagsBlocked.find(tag => tag.tagId === "q02-a00") != null
+   };
 
    /**
     * Removed undefined values and converts all to string before sending.
@@ -72,13 +84,5 @@ export function analyticsLogUser(user: Partial<User>) {
       userPropertiesReadyToSend[key] = String(userProperties[key]);
    });
 
-   if (Constants.appOwnership !== AppOwnership.Expo) {
-      Analytics.setUserId(user.userId);
-      Analytics.setUserProperties(userPropertiesReadyToSend);
-   }
-
-   console.log("///////////////////////////////////////");
-   console.log(`Analytics log user`);
-   console.log(userPropertiesReadyToSend);
-   console.log("///////////////////////////////////////");
+   return userPropertiesReadyToSend;
 }
