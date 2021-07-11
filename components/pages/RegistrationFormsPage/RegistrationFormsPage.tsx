@@ -269,12 +269,12 @@ const RegistrationFormsPage: FC = () => {
          revalidate("user/profile-status");
       }
 
-      if (!profileStatus.user.profileCompleted) {
+      if (profileStatus?.user != null && !profileStatus.user.profileCompleted) {
          analyticsLogEvent(
             `registration_completed`,
             getUserPropertiesInAnalyticsFormat({
-               ...profileStatus.user,
-               ...(propsToSend as User),
+               ...(profileStatus.user ?? {}),
+               ...((propsToSend as User) ?? {}),
                tagsSubscribed:
                   unifiedTagsToUpdate?.tagsToSubscribe?.map(tagId => getTagInfoById(tagId)) ?? [],
                tagsBlocked:
