@@ -36,6 +36,10 @@ export function analyticsLogUser(user: Partial<User>) {
    console.log("///////////////////////////////////////");
 }
 
+/**
+ * Firebase analytics supports a maximum of 25 user properties with a maximum of 24 characters
+ * in the name of the property
+ */
 export function getUserPropertiesInAnalyticsFormat(user: Partial<User>): Record<string, string> {
    const userProperties = {
       country: user.country,
@@ -58,14 +62,12 @@ export function getUserPropertiesInAnalyticsFormat(user: Partial<User>): Record<
       ),
       likesGroupSex: user.tagsSubscribed.find(tag => tag.tagId === "q01-a00") != null,
       likesFeminism: user.tagsSubscribed.find(tag => tag.tagId === "q00-a00") != null,
-      likesToMeetPeopleAndNotSpam: user.tagsSubscribed.find(tag => tag.tagId === "q02-a01") != null,
-      blocksPeopleWhoLikesGroupSex: user.tagsBlocked.find(tag => tag.tagId === "q01-a00") != null,
-      blocksPeopleWhoDontLikeGroupSex:
-         user.tagsBlocked.find(tag => tag.tagId === "q01-a01") != null,
-      blocksPeopleWhoLikesFeminism: user.tagsBlocked.find(tag => tag.tagId === "q00-a00") != null,
-      blocksPeopleWhoDontLikeFeminism:
-         user.tagsBlocked.find(tag => tag.tagId === "q00-a01") != null,
-      blocksPeopleWhoWantsToPromote: user.tagsBlocked.find(tag => tag.tagId === "q02-a00") != null
+      likesToMeetPeople: user.tagsSubscribed.find(tag => tag.tagId === "q02-a01") != null,
+      blocksGroupSex: user.tagsBlocked.find(tag => tag.tagId === "q01-a00") != null,
+      blocksGroupSexDislikers: user.tagsBlocked.find(tag => tag.tagId === "q01-a01") != null,
+      blocksFeminism: user.tagsBlocked.find(tag => tag.tagId === "q00-a00") != null,
+      blocksFeminismDislikers: user.tagsBlocked.find(tag => tag.tagId === "q00-a01") != null,
+      blocksPromoters: user.tagsBlocked.find(tag => tag.tagId === "q02-a00") != null
    };
 
    /**
