@@ -271,7 +271,7 @@ const RegistrationFormsPage: FC = () => {
 
       if (profileStatus?.user != null && !profileStatus.user.profileCompleted) {
          analyticsLogEvent(
-            `registration_completed`,
+            `registration_completed` /*,
             getUserPropertiesInAnalyticsFormat({
                ...(profileStatus.user ?? {}),
                ...((propsToSend as User) ?? {}),
@@ -279,7 +279,7 @@ const RegistrationFormsPage: FC = () => {
                   unifiedTagsToUpdate?.tagsToSubscribe?.map(tagId => getTagInfoById(tagId)) ?? [],
                tagsBlocked:
                   unifiedTagsToUpdate?.tagsToBlock?.map(tagId => getTagInfoById(tagId)) ?? []
-            })
+            })*/
          );
       }
    };
