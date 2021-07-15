@@ -32,6 +32,9 @@ const ContactPage: FC = () => {
    const handleSendEmailPress = () => {
       Linking.openURL("mailto:poly.app.team@gmail.com");
    };
+   const handleWebPress = () => {
+      Linking.openURL("https://polycommunity.app");
+   };
 
    return (
       <>
@@ -77,6 +80,13 @@ const ContactPage: FC = () => {
             </Button>
             <Button onPress={handleSendEmailPress} mode="text" color={colors.accent2}>
                Enviar email
+            </Button>
+            <TitleText extraSize style={styles.title}>
+               Nuestra web
+            </TitleText>
+            <EmptySpace height={15} />
+            <Button onPress={handleWebPress} mode="text" color={colors.accent2}>
+               Visitar
             </Button>
          </BasicScreenContainer>
       </>
