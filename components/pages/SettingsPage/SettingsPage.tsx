@@ -110,7 +110,9 @@ const SettingsPage: FC = () => {
                   onPress={() => {}}
                /> 
                */}
-         <List.Item
+         {/* 
+            Unfinished section:
+            <List.Item
             title="Chatear con nosotros"
             description="Escribinos lo que necesites: problemas, pedidos, quejas, etc."
             left={props => (
@@ -120,6 +122,12 @@ const SettingsPage: FC = () => {
                </View>
             )}
             onPress={() => navigate("Chat", { contactChat: true })}
+         /> */}
+         <List.Item
+            title="Participa y contactanos"
+            description="Descubre nuestros canales de participación y comunicación"
+            left={props => <List.Icon {...props} style={styles.optionIcon} icon="forum" />}
+            onPress={() => navigate("ContactPage")}
          />
          {localUser.isAdmin && (
             <List.Item

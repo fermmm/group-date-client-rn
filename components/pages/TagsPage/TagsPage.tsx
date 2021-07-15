@@ -42,7 +42,7 @@ export const TagsPage: FC = () => {
             showCloseButton
             rememberClose
             text={
-               "Puedes crear tags y los usarán lxs demás. Toca un tag para suscribirte, navegar sus subscriptores u ocultarlos."
+               "Puedes publicar nuevos tags y los verán lxs demás aquí. Toca un tag para saber como funcionan."
             }
          />
          <View style={styles.mainContainer}>
@@ -111,7 +111,7 @@ export const TagsPage: FC = () => {
             style={styles.createButton}
             small
             icon="plus"
-            label="Crear tag"
+            label="Publicar nuevo tag"
             onPress={() => navigate("CreateTag")}
          />
       </BasicScreenContainer>

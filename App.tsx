@@ -3,6 +3,7 @@ import i18n from "i18n-js";
 import React, { FC, useEffect, useState } from "react";
 import AppLoading from "expo-app-loading";
 import { Provider as PaperProvider } from "react-native-paper";
+import { StatusBar } from "expo-status-bar";
 import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
 import { currentTheme } from "./config";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -18,6 +19,7 @@ import AboutPage from "./components/pages/AboutPage/AboutPage";
 import AdminPage from "./components/pages/AdminPage/AdminPage";
 import CreateTagPage from "./components/pages/CreateTagPage/CreateTagPage";
 import WelcomeTourPage from "./components/pages/WelcomeTourPage/WelcomeTourPage";
+import ContactPage from "./components/pages/ContactPage/ContactPage";
 import { setupNotificationPressListener } from "./common-tools/device-native-api/notifications/setupNotificationPressListener";
 import { CacheConfigProvider } from "./api/tools/useCache/useCache";
 import { welcomeWasShowed } from "./components/pages/WelcomeTourPage/tools/useWelcomeShowed";
@@ -28,8 +30,6 @@ import "intl/locale-data/jsonp/en";
 import "intl/locale-data/jsonp/es";
 import "dayjs/locale/en";
 import "dayjs/locale/es";
-
-import { StatusBar } from "expo-status-bar";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -62,7 +62,7 @@ const App: FC = () => {
 
    return (
       <CacheConfigProvider>
-         <PaperProvider theme={(currentTheme as unknown) as ReactNativePaper.Theme}>
+         <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
             <StatusBar style="light" />
             <NavigationContainerWithNotifications>
                <Stack.Navigator
@@ -80,6 +80,7 @@ const App: FC = () => {
                   <Stack.Screen name="DateVoting" component={DateVotingPage} />
                   <Stack.Screen name="Admin" component={AdminPage} />
                   <Stack.Screen name="CreateTag" component={CreateTagPage} />
+                  <Stack.Screen name="ContactPage" component={ContactPage} />
                </Stack.Navigator>
             </NavigationContainerWithNotifications>
          </PaperProvider>

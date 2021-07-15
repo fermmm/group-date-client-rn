@@ -114,7 +114,7 @@ const CreateTagPage: FC = () => {
             <HelpBanner
                showCloseButton
                rememberClose
-               text={`Puedes crear hasta ${
+               text={`Puedes publicar hasta ${
                   serverInfo.serverConfigurations?.tagsPerTimeFrame
                } tags cada ${humanizeUnixTime(
                   serverInfo.serverConfigurations?.tagCreationTimeFrame
