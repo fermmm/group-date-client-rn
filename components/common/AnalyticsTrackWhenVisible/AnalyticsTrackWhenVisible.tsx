@@ -1,12 +1,18 @@
 import React, { FC, useRef } from "react";
-import { removeDigitsFromNumber } from "../../../common-tools/math/math-tools";
+import { getNearestMultiple, removeDigitsFromNumber } from "../../../common-tools/math/math-tools";
 import VisibilitySensor from "../VisibilitySensor/VisibilitySensor";
 
 interface PropsAnalyticsTrackWhenVisible {
+   /* Max seconds to register, Default = No limit */
+   maxSecondsToRegister?: number;
+   /* The interval to register, example: 5 will register 6 as 5 and 13 as 10. 5-10-15... Default = 3 */
+   secondPeriods?: number;
    onLogShouldSend: (timeVisible: number) => void;
 }
 
 const AnalyticsTrackWhenVisible: FC<PropsAnalyticsTrackWhenVisible> = ({
+   maxSecondsToRegister,
+   secondPeriods = 3,
    children,
    onLogShouldSend
 }) => {
@@ -32,12 +38,27 @@ const AnalyticsTrackWhenVisible: FC<PropsAnalyticsTrackWhenVisible> = ({
 
    const onDismount = () => {
       if (maxTimeRegistered.current > 0) {
-         const timeToLog = Math.round(maxTimeRegistered.current / 1000);
+         const timeToLog = getTimeToLogInFinalFormat(maxTimeRegistered.current);
          if (lastSentTime.current != timeToLog) {
             onLogShouldSend(timeToLog);
             lastSentTime.current = timeToLog;
          }
       }
+   };
+
+   const getTimeToLogInFinalFormat = (timeToLogInMs: number) => {
+      // Convert to seconds
+      let timeToLog = Math.round(timeToLogInMs / 1000);
+
+      if (maxSecondsToRegister != null && timeToLog > maxSecondsToRegister) {
+         timeToLog = maxSecondsToRegister;
+      }
+
+      if (secondPeriods != null) {
+         timeToLog = getNearestMultiple(timeToLog, secondPeriods);
+      }
+
+      return timeToLog;
    };
 
    return (

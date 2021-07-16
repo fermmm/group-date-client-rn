@@ -74,7 +74,11 @@ const AboutPage: FC = () => {
             <TitleText extraSize style={styles.title}>
                Breve historia del poliamor grupal
             </TitleText>
-            <AnalyticsTrackWhenVisible onLogShouldSend={logPolyHistory}>
+            <AnalyticsTrackWhenVisible
+               onLogShouldSend={logPolyHistory}
+               maxSecondsToRegister={60}
+               secondPeriods={6}
+            >
                <Text style={styles.text}>
                   En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
                   personas de una comunidad, compartían la crianza y los recursos de forma

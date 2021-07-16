@@ -39,3 +39,21 @@ export interface RemoveDigitsFromNumberOptions {
     */
    digitsToKeepInIntegerPart?: number;
 }
+
+export function getNearestMultiple(
+   number: number,
+   multiple: number,
+   mode: "floor" | "round" | "ceil" = "round"
+) {
+   if (mode === "floor") {
+      return Math.floor(number / multiple) * multiple;
+   }
+
+   if (mode === "round") {
+      return Math.round(number / multiple) * multiple;
+   }
+
+   if (mode === "ceil") {
+      return Math.ceil(number / multiple) * multiple;
+   }
+}
