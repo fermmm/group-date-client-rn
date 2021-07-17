@@ -31,8 +31,6 @@ import { analyticsLogUser } from "../../../common-tools/analytics/tools/analytic
 const LoginPage: FC = () => {
    // These are constants for debugging:
    const showDebugButtons: boolean = false;
-
-   const [logoAnimCompleted, setLogoAnimCompleted] = useState(false);
    const { colors } = useTheme();
    const { navigateWithoutHistory } = useNavigation();
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
@@ -69,12 +67,7 @@ const LoginPage: FC = () => {
 
    // If the user has props missing redirect to RegistrationForms otherwise redirect to Main or notification press
    useEffect(() => {
-      if (
-         profileStatusData == null ||
-         !logoAnimCompleted ||
-         !isFocused ||
-         !sendLoginPropsCompleted
-      ) {
+      if (profileStatusData == null || !isFocused || !sendLoginPropsCompleted) {
          return;
       }
 
@@ -94,7 +87,7 @@ const LoginPage: FC = () => {
          }
          showBetaVersionMessage();
       }
-   }, [profileStatusData, sendLoginPropsCompleted, logoAnimCompleted]);
+   }, [profileStatusData, sendLoginPropsCompleted]);
 
    const showAuthenticationButtons: boolean =
       profileStatusError ||
@@ -105,7 +98,6 @@ const LoginPage: FC = () => {
 
    const showLoadingAnimation: boolean =
       canUseServer &&
-      logoAnimCompleted &&
       !showAuthenticationButtons &&
       !profileStatusError &&
       (auth.isLoading || serverInfoLoading || !profileStatusData);
@@ -115,9 +107,9 @@ const LoginPage: FC = () => {
          <View style={styles.mainContainer}>
             <LoadingAnimation visible={showLoadingAnimation} />
             <View style={styles.logo}>
-               <LogoAnimator onAnimationComplete={() => setLogoAnimCompleted(true)}>
-                  <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
-               </LogoAnimator>
+               {/* <LogoAnimator onAnimationComplete={() => setLogoAnimCompleted(true)}> */}
+               <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
+               {/* </LogoAnimator> */}
             </View>
             {serverOperating === false && (
                <Text style={styles.textBlock}>
