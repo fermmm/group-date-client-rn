@@ -18,10 +18,10 @@ const ContactPage: FC = () => {
    const { colors } = useTheme();
 
    const handleCollaborationGroupPress = () => {
-      Linking.openURL("https://www.facebook.com/groups/612123533095071");
+      Linking.openURL("https://www.facebook.com/groups/133790728893669");
    };
    const handleInstagramAccountPress = () => {
-      Linking.openURL("https://www.instagram.com/poly.community.app/");
+      Linking.openURL("https://www.instagram.com/poly.community.app");
    };
    const handleFacebookAccountPress = () => {
       Linking.openURL("https://www.facebook.com/polycommunityapp");
@@ -47,8 +47,8 @@ const ContactPage: FC = () => {
                Tenemos un grupo de Facebook que visitamos todos los dias los creadores de la app
                donde puedes dejar tus criticas, sugerencias o cualquier forma de colaboración desde
                tu profesión o forma de ver el mundo, así como también disfrutar de lo que sucede
-               ahí. Este proyecto no es comercial y son estas colaboraciones desde todos lados las
-               que siguen mejorando la calidad de la app.
+               ahí. Este proyecto no es comercial y son estas colaboraciones diversas las que lo
+               hacen funcionar.
             </Text>
             <EmptySpace height={15} />
             <Button onPress={handleCollaborationGroupPress} mode="text" color={colors.accent2}>
