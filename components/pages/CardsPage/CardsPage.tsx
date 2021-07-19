@@ -93,9 +93,7 @@ const CardsPage: FC = () => {
                {cardsSource !== CardsSource.Recommendations && (
                   <WatchingIndicator
                      name={
-                        cardsSource === CardsSource.DislikedUsers
-                           ? "dejadxs de lado"
-                           : params?.tagName
+                        cardsSource === CardsSource.DislikedUsers ? "ocultadxs" : params?.tagName
                      }
                      onPress={handleGoBackToRecommendations}
                   />
