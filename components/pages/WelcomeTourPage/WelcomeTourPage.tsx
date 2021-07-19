@@ -76,19 +76,8 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     La temática de esta app NO sirve para trios ni swinger: No se puede limitar a 3
-                     el tamaño de una cita, aquí buscar eso es spam
-                  </Text>
-               </View>
-            </View>
-            <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
-                  <Icon name={"calendar-star"} color={topColor} size={iconSize} />
-               </View>
-               <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                     Recibirás notificaciones acerca de fiestas y otros eventos de organizaciones de
-                     poliamor cercanas
+                     La temática de esta app NO sirve para trios ni swinger: El tamaño de una cita
+                     no se puede limitar a 3 ni a otra cantidad, aquí buscar eso es spam
                   </Text>
                </View>
             </View>
@@ -98,8 +87,9 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Poly es nueva para todxs, no se espera que sepas o hagas nada en particular,
-                     solo ganas de conocer gente en una comunidad donde todo puede ser diferente.
+                     Poly es nueva para todxs, no se espera que sepas o hagas algo en particular,
+                     solo tener ganas de conocer gente en una comunidad por fuera de perspectivas
+                     monógamas que consideramos patriarcales
                   </Text>
                </View>
             </View>
@@ -109,8 +99,8 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Si te gusta la app no olvides mencionarla en las redes o a quienes creas
-                     oportuno, todo depende de ese tipo de aportes.
+                     No tenemos interés monetario y funcionamos gracias a colaboraciónes diversas.
+                     Si te gusta la app no olvides mencionarla en las redes o donde creas oportuno
                   </Text>
                </View>
             </View>
