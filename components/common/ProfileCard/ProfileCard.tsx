@@ -33,7 +33,7 @@ import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags"
 import TagChipList from "../TagChipList/TagChipList";
 import MoreModal from "./MoreModal/MoreModal";
 import { useCallback } from "react";
-import { removeSocialNetworkContact } from "../../../common-tools/strings/social";
+import { removeBannedWords } from "../../../common-tools/strings/social";
 import { useOnlyVisibleTags } from "../../../common-tools/tags/useOnlyVisibleTags";
 
 export interface ProfileCardProps {
@@ -209,7 +209,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                         <Paragraph style={styles.descriptionParagraph}>
                            {isOwnProfile
                               ? profileDescription
-                              : removeSocialNetworkContact(profileDescription)}
+                              : removeBannedWords(profileDescription)}
                         </Paragraph>
                         {editMode && (
                            <EditButton
