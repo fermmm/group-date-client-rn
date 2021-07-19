@@ -88,8 +88,8 @@ const WelcomeTourPage: FC = () => {
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
                      Poly es nueva para todxs, no se espera que sepas o hagas algo en particular,
-                     solo tener ganas de conocer gente en una comunidad por fuera de perspectivas
-                     monógamas que consideramos patriarcales
+                     solo tener ganas de ir a citas pensadas sin costumbres monógamas que
+                     consideramos del patriarcado
                   </Text>
                </View>
             </View>
