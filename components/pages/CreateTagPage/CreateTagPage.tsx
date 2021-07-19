@@ -19,7 +19,8 @@ import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 import TagChip from "../../common/TagChip/TagChip";
 import TextInputExtended from "../../common/TextInputExtended/TextInputExtended";
 import TitleText from "../../common/TitleText/TitleText";
-import { TAGS_CATEGORIES } from "../../../config";
+import { TAGS_BANNED_WORDS, TAGS_CATEGORIES } from "../../../config";
+import { textContainsAnyWord } from "../../../common-tools/strings/textContainsWord";
 
 const CreateTagPage: FC = () => {
    const [name, setName] = useState("");
@@ -79,6 +80,10 @@ const CreateTagPage: FC = () => {
       }
 
       goBack();
+
+      if (textContainsAnyWord(tag.name, TAGS_BANNED_WORDS)) {
+         return;
+      }
 
       const tagCrated = await createTag(
          { token, name: tag.name, category: tag.category },

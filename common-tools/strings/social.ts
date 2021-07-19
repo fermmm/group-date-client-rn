@@ -1,9 +1,11 @@
+import { TAGS_BANNED_WORDS } from "../../config";
+
 /**
  * If a user shares a way of contacting them personally the string information is
  * removed. Example: "My instagram is @fer, see you there!" will be changed to:
  * "My see you there!".
  */
-export function removeSocialNetworkContact(str: string): string {
+export function removeBannedWords(str: string): string {
    if (str == null) {
       return null;
    }
@@ -12,7 +14,7 @@ export function removeSocialNetworkContact(str: string): string {
 
    // For the moment only instagram is banned
    const removePhrasesStartingWith = ["ig", "insta", "instagram"];
-   const removeWordsContaining = ["@"];
+   const removeWordsContaining = ["@", ...TAGS_BANNED_WORDS];
    const punctuationsUsedInBannedWords = [" ", ".", ":"];
    const maxRemovals = 50;
 

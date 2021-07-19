@@ -72,12 +72,23 @@ const WelcomeTourPage: FC = () => {
             </View>
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
+                  <Text style={[styles.bigText, { color: topColor }]}>¡Atención!</Text>
+               </View>
+               <View style={styles.textContainer}>
+                  <Text style={styles.text}>
+                     La temática de esta app NO sirve para trios ni swinger: No se puede limitar a 3
+                     el tamaño de una cita, aquí buscar eso es spam
+                  </Text>
+               </View>
+            </View>
+            <View style={styles.mainContainer}>
+               <View style={styles.logoContainer}>
                   <Icon name={"calendar-star"} color={topColor} size={iconSize} />
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     También recibirás notificaciones acerca de fiestas y otros eventos de
-                     organizaciones de poliamor cercanas
+                     Recibirás notificaciones acerca de fiestas y otros eventos de organizaciones de
+                     poliamor cercanas
                   </Text>
                </View>
             </View>
