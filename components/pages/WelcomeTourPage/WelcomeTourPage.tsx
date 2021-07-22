@@ -76,9 +76,9 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     La temática de esta app NO sirve para quienes buscan trios o swingers por que
-                     el tamaño de los grupos lo decide el sistema, aquí buscar tamaños de cita
-                     específicos es hacer spam
+                     La temática de esta app NO sirve para quienes buscan trios o swinger ya que el
+                     tamaño de los grupos lo decide el sistema, buscar un tamaño de cita especifico
+                     aquí es spam
                   </Text>
                </View>
             </View>
@@ -89,8 +89,8 @@ const WelcomeTourPage: FC = () => {
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
                      Poly es nueva para todxs, no se espera que sepas o hagas algo en particular,
-                     solo tener ganas de ir a citas pensadas sin costumbres monógamas que
-                     consideramos del patriarcado
+                     solo tener ganas de ir a citas sin perspectivas monógamas que consideramos del
+                     patriarcado
                   </Text>
                </View>
             </View>
