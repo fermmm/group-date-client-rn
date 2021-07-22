@@ -76,8 +76,8 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     La temática de esta app NO sirve para quienes buscan trios o swinger ya que el
-                     tamaño de los grupos lo decide el sistema, buscar un tamaño de cita especifico
+                     La temática de esta app NO sirve para quienes buscan tríos o swinger ya que el
+                     tamaño de los grupos lo decide el sistema, buscar un tamaño de cita específico
                      aquí es spam
                   </Text>
                </View>
