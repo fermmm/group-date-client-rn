@@ -5,3 +5,10 @@
 export function includesAnyOf<T>(array1: readonly T[], array2: readonly T[]): boolean {
    return array1.find(e => array2.includes(e)) != null;
 }
+
+/**
+ * Checks if all elements of array1 are included in array2.
+ */
+export function arrayHasAllElementsFrom<T>(array1: readonly T[], array2: readonly T[]): boolean {
+   return array1.find(e => !array2.includes(e)) == null;
+}

@@ -99,6 +99,7 @@ const GenderForm: FC<PropsGenderForm> = props => {
          initiallySelected={getInitialGenderSelection()}
          onChange={handleSelectionChange}
          initiallyExpanded={true}
+         allowMultipleCisGenderSelection={genderTargetMode}
       />
    );
 };
