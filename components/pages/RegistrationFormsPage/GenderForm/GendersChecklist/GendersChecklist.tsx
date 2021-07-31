@@ -12,27 +12,16 @@ import CheckboxButton from "../../../../common/CheckboxButton/CheckboxButton";
 import { Styles } from "../../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../../config";
 import ButtonStyled from "../../../../common/ButtonStyled/ButtonStyled";
-import {
-   arrayHasAllElementsFrom,
-   includesAnyOf
-} from "../../../../../common-tools/array/arrayTools";
 
 export interface PropsGendersChecklist {
    title: string;
    initiallySelected?: Gender[];
    initiallyExpanded?: boolean;
    onChange: (newSelection: Gender[]) => void;
-   allowMultipleCisGenderSelection?: boolean;
 }
 
 const GendersChecklist: FC<PropsGendersChecklist> = props => {
-   const {
-      title,
-      initiallySelected,
-      onChange,
-      initiallyExpanded = true,
-      allowMultipleCisGenderSelection = true
-   } = props;
+   const { title, initiallySelected, onChange, initiallyExpanded = true } = props;
 
    const [expanded, setExpanded] = useState(initiallyExpanded);
    const { colors } = useTheme();
@@ -47,18 +36,11 @@ const GendersChecklist: FC<PropsGendersChecklist> = props => {
    );
 
    const addOrRemoveFromSelection = (gender: Gender) => {
-      let newSelection: Gender[] = selection;
+      let newSelection: Gender[] = [...selection];
 
       if (selection.includes(gender)) {
          newSelection = selection.filter(g => g !== gender);
       } else {
-         if (allowMultipleCisGenderSelection === false) {
-            // If the user selected a cis gender and has one already selected remove the previous ones
-            if (includesAnyOf(cisGenders, newSelection)) {
-               newSelection = selection.filter(g => !cisGenders.includes(g));
-            }
-         }
-
          newSelection.push(gender);
       }
 
@@ -67,6 +49,7 @@ const GendersChecklist: FC<PropsGendersChecklist> = props => {
 
    useEffect(() => onChange(selection), [selection]);
 
+   console.log("RENDER");
    return (
       <>
          <TitleText style={styles.question}>{title}</TitleText>
@@ -168,4 +151,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default GendersChecklist;
+export default React.memo(GendersChecklist);

@@ -97,9 +97,8 @@ const GenderForm: FC<PropsGenderForm> = props => {
       <GendersChecklist
          title={genderTargetMode ? "¿Qué géneros te atraen?" : "¿Cuál es tu género?"}
          initiallySelected={getInitialGenderSelection()}
-         onChange={handleSelectionChange}
+         onChange={setGendersSelected}
          initiallyExpanded={true}
-         allowMultipleCisGenderSelection={genderTargetMode}
       />
    );
 };

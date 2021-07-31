@@ -97,9 +97,9 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Hay muchos libros sobre el tema escritos y respaldados por la comunidad científica,
-               algunos muy conocidos como los de Cacilda Jethá y Christopher Ryan o de Friedrich
-               Engels: "El origen de la familia, la propiedad privada y el estado".
+               Hay muchos libros científicos sobre el tema, algunos muy conocidos como los de
+               Cacilda Jethá y Christopher Ryan o también el de Friedrich Engels: "El origen de la
+               familia, la propiedad privada y el estado".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
