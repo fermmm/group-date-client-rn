@@ -77,7 +77,7 @@ const WelcomeTourPage: FC = () => {
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
                      La app decide la cantidad de personas en una cita, no les sirve a quienes
-                     buscan un tamaño de cita específico (ej.: tríos o swinger)
+                     busquen un tamaño de cita específico (ej.: tríos o swinger)
                   </Text>
                </View>
             </View>

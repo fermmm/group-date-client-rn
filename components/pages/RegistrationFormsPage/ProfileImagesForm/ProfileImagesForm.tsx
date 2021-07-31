@@ -89,7 +89,7 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = props => {
 
    const getErrors = (): string | null => {
       if (getImagesArray().length === 0) {
-         return "Debes subir al menos una foto en la que se te vea, lxs que suban cualquier imagen para hacer trampa no podrán usar más la app. Los perfiles sin foto perjudican a muchos usuarixs, seamos respetuosxs con lxs demás.";
+         return "Debes subir al menos una foto en la que se te vea, lxs que pongan cualquier imagen para hacer trampa serán invisibles ya que son tomados como spam.";
       }
 
       if (imageToReposition != null) {
