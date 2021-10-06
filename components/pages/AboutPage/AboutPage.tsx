@@ -81,7 +81,7 @@ const AboutPage: FC = () => {
             >
                <Text style={styles.text}>
                   En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
-                  personas de una comunidad, compartían la crianza y los recursos de forma
+                  personas de una comunidad, compartían la crianza y el alimento de forma
                   igualitaria, potenciado por el sexo que era muy abundante, público y podía ser
                   grupal tanto como en pareja. Este pasado se puede ignorar pero nos acompañó
                   durante toda nuestra evolución por lo que no se va a ir de nuestro cuerpo, un
@@ -112,19 +112,19 @@ const AboutPage: FC = () => {
                ¿Quienes hicieron esta app?
             </TitleText>
             <Text style={styles.text}>
-               La idea viene de un informático argentino quién también escribió el software, pero
-               los múltiples detalles que multiplican su calidad son ideas de varias personas
-               interesadas en el proyecto, personas pertenecientes a organizaciones de poliamor,
-               amor libre, feminismo, profesionales de diferentes disciplinas: desde ciencias
-               sociales hasta otrxs informáticxs.
+               La idea inicial viene de un informático de Argentina quién también escribió el
+               software, pero luego se agregaron múltiples detalles que multiplican su calidad y son
+               colaboraciones de muchas personas interesadas en el proyecto pertenecientes a
+               organizaciones de poliamor, amor libre, feminismo, profesionales de diferentes
+               disciplinas: desde ciencias sociales hasta otrxs informáticxs.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿En base a que criterios me recomienda personas la app?
             </TitleText>
             <Text style={styles.text}>
                El algoritmo busca un grupo de usuarios activos al azar que te pusieron like y otro
-               que aún no, luego combina ambos en una sola lista con orden al azar, eso es todo lo
-               que hace por ahora.
+               que aún no, luego combina ambos en una sola lista con orden al azar, luego pone en
+               primer lugar a quienes tienen mas tags en comun o tags bloqueados en común.
             </Text>
             <EmptySpace height={80} />
          </BasicScreenContainer>
