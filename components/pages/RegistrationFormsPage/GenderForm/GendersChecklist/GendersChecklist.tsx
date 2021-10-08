@@ -25,7 +25,7 @@ const GendersChecklist: FC<PropsGendersChecklist> = props => {
 
    const [expanded, setExpanded] = useState(initiallyExpanded);
    const { colors } = useTheme();
-   const [selection, setSelection] = useState<Gender[]>(initiallySelected);
+   const [selection, setSelection] = useState<Gender[]>(initiallySelected ?? []);
    const cisGenders = [Gender.Woman, Gender.Man];
    const nonCisGenders = useMemo(
       () =>
@@ -49,7 +49,6 @@ const GendersChecklist: FC<PropsGendersChecklist> = props => {
 
    useEffect(() => onChange(selection), [selection]);
 
-   console.log("RENDER");
    return (
       <>
          <TitleText style={styles.question}>{title}</TitleText>
@@ -66,7 +65,7 @@ const GendersChecklist: FC<PropsGendersChecklist> = props => {
             <TitleText style={styles.cisTitleText}>Cis</TitleText>
             {cisGenders.map((gender: Gender) => (
                <CheckboxButton
-                  checked={selection.includes(gender)}
+                  checked={selection?.includes(gender)}
                   onPress={() => addOrRemoveFromSelection(gender)}
                   key={gender}
                >
@@ -87,7 +86,7 @@ const GendersChecklist: FC<PropsGendersChecklist> = props => {
                   <TitleText style={styles.otherGendersTitleText}>Otros géneros</TitleText>
                   {nonCisGenders.map((gender: Gender) => (
                      <CheckboxButton
-                        checked={selection.includes(gender)}
+                        checked={selection?.includes(gender)}
                         onPress={() => addOrRemoveFromSelection(gender)}
                         key={gender}
                      >

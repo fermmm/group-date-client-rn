@@ -1,14 +1,8 @@
 import * as Analytics from "expo-firebase-analytics";
 import Constants, { AppOwnership } from "expo-constants";
-import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { CIS_GENDERS, User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { fromBirthDateToAge } from "../../../api/tools/date-tools";
-import {
-   getCisGenderName,
-   getCisGendersUserIsAttractedTo,
-   getGenderName,
-   getGendersUserIsAttractedTo,
-   isAttractedToOppositeSex
-} from "../../strings/gender";
+import { isAttractedToOppositeSex } from "../../strings/gender";
 
 export function analyticsLogUser(user: Partial<User>) {
    if (user == null) {
@@ -51,13 +45,13 @@ export function getUserPropertiesInAnalyticsFormat(user: Partial<User>): Record<
       targetAgeMin: user.targetAgeMin,
       targetAgeMax: user.targetAgeMax,
       targetDistance: user.targetDistance,
-      genderCis: getCisGenderName(user.tagsSubscribed ?? [], false),
-      genderFull: getGenderName(user.tagsSubscribed ?? [], false, false),
-      attractedToCis: getCisGendersUserIsAttractedTo(user.tagsBlocked ?? [], false),
-      attractedToFull: getGendersUserIsAttractedTo(user.tagsBlocked ?? [], false),
+      genderCis: user.genders.filter(gender => CIS_GENDERS.includes(gender)),
+      genderFull: user.genders,
+      attractedToCis: user.likesGenders.filter(gender => CIS_GENDERS.includes(gender)),
+      attractedToFull: user.likesGenders,
       attractedToOppositeSex: isAttractedToOppositeSex(
-         user.tagsSubscribed,
-         user.tagsBlocked,
+         user.genders,
+         user.likesGenders,
          user.isCoupleProfile
       ),
       likesGroupSex: user.tagsSubscribed.find(tag => tag.tagId === "q01-a00") != null,

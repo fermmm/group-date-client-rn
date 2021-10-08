@@ -25,8 +25,8 @@ export const useRequiredFormList = (
     * Also this list determines the order in which the screens will be displayed.
     */
    const formsForProps: FormsAndTheirProps = {
-      GenderForm: [],
-      TargetGenderForm: [],
+      GenderForm: ["genders"],
+      TargetGenderForm: ["likesGenders"],
       CoupleProfileForm: ["isCoupleProfile"],
       TagsAsQuestionsForms: [], // This empty element will be replaced later
       UnknownPropsQuestionForms: [], // This empty element will be replaced later
@@ -186,14 +186,6 @@ function getOnlyRequired(
       // These forms will be included always because are removed in another place
       if (formName === "UnknownPropsQuestionForms" || formName === "TagsAsQuestionsForms") {
          return true;
-      }
-
-      if (formName === "GenderForm") {
-         return !profileStatus?.genderIsSelected;
-      }
-
-      if (formName === "TargetGenderForm") {
-         return !profileStatus?.targetGenderIsSelected;
       }
 
       const propsOfForm = formsForProps[formName] as RequiredUserPropKey[];

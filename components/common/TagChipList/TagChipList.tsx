@@ -19,6 +19,7 @@ export interface PropsTagChipList {
    hideCategory?: boolean;
    hideCategoryOnModal?: boolean;
    tagChipStyle?: StyleProp<ViewStyle>;
+   small?: boolean;
 }
 
 const TagChipList: FC<PropsTagChipList> = props => {
@@ -31,7 +32,8 @@ const TagChipList: FC<PropsTagChipList> = props => {
       notScrollingFlatList,
       tagChipStyle,
       hideCategory,
-      hideCategoryOnModal
+      hideCategoryOnModal,
+      small
    } = props;
    const [selectedTag, setSelectedTag] = useState<Tag>(null);
    const [showModal, setShowModal] = useState(false);
@@ -79,6 +81,7 @@ const TagChipList: FC<PropsTagChipList> = props => {
             onPress={onTagPress}
             key={key != null ? key : null}
             hideCategory={hideCategory}
+            small={small}
          />
       ),
       [showSubscribersAmount, user, userIsSubscribedToTag]

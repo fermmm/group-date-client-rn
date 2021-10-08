@@ -35,6 +35,9 @@ import MoreModal from "./MoreModal/MoreModal";
 import { useCallback } from "react";
 import { removeBannedWords } from "../../../common-tools/strings/social";
 import { useOnlyVisibleTags } from "../../../common-tools/tags/useOnlyVisibleTags";
+import TitleSmallText from "../TitleSmallText/TitleSmallText";
+import TitleMediumText from "../TitleMediumText/TitleMediumText";
+import TitleText from "../TitleText/TitleText";
 
 export interface ProfileCardProps {
    user: User;
@@ -61,13 +64,14 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       birthDate,
       cityName,
       height,
+      genders,
       profileDescription,
       isCoupleProfile,
       tagsSubscribed,
       tagsBlocked
    }: Partial<User> = props.user;
 
-   const genderText: string = getGenderName(tagsSubscribed, isCoupleProfile);
+   const genderText: string = getGenderName(genders, isCoupleProfile);
 
    const { navigate } = useNavigation();
    const [renderImageModal, setRenderImageModal] = useState(false);
@@ -179,7 +183,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                         <Card.Title
                            title={`${toFirstUpperCase(name)}${isCoupleProfile ? " (Pareja)" : ""}`}
                            subtitle={`${fromBirthDateToAge(birthDate)} · ${cityName}${
-                              height ? " · " + height + "cm" : ""
+                              height ? ` · Alt.: ${height} cm` : ""
                            }`}
                            style={{ flex: 1 }}
                            titleStyle={styles.nameText}
@@ -223,6 +227,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               }
                            />
                         )}
+                        <TitleMediumText>Tags en común:</TitleMediumText>
                         <View style={styles.tagsListContainer}>
                            <TagChipList
                               notScrollingFlatList={tagsSubscribedInCommon}
@@ -232,6 +237,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               showSubscribersAmountOnModal={false}
                               hideCategory={true}
                               hideCategoryOnModal={false}
+                              small={true}
                            />
                         </View>
                         {
@@ -335,7 +341,7 @@ const styles: Styles = StyleSheet.create({
       color: currentTheme.colors.text,
       fontFamily: currentTheme.font.light,
       marginBottom: 5,
-      fontSize: 15
+      fontSize: 17
    },
    tagsListContainer: {
       paddingTop: 10,

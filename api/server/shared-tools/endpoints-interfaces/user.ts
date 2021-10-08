@@ -37,10 +37,11 @@ export interface User {
    lastGroupJoinedDate: number;
    notifications: Notification[];
    questionsShowed: string[];
-   targetGenderIsSelected: boolean;
    notificationsToken: string;
    tagsSubscribed?: TagBasicInfo[];
    tagsBlocked?: TagBasicInfo[];
+   genders: Gender[];
+   likesGenders: Gender[];
 }
 
 export type UserPropsValueTypes = ValueOf<User>;
@@ -67,15 +68,17 @@ export enum Gender {
    TransgenderMan = "Transgender Man",
 }
 
+export type CisGender = Gender.Woman | Gender.Man;
+export type NonCisGender = Exclude<Gender, CisGender>;
+
 export const ALL_GENDERS: readonly Gender[] = Object.values(Gender);
 export const CIS_GENDERS: readonly Gender[] = [Gender.Woman, Gender.Man];
+export const TRANS_GENDERS: readonly Gender[] = [Gender.TransgenderWoman, Gender.TransgenderMan];
 export const NON_CIS_GENDERS: readonly Gender[] = ALL_GENDERS.filter(gender => !CIS_GENDERS.includes(gender));
 
 export interface ProfileStatusServerResponse {
    missingEditableUserProps: RequiredUserPropKey[];
    notShowedTagQuestions: string[];
-   genderIsSelected: boolean;
-   targetGenderIsSelected: boolean;
    user: Partial<User>;
 }
 
@@ -85,7 +88,7 @@ export interface UserGetParams extends TokenParameter {
 
 export interface UserPostParams {
    token: string;
-   props?: EditableUserProps;
+   props?: Partial<User>;
    updateProfileCompletedProp?: boolean;
 }
 

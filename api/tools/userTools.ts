@@ -5,17 +5,7 @@ export function userHasFinishedRegistration(profileStatus: ProfileStatusServerRe
       return null;
    }
 
-   const {
-      missingEditableUserProps = [],
-      notShowedTagQuestions = [],
-      genderIsSelected,
-      targetGenderIsSelected
-   } = profileStatus;
+   const { missingEditableUserProps = [], notShowedTagQuestions = [] } = profileStatus;
 
-   return (
-      missingEditableUserProps.length === 0 &&
-      notShowedTagQuestions.length === 0 &&
-      genderIsSelected &&
-      targetGenderIsSelected
-   );
+   return missingEditableUserProps.length === 0 && notShowedTagQuestions.length === 0;
 }

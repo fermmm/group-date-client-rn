@@ -33,8 +33,6 @@ import GenderForm from "./GenderForm/GenderForm";
 import { IsCoupleQuestion } from "./IsCoupleQuestion/IsCoupleQuestion";
 import { useAnalyticsForRegistration } from "../../../common-tools/analytics/registrationFormsPage/useAnalyticsForRegistration";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
-import { getUserPropertiesInAnalyticsFormat } from "../../../common-tools/analytics/tools/analyticsLogUser";
-import { useTagsInfo } from "./tools/useTagsInfo";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -61,7 +59,6 @@ const RegistrationFormsPage: FC = () => {
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
    const { data: profileStatus } = useUserProfileStatus();
    const { data: tagsAsQuestions } = useTagsAsQuestions();
-   const { getTagInfoById } = useTagsInfo();
    const {
       isLoading: requiredFormListLoading,
       formsRequired,
@@ -72,7 +69,7 @@ const RegistrationFormsPage: FC = () => {
       params != null ? { fromParams: params } : { fromProfileStatus: profileStatus }
    );
    const { token } = useAuthentication(profileStatus?.user?.token);
-   useAnalyticsForRegistration(profileStatus.user, formsRequired, currentStep);
+   useAnalyticsForRegistration(profileStatus?.user, formsRequired, currentStep);
 
    const handleOnChangeForm = useCallback(
       (params: OnChangeFormParams) => {
@@ -257,7 +254,10 @@ const RegistrationFormsPage: FC = () => {
       // We send user props last because it contains questionsShowed prop, which means that the tags were sent
       if (thereArePropsToSend) {
          setSendingToServer(true);
-         await sendUserProps({ token, props: propsToSend, updateProfileCompletedProp: true }, true);
+         await sendUserProps(
+            { token, props: propsToSend as User, updateProfileCompletedProp: true },
+            true
+         );
       }
 
       if (thereAreRecommendationsRelatedChanges || thereAreTagsChanges) {
@@ -269,18 +269,8 @@ const RegistrationFormsPage: FC = () => {
          revalidate("user/profile-status");
       }
 
-      if (profileStatus?.user != null && !profileStatus.user.profileCompleted) {
-         analyticsLogEvent(
-            `registration_completed` /*,
-            getUserPropertiesInAnalyticsFormat({
-               ...(profileStatus.user ?? {}),
-               ...((propsToSend as User) ?? {}),
-               tagsSubscribed:
-                  unifiedTagsToUpdate?.tagsToSubscribe?.map(tagId => getTagInfoById(tagId)) ?? [],
-               tagsBlocked:
-                  unifiedTagsToUpdate?.tagsToBlock?.map(tagId => getTagInfoById(tagId)) ?? []
-            })*/
-         );
+      if (profileStatus?.user != null && !profileStatus?.user?.profileCompleted) {
+         analyticsLogEvent(`registration_completed`);
       }
    };
 
@@ -302,8 +292,7 @@ const RegistrationFormsPage: FC = () => {
       [formsRequired, currentStep]
    );
 
-   const isLoading: boolean =
-      !profileStatus || formsRequired?.length === 0 || requiredFormListLoading || sendingToServer;
+   const isLoading: boolean = !profileStatus || requiredFormListLoading || sendingToServer;
 
    return (
       <>

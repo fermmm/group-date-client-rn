@@ -5,7 +5,7 @@ import { RadioButton, TouchableRipple } from "react-native-paper";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 export interface RadioButtonImprovedProps {
-   checked: boolean;
+   checked?: boolean;
    style?: StyleProp<ViewStyle>;
    onPress(): void;
    iconElement?(checked: boolean): JSX.Element;
@@ -13,6 +13,7 @@ export interface RadioButtonImprovedProps {
 
 const RadioButtonImproved: FC<RadioButtonImprovedProps> = props => {
    const [margin, setMargin] = useState<number>(null);
+   const { onPress, style, iconElement, checked = false, children } = props;
 
    const translateBetweenRanges = (
       valueToTranslate: number,
@@ -35,17 +36,17 @@ const RadioButtonImproved: FC<RadioButtonImprovedProps> = props => {
    };
 
    return (
-      <ViewTouchable onPress={() => props.onPress()}>
-         <View pointerEvents={"none"} style={[props.style, styles.mainContainer]}>
+      <ViewTouchable onPress={() => onPress()}>
+         <View pointerEvents={"none"} style={[style, styles.mainContainer]}>
             <View style={{ marginRight: 15 }}>
-               {props.iconElement != null ? (
-                  props.iconElement(props.checked)
+               {iconElement != null ? (
+                  iconElement(checked)
                ) : (
-                  <RadioButton value={""} status={props.checked ? "checked" : "unchecked"} />
+                  <RadioButton value={""} status={checked ? "checked" : "unchecked"} />
                )}
             </View>
             <View style={styles.childrenContainer} onLayout={measureView}>
-               {props.children}
+               {children}
             </View>
          </View>
       </ViewTouchable>

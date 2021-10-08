@@ -19,6 +19,7 @@ export interface PropsTagChip {
    style?: StyleProp<ViewStyle>;
    userSubscribed?: boolean;
    userBlocked?: boolean;
+   small?: boolean;
 }
 
 const TagChip: FC<PropsTagChip> = ({
@@ -29,7 +30,8 @@ const TagChip: FC<PropsTagChip> = ({
    onPress,
    userSubscribed,
    userBlocked,
-   style
+   style,
+   small
 }) => {
    const { colors }: ThemeExt = useTheme();
 
@@ -62,7 +64,14 @@ const TagChip: FC<PropsTagChip> = ({
             onPress={interactive ? () => onPress(tag) : null}
             defaultAlpha={0.1}
          >
-            <View style={[styles.mainContainer, styleBasedOnUserTags, style]}>
+            <View
+               style={[
+                  styles.mainContainer,
+                  styleBasedOnUserTags,
+                  style,
+                  small ? styles.mainContainerSmall : {}
+               ]}
+            >
                <>
                   <View>
                      {!hideCategory && (
@@ -70,7 +79,9 @@ const TagChip: FC<PropsTagChip> = ({
                            {toFirstUpperCase(tag.category)}
                         </Caption>
                      )}
-                     <Text style={styles.nameText}>{toFirstUpperCase(tag.name)}</Text>
+                     <Text style={[styles.nameText, small ? styles.nameTextSmall : {}]}>
+                        {toFirstUpperCase(tag.name)}
+                     </Text>
                   </View>
                   {showSubscribersAmount && (
                      <Text style={styles.subscribersText}>+{tag.subscribersAmount ?? 0}</Text>
@@ -96,6 +107,12 @@ const styles: Styles = StyleSheet.create({
       borderRadius: currentTheme.roundness,
       backgroundColor: color(currentTheme.colors.background).darken(0.05).string()
    },
+   mainContainerSmall: {
+      padding: 8,
+      paddingLeft: 14,
+      paddingRight: 14,
+      marginRight: 4
+   },
    categoryText: {
       color: currentTheme.colors.text,
       fontSize: 10,
@@ -103,6 +120,9 @@ const styles: Styles = StyleSheet.create({
    },
    nameText: {
       color: currentTheme.colors.text
+   },
+   nameTextSmall: {
+      fontSize: 12
    },
    subscribersText: {
       fontSize: 10,
