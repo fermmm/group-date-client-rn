@@ -114,7 +114,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
          return "Tu edad demasiado baja para lo que se permite en este tipo de apps, lo sentimos";
       }
 
-      if (birthYear < moment(fromAgeToBirthDate(179), "X").year()) {
+      if (birthYear < moment(fromAgeToBirthDate(100), "X").year()) {
          return "Tu edad es demasiado alta para ser la de un ser humano";
       }
 

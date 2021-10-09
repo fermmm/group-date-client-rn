@@ -33,7 +33,7 @@ export const PROFILE_IMAGES_AMOUNT = 6;
 export const AUTOMATIC_TARGET_AGE: number = 20;
 
 export const MIN_AGE_ALLOWED: number = 18;
-export const MAX_AGE_ALLOWED: number = 129;
+export const MAX_AGE_ALLOWED: number = 90;
 
 /**
  * Distances values available in KM

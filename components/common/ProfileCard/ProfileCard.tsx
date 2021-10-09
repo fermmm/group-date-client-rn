@@ -35,9 +35,7 @@ import MoreModal from "./MoreModal/MoreModal";
 import { useCallback } from "react";
 import { removeBannedWords } from "../../../common-tools/strings/social";
 import { useOnlyVisibleTags } from "../../../common-tools/tags/useOnlyVisibleTags";
-import TitleSmallText from "../TitleSmallText/TitleSmallText";
 import TitleMediumText from "../TitleMediumText/TitleMediumText";
-import TitleText from "../TitleText/TitleText";
 
 export interface ProfileCardProps {
    user: User;
@@ -183,7 +181,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                         <Card.Title
                            title={`${toFirstUpperCase(name)}${isCoupleProfile ? " (Pareja)" : ""}`}
                            subtitle={`${fromBirthDateToAge(birthDate)} · ${cityName}${
-                              height ? ` · Alt.: ${height} cm` : ""
+                              height ? ` · Altura: ${height} cm` : ""
                            }`}
                            style={{ flex: 1 }}
                            titleStyle={styles.nameText}
