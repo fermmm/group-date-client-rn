@@ -83,23 +83,25 @@ const AboutPage: FC = () => {
                   En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
                   personas de una comunidad, compartían la crianza y el alimento de forma
                   igualitaria, potenciado por el sexo que era muy abundante, público y podía ser
-                  grupal tanto como en pareja. Este pasado se puede ignorar pero nos acompañó
-                  durante toda nuestra evolución por lo que no se va a ir de nuestro cuerpo, un
+                  grupal tanto como en pareja. Este pasado se puede ignorar pero formó parte de
+                  nuestra evolución por lo que no se va a ir de nuestro cuerpo y nuestra mente, un
                   ejemplo representativo: Los "gemidos sexuales" son un instinto que en las otras
                   especies (primates) cumple la función de llamar a lxs que están cerca.
                </Text>
             </AnalyticsTrackWhenVisible>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Durante el neolítico aparece la propiedad privada y el patriarcado, al mismo tiempo y
-               para adaptarnos a ello aparece la monogamia, las relaciones solo de a 2 y con ello la
-               familia nuclear (solo 2 padres y sus hijos)
+               Durante el neolítico aparecen tecnologías que generan riqueza, la cual permite la
+               propiedad privada y acumulación individual. Lxs padres inculcan la monogamia y la
+               familia nuclear (solo 2 padres y sus hijos) debido a necesidades como los matrimonios
+               por motivos comerciales, poniendole fin a la forma original en la que nos
+               relacionábamos.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Hay muchos libros científicos sobre el tema, algunos muy conocidos como los de
-               Cacilda Jethá y Christopher Ryan o también el de Friedrich Engels: "El origen de la
-               familia, la propiedad privada y el estado".
+               Hay muchos libros de ciencia sobre el tema, algunos muy conocidos como los de Cacilda
+               Jethá y Christopher Ryan o también el de Friedrich Engels: "El origen de la familia,
+               la propiedad privada y el estado".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
