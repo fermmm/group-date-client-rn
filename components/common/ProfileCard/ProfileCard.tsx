@@ -8,7 +8,7 @@ import {
    Platform,
    ImageBackground
 } from "react-native";
-import { Card, Paragraph } from "react-native-paper";
+import { Card, Paragraph, Text } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
 import ImagesModal from "../ImagesModal/ImagesModal";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -35,7 +35,6 @@ import MoreModal from "./MoreModal/MoreModal";
 import { useCallback } from "react";
 import { removeBannedWords } from "../../../common-tools/strings/social";
 import { useOnlyVisibleTags } from "../../../common-tools/tags/useOnlyVisibleTags";
-import TitleMediumText from "../TitleMediumText/TitleMediumText";
 
 export interface ProfileCardProps {
    user: User;
@@ -225,7 +224,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               }
                            />
                         )}
-                        <TitleMediumText>Tags en común:</TitleMediumText>
+                        <Text style={styles.tagsTitleText}>Tags en común:</Text>
                         <View style={styles.tagsListContainer}>
                            <TagChipList
                               notScrollingFlatList={tagsSubscribedInCommon}
@@ -340,6 +339,13 @@ const styles: Styles = StyleSheet.create({
       fontFamily: currentTheme.font.light,
       marginBottom: 5,
       fontSize: 17
+   },
+   tagsTitleText: {
+      color: currentTheme.colors.text,
+      fontFamily: currentTheme.font.regular,
+      marginBottom: 5,
+      marginTop: 25,
+      fontSize: 15
    },
    tagsListContainer: {
       paddingTop: 10,
