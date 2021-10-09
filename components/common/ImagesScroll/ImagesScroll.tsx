@@ -55,7 +55,7 @@ const ImagesScroll: FC<PropsImagesScroll> = props => {
    };
 
    const cacheImages = (): Promise<void> | unknown => {
-      return images.map(image => {
+      return images?.map(image => {
          if (typeof image === "string") {
             return Image.prefetch(image);
          } else {
@@ -79,7 +79,7 @@ const ImagesScroll: FC<PropsImagesScroll> = props => {
             showsHorizontalScrollIndicator={false}
             onScroll={event => onScroll(event)}
          >
-            {images.map((value: string, i: number) =>
+            {images?.map((value: string, i: number) =>
                !onImageClick ? (
                   findImageToRender(value, {
                      style: [{ width: imagesWidth, height: imagesHeight }, imagesStyle],

@@ -12,7 +12,8 @@ import TitleText from "../TitleText/TitleText";
 export interface PropsTagChipList {
    flatList?: Tag[];
    sectionedList?: Array<{ title?: string; data: Tag[] }>;
-   notScrollingFlatList?: Tag[];
+   notScrollingList?: Tag[];
+   notScrollingListHorizontal?: Tag[];
    showSubscribersAmount?: boolean;
    showSubscribersAmountOnModal?: boolean;
    highlightSubscribedAndBlocked?: boolean;
@@ -29,7 +30,8 @@ const TagChipList: FC<PropsTagChipList> = props => {
       showSubscribersAmount,
       showSubscribersAmountOnModal,
       highlightSubscribedAndBlocked = true,
-      notScrollingFlatList,
+      notScrollingList,
+      notScrollingListHorizontal,
       tagChipStyle,
       hideCategory,
       hideCategoryOnModal,
@@ -104,9 +106,14 @@ const TagChipList: FC<PropsTagChipList> = props => {
                renderItem={renderTagChip}
                contentContainerStyle={styles.listScroll}
             />
+         ) : notScrollingListHorizontal ? (
+            <View style={styles.notScrollingListHorizontalContainer}>
+               {notScrollingListHorizontal?.map(tag =>
+                  renderTagChip({ item: tag, key: tag.tagId })
+               )}
+            </View>
          ) : (
-            notScrollingFlatList &&
-            notScrollingFlatList.map(tag => renderTagChip({ item: tag, key: tag.tagId }))
+            notScrollingList?.map(tag => renderTagChip({ item: tag, key: tag.tagId }))
          )}
          {showModal && (
             <TagModal
@@ -135,6 +142,11 @@ const styles: Styles = StyleSheet.create({
    listScroll: {
       paddingBottom: 160
    },
+   notScrollingListHorizontalContainer: {
+      flexDirection: "row",
+      flexWrap: "wrap"
+   },
+   notScrollingListContainer: {},
    tagChip: { marginLeft: 15 }
 });
 

@@ -11,6 +11,10 @@ export function getGenderName(
       return "Pareja";
    }
 
+   if (genders == null) {
+      return "Género desconocido";
+   }
+
    if (translate) {
       return genders.map(gender => I18n.t(gender)).join(", ");
    } else {

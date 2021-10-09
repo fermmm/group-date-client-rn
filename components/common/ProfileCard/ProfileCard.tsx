@@ -86,9 +86,9 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       useMemo(
          () =>
             tagsSubscribed
-               ?.filter(t => localUser?.tagsSubscribed.find(ut => ut.tagId === t.tagId) != null)
+               ?.filter(t => localUser?.tagsSubscribed?.find(ut => ut.tagId === t.tagId) != null)
                .map(t => allTags?.find(at => at.tagId === t.tagId))
-               .filter(t => t != null),
+               .filter(t => t != null) ?? [],
          [localUser, tagsSubscribed, allTags]
       )
    );
@@ -103,7 +103,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    // ));
 
    const finalImagesUri = useMemo(
-      () => images.map(uri => prepareUrl(serverInfo.imagesHost + uri)),
+      () => images?.map(uri => prepareUrl(serverInfo.imagesHost + uri)) ?? [],
       [images]
    );
 
@@ -207,11 +207,13 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                         <Paragraph style={styles.interestParagraph}>{genderText}</Paragraph>
                      </View>
                      <Card.Content>
-                        <Paragraph style={styles.descriptionParagraph}>
-                           {isOwnProfile
-                              ? profileDescription
-                              : removeBannedWords(profileDescription)}
-                        </Paragraph>
+                        {profileDescription?.length > 0 && (
+                           <Paragraph style={styles.descriptionParagraph}>
+                              {isOwnProfile
+                                 ? profileDescription
+                                 : removeBannedWords(profileDescription)}
+                           </Paragraph>
+                        )}
                         {editMode && (
                            <EditButton
                               showAtBottom
@@ -224,19 +226,23 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               }
                            />
                         )}
-                        <Text style={styles.tagsTitleText}>Tags en común:</Text>
-                        <View style={styles.tagsListContainer}>
-                           <TagChipList
-                              notScrollingFlatList={tagsSubscribedInCommon}
-                              tagChipStyle={styles.tagChip}
-                              highlightSubscribedAndBlocked={false}
-                              showSubscribersAmount={false}
-                              showSubscribersAmountOnModal={false}
-                              hideCategory={true}
-                              hideCategoryOnModal={false}
-                              small={true}
-                           />
-                        </View>
+                        {tagsSubscribedInCommon && (
+                           <>
+                              <Text style={styles.tagsTitleText}>Tags en común:</Text>
+                              <View style={styles.tagsListContainer}>
+                                 <TagChipList
+                                    notScrollingListHorizontal={tagsSubscribedInCommon}
+                                    tagChipStyle={styles.tagChip}
+                                    highlightSubscribedAndBlocked={false}
+                                    showSubscribersAmount={false}
+                                    showSubscribersAmountOnModal={false}
+                                    hideCategory={true}
+                                    hideCategoryOnModal={false}
+                                    small={true}
+                                 />
+                              </View>
+                           </>
+                        )}
                         {
                            /*
                             * This is commented because it can be interpreted as incompatibility but it's a negative compatibility
@@ -299,7 +305,7 @@ const styles: Styles = StyleSheet.create({
       elevation: 0
    },
    galleryScroll: {
-      height: Dimensions.get("window").height * 0.48 // This controls the height of the images area.
+      height: Dimensions.get("window").height * 0.6 // This controls the height of the images area.
    },
    titleAreaContainer: {
       flexDirection: "column",
@@ -338,7 +344,7 @@ const styles: Styles = StyleSheet.create({
       color: currentTheme.colors.text,
       fontFamily: currentTheme.font.light,
       marginBottom: 5,
-      fontSize: 17
+      fontSize: 18
    },
    tagsTitleText: {
       color: currentTheme.colors.text,

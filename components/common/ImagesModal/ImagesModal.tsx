@@ -17,9 +17,10 @@ export interface ImagesModalProps {
 }
 
 const ImagesModal: FC<ImagesModalProps> = props => {
-   const imagesGalleryFormat = props.images.map(uri => ({
-      source: { uri }
-   }));
+   const imagesGalleryFormat =
+      props.images?.map(uri => ({
+         source: { uri }
+      })) ?? [];
 
    return (
       <Modal
