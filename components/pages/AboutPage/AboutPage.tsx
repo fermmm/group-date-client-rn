@@ -84,18 +84,17 @@ const AboutPage: FC = () => {
                   personas de una comunidad, compartían la crianza y el alimento de forma
                   igualitaria, potenciado por el sexo que era muy abundante, público y podía ser
                   grupal tanto como en pareja. Este pasado se puede ignorar pero formó parte de
-                  nuestra evolución por lo que no se va a ir de nuestro cuerpo y nuestra mente, un
-                  ejemplo representativo: Los "gemidos sexuales" son un instinto que en las otras
-                  especies (primates) cumple la función de llamar a lxs que están cerca.
+                  nuestra evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo
+                  representativo: Los "gemidos sexuales" son un instinto que en las otras especies
+                  (primates) cumple la función de llamar a lxs que están cerca.
                </Text>
             </AnalyticsTrackWhenVisible>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Durante el neolítico aparecen tecnologías que generan riqueza, la cual permite la
-               propiedad privada y acumulación individual. Lxs padres inculcan la monogamia y la
-               familia nuclear (solo 2 padres y sus hijos) debido a necesidades como los matrimonios
-               por motivos comerciales, poniendole fin a la forma original en la que nos
-               relacionábamos.
+               Durante el neolítico aparecen tecnologías que generan riqueza, propiedad privada y
+               acumulación. Los padres inculcan ideas monógamas debido a necesidades tales como
+               herencias o matrimonios por motivos comerciales, quedando la monogamia como la única
+               opción posible.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>

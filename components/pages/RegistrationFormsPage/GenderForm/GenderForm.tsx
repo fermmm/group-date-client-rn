@@ -3,6 +3,7 @@ import { TagBasicInfo } from "../../../../api/server/shared-tools/endpoints-inte
 import {
    CIS_GENDERS,
    Gender,
+   NON_CIS_GENDERS,
    User
 } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { includesAnyOf } from "../../../../common-tools/array/arrayTools";
@@ -25,7 +26,9 @@ export interface GenderForm {
 const GenderForm: FC<PropsGenderForm> = props => {
    const { initialData, onChange, formName, genderTargetMode = false, isOnFocus } = props;
    const [gendersSelected, setGendersSelected] = useState<Gender[]>(null);
-   const initialGenderSelection = genderTargetMode ? initialData.likesGenders : initialData.genders;
+   const initialGenderSelection = genderTargetMode
+      ? initialData.likesGenders ?? [...NON_CIS_GENDERS]
+      : initialData.genders;
 
    useEffect(() => {
       if (!isOnFocus) {
