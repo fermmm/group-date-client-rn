@@ -40,7 +40,7 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
 
          Alert.alert(
             "",
-            "Entonces esta app no te sirve, aquí los encuentros son de a muchxs y no hay una función para limitar a 3, tampoco es la temática de la app. Si continuas tu búsqueda de 3 lo consideramos spam y seras invisible. Te recomendamos la app 3Fun.",
+            "Entonces esta app no te sirve, en un encuentro de esta app no se puede elegir la cantidad de personas, tampoco es una app para trios, solo molestarás a los demás ya que buscan otra cosa. Si continuas serás invisible sin saberlo. Te recomendamos la app 3Fun.",
             [
                {
                   text: "Descargar 3Fun",
