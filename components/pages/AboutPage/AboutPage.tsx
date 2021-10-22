@@ -82,19 +82,19 @@ const AboutPage: FC = () => {
                <Text style={styles.text}>
                   En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
                   personas de una comunidad, compartían la crianza y el alimento de forma
-                  igualitaria, potenciado por el sexo que era muy abundante, público y podía ser
-                  grupal tanto como en pareja. Este pasado se puede ignorar pero formó parte de
-                  nuestra evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo
+                  igualitaria, potenciado por el sexo que era mucho más abundante, público y podía
+                  ser grupal tanto como en pareja. Este pasado se puede ignorar pero existió durante
+                  toda nuestra evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo
                   representativo: Los "gemidos sexuales" son un instinto que en las otras especies
                   (primates) cumple la función de llamar a lxs que están cerca.
                </Text>
             </AnalyticsTrackWhenVisible>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Durante el neolítico aparecen tecnologías que generan riqueza, propiedad privada y
-               acumulación. Los padres inculcan ideas monógamas debido a necesidades tales como
-               herencias o matrimonios por motivos comerciales, quedando la monogamia como la única
-               opción posible.
+               Durante el neolítico aparecen tecnologías que hacen posible la riqueza y el comercio,
+               los padres inculcan ideas monógamas para casar a sus hijos por motivos comerciales y
+               la familia pequeña favorece la acumulación personal, dejando en un lugar hegemónico a
+               las ideas de la monogamia y familia nuclear.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
