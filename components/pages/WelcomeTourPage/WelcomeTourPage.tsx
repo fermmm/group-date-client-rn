@@ -49,8 +49,9 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Poly es la primera app de citas grupales: Cuando se gustan varias personas se
-                     habilita un chat grupal.
+                     Poly es una propuesta: Salir en grupo con lxs que te gustan. NO es una app para
+                     encontrar "a alguien". Cuando se gustan varias personas se habilita un chat
+                     grupal.
                   </Text>
                </View>
             </View>
@@ -65,7 +66,7 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Hasta ahora cuando pensábamos en una cita nos imaginábamos a solo 2 personas
+                     Hasta ahora si pensábamos en una cita nos imaginábamos a solo 2 personas
                      conociéndose, el poliamor habilita citas en grupos de diversos tamaños.
                   </Text>
                </View>
@@ -87,9 +88,9 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Poly es nueva para todxs, no se espera que sepas o hagas algo en particular,
-                     solo tener ganas de ir a citas sin perspectivas monógamas que consideramos del
-                     patriarcado
+                     Para todxs es una propuesta nueva: No se espera que sepas o hagas algo en
+                     particular, solo tener ganas de socializar sin perspectivas monógamas que
+                     consideramos del patriarcado
                   </Text>
                </View>
             </View>
