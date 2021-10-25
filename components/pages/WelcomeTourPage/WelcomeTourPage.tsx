@@ -49,9 +49,9 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Poly es una propuesta: Salir en grupo con lxs que te gustan. NO es una app para
-                     encontrar "a alguien". Cuando se gustan varias personas se habilita un chat
-                     grupal.
+                     Poly es una propuesta: Salir en grupo con lxs que te gustan. Cuando se gustan
+                     entre muchxs se habilita un chat grupal. NO es un espacio para encontrar "a
+                     alguien".
                   </Text>
                </View>
             </View>
@@ -66,8 +66,9 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Hasta ahora si pensábamos en una cita nos imaginábamos a solo 2 personas
-                     conociéndose, el poliamor habilita citas en grupos de diversos tamaños.
+                     Hasta ahora cuando pensábamos en una cita nos imaginábamos a solo 2 personas
+                     conociéndose, el poliamor habilita citas en grupos con diversa cantidad de
+                     personas.
                   </Text>
                </View>
             </View>
@@ -77,8 +78,8 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     La app decide la cantidad de personas en una cita, no les sirve a quienes
-                     busquen un tamaño de cita específico ej.: tríos
+                     Segun los likes, la app decide la cantidad de personas en una cita, no les
+                     sirve a quienes vengan con una idea especifica ej.: tríos o pareja
                   </Text>
                </View>
             </View>
@@ -88,9 +89,9 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Para todxs es una propuesta nueva: No se espera que sepas o hagas algo en
-                     particular, solo tener ganas de socializar sin perspectivas monógamas que
-                     consideramos del patriarcado
+                     Es una propuesta nueva: No se espera que sepas o hagas algo en particular, solo
+                     tener ganas de socializar sin perspectivas monógamas que consideramos del
+                     patriarcado
                   </Text>
                </View>
             </View>
