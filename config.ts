@@ -38,7 +38,7 @@ export const MAX_AGE_ALLOWED: number = 90;
 /**
  * Distances values available in KM
  */
-export const AVAILABLE_DISTANCES: number[] = [50, 70, 90, 200, 600, 1000];
+export const AVAILABLE_DISTANCES: number[] = [50, 60, 70, 80, 90, 200, 600, 1000];
 
 /**
  * If USE_AUTOMATIC_TARGET_DISTANCE is true then the target distance is this value. It must be a value from
@@ -50,7 +50,7 @@ export const DEFAULT_TARGET_DISTANCE: number = 90;
  * Allow the user to change the aspect ratio of the images, bad for profile page design but the users
  * have more freedom to get the best image
  */
-export const LOCK_IMAGES_ASPECT_RATIO: boolean = true;
+export const LOCK_IMAGES_ASPECT_RATIO: boolean = false;
 
 /**
  * Only works if LOCK_IMAGES_ASPECT_RATIO = true. The aspect ratio can be configured here. It's recommended
