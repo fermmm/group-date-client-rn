@@ -25,10 +25,10 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
          }
 
          const isUnicornHunter = await AlertAsync({
-            message: "¿Estás buscando a alguien para sumar a tu pareja o para trio?",
+            message: "¿Estás buscando a alguien para sumar a tu pareja, un trio o swinger?",
             buttons: [
                { text: "No", onPressReturns: false },
-               { text: "Si, solo quiero eso", onPressReturns: true }
+               { text: "Si, solo quiero a alguien, trio o swinger", onPressReturns: true }
             ]
          });
 
@@ -40,7 +40,7 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
 
          Alert.alert(
             "",
-            "Entonces esta app no te sirve, en un encuentro de esta app no se puede elegir la cantidad de personas, tampoco es una app para trios, solo molestarás a los demás ya que buscan otra cosa. Si continuas serás invisible sin saberlo. Te recomendamos la app 3Fun.",
+            "Entonces esta app no te sirve, aquí los encuentros son entre muchas personas, no es una app para trios, es una propuesta nueva. Cada app tiene su público. La app 3Fun tiene lo que buscas.",
             [
                {
                   text: "Descargar 3Fun",
@@ -48,6 +48,9 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
                      Linking.openURL(
                         "https://play.google.com/store/apps/details?id=com.threesome.swingers.app.threefun"
                      )
+               },
+               {
+                  text: "Me importa una mierda" // Implement shadow ban
                }
             ]
          );
