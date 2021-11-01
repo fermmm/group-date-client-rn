@@ -65,7 +65,7 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Una cita en el poliamor no está limitada a 2 personas, puede ser en grupo.
+                     Una cita en el poliamor no está limitada a 2 personas.
                   </Text>
                </View>
             </View>
