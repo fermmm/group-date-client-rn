@@ -65,7 +65,8 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Una cita en el poliamor no está limitada a 2 personas.
+                     Es para disfrutar el hecho de ser muchxs. Una situación que no se da en nuestra
+                     cultura contemporanea.
                   </Text>
                </View>
             </View>
@@ -75,8 +76,8 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     No sirve a quienes buscan algo específico ej.: tríos o pareja. Segun los likes,
-                     la app decide la cantidad de personas en una cita.
+                     No sirve a quienes buscan algo específico ej.: tríos o pareja. Segun quienes se
+                     gustan, la app decide la cantidad de personas en una cita.
                   </Text>
                </View>
             </View>
