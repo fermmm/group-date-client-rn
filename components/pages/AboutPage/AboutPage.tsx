@@ -93,8 +93,8 @@ const AboutPage: FC = () => {
             <Text style={styles.text}>
                Durante el neolítico aparecen tecnologías que hacen posible la riqueza y el comercio,
                los padres inculcan ideas monógamas para casar a sus hijos por motivos comerciales y
-               la familia pequeña favorece la acumulación personal, dejando en un lugar hegemónico a
-               las ideas de la monogamia y familia nuclear.
+               la familia pequeña favorece la acumulación personal, poniendo en un lugar hegemónico
+               a las ideas de la monogamia y familia nuclear.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
