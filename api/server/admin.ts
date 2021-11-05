@@ -1,6 +1,5 @@
 import { defaultHttpRequest } from "../tools/httpRequest";
 import { revalidate, UseCacheOptions, useCache } from "../tools/useCache/useCache";
-import { AdminNotificationPostParams } from "./shared-tools/endpoints-interfaces/admin";
 import { TokenParameter } from "./shared-tools/endpoints-interfaces/common";
 
 export async function sendCreateFakeUsers(
@@ -65,18 +64,6 @@ export async function sendCreateFakeChat(
    );
    if (autoRevalidateRelated) {
    }
-   return resp;
-}
-
-export async function sendTestNotification(params: AdminNotificationPostParams) {
-   const resp = await defaultHttpRequest<typeof params, string>(
-      "admin/notification",
-      "POST",
-      params,
-      {
-         handleErrors: true
-      }
-   );
    return resp;
 }
 

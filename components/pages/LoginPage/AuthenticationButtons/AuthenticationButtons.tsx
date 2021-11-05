@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { UseAuthentication } from "../../../../api/authentication/useAuthentication";
+import { useServerInfo } from "../../../../api/server/server-info";
 import { AuthenticationProvider } from "../../../../api/server/shared-tools/authentication/AuthenticationProvider";
 import {
    LoginStep,
@@ -12,21 +13,25 @@ import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
 import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
+import EmailLoginButtonAndForm from "./EmailLoginButtonAndForm/EmailLoginButtonAndForm";
 
 interface PropsAuthenticationButtons {
    show: boolean;
    authentication: UseAuthentication;
 }
 
-export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authentication, show }) => {
+export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
+   const { authentication, show } = props;
    const { getNewToken } = authentication;
+   const { data: serverInfo, isLoading: isLoadingServerInfo } = useServerInfo();
    const { colors } = useTheme();
    const color = colors.textLogin;
    const facebookLoginAvailable =
       Boolean(process.env.FACEBOOK_APP_ID) && Boolean(process.env.FACEBOOK_APP_NAME);
    const googleLoginAvailable = Boolean(process.env.GOOGLE_CLIENT_WEB_EXPO);
 
-   const anyLoginAvailable = facebookLoginAvailable || googleLoginAvailable;
+   const anyLoginAvailable =
+      facebookLoginAvailable || googleLoginAvailable || serverInfo.emailLoginEnabled;
 
    const handleGoogleButtonPress = () => {
       getNewToken(AuthenticationProvider.Google);
@@ -38,7 +43,16 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authenti
       logAnalyticsLoginStep(LoginStep.ClickedLoginButtonFb);
    };
 
+   const handleEmailLoginCredentialsTyped = () => {
+      getNewToken(AuthenticationProvider.Email);
+      logAnalyticsLoginStep(LoginStep.ClickedLoginButtonMl);
+   };
+
    if (!show) {
+      return null;
+   }
+
+   if (isLoadingServerInfo) {
       return null;
    }
 
@@ -65,6 +79,17 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = ({ authenti
             >
                Iniciar sesión con Facebook
             </ButtonStyled>
+         )}
+         {serverInfo.emailLoginEnabled && (
+            <EmailLoginButtonAndForm
+               color={color}
+               style={styles.button}
+               contentStyle={styles.buttonContent}
+               icon={() => <Icon name={"email-outline"} color={color} size={23} />}
+               onCredentialsTyped={handleEmailLoginCredentialsTyped}
+            >
+               Iniciar sesión con tu email
+            </EmailLoginButtonAndForm>
          )}
          {!anyLoginAvailable && (
             <Text style={styles.errorText}>

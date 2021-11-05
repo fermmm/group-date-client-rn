@@ -3,7 +3,9 @@ import { StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 
-const ButtonStyled: FC<ComponentProps<typeof Button>> = props => {
+export type ButtonStyledProps = ComponentProps<typeof Button>;
+
+const ButtonStyled: FC<ButtonStyledProps> = props => {
    return (
       <Button
          mode="outlined"

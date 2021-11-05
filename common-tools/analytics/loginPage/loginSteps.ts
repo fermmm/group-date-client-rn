@@ -12,6 +12,7 @@ export function logAnalyticsLoginStep(
 export enum LoginStep {
    ClickedLoginButtonFb = "login_step_login_button_clicked_fb",
    ClickedLoginButtonGl = "login_step_login_button_clicked_gl",
+   ClickedLoginButtonMl = "login_step_login_button_click_email",
    AcceptedGpsPermissions = "login_step_accepted_gps_permissions",
    LoginCompleted = "login_step_login_completed"
 }

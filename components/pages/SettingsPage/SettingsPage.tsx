@@ -14,9 +14,11 @@ import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/Lo
 import { openDeviceAction } from "../../../common-tools/device-native-api/device-action/openDeviceAction";
 import { currentTheme } from "../../../config";
 import { getAppVersion } from "../../../common-tools/device-native-api/versions/versions";
+import { useAuthentication } from "../../../api/authentication/useAuthentication";
 
 const SettingsPage: FC = () => {
    const { navigate } = useNavigation();
+   const { logout } = useAuthentication();
    const { data: localUser } = useUser();
 
    if (!localUser) {
@@ -128,6 +130,12 @@ const SettingsPage: FC = () => {
             description="Descubre nuestros canales de participación y comunicación"
             left={props => <List.Icon {...props} style={styles.optionIcon} icon="forum" />}
             onPress={() => navigate("ContactPage")}
+         />
+         <List.Item
+            title="Cerrar sesión"
+            description="Tendrás que volver a hacer login para seguir usando la app"
+            left={props => <List.Icon {...props} style={styles.optionIcon} icon="exit-run" />}
+            onPress={logout}
          />
          {localUser.isAdmin && (
             <List.Item

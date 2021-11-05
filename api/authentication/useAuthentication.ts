@@ -1,5 +1,9 @@
 import { useCache, UseCacheOptions } from "../tools/useCache/useCache";
-import { loadFromDevice, saveOnDevice } from "../../common-tools/device-native-api/storage/storage";
+import {
+   loadFromDevice,
+   removeFromDevice,
+   saveOnDevice
+} from "../../common-tools/device-native-api/storage/storage";
 import { useEffect, useRef, useState } from "react";
 import { LocalStorageKey } from "../../common-tools/strings/LocalStorageKey";
 import { getFacebookToken } from "./providers/facebook/getFacebookToken";
@@ -11,6 +15,9 @@ import {
    createExtendedInfoToken,
    getTokenInfo
 } from "../server/shared-tools/authentication/tokenStringTools";
+import { getEmailToken } from "./providers/email/getEmailToken";
+import { checkEmailToken } from "./providers/email/checkEmailToken";
+import { useNavigation } from "../../common-tools/navigation/useNavigation";
 
 let fasterTokenCache: string = null;
 
@@ -37,15 +44,25 @@ export function useAuthentication(
       token,
       enabled: tokenCheck?.valid === false && checkTokenIsValid && enabled
    });
+   const { navigate } = useNavigation();
 
    const isLoading =
       token.isLoading || (options?.checkTokenIsValid === true ? tokenCheckLoading : false);
+
+   const logout = async () => {
+      await removeFromDevice(LocalStorageKey.AuthenticationToken, { secure: true });
+      await removeFromDevice(LocalStorageKey.EmailLoginUser, { secure: true });
+      await removeFromDevice(LocalStorageKey.EmailLoginPass, { secure: true });
+      fasterTokenCache = null;
+      navigate("Login");
+   };
 
    return {
       token: token.token,
       isLoading,
       tokenIsValid: tokenCheck?.valid,
-      getNewToken: token.getNewToken
+      getNewToken: token.getNewToken,
+      logout
    };
 }
 
@@ -75,6 +92,9 @@ function useToken(externallyProvidedToken?: string): UseToken {
             break;
          case AuthenticationProvider.Google:
             tokenGetter = getGoogleToken;
+            break;
+         case AuthenticationProvider.Email:
+            tokenGetter = getEmailToken;
             break;
       }
 
@@ -140,13 +160,13 @@ function useTokenCheck(token: string, config?: UseCacheOptions<TokenCheckResult>
       case AuthenticationProvider.Google:
          tokenChecker = checkGoogleToken;
          break;
+
+      case AuthenticationProvider.Email:
+         tokenChecker = checkEmailToken;
+         break;
    }
 
-   return useCache<TokenCheckResult>(
-      `tokenCheck${token}`,
-      () => tokenChecker(tokenInfo.originalToken),
-      config
-   );
+   return useCache<TokenCheckResult>(`tokenCheck${token}`, () => tokenChecker(token), config);
 }
 
 /**
@@ -172,6 +192,7 @@ function useAutomaticReLogin(params: { token: UseToken; enabled: boolean }) {
 
 export interface UseAuthentication extends UseToken {
    tokenIsValid: boolean;
+   logout: () => Promise<void>;
 }
 
 export interface UseAuthenticationOptions {

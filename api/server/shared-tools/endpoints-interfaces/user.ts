@@ -24,6 +24,7 @@ export interface User {
    language: string;
    name: string;
    birthDate: number;
+   registrationDate?: number;
    targetAgeMin: number;
    targetAgeMax: number;
    targetDistance: number;
@@ -35,6 +36,7 @@ export interface User {
    isAdmin?: boolean;
    sendNewUsersNotification: number;
    lastGroupJoinedDate: number;
+   imagesAmount?: number;
    notifications: Notification[];
    questionsShowed: string[];
    notificationsToken: string;

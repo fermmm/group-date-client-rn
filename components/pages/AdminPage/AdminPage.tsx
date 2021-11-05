@@ -12,17 +12,12 @@ import {
    sendCreateFakeChat,
    sendCreateFakeTags,
    sendCreateFakeUsers,
-   sendForceGroupsSearch,
-   sendTestNotification
+   sendForceGroupsSearch
 } from "../../../api/server/admin";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import SurfaceStyled from "../../common/SurfaceStyled/SurfaceStyled";
 import { removeAllLocalStorage } from "../../../common-tools/device-native-api/storage/removeAllLocalStorage";
-import {
-   NotificationChannelId,
-   NotificationType
-} from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
 const AdminPage: FC = () => {
    const { colors } = useTheme();
@@ -53,20 +48,6 @@ const AdminPage: FC = () => {
    const handleCreateFakeTagsPress = async () => {
       const response = await sendCreateFakeTags({ token: localUser.token, text: fakeTagsAmount });
       Alert.alert("Hecho, respuesta:", response);
-   };
-
-   const notificationsTest = async () => {
-      await sendTestNotification({
-         token: localUser.token,
-         channelId: NotificationChannelId.Default,
-         targetUserId: localUser.userId,
-         notification: {
-            title: "Holiii",
-            text: "Esto es una prueba amiguiii",
-            type: NotificationType.TextOnly
-         }
-      });
-      Alert.alert("", "Hecho");
    };
 
    if (!localUser) {
@@ -108,9 +89,6 @@ const AdminPage: FC = () => {
                </Button>
             </SurfaceStyled>
             <EmptySpace height={80} />
-            <Button onPress={notificationsTest} mode="outlined" color={colors.accent2}>
-               Mandar notificación
-            </Button>
             <Button onPress={handleCreateFakeChatPress} mode="outlined" color={colors.accent2}>
                Crear chat fake
             </Button>
