@@ -6,18 +6,32 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 interface PropsModalTransparent {
    visible?: boolean;
    onClose?: () => void;
+   onBackButtonPress?: () => void;
+   closeWithBackButton?: boolean;
 }
 
-export const ModalTransparent: FC<PropsModalTransparent> = ({
-   visible = true,
-   onClose,
-   children
-}) => {
+/**
+ * TODO: When a modal is open the back button handler is disabled. The only tool available to
+ * handle this is the onBackButtonPress prop, that forces bad design in other parts of the code.
+ * To fix this react-native-modalfy should replace Modal and also it should be used instead of Alert
+ */
+export const ModalTransparent: FC<PropsModalTransparent> = props => {
+   const {
+      visible = true,
+      onClose,
+      children,
+      closeWithBackButton = true,
+      onBackButtonPress
+   } = props;
+
    return (
       <Modal
          animationType="fade"
-         onRequestClose={onClose != null ? () => onClose() : null}
-         onDismiss={onClose != null ? () => onClose() : null}
+         onRequestClose={() => {
+            closeWithBackButton && onClose?.();
+            onBackButtonPress?.();
+         }}
+         onDismiss={() => onClose?.()}
          visible={visible}
          statusBarTranslucent
          transparent

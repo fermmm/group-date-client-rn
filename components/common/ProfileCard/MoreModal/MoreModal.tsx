@@ -123,7 +123,7 @@ const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       width: "90%",
-      backgroundColor: currentTheme.colors.background,
+      backgroundColor: currentTheme.colors.backgroundBottomGradient,
       borderRadius: currentTheme.roundnessSmall,
       marginTop: 50,
       marginBottom: 50

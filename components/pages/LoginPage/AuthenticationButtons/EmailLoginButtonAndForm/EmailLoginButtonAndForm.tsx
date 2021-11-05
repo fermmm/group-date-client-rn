@@ -1,7 +1,8 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Styles } from "../../../../../common-tools/ts-tools/Styles";
 import ButtonStyled, { ButtonStyledProps } from "../../../../common/ButtonStyled/ButtonStyled";
+import EmailLoginForm from "./EmailLoginForm/EmailLoginForm";
 
 export interface PropsEmailLoginButtonAndForm {
    onCredentialsTyped: () => void;
@@ -9,16 +10,24 @@ export interface PropsEmailLoginButtonAndForm {
 
 const EmailLoginButtonAndForm: FC<PropsEmailLoginButtonAndForm & ButtonStyledProps> = props => {
    const { onCredentialsTyped } = props;
+   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
-   // TODO: Implementar la UI de los formularios
    const handleButtonPress = () => {
+      setLoginModalOpen(true);
+   };
+
+   const onLoginModalClose = () => {
       // onCredentialsTyped();
+      setLoginModalOpen(false);
    };
 
    return (
-      <ButtonStyled {...props} onPress={handleButtonPress}>
-         {props.children}
-      </ButtonStyled>
+      <>
+         <ButtonStyled {...props} onPress={handleButtonPress}>
+            {props.children}
+         </ButtonStyled>
+         {loginModalOpen && <EmailLoginForm onClose={onLoginModalClose} />}
+      </>
    );
 };
 

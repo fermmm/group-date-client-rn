@@ -17,7 +17,12 @@ export interface ScreenStepperProps {
     * This triggers when the user press the back button or when
     * swiping is enabled and the user changes the screen.
     */
-   onScreenChange: (newScreen: number) => void;
+   onScreenChange?: (newScreen: number) => void;
+   /**
+    * When this prop has a different value than the last time triggers a back to previous page action.
+    * Useful when something is blocking the hardware navigation back button (like a modal)
+    */
+   goBackTrigger?: boolean;
 }
 
 export const ScreensStepper: FC<ScreenStepperProps> = props => {
@@ -27,7 +32,8 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
       swipeEnabled = true,
       currentScreen,
       onScreenChange,
-      children
+      children,
+      goBackTrigger
    } = props;
 
    const ref = useRef<ScrollView>();
@@ -38,6 +44,12 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
       scrollToScreen(currentScreen, animated);
       addCurrentStepToHistory(currentScreen);
    }, [currentScreen]);
+
+   useEffect(() => {
+      if (goBackTrigger != null) {
+         goBack();
+      }
+   }, [goBackTrigger]);
 
    useEffect(() => {
       BackHandler.addEventListener("hardwareBackPress", handleBackButton);
