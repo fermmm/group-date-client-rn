@@ -1,5 +1,10 @@
 import { Alert } from "react-native";
-import { FacebookLoginResult, initializeAsync, logInWithReadPermissionsAsync } from "expo-facebook";
+import {
+   FacebookLoginResult,
+   initializeAsync,
+   logInWithReadPermissionsAsync,
+   logOutAsync
+} from "expo-facebook";
 import { Flatten } from "../../../../common-tools/ts-tools/common-ts-tools";
 
 /**
@@ -28,7 +33,10 @@ export async function getFacebookToken(): Promise<string | null> {
          return Promise.resolve(null);
       }
    } catch ({ message }) {
-      Alert.alert("Facebook login: ", message);
+      Alert.alert(
+         "No se puede usar Facebook",
+         `Primero inicia sesion en la app Facebook. Mensaje: ${message}. `
+      );
    }
 
    return Promise.resolve(null);
