@@ -4,9 +4,16 @@ import React, { FC, useEffect, useState } from "react";
 import AppLoading from "expo-app-loading";
 import { Provider as PaperProvider } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
+import {
+   createModalStack,
+   ModalOptions,
+   ModalProvider,
+   ModalStackConfig
+} from "react-native-modalfy";
 import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
 import { currentTheme } from "./config";
 import { createStackNavigator } from "@react-navigation/stack";
+import DialogModal from "./components/common/DialogModal/DialogModal";
 import { NavigationContainerWithNotifications } from "./components/common/NavigationContainerWithNotifications/NavigationContainerWithNotifications";
 import MainPage from "./components/pages/MainPage/MainPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
@@ -30,6 +37,7 @@ import "intl/locale-data/jsonp/en";
 import "intl/locale-data/jsonp/es";
 import "dayjs/locale/en";
 import "dayjs/locale/es";
+import EmailLoginModal from "./components/common/EmailLoginModal/EmailLoginModal";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -43,6 +51,13 @@ i18n.locale = Localization.locale.split("-")[0];
 const Stack = createStackNavigator();
 
 setupNotificationPressListener();
+
+const modalConfig: ModalStackConfig = {
+   DialogModal: { modal: DialogModal, backBehavior: "none", disableFlingGesture: true },
+   EmailLoginModal: { modal: EmailLoginModal, backBehavior: "none", disableFlingGesture: true }
+};
+const defaultOptions: ModalOptions = { backdropOpacity: 0.6 };
+export const modalsStack = createModalStack(modalConfig, defaultOptions);
 
 const App: FC = () => {
    const [resourcesLoaded, setResourcesLoaded] = useState(false);
@@ -63,26 +78,28 @@ const App: FC = () => {
    return (
       <CacheConfigProvider>
          <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
-            <StatusBar style="light" />
-            <NavigationContainerWithNotifications>
-               <Stack.Navigator
-                  initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}
-                  headerMode={"none"}
-               >
-                  <Stack.Screen name="WelcomeTour" component={WelcomeTourPage} />
-                  <Stack.Screen name="Login" component={LoginPage} />
-                  <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
-                  <Stack.Screen name="Main" component={MainPage} />
-                  <Stack.Screen name="Profile" component={ProfilePage} />
-                  <Stack.Screen name="About" component={AboutPage} />
-                  <Stack.Screen name="Group" component={GroupPage} />
-                  <Stack.Screen name="Chat" component={ChatPage} />
-                  <Stack.Screen name="DateVoting" component={DateVotingPage} />
-                  <Stack.Screen name="Admin" component={AdminPage} />
-                  <Stack.Screen name="CreateTag" component={CreateTagPage} />
-                  <Stack.Screen name="ContactPage" component={ContactPage} />
-               </Stack.Navigator>
-            </NavigationContainerWithNotifications>
+            <ModalProvider stack={modalsStack}>
+               <StatusBar style="light" />
+               <NavigationContainerWithNotifications>
+                  <Stack.Navigator
+                     initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}
+                     headerMode={"none"}
+                  >
+                     <Stack.Screen name="WelcomeTour" component={WelcomeTourPage} />
+                     <Stack.Screen name="Login" component={LoginPage} />
+                     <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
+                     <Stack.Screen name="Main" component={MainPage} />
+                     <Stack.Screen name="Profile" component={ProfilePage} />
+                     <Stack.Screen name="About" component={AboutPage} />
+                     <Stack.Screen name="Group" component={GroupPage} />
+                     <Stack.Screen name="Chat" component={ChatPage} />
+                     <Stack.Screen name="DateVoting" component={DateVotingPage} />
+                     <Stack.Screen name="Admin" component={AdminPage} />
+                     <Stack.Screen name="CreateTag" component={CreateTagPage} />
+                     <Stack.Screen name="ContactPage" component={ContactPage} />
+                  </Stack.Navigator>
+               </NavigationContainerWithNotifications>
+            </ModalProvider>
          </PaperProvider>
       </CacheConfigProvider>
    );

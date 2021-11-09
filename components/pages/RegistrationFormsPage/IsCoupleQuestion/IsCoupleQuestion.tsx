@@ -28,7 +28,7 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
             message: "¿Estás buscando a alguien para sumar a tu pareja, un trio o swinger?",
             buttons: [
                { text: "No", onPressReturns: false },
-               { text: "Si, solo quiero a alguien, trio o swinger", onPressReturns: true }
+               { text: "Si, solo quiero algo de eso", onPressReturns: true }
             ]
          });
 

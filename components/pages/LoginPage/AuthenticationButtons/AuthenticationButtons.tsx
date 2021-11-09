@@ -13,7 +13,6 @@ import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
 import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
-import EmailLoginButtonAndForm from "./EmailLoginButtonAndForm/EmailLoginButtonAndForm";
 
 interface PropsAuthenticationButtons {
    show: boolean;
@@ -43,7 +42,7 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
       logAnalyticsLoginStep(LoginStep.ClickedLoginButtonFb);
    };
 
-   const handleEmailLoginCredentialsTyped = () => {
+   const handleEmailButtonPress = () => {
       getNewToken(AuthenticationProvider.Email);
       logAnalyticsLoginStep(LoginStep.ClickedLoginButtonMl);
    };
@@ -81,15 +80,15 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
             </ButtonStyled>
          )}
          {serverInfo.emailLoginEnabled && (
-            <EmailLoginButtonAndForm
+            <ButtonStyled
                color={color}
                style={styles.button}
                contentStyle={styles.buttonContent}
                icon={() => <Icon name={"email-outline"} color={color} size={23} />}
-               onCredentialsTyped={handleEmailLoginCredentialsTyped}
+               onPress={handleEmailButtonPress}
             >
                Iniciar sesión con tu email
-            </EmailLoginButtonAndForm>
+            </ButtonStyled>
          )}
          {!anyLoginAvailable && (
             <Text style={styles.errorText}>

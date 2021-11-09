@@ -15,7 +15,7 @@ import {
    createExtendedInfoToken,
    getTokenInfo
 } from "../server/shared-tools/authentication/tokenStringTools";
-import { getEmailToken } from "./providers/email/getEmailToken";
+import { useEmailToken } from "./providers/email/getEmailToken";
 import { checkEmailToken } from "./providers/email/checkEmailToken";
 import { useNavigation } from "../../common-tools/navigation/useNavigation";
 
@@ -36,6 +36,7 @@ export function useAuthentication(
 ): UseAuthentication {
    const { checkTokenIsValid = false, enabled = true } = options ?? {};
 
+   console.log("00");
    const token = useToken(externallyProvidedToken);
    const { data: tokenCheck, isLoading: tokenCheckLoading } = useTokenCheck(token.token, {
       enabled: checkTokenIsValid && token.token != null && enabled
@@ -78,8 +79,10 @@ function useToken(externallyProvidedToken?: string): UseToken {
    const [fetchingNewToken, setFetchingNewToken] = useState<boolean>(false);
    const [attemptedFromDevice, setAttemptedFromDevice] = useState<boolean>(false);
    const getGoogleToken = useGetGoogleToken();
+   const getEmailToken = useEmailToken();
 
    const getNewToken = (provider: AuthenticationProvider) => {
+      console.log("01");
       fasterTokenCache = null;
       setToken(null);
       setIsLoading(true);
@@ -98,23 +101,32 @@ function useToken(externallyProvidedToken?: string): UseToken {
             break;
       }
 
-      tokenGetter().then(newToken => {
-         if (Boolean(newToken) === false) {
+      tokenGetter()
+         .then(newToken => {
+            if (Boolean(newToken) === false) {
+               fasterTokenCache = null;
+               setToken(null);
+               setIsLoading(false);
+               setFetchingNewToken(false);
+               return;
+            }
+
+            newToken = createExtendedInfoToken({ originalToken: newToken, provider });
+            saveOnDevice(LocalStorageKey.AuthenticationToken, newToken, { secure: true }).then(
+               () => {
+                  fasterTokenCache = newToken;
+                  setToken(newToken);
+                  setIsLoading(false);
+                  setFetchingNewToken(false);
+               }
+            );
+         })
+         .catch(error => {
             fasterTokenCache = null;
             setToken(null);
             setIsLoading(false);
             setFetchingNewToken(false);
-            return;
-         }
-
-         newToken = createExtendedInfoToken({ originalToken: newToken, provider });
-         saveOnDevice(LocalStorageKey.AuthenticationToken, newToken, { secure: true }).then(() => {
-            fasterTokenCache = newToken;
-            setToken(newToken);
-            setIsLoading(false);
-            setFetchingNewToken(false);
          });
-      });
    };
 
    if (externallyProvidedToken != null || token != null || fasterTokenCache != null) {
@@ -128,16 +140,18 @@ function useToken(externallyProvidedToken?: string): UseToken {
    if (!fetchingNewToken && !attemptedFromDevice) {
       setAttemptedFromDevice(true);
       // Try to get stored token from previous session
-      loadFromDevice(LocalStorageKey.AuthenticationToken, { secure: true }).then(
-         tokenFromDevice => {
+      loadFromDevice(LocalStorageKey.AuthenticationToken, { secure: true })
+         .then(tokenFromDevice => {
             setIsLoading(false);
             if (tokenFromDevice == null) {
                return;
             }
             fasterTokenCache = tokenFromDevice;
             setToken(tokenFromDevice);
-         }
-      );
+         })
+         .catch(error => {
+            setIsLoading(false);
+         });
    }
 
    return { token, isLoading, getNewToken };

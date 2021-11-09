@@ -8,7 +8,8 @@ import {
    KeyboardTypeOptions,
    TextInput as NativeTextInput,
    Modal,
-   ViewStyle
+   ViewStyle,
+   ReturnKeyTypeOptions
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -38,6 +39,52 @@ export interface TextInputExtendedProps {
    iconButton?: string;
    onIconButtonPress?: () => void;
    value: string;
+   secureTextEntry?: boolean;
+   returnKeyType?: ReturnKeyTypeOptions;
+   autoCapitalize?: "none" | "sentences" | "words" | "characters";
+   autoCompleteType?:
+      | "name"
+      | "username"
+      | "password"
+      | "cc-csc"
+      | "cc-exp"
+      | "cc-exp-month"
+      | "cc-exp-year"
+      | "cc-number"
+      | "email"
+      | "postal-code"
+      | "street-address"
+      | "tel"
+      | "off";
+   textContentType?:
+      | "none"
+      | "URL"
+      | "addressCity"
+      | "addressCityAndState"
+      | "addressState"
+      | "countryName"
+      | "creditCardNumber"
+      | "emailAddress"
+      | "familyName"
+      | "fullStreetAddress"
+      | "givenName"
+      | "jobTitle"
+      | "location"
+      | "middleName"
+      | "name"
+      | "namePrefix"
+      | "nameSuffix"
+      | "nickname"
+      | "organizationName"
+      | "postalCode"
+      | "streetAddressLine1"
+      | "streetAddressLine2"
+      | "sublocality"
+      | "telephoneNumber"
+      | "username"
+      | "password"
+      | "newPassword"
+      | "oneTimeCode";
 }
 
 const TextInputExtended: FC<TextInputExtendedProps> = props => {
@@ -58,7 +105,12 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       onIconButtonPress,
       style,
       containerStyle,
-      inputRef
+      inputRef,
+      secureTextEntry,
+      returnKeyType,
+      autoCapitalize,
+      autoCompleteType,
+      textContentType
    }: TextInputExtendedProps = props;
    const theme = useTheme();
    const [fullScreenMode, setFullScreenMode] = useState(false);
@@ -100,6 +152,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                   style={[styles.input, style]}
                   multiline={multiline}
                   ref={inputRef}
+                  secureTextEntry={secureTextEntry}
                   render={innerProps => (
                      <NativeTextInput
                         {...innerProps}
@@ -145,6 +198,11 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                      numberOfLines={200}
                      style={{ flex: multiline ? 1 : 0 }}
                      ref={fullScreenInputRef}
+                     secureTextEntry={secureTextEntry}
+                     returnKeyType={returnKeyType}
+                     autoCapitalize={autoCapitalize}
+                     autoCompleteType={autoCompleteType}
+                     textContentType={textContentType}
                   />
                   {errorText && canShowError && (
                      <TitleMediumText style={styles.errorText}>{errorText}</TitleMediumText>

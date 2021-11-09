@@ -27,6 +27,7 @@ import {
    LoginStep
 } from "../../../common-tools/analytics/loginPage/loginSteps";
 import { analyticsLogUser } from "../../../common-tools/analytics/tools/analyticsLogUser";
+import VersionIndicator from "./VersionIndicator/VersionIndicator";
 
 const LoginPage: FC = () => {
    // These are constants for debugging:
@@ -133,7 +134,7 @@ const LoginPage: FC = () => {
                </>
             )}
             <AuthenticationButtons show={showAuthenticationButtons} authentication={auth} />
-            <Text style={styles.text}>{codeVersion}</Text>
+            <VersionIndicator />
          </View>
       </BackgroundArtistic>
    );

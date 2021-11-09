@@ -3,6 +3,7 @@ import Constants, { AppOwnership } from "expo-constants";
 import { CIS_GENDERS, User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { fromBirthDateToAge } from "../../../api/tools/date-tools";
 import { isAttractedToOppositeSex } from "../../strings/gender";
+import { LOG_ANALYTICS } from "../../../config";
 
 export function analyticsLogUser(user: Partial<User>) {
    if (user == null) {
@@ -24,10 +25,12 @@ export function analyticsLogUser(user: Partial<User>) {
       Analytics.setUserProperties(userPropertiesAnalytics);
    }
 
-   console.log("///////////////////////////////////////");
-   console.log(`Analytics log user`);
-   console.log(userPropertiesAnalytics);
-   console.log("///////////////////////////////////////");
+   if (LOG_ANALYTICS) {
+      console.log("///////////////////////////////////////");
+      console.log(`Analytics log user`);
+      console.log(userPropertiesAnalytics);
+      console.log("///////////////////////////////////////");
+   }
 }
 
 /**
