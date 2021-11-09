@@ -12,6 +12,7 @@ export default {
       accent2: "#244A7A",
       accent3: "#00E0DD",
       background: "#FFFFFF",
+      background2: "#E5E9F0",
       backgroundBottomGradient: "#DFE4EC",
       specialBackground1: "#9B63F8",
       specialBackground2: "#809FFC",

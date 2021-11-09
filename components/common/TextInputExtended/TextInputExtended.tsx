@@ -226,10 +226,12 @@ const styles: Styles = StyleSheet.create({
       marginBottom: 18
    },
    title: {
-      marginBottom: 0
+      marginBottom: 6,
+      paddingLeft: 6
    },
    titleLine2: {
-      marginBottom: 0,
+      marginBottom: 6,
+      paddingLeft: 6,
       fontFamily: currentTheme.font.extraLight
    },
    errorText: {
@@ -240,7 +242,8 @@ const styles: Styles = StyleSheet.create({
    },
    input: {
       textAlignVertical: "top",
-      marginTop: -6 // For some reason the react native paper component has a space like a padding but it's not, so we compensate with this
+      marginTop: -6, // For some reason the react native paper component has a space like a padding but it's not, so we compensate with this
+      backgroundColor: currentTheme.colors.background2
    },
    inputWithIconButton: {
       paddingRight: 45

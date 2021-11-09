@@ -17,6 +17,7 @@ export type ThemeExt = Merge<
          primary: string;
          primary2: string;
          background: string;
+         background2: string;
          backgroundBottomGradient: string;
          specialBackground1: string;
          specialBackground2: string;
