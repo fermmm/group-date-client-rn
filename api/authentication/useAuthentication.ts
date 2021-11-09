@@ -45,7 +45,7 @@ export function useAuthentication(
       token,
       enabled: tokenCheck?.valid === false && checkTokenIsValid && enabled
    });
-   const { navigate } = useNavigation();
+   const { navigateWithoutHistory } = useNavigation();
 
    const isLoading =
       token.isLoading || (options?.checkTokenIsValid === true ? tokenCheckLoading : false);
@@ -55,7 +55,7 @@ export function useAuthentication(
       await removeFromDevice(LocalStorageKey.EmailLoginUser, { secure: true });
       await removeFromDevice(LocalStorageKey.EmailLoginPass, { secure: true });
       fasterTokenCache = null;
-      navigate("Login");
+      navigateWithoutHistory("Login");
    };
 
    return {
