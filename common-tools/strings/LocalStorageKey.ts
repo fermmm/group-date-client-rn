@@ -4,7 +4,5 @@ export enum LocalStorageKey {
    AuthenticationToken = "__token__",
    WelcomeShowed = "welcomeShowed2",
    GeolocationCoords = "__geolocationCoords__",
-   GeolocationAddress = "__geolocationAddress__",
-   EmailLoginUser = "__emailLoginUser__",
-   EmailLoginPass = "__emailLoginPass__"
+   GeolocationAddress = "__geolocationAddress__"
 }

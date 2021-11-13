@@ -24,6 +24,7 @@ export function useCacheSwr<Response = void, Error = any>(
    let swr = useSWR<Response>(newKey, fn, config);
    const data = useAvoidNull(swr.data);
    swr = { ...swr, data: data };
+   const { showAlertOnError } = config;
 
    // Workaround for this swr bug: https://github.com/vercel/swr/issues/455
    useEffect(() => {
@@ -53,7 +54,7 @@ export function useCacheSwr<Response = void, Error = any>(
       isLoading: (swr.data == null || swr.isValidating) && !swr.error && newKey != null
    };
 
-   result = useDefaultErrorHandling(result);
+   result = useDefaultErrorHandling(result, { showAlertOnError });
 
    return result;
 }

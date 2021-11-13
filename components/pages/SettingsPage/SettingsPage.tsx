@@ -31,7 +31,7 @@ const SettingsPage: FC = () => {
          <List.Item
             title="Tu perfil y fotos"
             titleStyle={styles.profileIconTitle}
-            left={props => <Avatar {...props} size={48} source={{ uri: localUser?.images[0] }} />}
+            left={props => <Avatar {...props} size={48} source={{ uri: localUser?.images?.[0] }} />}
             onPress={() => navigate("Profile", { editMode: true })}
          />
          <EmptySpace height={10} />

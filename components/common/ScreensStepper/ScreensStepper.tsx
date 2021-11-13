@@ -22,6 +22,7 @@ export interface ScreenStepperProps {
     * Called when the user press hardware back button and there is no history to go back.
     */
    onBackPressAndNoHistory?: () => void;
+   goingBackEnabled?: boolean;
    /**
     * When this prop has a different value than the last time triggers a back to previous page action.
     * Useful when something is blocking the hardware navigation back button (like a modal)
@@ -34,6 +35,7 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
       screensWidth = Dimensions.get("window").width,
       animated = true,
       swipeEnabled = true,
+      goingBackEnabled = true,
       currentScreen,
       onScreenChange,
       onBackPressAndNoHistory,
@@ -59,9 +61,13 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
    useEffect(() => {
       BackHandler.addEventListener("hardwareBackPress", handleBackButton);
       return () => BackHandler.removeEventListener("hardwareBackPress", handleBackButton);
-   }, [onScreenChange]);
+   }, [onScreenChange, goingBackEnabled, onBackPressAndNoHistory]);
 
    const handleBackButton = useCallback((): boolean => {
+      if (!goingBackEnabled) {
+         return true;
+      }
+
       const canGoBack = goBack();
 
       if (!canGoBack && onBackPressAndNoHistory != null) {
@@ -71,7 +77,7 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
 
       // Returning true in this function disables the default behavior of the back button:
       return canGoBack;
-   }, []);
+   }, [goingBackEnabled, onBackPressAndNoHistory]);
 
    /*
     * The return value is true or false whether or not is possible to go back to a previous step

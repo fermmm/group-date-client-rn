@@ -35,36 +35,31 @@ export function useAuthentication(
    options?: UseAuthenticationOptions
 ): UseAuthentication {
    const { checkTokenIsValid = false, enabled = true } = options ?? {};
-
-   console.log("00");
+   const { logout } = useLogout();
    const token = useToken(externallyProvidedToken);
-   const { data: tokenCheck, isLoading: tokenCheckLoading } = useTokenCheck(token.token, {
+   const { isValid: tokenIsValid, isLoading: tokenCheckLoading } = useTokenCheck({
+      token: token.token,
+      onTokenInvalidFormat: logout,
       enabled: checkTokenIsValid && token.token != null && enabled
    });
+
    useAutomaticReLogin({
       token,
-      enabled: tokenCheck?.valid === false && checkTokenIsValid && enabled
+      enabled: tokenIsValid === false && checkTokenIsValid && enabled
    });
-   const { navigateWithoutHistory } = useNavigation();
 
    const isLoading =
       token.isLoading || (options?.checkTokenIsValid === true ? tokenCheckLoading : false);
 
-   const logout = async () => {
-      await removeFromDevice(LocalStorageKey.AuthenticationToken, { secure: true });
-      await removeFromDevice(LocalStorageKey.EmailLoginUser, { secure: true });
-      await removeFromDevice(LocalStorageKey.EmailLoginPass, { secure: true });
-      fasterTokenCache = null;
-      navigateWithoutHistory("Login");
-   };
-
-   return {
+   const result = {
       token: token.token,
       isLoading,
-      tokenIsValid: tokenCheck?.valid,
+      tokenIsValid,
       getNewToken: token.getNewToken,
       logout
    };
+
+   return result;
 }
 
 /**
@@ -82,7 +77,6 @@ function useToken(externallyProvidedToken?: string): UseToken {
    const getEmailToken = useEmailToken();
 
    const getNewToken = (provider: AuthenticationProvider) => {
-      console.log("01");
       fasterTokenCache = null;
       setToken(null);
       setIsLoading(true);
@@ -139,9 +133,11 @@ function useToken(externallyProvidedToken?: string): UseToken {
 
    if (!fetchingNewToken && !attemptedFromDevice) {
       setAttemptedFromDevice(true);
+      console.log("AAA 01");
       // Try to get stored token from previous session
       loadFromDevice(LocalStorageKey.AuthenticationToken, { secure: true })
          .then(tokenFromDevice => {
+            console.log("AAA 02", tokenFromDevice, token);
             setIsLoading(false);
             if (tokenFromDevice == null) {
                return;
@@ -150,6 +146,7 @@ function useToken(externallyProvidedToken?: string): UseToken {
             setToken(tokenFromDevice);
          })
          .catch(error => {
+            console.log("AAA 03");
             setIsLoading(false);
          });
    }
@@ -162,25 +159,57 @@ function useToken(externallyProvidedToken?: string): UseToken {
  * means the token is valid. It's better to check this on the client than on the server, dealing with
  * an extra server error is more complex. If the token is not valid then getNewToken() should be called.
  */
-function useTokenCheck(token: string, config?: UseCacheOptions<TokenCheckResult>) {
-   let tokenInfo = getTokenInfo(token);
+function useTokenCheck(props: {
+   token: string;
+   onTokenInvalidFormat: () => void;
+   enabled: boolean;
+}) {
+   const { token, onTokenInvalidFormat, enabled } = props;
+   const [isValid, setIsValid] = useState<boolean>(null);
+   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-   let tokenChecker: (token: string) => Promise<TokenCheckResult>;
-   switch (tokenInfo?.provider) {
-      case AuthenticationProvider.Facebook:
-         tokenChecker = checkFacebookToken;
-         break;
+   useEffect(() => {
+      if (!enabled) {
+         return;
+      }
 
-      case AuthenticationProvider.Google:
-         tokenChecker = checkGoogleToken;
-         break;
+      let tokenInfo = getTokenInfo(token);
 
-      case AuthenticationProvider.Email:
-         tokenChecker = checkEmailToken;
-         break;
-   }
+      if (token != null && tokenInfo == null) {
+         onTokenInvalidFormat();
+         setIsValid(false);
+         return;
+      }
 
-   return useCache<TokenCheckResult>(`tokenCheck${token}`, () => tokenChecker(token), config);
+      let tokenChecker: (token: string) => Promise<TokenCheckResult>;
+      switch (tokenInfo?.provider) {
+         case AuthenticationProvider.Facebook:
+            tokenChecker = checkFacebookToken;
+            break;
+
+         case AuthenticationProvider.Google:
+            tokenChecker = checkGoogleToken;
+            break;
+
+         case AuthenticationProvider.Email:
+            tokenChecker = checkEmailToken;
+            break;
+      }
+
+      setIsLoading(true);
+
+      tokenChecker(token)
+         .then(({ valid }) => {
+            setIsValid(valid);
+            setIsLoading(false);
+         })
+         .catch(error => {
+            setIsValid(false);
+            setIsLoading(false);
+         });
+   }, [enabled, token]);
+
+   return { isValid, isLoading };
 }
 
 /**
@@ -222,4 +251,16 @@ interface UseToken {
 
 interface TokenCheckResult {
    valid: boolean;
+}
+
+export function useLogout() {
+   const { navigateWithoutHistory } = useNavigation();
+
+   const logout = async () => {
+      await removeFromDevice(LocalStorageKey.AuthenticationToken, { secure: true });
+      fasterTokenCache = null;
+      navigateWithoutHistory("Login");
+   };
+
+   return { logout };
 }

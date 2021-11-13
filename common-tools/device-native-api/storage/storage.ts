@@ -60,6 +60,10 @@ export async function removeFromDevice(
 }
 
 async function isSecureStorageAvailable(): Promise<boolean> {
+   console.log("BBBBB 01");
    await SecureStore.setItemAsync("__test___", "1234");
-   return Promise.resolve((await SecureStore.getItemAsync("__test___")) === "1234");
+   console.log("BBBBB 02");
+   const canRead = (await SecureStore.getItemAsync("__test___")) === "1234";
+   console.log("BBBBB 03");
+   return Promise.resolve(canRead);
 }

@@ -9,13 +9,13 @@ import TextInputExtended from "../../TextInputExtended/TextInputExtended";
 import TitleText from "../../TitleText/TitleText";
 
 export interface PropsEmailStep {
+   title?: string;
    onSubmit: (email: string) => void;
    onBackPress: () => void;
-   isForgotPasswordStep?: boolean;
 }
 
 const EmailStep: FC<PropsEmailStep> = props => {
-   const { onSubmit, onBackPress, isForgotPasswordStep } = props;
+   const { onSubmit, onBackPress, title } = props;
    const [email, setEmail] = useState<string>(null);
    const theme = useTheme();
 
@@ -31,24 +31,31 @@ const EmailStep: FC<PropsEmailStep> = props => {
       return null;
    };
 
+   const handleContinueButton = async () => {
+      if (getEmailError() != null) {
+         return;
+      }
+
+      onSubmit(email);
+   };
+
    return (
       <View style={styles.stepContainer}>
-         {isForgotPasswordStep === true && (
-            <TitleText style={styles.title}>Olvide la contraseña</TitleText>
-         )}
+         {title != null && <TitleText style={styles.title}>{title}</TitleText>}
          <TextInputExtended
             title="Tu email"
             errorText={getEmailError()}
             mode="outlined"
             value={email}
-            onChangeText={t => setEmail(t)}
+            onChangeText={setEmail}
             autoCapitalize="none"
             autoCompleteType="email"
             textContentType="emailAddress"
             keyboardType="email-address"
+            style={styles.input}
          />
          <Button
-            onPress={() => (getEmailError() != null ? null : onSubmit(email))}
+            onPress={handleContinueButton}
             mode="outlined"
             color={theme.colors.accent2}
             style={[styles.button, { marginBottom: 10 }]}
@@ -76,7 +83,10 @@ const styles: Styles = StyleSheet.create({
       borderColor: currentTheme.colors.accent2,
       minWidth: 180
    },
-   title: {}
+   title: {},
+   input: {
+      backgroundColor: currentTheme.colors.background2
+   }
 });
 
 export default EmailStep;

@@ -1,4 +1,4 @@
-import React, { Component, ComponentProps, FC } from "react";
+import React, { Component, ComponentProps, ComponentPropsWithRef, FC } from "react";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";

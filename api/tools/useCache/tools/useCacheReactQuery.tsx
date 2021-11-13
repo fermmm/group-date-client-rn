@@ -34,6 +34,7 @@ export function useCacheRq<Response = void, Error = any>(
       refetchInterval: config?.refreshInterval,
       refetchOnMount: config?.revalidateOnMount
    };
+   const { showAlertOnError = true } = config ?? {};
 
    let query = useQuery<Response, Error>(key, fn, configRq);
 
@@ -50,9 +51,7 @@ export function useCacheRq<Response = void, Error = any>(
       isValidating: query.isFetching
    };
 
-   const resultWIthErrorHandling = useDefaultErrorHandling(result);
-
-   return resultWIthErrorHandling;
+   return useDefaultErrorHandling(result, { showAlertOnError });
 }
 
 export async function revalidateRq<T>(key: string | string[], settings?: { exactMatch?: boolean }) {

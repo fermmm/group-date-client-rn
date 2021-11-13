@@ -1,7 +1,4 @@
-import { loadFromDevice } from "../../../../common-tools/device-native-api/storage/storage";
-import { LocalStorageKey } from "../../../../common-tools/strings/LocalStorageKey";
 import { useEmailLoginModal } from "../../../../components/common/EmailLoginModal/tools/useEmailLoginModal";
-import { emailLoginTokenGet } from "../../../server/email-login";
 
 /**
  * This function returns the token using the email and password stored in the device.
@@ -21,16 +18,8 @@ export function useEmailToken() {
 
       openEmailLoginModal({
          onDismiss: () => resolve(null),
-         onLogin: async () => {
-            const email = await loadFromDevice(LocalStorageKey.EmailLoginUser);
-            const password = await loadFromDevice(LocalStorageKey.EmailLoginPass);
-
-            if (!email || !password) {
-               resolve(null);
-            }
-
-            const response = await emailLoginTokenGet({ email, password });
-            return resolve(response.token);
+         onLogin: async (token: string) => {
+            resolve(token);
          }
       });
 

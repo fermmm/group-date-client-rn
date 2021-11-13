@@ -29,6 +29,7 @@ export interface TextInputExtendedProps {
    multiline?: boolean;
    saveButtonText?: string;
    style?: StyleProp<TextStyle>;
+   styleInputFullScreen?: StyleProp<TextStyle>;
    containerStyle?: StyleProp<ViewStyle>;
    mode?: "flat" | "outlined";
    small?: boolean;
@@ -104,6 +105,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       iconButton,
       onIconButtonPress,
       style,
+      styleInputFullScreen,
       containerStyle,
       inputRef,
       secureTextEntry,
@@ -196,7 +198,11 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                      multiline={multiline}
                      onChangeText={onChangeText}
                      numberOfLines={200}
-                     style={{ flex: multiline ? 1 : 0 }}
+                     style={[
+                        { flex: multiline ? 1 : 0 },
+                        styles.inputFullScreen,
+                        styleInputFullScreen
+                     ]}
                      ref={fullScreenInputRef}
                      secureTextEntry={secureTextEntry}
                      returnKeyType={returnKeyType}
@@ -243,7 +249,10 @@ const styles: Styles = StyleSheet.create({
    input: {
       textAlignVertical: "top",
       marginTop: -6, // For some reason the react native paper component has a space like a padding but it's not, so we compensate with this
-      backgroundColor: currentTheme.colors.background2
+      backgroundColor: currentTheme.colors.background
+   },
+   inputFullScreen: {
+      backgroundColor: currentTheme.colors.background
    },
    inputWithIconButton: {
       paddingRight: 45

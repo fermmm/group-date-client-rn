@@ -23,7 +23,7 @@ export const PageBackgroundGradient: FC<PropsPageBackgroundGradient> = ({
          locations={[0.7, 1]}
          colors={[
             color(colors.background).string(),
-            color(colors.backgroundBottomGradient).alpha(1).string()
+            color(colors.backgroundBottomGradient).string()
          ]}
       >
          {children}

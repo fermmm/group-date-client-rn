@@ -89,6 +89,7 @@ export interface UseCacheOptions<Response = void, Error = any> {
    onSuccess?: (data: Response) => void;
    onError?: (err: Error) => void;
    onErrorRetry?: (err: Error) => void;
+   showAlertOnError?: boolean;
 }
 
 export interface UseCache<Response, Error> {

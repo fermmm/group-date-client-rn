@@ -31,9 +31,7 @@ export function useGetGoogleToken(): () => Promise<string | null> {
       };
    } else {
       // This is imported using require() to not break Expo Go
-      console.log("02");
       const { GoogleSignin, statusCodes } = require("@react-native-google-signin/google-signin");
-      console.log("03");
 
       getGoogleToken = async () => {
          try {

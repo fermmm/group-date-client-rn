@@ -4,8 +4,10 @@ import { showRequestErrorAlert } from "../../showRequestErrorAlert";
 import { RequestError, UseCache } from "../useCache";
 
 export function useDefaultErrorHandling<Response = void, Error = any>(
-   queryResult: UseCache<Response, Error>
+   queryResult: UseCache<Response, Error>,
+   config?: { showAlertOnError?: boolean }
 ): UseCache<Response, Error> {
+   const { showAlertOnError = true } = config || {};
    const stopShowing = useRef(false);
 
    useEffect(() => {
@@ -28,6 +30,10 @@ export function useDefaultErrorHandling<Response = void, Error = any>(
    };
 
    stopShowing.current = true;
+
+   if (!showAlertOnError) {
+      return queryResult;
+   }
 
    if (error.response == null) {
       showRequestErrorAlert({

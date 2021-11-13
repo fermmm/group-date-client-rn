@@ -4,6 +4,7 @@ import { Button, Text } from "react-native-paper";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
+import { LoadingAnimation } from "../../LoadingAnimation/LoadingAnimation";
 import TextInputExtended from "../../TextInputExtended/TextInputExtended";
 import { ViewTouchable } from "../../ViewTouchable/ViewTouchable";
 
@@ -12,10 +13,12 @@ export interface PropsPasswordStep {
    onSubmit: (password: string) => void;
    onBackPress: () => void;
    onForgotPasswordPress?: () => void;
+   showLoadingAnimation?: boolean;
 }
 
 const PasswordStep: FC<PropsPasswordStep> = props => {
-   const { onSubmit, onBackPress, onForgotPasswordPress, previousPassword } = props;
+   const { onSubmit, onBackPress, onForgotPasswordPress, previousPassword, showLoadingAnimation } =
+      props;
    const [password, setPassword] = useState<string>(null);
    const theme = useTheme();
 
@@ -31,6 +34,10 @@ const PasswordStep: FC<PropsPasswordStep> = props => {
       return null;
    };
 
+   if (showLoadingAnimation) {
+      return <LoadingAnimation />;
+   }
+
    return (
       <View style={styles.stepContainer}>
          <TextInputExtended
@@ -40,6 +47,7 @@ const PasswordStep: FC<PropsPasswordStep> = props => {
             value={password}
             onChangeText={t => setPassword(t)}
             secureTextEntry
+            style={styles.input}
          />
          {onForgotPasswordPress != null && (
             <ViewTouchable
@@ -85,6 +93,9 @@ const styles: Styles = StyleSheet.create({
    },
    buttonForgotPasswordContainer: {
       marginBottom: 15
+   },
+   input: {
+      backgroundColor: currentTheme.colors.background2
    }
 });
 

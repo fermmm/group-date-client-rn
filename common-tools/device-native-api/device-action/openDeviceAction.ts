@@ -1,7 +1,7 @@
 import { ToastAndroid, Platform } from "react-native";
 import * as IntentLauncher from "expo-intent-launcher";
 import Constants from "expo-constants";
-import { Linking } from "expo";
+import * as Linking from "expo-linking";
 
 /**
  * Opens an intent on Android and a url on IOS. Useful open other apps or app settings. Example:

@@ -7,12 +7,17 @@ export interface PropsViewTouchable {
    defaultRippleColor?: string;
    defaultAlpha?: number;
 }
-export const ViewTouchable: FC<
-   ComponentProps<typeof TouchableRipple> & PropsViewTouchable
-> = props => {
+
+type TouchableRippleProps = Omit<
+   ComponentProps<typeof TouchableRipple>,
+   "hasTVPreferredFocus" | "tvParallaxProperties"
+>;
+
+export const ViewTouchable: FC<TouchableRippleProps & PropsViewTouchable> = props => {
    const { colors, roundness } = useTheme();
 
    return (
+      // @ts-ignore
       <TouchableRipple
          borderless
          rippleColor={color(props?.defaultRippleColor ?? "black")

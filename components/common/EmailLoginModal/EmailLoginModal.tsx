@@ -1,12 +1,18 @@
 import React, { FC, useCallback, useState } from "react";
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { View, StyleSheet, ScrollView, Dimensions, Alert } from "react-native";
 import { UsableModalComponentProp } from "react-native-modalfy";
+import { emailLoginGet, emailLoginResetPasswordPost } from "../../../api/server/email-login";
+import { LoginResponse } from "../../../api/server/shared-tools/endpoints-interfaces/email-login";
+import { tryToGetErrorMessage } from "../../../api/tools/httpRequest";
+import { openEmailApp } from "../../../common-tools/device-native-api/device-action/openEmailApp";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 import CenterContainer from "../CenterContainer/CenterContainer";
+import { useDialogModal } from "../DialogModal/tools/useDialogModal";
 import ModalCloseManager from "../ModalCloseManager/ModalCloseManager";
 import { ScreensStepper } from "../ScreensStepper/ScreensStepper";
 import EmailStep from "./EmailStep/EmailStep";
+import EmailValidationStep from "./EmailValidationStep/EmailValidationStep";
 import MainStep from "./MainStep/MainStep";
 import PasswordStep from "./PasswordStep/PasswordStep";
 
@@ -15,18 +21,22 @@ interface Props {
 }
 
 export interface EmailLoginModalProps {
-   onLogin: () => void;
+   onLogin: (token: string) => void;
    onDismiss: () => void;
 }
 
 const modalWidthPercentage = 95;
 
 /**
- * When creating a new modal it needs to be added in App.tsx
+ * Having all the forms in one component it's not the best design but it's the easiest way to support
+ * the back button.
  */
 const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
    const onDismiss = getParam<keyof EmailLoginModalProps, () => void>("onDismiss") as () => void;
-   const onLogin = getParam<keyof EmailLoginModalProps, () => void>("onLogin") as () => void;
+   const onLogin = getParam<keyof EmailLoginModalProps, (token: string) => void>("onLogin") as (
+      token: string
+   ) => void;
+   const [isLoading, setIsLoading] = useState(false);
    const [currentStep, setCurrentStep] = useState(0);
    const [width, setWidth] = useState(null);
    const [goBackTrigger, setGoBackTrigger] = useState<boolean>(null);
@@ -34,57 +44,94 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
    const [signUpPassword1, setSignUpPassword1] = useState<string>(null);
    const [signUpPassword2, setSignUpPassword2] = useState<string>(null);
    const [loginEmail, setLoginEmail] = useState<string>(null);
-   const [loginPassword, setLoginPassword] = useState<string>(null);
    const [forgotPasswordEmail, setForgotPasswordEmail] = useState<string>(null);
+   const [enableAnimation, setEnableAnimation] = useState<boolean>(false);
+   const { openDialogModal } = useDialogModal();
 
-   const handleSignUpComplete = () => {
-      // TODO: Llamar al endpoint, si la respuesta trae el token seguir si no mostrar el error
-      // TODO: Mostrar un Dialog que avisa que mando un mail con boton a ir a la aplicacion de email
-      // TODO: Poner una pantalla aca de "Ya valide mi email" que llama cada tanto a la api y cuando se hace focus en la app
-      // TODO: Cuando se apreta en "ya valide mi email" se guardan las credenciales en el local storage y se llama a handleLoginComplete(token)
-      handleLoginComplete();
-      console.log("SIGNUP COMPLETE");
+   const handleSignUp = async (token: string) => {
+      onLogin?.(token);
+      openDialogModal({
+         message: "Has creado tu cuenta con éxito =)",
+         buttons: [{ label: "Ok" }]
+      });
+      closeModal("EmailLoginModal");
    };
 
-   const handleLoginComplete = () => {
-      // TODO: LLamar al endpoint y si devuelve el token mandarlo en onLogin
-      // TODO: onLogin tiene que devolver el token
-      onLogin?.();
-      closeModal();
+   const handleLogin = async (password: string) => {
+      let response: LoginResponse;
+      setIsLoading(true);
+      try {
+         response = await emailLoginGet({ email: loginEmail, password });
+      } catch (error) {
+         Alert.alert("", tryToGetErrorMessage(error));
+         setIsLoading(false);
+      }
+
+      if (response?.userExists && response?.token) {
+         onLogin?.(response.token);
+         closeModal("EmailLoginModal");
+      } else {
+         // Loading is falso only when there is an error because it looks better like this
+         setIsLoading(false);
+      }
    };
 
    const handleForgotPasswordComplete = () => {
-      // TODO: Llamar al endpoint y si devuelve ok solo mostrar mensaje de que reviste el email
+      emailLoginResetPasswordPost({ email: forgotPasswordEmail });
+      openDialogModal({
+         message: "Te hemos enviado un email para que cambies el password",
+         buttons: [{ label: "Ok" }, { label: "Abrir app de emails", onPress: openEmailApp }]
+      });
       handleModalDismiss();
    };
 
    const handleModalDismiss = () => {
+      closeModal("EmailLoginModal");
       onDismiss?.();
-      closeModal();
+   };
+
+   /**
+    * Called when the user is trying to sing up and the email is already in use.
+    */
+   const handleAccountAlreadyExists = () => {
+      openDialogModal({
+         message: 'Ya existe una cuenta con ese email. Inicia sesión o toca "Olvide la contraseña"'
+      });
+      handleModalDismiss();
    };
 
    const goToNextStep = () => {
+      setEnableAnimation(true);
       setCurrentStep(currentStep + 1);
    };
 
    const goToPreviousStep = () => {
+      setEnableAnimation(true);
       setCurrentStep(currentStep - 1);
    };
 
    const goToMainStep = () => {
+      setEnableAnimation(false);
       setCurrentStep(0);
    };
 
    const goToLoginStep = () => {
+      setEnableAnimation(false);
       setCurrentStep(1);
    };
 
    const goToSignUpStep = () => {
-      setCurrentStep(3);
+      setEnableAnimation(false);
+      setCurrentStep(4);
    };
 
    const gotoForgotPasswordStep = () => {
-      setCurrentStep(6);
+      setEnableAnimation(false);
+      setCurrentStep(3);
+   };
+
+   const isEmailVerificationCheckStep = () => {
+      return currentStep === 7;
    };
 
    // Called by back button/gesture
@@ -105,12 +152,14 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
                      swipeEnabled={false}
                      onScreenChange={handleScreenChange}
                      onBackPressAndNoHistory={handleModalDismiss}
+                     goingBackEnabled={!isEmailVerificationCheckStep()}
                      screensWidth={
                         width != null
                            ? width
                            : (Dimensions.get("window").width * modalWidthPercentage) / 100
                      }
                      goBackTrigger={goBackTrigger}
+                     animated={enableAnimation}
                   >
                      {/** MAIN */}
 
@@ -124,18 +173,27 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
 
                      <EmailStep
                         onSubmit={email => {
-                           setSignUpEmail(email);
+                           setLoginEmail(email);
                            goToNextStep();
                         }}
                         onBackPress={goToMainStep}
                      />
                      <PasswordStep
-                        onSubmit={pass => {
-                           setLoginPassword(pass);
-                           handleLoginComplete();
-                        }}
+                        onSubmit={handleLogin}
                         onBackPress={goToPreviousStep}
                         onForgotPasswordPress={gotoForgotPasswordStep}
+                        showLoadingAnimation={isLoading}
+                     />
+
+                     {/** FORGOT-PASSWORD */}
+
+                     <EmailStep
+                        title={"Olvide la contraseña"}
+                        onSubmit={email => {
+                           setForgotPasswordEmail(email);
+                           handleForgotPasswordComplete();
+                        }}
+                        onBackPress={goToMainStep}
                      />
 
                      {/** SIGN-UP */}
@@ -158,19 +216,17 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
                         previousPassword={signUpPassword1}
                         onSubmit={pass => {
                            setSignUpPassword2(pass);
-                           handleSignUpComplete();
+                           goToNextStep();
                         }}
                         onBackPress={goToPreviousStep}
                      />
-
-                     {/** FORGOT-PASSWORD */}
-                     <EmailStep
-                        onSubmit={email => {
-                           setForgotPasswordEmail(email);
-                           handleForgotPasswordComplete();
-                        }}
-                        onBackPress={goToMainStep}
-                        isForgotPasswordStep
+                     <EmailValidationStep
+                        title={"Valida tu email"}
+                        subtitle={"Para continuar revisa el mail que te hemos enviado"}
+                        credentials={{ email: signUpEmail, password: signUpPassword1 }}
+                        stepIsFocused={isEmailVerificationCheckStep()}
+                        onValidationConfirmed={handleSignUp}
+                        onAccountAlreadyExists={handleAccountAlreadyExists}
                      />
                   </ScreensStepper>
                </ScrollView>

@@ -50,7 +50,9 @@ export function showRequestErrorAlert(params?: ShowRequestErrorAlertParams) {
       ];
    }
 
-   Alert.alert(title, errorMsg, buttons, { cancelable: false });
+   Alert.alert(String(title) ?? "", String(errorMsg) ?? "Unknown network error", buttons, {
+      cancelable: false
+   });
 }
 
 export interface ShowRequestErrorAlertParams {

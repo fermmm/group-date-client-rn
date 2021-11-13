@@ -28,7 +28,7 @@ export async function httpRequest<Response>(
       promiseResolve = resolve;
    });
 
-   if (!options.handleErrors) {
+   if (!options?.handleErrors) {
       const response: AxiosResponse<Response> = await client(options);
       promiseResolve(response?.data);
       return resultPromise;
@@ -39,29 +39,34 @@ export async function httpRequest<Response>(
       promiseResolve(response.data);
    } catch (error) {
       if (error.response) {
+         promiseResolve(null);
+
          // Request was made but server responded with something
          // other than 2xx
          console.debug("Request error:", error.response);
 
-         if (!options.errorResponseSilent) {
+         if (!options?.errorResponseSilent) {
             showRequestErrorAlert({
                title: error?.response?.status,
                errorMsg: tryToGetErrorMessage(error)
             });
          }
-
-         promiseResolve(null);
       } else {
          // Something else happened while setting up the request
          // triggered the error
          console.debug("Request error:", error.message);
 
-         if (!options.hideRetryAlertOnConnectionFail) {
+         if (!options?.hideRetryAlertOnConnectionFail) {
             showRequestErrorAlert({
                retryFn: async () => promiseResolve(await httpRequest(options))
             });
          } else {
             promiseResolve(null);
+
+            showRequestErrorAlert({
+               title: error?.response?.status ?? "",
+               errorMsg: tryToGetErrorMessage(error)
+            });
          }
       }
    }
