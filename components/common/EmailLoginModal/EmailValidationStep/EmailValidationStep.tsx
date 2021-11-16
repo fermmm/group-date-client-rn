@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import * as Linking from "expo-linking";
 import { Button } from "react-native-paper";
 import { EmailLoginCredentials } from "../../../../api/server/shared-tools/endpoints-interfaces/email-login";
 import { useAppState } from "../../../../common-tools/device-native-api/state/useAppState";
@@ -17,6 +16,7 @@ import {
 import { openEmailApp } from "../../../../common-tools/device-native-api/device-action/openEmailApp";
 import { tryToGetErrorMessage } from "../../../../api/tools/httpRequest";
 import { LoadingAnimation } from "../../LoadingAnimation/LoadingAnimation";
+import { getLinkToApp } from "../../../../common-tools/navigation/getLinkToApp";
 
 export interface PropsEmailValidationStep {
    title?: string;
@@ -92,7 +92,7 @@ const EmailValidationStep: FC<PropsEmailValidationStep> = props => {
          return;
       }
 
-      const appUrl = Linking.createURL("");
+      const appUrl = getLinkToApp();
 
       setIsLoading(true);
       emailLoginCreateAccountPost({ ...credentials, appUrl })

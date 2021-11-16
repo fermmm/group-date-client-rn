@@ -5,6 +5,7 @@ import { emailLoginGet, emailLoginResetPasswordPost } from "../../../api/server/
 import { LoginResponse } from "../../../api/server/shared-tools/endpoints-interfaces/email-login";
 import { tryToGetErrorMessage } from "../../../api/tools/httpRequest";
 import { openEmailApp } from "../../../common-tools/device-native-api/device-action/openEmailApp";
+import { getLinkToApp } from "../../../common-tools/navigation/getLinkToApp";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 import CenterContainer from "../CenterContainer/CenterContainer";
@@ -77,7 +78,7 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
    };
 
    const handleForgotPasswordComplete = () => {
-      emailLoginResetPasswordPost({ email: forgotPasswordEmail });
+      emailLoginResetPasswordPost({ email: forgotPasswordEmail, appUrl: getLinkToApp() });
       openDialogModal({
          message: "Te hemos enviado un email para que cambies el password",
          buttons: [{ label: "Ok" }, { label: "Abrir app de emails", onPress: openEmailApp }]
