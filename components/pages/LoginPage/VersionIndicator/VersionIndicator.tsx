@@ -18,7 +18,7 @@ const VersionIndicator: FC = () => {
    return (
       <>
          <ViewTouchable onPress={handlePress}>
-            <Text style={styles.text}>{codeVersion} dev 2</Text>
+            <Text style={styles.text}>{codeVersion}</Text>
          </ViewTouchable>
          <View
             pointerEvents="box-none"
