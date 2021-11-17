@@ -43,9 +43,7 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
    const [goBackTrigger, setGoBackTrigger] = useState<boolean>(null);
    const [signUpEmail, setSignUpEmail] = useState<string>(null);
    const [signUpPassword1, setSignUpPassword1] = useState<string>(null);
-   const [signUpPassword2, setSignUpPassword2] = useState<string>(null);
    const [loginEmail, setLoginEmail] = useState<string>(null);
-   const [forgotPasswordEmail, setForgotPasswordEmail] = useState<string>(null);
    const [enableAnimation, setEnableAnimation] = useState<boolean>(false);
    const { openDialogModal } = useDialogModal();
 
@@ -77,8 +75,8 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
       }
    };
 
-   const handleForgotPasswordComplete = () => {
-      emailLoginResetPasswordPost({ email: forgotPasswordEmail, appUrl: getLinkToApp() });
+   const handleForgotPasswordComplete = (email: string) => {
+      emailLoginResetPasswordPost({ email, appUrl: getLinkToApp() });
       openDialogModal({
          message: "Te hemos enviado un email para que cambies el password",
          buttons: [{ label: "Ok" }, { label: "Abrir app de emails", onPress: openEmailApp }]
@@ -191,8 +189,7 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
                      <EmailStep
                         title={"Olvide la contraseña"}
                         onSubmit={email => {
-                           setForgotPasswordEmail(email);
-                           handleForgotPasswordComplete();
+                           handleForgotPasswordComplete(email);
                         }}
                         onBackPress={goToMainStep}
                      />
@@ -216,7 +213,6 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
                      <PasswordStep
                         previousPassword={signUpPassword1}
                         onSubmit={pass => {
-                           setSignUpPassword2(pass);
                            goToNextStep();
                         }}
                         onBackPress={goToPreviousStep}
