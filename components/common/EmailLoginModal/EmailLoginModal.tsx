@@ -26,7 +26,7 @@ export interface EmailLoginModalProps {
    onDismiss: () => void;
 }
 
-const modalWidthPercentage = 95;
+const modalWidthPercentage = 100;
 
 /**
  * Having all the forms in one component it's not the best design but it's the easiest way to support
@@ -139,7 +139,7 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
    }, []);
 
    return (
-      <ModalCloseManager onClose={handleModalDismiss}>
+      <ModalCloseManager onClose={handleModalDismiss} contentPosition={"bottom"}>
          <CenterContainer>
             <View style={styles.mainContainer}>
                <ScrollView
@@ -237,7 +237,7 @@ const styles: Styles = StyleSheet.create({
    mainContainer: {
       width: `${modalWidthPercentage}%`,
       backgroundColor: currentTheme.colors.backgroundBottomGradient,
-      borderRadius: currentTheme.roundnessSmall,
+      borderRadius: currentTheme.roundness,
       minWidth: 200
    },
    contentContainer: {

@@ -4,14 +4,20 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 
 export interface PropsModalCloseManager {
    onClose?: () => void;
+   contentPosition?: "center" | "bottom";
 }
 
 const ModalCloseManager: FC<PropsModalCloseManager> = props => {
-   const { onClose, children } = props;
+   const { onClose, children, contentPosition = "center" } = props;
 
    return (
       <TouchableWithoutFeedback onPress={onClose}>
-         <View style={styles.modalContainer}>
+         <View
+            style={[
+               styles.modalContainer,
+               { alignItems: contentPosition === "center" ? "center" : "flex-end" }
+            ]}
+         >
             {/** This touchable blocks the action of the parent one to prevent closing when clicking on the modal */}
             <TouchableWithoutFeedback>
                <View>{children}</View>
