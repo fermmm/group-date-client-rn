@@ -15,7 +15,7 @@ interface PropsLoadingAnimation {
    animationStyle?: StyleProp<ViewStyle>;
    /** Shows a cancel button after some time loading, use onTimeoutButtonPress to set the cancel action. */
    enableTimeoutButton?: boolean;
-   onTimeoutButtonPress?: () => void;
+   onTimeoutButtonPress?: (timeWaited: number) => void;
    /** In milliseconds. Default: 5000 */
    timeoutButtonTime?: number;
    timeoutButtonColor?: string;
@@ -55,6 +55,7 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = props => {
 
    const [animValue] = useState(new Animated.Value(0));
    const [timeoutButtonVisible, setTimeoutButtonVisible] = useState(false);
+   const [timeStamp, setTimestamp] = useState<number>();
    const [timeoutButtonId, setTimeoutButtonId] = useState<number>();
 
    useEffect(() => {
@@ -77,11 +78,16 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = props => {
          return;
       }
 
+      setTimestamp(new Date().getTime());
       clearTimeout(timeoutButtonId);
       setTimeoutButtonId(
          setTimeout(() => setTimeoutButtonVisible(true), timeoutButtonTime) as unknown as number
       );
    }, [visible]);
+
+   const getWaitedTime = () => {
+      return new Date().getTime() - timeStamp;
+   };
 
    let centeringStyle: StyleProp<ViewStyle> = {};
 
@@ -111,7 +117,10 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = props => {
                />
             </Animated.View>
             {timeoutButtonVisible && (
-               <ViewTouchable onPress={onTimeoutButtonPress} style={styles.cancelButtonContainer}>
+               <ViewTouchable
+                  onPress={() => onTimeoutButtonPress(getWaitedTime())}
+                  style={styles.cancelButtonContainer}
+               >
                   <TitleMediumText
                      style={{
                         color: timeoutButtonColor,

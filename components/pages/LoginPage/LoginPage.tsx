@@ -90,6 +90,8 @@ const LoginPage: FC = () => {
       }
    }, [profileStatusData, sendLoginPropsCompleted]);
 
+   const handleCancelPress = (timeWaitedMs: number) => {};
+
    const showAuthenticationButtons: boolean =
       profileStatusError ||
       (canUseServer &&
