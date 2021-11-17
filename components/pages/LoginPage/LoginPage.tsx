@@ -106,7 +106,12 @@ const LoginPage: FC = () => {
    return (
       <BackgroundArtistic useImageBackground={true}>
          <View style={styles.mainContainer}>
-            <LoadingAnimation visible={showLoadingAnimation} />
+            <LoadingAnimation
+               visible={showLoadingAnimation}
+               enableTimeoutButton
+               timeoutButtonColor={colors.textLogin}
+               onTimeoutButtonPress={auth.logout}
+            />
             <View style={styles.logo}>
                {/* <LogoAnimator onAnimationComplete={() => setLogoAnimCompleted(true)}> */}
                <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />

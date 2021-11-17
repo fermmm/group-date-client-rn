@@ -3,6 +3,9 @@ import { Animated, StyleProp, StyleSheet, View, ViewStyle, Dimensions } from "re
 import LottieView from "lottie-react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import BasicScreenContainer from "../BasicScreenContainer/BasicScreenContainer";
+import TitleMediumText from "../TitleMediumText/TitleMediumText";
+import { currentTheme } from "../../../config";
+import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 interface PropsLoadingAnimation {
    visible?: boolean;
@@ -10,6 +13,12 @@ interface PropsLoadingAnimation {
    renderMethod?: RenderMethod;
    style?: StyleProp<ViewStyle>;
    animationStyle?: StyleProp<ViewStyle>;
+   /** Shows a cancel button after some time loading, use onTimeoutButtonPress to set the cancel action. */
+   enableTimeoutButton?: boolean;
+   onTimeoutButtonPress?: () => void;
+   /** In milliseconds. Default: 5000 */
+   timeoutButtonTime?: number;
+   timeoutButtonColor?: string;
 }
 
 export enum CenteredMethod {
@@ -27,18 +36,26 @@ export enum RenderMethod {
  * To edit the colors of the animation load the animation-loading.json into this tool:
  * https://lottiefiles.com/editor
  */
-export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
-   visible = true,
-   centeredMethod,
-   renderMethod,
-   style,
-   animationStyle
-}) => {
+export const LoadingAnimation: FC<PropsLoadingAnimation> = props => {
+   let {
+      visible = true,
+      centeredMethod,
+      renderMethod,
+      style,
+      animationStyle,
+      enableTimeoutButton,
+      onTimeoutButtonPress,
+      timeoutButtonTime = 5000,
+      timeoutButtonColor = "black"
+   } = props;
+
    if (!visible) {
       return null;
    }
 
    const [animValue] = useState(new Animated.Value(0));
+   const [timeoutButtonVisible, setTimeoutButtonVisible] = useState(false);
+   const [timeoutButtonId, setTimeoutButtonId] = useState<number>();
 
    useEffect(() => {
       animValue.setValue(0);
@@ -47,6 +64,23 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
          duration: 1500,
          useNativeDriver: true
       }).start();
+   }, [visible]);
+
+   useEffect(() => {
+      if (!enableTimeoutButton) {
+         return;
+      }
+
+      if (!visible) {
+         clearTimeout(timeoutButtonId);
+         setTimeoutButtonVisible(false);
+         return;
+      }
+
+      clearTimeout(timeoutButtonId);
+      setTimeoutButtonId(
+         setTimeout(() => setTimeoutButtonVisible(true), timeoutButtonTime) as unknown as number
+      );
    }, [visible]);
 
    let centeringStyle: StyleProp<ViewStyle> = {};
@@ -71,11 +105,23 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
                <LottieView
                   source={require("./animation-loading.json")}
                   style={[styles.lottie, animationStyle]}
-                  speed={0.5}
+                  speed={0.75}
                   autoPlay
                   loop
                />
             </Animated.View>
+            {timeoutButtonVisible && (
+               <ViewTouchable onPress={onTimeoutButtonPress} style={styles.cancelButtonContainer}>
+                  <TitleMediumText
+                     style={{
+                        color: timeoutButtonColor,
+                        fontFamily: currentTheme.font.semiBold
+                     }}
+                  >
+                     Cancelar
+                  </TitleMediumText>
+               </ViewTouchable>
+            )}
          </View>
       </>
    );
@@ -84,7 +130,8 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = ({
 const styles: Styles = StyleSheet.create({
    containerBase: {
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "center",
+      flexDirection: "column"
    },
    relativePosition: {
       position: "relative",
@@ -97,5 +144,11 @@ const styles: Styles = StyleSheet.create({
    },
    lottie: {
       width: "40%"
+   },
+   cancelButtonContainer: {
+      position: "absolute",
+      top: -5,
+      height: 40,
+      padding: 10
    }
 });
