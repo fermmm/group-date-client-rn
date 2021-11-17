@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { getPermissionTokenForNotifications } from "../../../../common-tools/device-native-api/notifications/getPermissionTokenForNotifications";
 import { sendUserProps } from "../../../../api/server/user";
 import { ServerInfoResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/server-info";
-import { EditableUserPropKey } from "../../../../api/server/shared-tools/validators/user";
-import { UserPropsValueTypes } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
+import { User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 
 /**
  * At every login there are some user props that need to be updated: The user may be in a different
@@ -68,7 +67,7 @@ export function useSendPropsToUpdateAtLogin(
          enabled === true &&
          completed === false
       ) {
-         let props: Partial<Record<EditableUserPropKey, UserPropsValueTypes>> = {
+         let props: Partial<User> = {
             locationLat,
             locationLon,
             country

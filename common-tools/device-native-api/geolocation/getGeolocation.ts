@@ -95,7 +95,8 @@ function useAddress(params: {
       permissionGranted === true && coords != null && loadingStoredGeolocation !== true;
 
    // Request the cache if the stored location is different than current or when there is no cache
-   const shouldRequestAddress = (locationChanged || storedGeolocation == null) && requirementsOk;
+   const shouldRequestAddress =
+      (locationChanged || storedGeolocation?.address == null) && requirementsOk;
 
    const { data: requestedAddress } = useCache(
       "_geolocationAddress_",
