@@ -5,7 +5,6 @@ import { List, Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
-import BadgeExtended from "../../common/BadgeExtended/BadgeExtended";
 import { useUser } from "../../../api/server/user";
 import Avatar from "../../common/Avatar/Avatar";
 import { ParamsRegistrationFormsPage } from "../RegistrationFormsPage/RegistrationFormsPage";
@@ -15,13 +14,15 @@ import { openDeviceAction } from "../../../common-tools/device-native-api/device
 import { currentTheme } from "../../../config";
 import { getAppVersion } from "../../../common-tools/device-native-api/versions/versions";
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
+import { useAccountDelete } from "./tools/useAccountDelete";
 
 const SettingsPage: FC = () => {
    const { navigate } = useNavigation();
    const { logout } = useAuthentication();
    const { data: localUser } = useUser();
+   const { handleAccountDelete, isLoading: accountDeleteLoading } = useAccountDelete();
 
-   if (!localUser) {
+   if (!localUser || accountDeleteLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 
@@ -136,6 +137,14 @@ const SettingsPage: FC = () => {
             description="Tendrás que volver a hacer login para seguir usando la app"
             left={props => <List.Icon {...props} style={styles.optionIcon} icon="exit-run" />}
             onPress={logout}
+         />
+         <List.Item
+            title="Eliminar tu cuenta"
+            description="Eliminar todos tus datos en la app"
+            left={props => (
+               <List.Icon {...props} style={styles.optionIcon} icon="trash-can-outline" />
+            )}
+            onPress={handleAccountDelete}
          />
          {localUser.isAdmin && (
             <List.Item

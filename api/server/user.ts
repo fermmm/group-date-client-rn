@@ -13,7 +13,9 @@ import {
    UserPostParams,
    UserPropAsQuestion,
    Notification,
-   ReportUserPostParams
+   ReportUserPostParams,
+   DeleteAccountPostParams,
+   DeleteAccountResponse
 } from "./shared-tools/endpoints-interfaces/user";
 import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
@@ -102,6 +104,12 @@ export async function sendAttraction(params: SetAttractionParams) {
 
 export async function sendReportUser(params: ReportUserPostParams) {
    return await defaultHttpRequest("user/report", "POST", params, { handleErrors: true });
+}
+
+export async function deleteAccount(
+   params: DeleteAccountPostParams
+): Promise<DeleteAccountResponse> {
+   return await defaultHttpRequest("user/delete", "POST", params, { handleErrors: true });
 }
 
 export async function uploadImage(

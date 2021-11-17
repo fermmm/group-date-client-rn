@@ -35,6 +35,15 @@ const DialogModal: FC<PropsDialog> = ({ modal: { closeModal, getParam } }) => {
       { label: "Aceptar" }
    ]) as DialogButton[];
 
+   const handleButtonPress = (action?: () => void) => {
+      if (action == null) {
+         return;
+      }
+
+      // This allows to chain modals, if the action is called immediately the next modal won't open.
+      setTimeout(action, 16);
+   };
+
    return (
       <ModalCloseManager onClose={blockClosing ? null : () => closeModal()}>
          <ModalContainer>
@@ -50,7 +59,7 @@ const DialogModal: FC<PropsDialog> = ({ modal: { closeModal, getParam } }) => {
                      color={theme.colors.accent2}
                      style={[styles.button, buttons.length === 1 && styles.buttonSingle]}
                      onPress={() => {
-                        button.onPress?.();
+                        handleButtonPress(button.onPress);
                         button.closesModal === false ? null : closeModal();
                      }}
                      key={i}
