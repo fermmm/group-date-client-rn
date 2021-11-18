@@ -1,4 +1,6 @@
 import React, { useState, FC, useRef, useCallback } from "react";
+import { StyleSheet } from "react-native";
+import { useRoute } from "@react-navigation/native";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import ProfileDescriptionForm from "./ProfileDescriptionForm/ProfileDescriptionForm";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
@@ -7,7 +9,6 @@ import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenC
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
 import { sendUserProps, useUserProfileStatus } from "../../../api/server/user";
-import { useRoute } from "@react-navigation/native";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import {
    EditableUserPropKey,
@@ -35,6 +36,7 @@ import { useAnalyticsForRegistration } from "../../../common-tools/analytics/reg
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import TitleMediumText from "../../common/TitleMediumText/TitleMediumText";
+import { Styles } from "../../../common-tools/ts-tools/Styles";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -317,13 +319,7 @@ const RegistrationFormsPage: FC = () => {
                      showContinueButton
                      key={i}
                   >
-                     <TitleMediumText
-                        style={{
-                           marginBottom: 5,
-                           paddingLeft: 10,
-                           opacity: 0.5
-                        }}
-                     >
+                     <TitleMediumText style={styles.remainingStepsText}>
                         Paso {i + 1} de {formsRequired.length}
                      </TitleMediumText>
                      {formName === "BasicInfoForm" && (
@@ -430,6 +426,14 @@ const RegistrationFormsPage: FC = () => {
       </>
    );
 };
+
+const styles: Styles = StyleSheet.create({
+   remainingStepsText: {
+      marginBottom: 5,
+      paddingLeft: 10,
+      opacity: 0.5
+   }
+});
 
 export interface TagsToUpdate {
    tagsToUnsubscribe?: string[];

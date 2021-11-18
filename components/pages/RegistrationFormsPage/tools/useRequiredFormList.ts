@@ -27,10 +27,9 @@ export const useRequiredFormList = (
    const formsForProps: FormsAndTheirProps = {
       CoupleProfileForm: ["isCoupleProfile"],
       GenderForm: ["genders"],
-      FiltersForm: ["targetAgeMin", "targetAgeMax", "targetDistance"],
-      TargetGenderForm: ["likesGenders"],
       TagsAsQuestionsForms: [], // This empty element will be replaced later
       UnknownPropsQuestionForms: [], // This empty element will be replaced later
+      TargetGenderForm: ["likesGenders"],
       DateIdeaForm: ["dateIdea"],
       BasicInfoForm: [
          "name",
@@ -41,6 +40,7 @@ export const useRequiredFormList = (
          "cityName",
          "country"
       ],
+      FiltersForm: ["targetAgeMin", "targetAgeMax", "targetDistance"],
       ProfileImagesForm: ["images"],
       ProfileDescriptionForm: ["profileDescription"]
    };
