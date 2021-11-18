@@ -319,9 +319,11 @@ const RegistrationFormsPage: FC = () => {
                      showContinueButton
                      key={i}
                   >
-                     <TitleMediumText style={styles.remainingStepsText}>
-                        Paso {i + 1} de {formsRequired.length}
-                     </TitleMediumText>
+                     {formsRequired.length > 1 && (
+                        <TitleMediumText style={styles.remainingStepsText}>
+                           Paso {i + 1} de {formsRequired.length}
+                        </TitleMediumText>
+                     )}
                      {formName === "BasicInfoForm" && (
                         <BasicInfoForm
                            formName={formName}
