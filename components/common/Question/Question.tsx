@@ -46,16 +46,14 @@ const Question: FC<PropsQuestion> = props => {
    } = props;
    const { colors } = useTheme();
    const [selectedAnswer, setSelectedAnswer] = useState<string>(initiallySelected?.[0]);
-   const [selectedAnswerMultiple, setSelectedAnswerMultiple] = useState<string[]>(
-      initiallySelected
-   );
+   const [selectedAnswerMultiple, setSelectedAnswerMultiple] =
+      useState<string[]>(initiallySelected);
    const [itsImportantChecked, setItsImportantChecked] = useState(initiallyItsImportantChecked);
 
-   useEffect(() => onChange({ selectedAnswer, selectedAnswerMultiple, itsImportantChecked }), [
-      selectedAnswer,
-      selectedAnswerMultiple,
-      itsImportantChecked
-   ]);
+   useEffect(
+      () => onChange({ selectedAnswer, selectedAnswerMultiple, itsImportantChecked }),
+      [selectedAnswer, selectedAnswerMultiple, itsImportantChecked]
+   );
 
    const toggleAnswerFromList = (answerId: string) => {
       if (selectedAnswerMultiple.includes(answerId)) {
@@ -103,6 +101,7 @@ const Question: FC<PropsQuestion> = props => {
                     <RadioButtonImproved
                        checked={selectedAnswer === answer.id}
                        onPress={() => setSelectedAnswer(answer.id)}
+                       style={styles.radioButtonAnswer}
                        key={i}
                     >
                        <Text style={styles.responseText}>{answer.text}</Text>
@@ -165,6 +164,10 @@ const styles: Styles = StyleSheet.create({
    responseExtraText: {
       fontSize: 15,
       fontFamily: currentTheme.font.light
+   },
+   radioButtonAnswer: {
+      paddingTop: 7,
+      paddingBottom: 7
    }
 });
 

@@ -2,16 +2,16 @@ import React, { FC } from "react";
 import { LogBox } from "react-native";
 import {
    ConfigProviderRq,
+   deleteAllCacheRq,
    initFocusManagerRq,
    mutateCacheRq,
    revalidateRq,
    useCacheRq
 } from "./tools/useCacheReactQuery";
-import { ConfigProviderSwr, mutateCacheSwr, revalidateSwr, useCacheSwr } from "./tools/useCacheSwr";
 
 export enum CacheLibrary {
    ReactQuery,
-   Swr
+   Swr // TODO: Remove this and refactor to use ReactQuery
 }
 
 let cacheLibraryToUse: CacheLibrary = CacheLibrary.ReactQuery;
@@ -30,26 +30,14 @@ export function useCache<Response = void, Error = any>(
    fn?: FetcherFn<Response>,
    config?: UseCacheOptions<Response, Error>
 ): UseCache<Response, Error> {
-   if (cacheLibraryToUse === CacheLibrary.Swr) {
-      return useCacheSwr(key, fn, config);
-   }
-
-   if (cacheLibraryToUse === CacheLibrary.ReactQuery) {
-      return useCacheRq(key, fn, config);
-   }
+   return useCacheRq(key, fn, config);
 }
 
 /**
  * Pass one or multiple keys and the requests for these keys are going to be made again to update the cache data
  */
 export async function revalidate<T>(key: string | string[], settings?: { exactMatch?: boolean }) {
-   if (cacheLibraryToUse === CacheLibrary.Swr) {
-      await revalidateSwr(key);
-   }
-
-   if (cacheLibraryToUse === CacheLibrary.ReactQuery) {
-      await revalidateRq(key, settings);
-   }
+   await revalidateRq(key, settings);
 }
 
 /**
@@ -57,23 +45,15 @@ export async function revalidate<T>(key: string | string[], settings?: { exactMa
  * all caches that contains the same object without making more unnecessary requests.
  */
 export async function mutateCache<T>(key: string, newData: T) {
-   if (cacheLibraryToUse === CacheLibrary.Swr) {
-      await mutateCacheSwr(key, newData);
-   }
+   await mutateCacheRq(key, newData);
+}
 
-   if (cacheLibraryToUse === CacheLibrary.ReactQuery) {
-      await mutateCacheRq(key, newData);
-   }
+export async function deleteAllCache() {
+   await deleteAllCacheRq();
 }
 
 export const CacheConfigProvider: FC = ({ children }) => {
-   if (cacheLibraryToUse === CacheLibrary.Swr) {
-      return <ConfigProviderSwr>{children}</ConfigProviderSwr>;
-   }
-
-   if (cacheLibraryToUse === CacheLibrary.ReactQuery) {
-      return <ConfigProviderRq>{children}</ConfigProviderRq>;
-   }
+   return <ConfigProviderRq>{children}</ConfigProviderRq>;
 };
 
 if (cacheLibraryToUse === CacheLibrary.ReactQuery) {

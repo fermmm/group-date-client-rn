@@ -1,4 +1,4 @@
-import { useCache, UseCacheOptions } from "../tools/useCache/useCache";
+import { deleteAllCache } from "../tools/useCache/useCache";
 import {
    loadFromDevice,
    removeFromDevice,
@@ -259,6 +259,7 @@ export function useLogout() {
    const logout = async () => {
       await removeFromDevice(LocalStorageKey.AuthenticationToken, { secure: true });
       fasterTokenCache = null;
+      deleteAllCache();
       navigateWithoutHistory("Login");
    };
 

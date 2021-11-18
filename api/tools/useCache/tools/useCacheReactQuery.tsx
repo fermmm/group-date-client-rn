@@ -93,6 +93,10 @@ export async function mutateCacheRq<T>(key: string, newData: T) {
    return queryClient.setQueryData<T>(key, newData);
 }
 
+export async function deleteAllCacheRq() {
+   return queryClient.clear();
+}
+
 export const ConfigProviderRq: FC = ({ children }) => {
    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };
