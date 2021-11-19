@@ -75,14 +75,18 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = props => {
       if (!visible) {
          clearTimeout(timeoutButtonId);
          setTimeoutButtonVisible(false);
-         return;
+         return () => clearTimeout(timeoutId);
       }
 
       setTimestamp(new Date().getTime());
       clearTimeout(timeoutButtonId);
-      setTimeoutButtonId(
-         setTimeout(() => setTimeoutButtonVisible(true), timeoutButtonTime) as unknown as number
-      );
+      const timeoutId = setTimeout(
+         () => setTimeoutButtonVisible(true),
+         timeoutButtonTime
+      ) as unknown as number;
+      setTimeoutButtonId(timeoutId);
+
+      return () => clearTimeout(timeoutId);
    }, [visible]);
 
    const getWaitedTime = () => {
