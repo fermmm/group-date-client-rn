@@ -134,7 +134,7 @@ const CreateTagPage: FC = () => {
             onBackPress={handleBackPress}
          >
             <View style={styles.mainContainer}>
-               <TitleText style={styles.title}>Nombre</TitleText>
+               <TitleText style={styles.title}>Nombre del tag</TitleText>
                <TextInputExtended
                   errorText={getCharactersError(name)}
                   value={name}
