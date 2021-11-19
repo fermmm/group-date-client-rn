@@ -18,8 +18,8 @@ export interface ImagesModalProps {
 
 const ImagesModal: FC<ImagesModalProps> = props => {
    const imagesGalleryFormat =
-      props.images?.map(uri => ({
-         source: { uri }
+      props.images?.map(image => ({
+         source: image
       })) ?? [];
 
    return (
@@ -28,7 +28,6 @@ const ImagesModal: FC<ImagesModalProps> = props => {
          visible={props.visible}
          animationType={"fade"}
          onRequestClose={() => props.onClose && props.onClose()}
-         statusBarTranslucent
       >
          <Gallery
             style={styles.gallery}
