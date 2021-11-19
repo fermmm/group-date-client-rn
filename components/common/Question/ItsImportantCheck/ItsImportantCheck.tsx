@@ -56,8 +56,6 @@ const ItsImportantCheck: FC<PropsItsImportantCheck> = props => {
       );
    };
 
-   console.log("INVISIBLE", invisible);
-
    return (
       <ListItemImproved
          title="Usar de filtro"
