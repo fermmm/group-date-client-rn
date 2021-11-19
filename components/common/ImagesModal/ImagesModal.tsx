@@ -1,12 +1,12 @@
 import React, { FC } from "react";
-import { StyleSheet, Modal, Image, ImageProps, StatusBar } from "react-native";
+import { StyleSheet, Modal, Image, ImageProps, StatusBar, ImageSourcePropType } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Gallery from "./Gallery/Gallery";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 export interface ImagesModalProps {
-   images: string[];
+   images: ImageSourcePropType[];
    visible: boolean;
    initialPage?: number;
    onClose?: () => void;

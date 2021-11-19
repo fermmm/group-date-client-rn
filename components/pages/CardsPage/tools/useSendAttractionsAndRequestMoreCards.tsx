@@ -58,7 +58,7 @@ async function sendAttractions(token: string, params: UseSendAttractionsParams) 
 }
 
 function requestMoreCardsIfNeeded(params: UseRequestMoreCardsParams) {
-   const { manager, cardsSource, cardsFromServer, tagId } = params;
+   const { manager, cardsSource, cardsFromServer, tagId, disableAppendMode } = params;
    const reason = manager.shouldRequestMoreUsersReason;
 
    manager.setShouldRequestMoreUsersReason(RequestMoreUsersReason.None);
@@ -74,10 +74,11 @@ function requestMoreCardsIfNeeded(params: UseRequestMoreCardsParams) {
 
    /**
     * Load more while reviewing the users is not possible when navigating disliked users because disliked
-    * users list may contain repetitions: The action of disliking keeps the users on the disliked list,
-    * so this repetitions mentioned are caused by this cycling effect.
+    * users list may contain repetitions: The action of disliking makes the same users appear again when
+    * requesting the disliked list again, then the dedup logic deletes the new users creating and empty update.
+    * The solution is to not append the new users when loading disliked and replace the list instead.
     */
-   if (cardsSource !== CardsSource.DislikedUsers) {
+   if (cardsSource !== CardsSource.DislikedUsers && !disableAppendMode) {
       manager.inNextUpdateAppendNewUsersToRenderList();
    }
 
@@ -99,4 +100,5 @@ interface UseRequestMoreCardsParams extends UseSendAttractionsParams {
    cardsSource: CardsSource;
    cardsFromServer: User[];
    tagId?: string;
+   disableAppendMode?: boolean;
 }

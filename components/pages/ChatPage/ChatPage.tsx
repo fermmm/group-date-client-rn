@@ -170,12 +170,7 @@ const ChatPage: FC = () => {
                alwaysShowSend
                placeholder={"Escribir un mensaje..."}
                renderAvatar={props => {
-                  return (
-                     <Avatar
-                        size={48}
-                        source={{ uri: props.currentMessage.user.avatar as string }}
-                     />
-                  );
+                  return <Avatar size={48} source={props.currentMessage.user.avatar as string} />;
                }}
                renderBubble={props => (
                   <Bubble

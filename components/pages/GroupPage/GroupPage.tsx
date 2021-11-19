@@ -94,9 +94,7 @@ const GroupPage: FC = () => {
                         expanded={i === expandedUser}
                         onPress={() => setExpandedUser(expandedUser !== i ? i : null)}
                         titleStyle={styles.itemTitle}
-                        left={props => (
-                           <Avatar {...props} size={50} source={{ uri: user.images[0] }} />
-                        )}
+                        left={props => <Avatar {...props} size={50} source={user?.images?.[0]} />}
                         key={user.userId}
                      >
                         <View style={{ paddingLeft: 0 }}>
@@ -136,7 +134,7 @@ const GroupPage: FC = () => {
                                              )
                                           }
                                           size={50}
-                                          source={{ uri: matchedUser.images[0] }}
+                                          source={matchedUser?.images?.[0]}
                                        />
                                     )}
                                  />

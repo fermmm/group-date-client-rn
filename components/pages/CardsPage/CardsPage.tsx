@@ -20,6 +20,7 @@ import { useCardsFromServer } from "./tools/useCardsFromServer";
 import { useCardsSourceAutomaticChange } from "./tools/useCardsSourceAutomaticChange";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 import { useAnalyticsForCardsPage } from "../../../common-tools/analytics/cardsPage/useAnalyticsForCardsPage";
+import { useUser } from "../../../api/server/user";
 
 export interface ParamsCardsPage {
    cardsSource?: CardsSource;
@@ -29,6 +30,7 @@ export interface ParamsCardsPage {
 
 const CardsPage: FC = () => {
    const { params } = useRoute<RouteProps<ParamsCardsPage>>();
+   const { data: user } = useUser();
    const [cardsSource, setCardsSource] = useState(CardsSource.Recommendations);
    const cardsFromServer = useCardsFromServer(cardsSource, { tagId: params?.tagId });
    const manager = useCardsDataManager(cardsFromServer);
@@ -36,7 +38,8 @@ const CardsPage: FC = () => {
       manager,
       cardsSource,
       cardsFromServer,
-      tagId: params?.tagId
+      tagId: params?.tagId,
+      disableAppendMode: user?.demoAccount
    });
    useSendAttractionsQueueIfNeeded({ manager });
    useCardsSourceAutomaticChange({ cardsFromServer, params, cardsSource, setCardsSource });

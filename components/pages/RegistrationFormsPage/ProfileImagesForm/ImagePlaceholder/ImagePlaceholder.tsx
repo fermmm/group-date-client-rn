@@ -13,10 +13,9 @@ import {
 } from "../../../../common/LoadingAnimation/LoadingAnimation";
 import { callCameraPicture } from "../../../../../common-tools/device-native-api/camera/camera";
 import { callImagePicker } from "../../../../../common-tools/device-native-api/files/files";
-import { useServerInfo } from "../../../../../api/server/server-info";
 import { useTheme } from "../../../../../common-tools/themes/useTheme/useTheme";
-import { prepareUrl } from "../../../../../api/tools/httpRequest";
 import { ViewTouchable } from "../../../../common/ViewTouchable/ViewTouchable";
+import { useImageFullUrl } from "../../../../../api/tools/useImageFullUrl";
 
 interface PropsImagePlaceholder {
    initialUri: string;
@@ -45,10 +44,10 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
       onRepositionSelect,
       onImageDeleted
    } = props;
-   const { data: serverInfo } = useServerInfo();
+   const { getImageFullUrl, isLoading: fullUrlLoading } = useImageFullUrl();
    const { colors } = useTheme();
    const [uri, setUri] = useState(initialUri);
-   const [fullUri, setFullUri] = useState(prepareUrl(serverInfo.imagesHost + initialUri));
+   const [fullUri, setFullUri] = useState(null);
    const [imageSize, setImageSize] = useState<{ width: number; height: number }>(null);
    const [id] = useState(props.id);
    const [isUploading, setIsUploading] = useState(false);
@@ -56,6 +55,13 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
    const menuRef = useRef<Menu>(null);
 
    useEffect(() => onChange({ uri, isUploading, id }), [uri, isUploading]);
+
+   // Effect to load the initial uri from the params when everything is ready for that
+   useEffect(() => {
+      if (fullUri == null && initialUri && !fullUrlLoading) {
+         setFullUri(getImageFullUrl(initialUri));
+      }
+   }, [initialUri, fullUrlLoading, fullUri]);
 
    const handleTouch = () => {
       if (!repositionMode) {
@@ -99,7 +105,7 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
          return;
       }
 
-      const finalFullUri = prepareUrl(serverInfo.imagesHost + uploadResponse.data.fileNameBig);
+      const finalFullUri = getImageFullUrl(uploadResponse.data.fileNameBig);
 
       // This helps with the image catching
       Image.getSize(

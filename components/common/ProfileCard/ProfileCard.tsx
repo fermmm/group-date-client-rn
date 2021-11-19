@@ -6,7 +6,8 @@ import {
    View,
    Dimensions,
    Platform,
-   ImageBackground
+   ImageBackground,
+   ImageSourcePropType
 } from "react-native";
 import { Card, Paragraph, Text } from "react-native-paper";
 import ImagesScroll from "../ImagesScroll/ImagesScroll";
@@ -21,20 +22,19 @@ import { useTags } from "../../../api/server/tags";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { fromBirthDateToAge } from "../../../api/tools/date-tools";
 import { LoadingAnimation, RenderMethod } from "../LoadingAnimation/LoadingAnimation";
-import { useServerInfo } from "../../../api/server/server-info";
 import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { currentTheme } from "../../../config";
 import { ParamsRegistrationFormsPage } from "../../pages/RegistrationFormsPage/RegistrationFormsPage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import CardAnimator, { CardAnimationType } from "./CardAnimator/CardAnimator";
 import { getGenderName } from "../../../common-tools/strings/gender";
-import { prepareUrl } from "../../../api/tools/httpRequest";
 import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 import TagChipList from "../TagChipList/TagChipList";
 import MoreModal from "./MoreModal/MoreModal";
 import { useCallback } from "react";
 import { removeBannedWords } from "../../../common-tools/strings/social";
 import { useOnlyVisibleTags } from "../../../common-tools/tags/useOnlyVisibleTags";
+import { useImageFullUrl } from "../../../api/tools/useImageFullUrl";
 
 export interface ProfileCardProps {
    user: User;
@@ -71,6 +71,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    const genderText: string = getGenderName(genders, isCoupleProfile);
 
    const { navigate } = useNavigation();
+   const { getImageFullUrl, isLoading: imagesFullUrlLoading } = useImageFullUrl();
    const [renderImageModal, setRenderImageModal] = useState(false);
    const [showMoreOptionsModal, setShowMoreOptionsModal] = useState(false);
    const [imageSelected, setImageSelected] = useState(0);
@@ -79,7 +80,6 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    const { colors } = useTheme();
    const { data: localUser } = useUser();
    const { data: allTags, isLoading: tagsLoading } = useTags();
-   const { data: serverInfo, isLoading: serverInfoLoading } = useServerInfo();
    const isOwnProfile = localUser?.userId === userId;
 
    const tagsSubscribedInCommon: Tag[] = useOnlyVisibleTags(
@@ -102,11 +102,6 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    //    [localUser, tagsSubscribed, allTags]
    // ));
 
-   const finalImagesUri = useMemo(
-      () => images?.map(uri => prepareUrl(serverInfo.imagesHost + uri)) ?? [],
-      [images]
-   );
-
    const handleLikePress = useCallback(() => {
       setOnAnimationFinish({ func: onLikePress });
       setAnimate(CardAnimationType.Like);
@@ -125,9 +120,11 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       setShowMoreOptionsModal(false);
    }, []);
 
-   if (!localUser || tagsLoading || serverInfoLoading) {
+   if (!localUser || tagsLoading || imagesFullUrlLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
+
+   const finalImages = images?.map(uri => getImageFullUrl(uri)) ?? [];
 
    return (
       <>
@@ -142,23 +139,27 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                   <Card style={styles.card}>
                      <View>
                         <ImagesScroll
-                           images={finalImagesUri}
+                           images={finalImages}
                            style={[styles.galleryScroll]}
                            onImageClick={(i: number) => {
                               setImageSelected(i);
                               setRenderImageModal(true);
                            }}
-                           renderImage={(uri: string, imageProps: ImageProps) => (
+                           renderImage={(
+                              image: ImageSourcePropType,
+                              imageProps: ImageProps,
+                              key: string | number
+                           ) => (
                               <ImageBackground
                                  style={{ width: "100%", height: "100%" }}
-                                 source={{ uri }}
+                                 source={image}
                                  blurRadius={Platform.OS === "ios" ? 120 : 60}
                               >
                                  <Image
                                     {...imageProps}
                                     resizeMethod={"resize"}
                                     resizeMode={"contain"}
-                                    key={uri}
+                                    key={key}
                                  />
                               </ImageBackground>
                            )}
@@ -276,7 +277,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
          {renderImageModal === true && (
             <ImagesModal
                visible={renderImageModal}
-               images={finalImagesUri}
+               images={finalImages}
                initialPage={imageSelected}
                onClose={() => setRenderImageModal(false)}
             />

@@ -8,15 +8,20 @@ import {
    ImageProps,
    ScrollView,
    NativeSyntheticEvent,
-   NativeScrollEvent
+   NativeScrollEvent,
+   ImageSourcePropType
 } from "react-native";
 import DotsIndicator from "../DotsIndicator/DotsIndicator";
 import { Asset } from "expo-asset";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 export interface PropsImagesScroll {
-   images: string[];
-   renderImage?: (image: string, imageProps: ImageProps) => JSX.Element;
+   images: ImageSourcePropType[];
+   renderImage?: (
+      image: ImageSourcePropType,
+      imageProps: ImageProps,
+      key: string | number
+   ) => JSX.Element;
    onImageClick?: (index: number) => void;
    style?: StyleProp<ViewStyle>;
    scrollViewStyle?: StyleProp<ViewStyle>;
@@ -38,12 +43,20 @@ const ImagesScroll: FC<PropsImagesScroll> = props => {
    const [imagesHeight, setImagesHeight] = useState(0);
    const [currentPictureFocused, setCurrentPictureFocused] = useState(0);
 
-   useEffect(() => {
-      cacheImages();
-   }, []);
+   // useEffect(() => {
+   //    cacheImages();
+   // }, []);
 
-   const findImageToRender = (image: string, imageProps: ImageProps): JSX.Element => {
-      return renderImage ? renderImage(image, imageProps) : <Image {...imageProps} key={image} />;
+   const findImageToRender = (
+      image: ImageSourcePropType,
+      imageProps: ImageProps,
+      key: string | number
+   ): JSX.Element => {
+      return renderImage ? (
+         renderImage(image, imageProps, key)
+      ) : (
+         <Image {...imageProps} key={key} />
+      );
    };
 
    const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -54,15 +67,15 @@ const ImagesScroll: FC<PropsImagesScroll> = props => {
       );
    };
 
-   const cacheImages = (): Promise<void> | unknown => {
-      return images?.map(image => {
-         if (typeof image === "string") {
-            return Image.prefetch(image);
-         } else {
-            return Asset.fromModule(image).downloadAsync();
-         }
-      });
-   };
+   // const cacheImages = (): Promise<void> | unknown => {
+   //    return images?.map(image => {
+   //       if (typeof image === "string") {
+   //          return Image.prefetch(image);
+   //       } else {
+   //          return Asset.fromModule(image).downloadAsync();
+   //       }
+   //    });
+   // };
 
    return (
       <View
@@ -79,22 +92,30 @@ const ImagesScroll: FC<PropsImagesScroll> = props => {
             showsHorizontalScrollIndicator={false}
             onScroll={event => onScroll(event)}
          >
-            {images?.map((value: string, i: number) =>
+            {images?.map((value: ImageSourcePropType, i: number) =>
                !onImageClick ? (
-                  findImageToRender(value, {
-                     style: [{ width: imagesWidth, height: imagesHeight }, imagesStyle],
-                     source: { uri: value }
-                  })
+                  findImageToRender(
+                     value,
+                     {
+                        style: [{ width: imagesWidth, height: imagesHeight }, imagesStyle],
+                        source: value
+                     },
+                     i
+                  )
                ) : (
                   <ViewTouchable
                      onPress={() => onImageClick && onImageClick(i)}
                      style={{ borderRadius: 0 }}
                      key={i}
                   >
-                     {findImageToRender(value, {
-                        style: [{ width: imagesWidth, height: imagesHeight }, imagesStyle],
-                        source: { uri: value }
-                     })}
+                     {findImageToRender(
+                        value,
+                        {
+                           style: [{ width: imagesWidth, height: imagesHeight }, imagesStyle],
+                           source: value
+                        },
+                        i
+                     )}
                   </ViewTouchable>
                )
             )}

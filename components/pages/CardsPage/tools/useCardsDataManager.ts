@@ -22,20 +22,17 @@ export function useCardsDataManager(cardsFromServer: User[]): UseCardsDataManage
    const [usersToRender, setUsersToRender] = useState<User[]>([]);
    const attractionsQueue = useRef<Attraction[]>([]);
    const appendMode = useRef(false);
-   const [
-      attractionsShouldBeSentReason,
-      setAttractionsShouldBeSentReason
-   ] = useState<AttractionsSendReason>(AttractionsSendReason.None);
-   const [
-      shouldRequestMoreUsersReason,
-      setShouldRequestMoreUsersReason
-   ] = useState<RequestMoreUsersReason>(RequestMoreUsersReason.None);
+   const [attractionsShouldBeSentReason, setAttractionsShouldBeSentReason] =
+      useState<AttractionsSendReason>(AttractionsSendReason.None);
+   const [shouldRequestMoreUsersReason, setShouldRequestMoreUsersReason] =
+      useState<RequestMoreUsersReason>(RequestMoreUsersReason.None);
    const noMoreUsersLeft =
       currentUserDisplaying >= usersToRender.length && cardsFromServer?.length === 0;
 
    const isLoading =
       cardsFromServer == null ||
       (currentUserDisplaying >= usersToRender.length && !noMoreUsersLeft);
+
    /**
     * If more users are coming from server replace usersToRender or add them at the end of it
     */
