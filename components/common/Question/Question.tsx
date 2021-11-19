@@ -14,6 +14,7 @@ export interface PropsQuestion {
    answers: Answer[];
    initiallySelected?: string[];
    initiallyItsImportantChecked?: boolean;
+   itsImportantInvisible?: boolean;
    onChange: (changes: QuestionOnChange) => void;
    questionExtraText?: string;
    multipleAnswersAllowed?: boolean;
@@ -42,7 +43,8 @@ const Question: FC<PropsQuestion> = props => {
       onChange,
       incompatibilitiesBetweenAnswers,
       initiallySelected,
-      initiallyItsImportantChecked
+      initiallyItsImportantChecked,
+      itsImportantInvisible
    } = props;
    const { colors } = useTheme();
    const [selectedAnswer, setSelectedAnswer] = useState<string>(initiallySelected?.[0]);
@@ -120,6 +122,7 @@ const Question: FC<PropsQuestion> = props => {
             onChange={checked => setItsImportantChecked(checked)}
             selectedAnswer={answers.findIndex(a => a.id === selectedAnswer)}
             incompatibilitiesBetweenAnswers={incompatibilitiesBetweenAnswers}
+            invisible={itsImportantInvisible}
          />
       </>
    );

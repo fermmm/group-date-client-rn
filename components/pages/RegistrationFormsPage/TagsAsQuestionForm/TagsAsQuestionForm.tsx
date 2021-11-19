@@ -35,7 +35,8 @@ const TagsAsQuestionForm: FC<PropsTagsAsQuestionForm> = props => {
       question,
       initiallySelectedAnswer,
       initiallyItsImportantChecked,
-      tagsToUpdate
+      tagsToUpdate,
+      itsImportantSelectorInvisible
    } = useTagAsQuestionInfo(
       tagsAsQuestions,
       questionId,
@@ -76,6 +77,7 @@ const TagsAsQuestionForm: FC<PropsTagsAsQuestionForm> = props => {
          multipleAnswersAllowed={false}
          initiallySelected={[initiallySelectedAnswer]}
          initiallyItsImportantChecked={initiallyItsImportantChecked}
+         itsImportantInvisible={itsImportantSelectorInvisible}
          onChange={handleQuestionChange}
       />
    );

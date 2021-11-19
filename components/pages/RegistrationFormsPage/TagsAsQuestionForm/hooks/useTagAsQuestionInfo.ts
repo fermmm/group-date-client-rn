@@ -22,11 +22,11 @@ export function useTagAsQuestionInfo(
       question
    );
    const selectedAnswerIncompatibles = getIncompatibleAnswersOf(selectedAnswer, question);
-   const initiallyItsImportantChecked = getInitiallyItsImportantChecked(
-      initiallySelectedAnswer?.[0],
-      initialData.tagsBlocked,
+   const initiallyItsImportantChecked = getInitiallyItsImportantChecked({
+      initiallySelectedAnswer: initiallySelectedAnswer?.[0],
+      tagsBlocked: initialData.tagsBlocked,
       question
-   );
+   });
    const tagsToUpdate = getTagsToUpdate({
       initiallySelectedAnswer,
       initiallyItsImportantChecked,
@@ -41,7 +41,8 @@ export function useTagAsQuestionInfo(
       question,
       initiallySelectedAnswer,
       initiallyItsImportantChecked,
-      tagsToUpdate
+      tagsToUpdate,
+      itsImportantSelectorInvisible: question?.filterSelectionInvisible ?? false
    };
 }
 
@@ -51,6 +52,7 @@ export interface UseTagInfoResponse {
    initiallySelectedAnswer: string;
    initiallyItsImportantChecked: boolean;
    tagsToUpdate?: TagsToUpdate;
+   itsImportantSelectorInvisible: boolean;
 }
 
 function getTagsToUpdate(props: {
@@ -137,24 +139,32 @@ function getInitiallySelectedAnswer(
    return [optionSelected.tagId];
 }
 
-function getInitiallyItsImportantChecked(
-   initiallySelectedAnswer: string,
-   tagsBlocked: TagBasicInfo[],
-   question: TagsAsQuestion
-) {
-   if (question == null || initiallySelectedAnswer == null) {
+function getInitiallyItsImportantChecked(props: {
+   initiallySelectedAnswer: string;
+   tagsBlocked: TagBasicInfo[];
+   question: TagsAsQuestion;
+}) {
+   const { initiallySelectedAnswer, tagsBlocked, question } = props;
+
+   if (question == null) {
       return false;
+   }
+
+   // If this is not null it means the user never answered this question. initiallySelectedAnswer comes from checking the tags subscribed.
+   if (initiallySelectedAnswer == null) {
+      return question?.filterSelectedByDefault ?? false;
    }
 
    const incompatibleAnswers = getIncompatibleAnswersOf(initiallySelectedAnswer, question);
 
    // If any incompatible answer is a tag blocked by the user then it's important is considered checked
-   const incompatibleAnswerIsBlocked = incompatibleAnswers.find(
-      incompatibleAnswer =>
-         tagsBlocked?.find(tagBlocked => tagBlocked.tagId === incompatibleAnswer) != null
-   );
+   const incompatibleAnswerIsATagBlocked =
+      incompatibleAnswers.find(
+         incompatibleAnswer =>
+            tagsBlocked?.find(tagBlocked => tagBlocked.tagId === incompatibleAnswer) != null
+      ) != null;
 
-   return incompatibleAnswerIsBlocked != null;
+   return incompatibleAnswerIsATagBlocked;
 }
 
 function getIncompatibleAnswersOf(answerId: string, question: TagsAsQuestion): string[] {

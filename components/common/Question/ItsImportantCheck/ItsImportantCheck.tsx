@@ -11,10 +11,18 @@ interface PropsItsImportantCheck {
    onChange: (checked: boolean) => void;
    selectedAnswer?: number;
    incompatibilitiesBetweenAnswers?: { [key: number]: number[] };
+   invisible?: boolean;
 }
 
 const ItsImportantCheck: FC<PropsItsImportantCheck> = props => {
-   const { checked, onChange, answers, selectedAnswer, incompatibilitiesBetweenAnswers } = props;
+   const {
+      checked,
+      onChange,
+      answers,
+      selectedAnswer,
+      incompatibilitiesBetweenAnswers,
+      invisible
+   } = props;
 
    if (
       selectedAnswer == null ||
@@ -48,6 +56,8 @@ const ItsImportantCheck: FC<PropsItsImportantCheck> = props => {
       );
    };
 
+   console.log("INVISIBLE", invisible);
+
    return (
       <ListItemImproved
          title="Usar de filtro"
@@ -57,7 +67,7 @@ const ItsImportantCheck: FC<PropsItsImportantCheck> = props => {
          )}
          onPress={() => onChange(!checked)}
          disabled={incompatibilities.length === 0}
-         style={styles.importantCheck}
+         style={[styles.importantCheck, invisible ? { display: "none" } : {}]}
       />
    );
 };
