@@ -48,7 +48,6 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
    const { colors } = useTheme();
    const [uri, setUri] = useState(initialUri);
    const [fullUri, setFullUri] = useState(null);
-   const [imageSize, setImageSize] = useState<{ width: number; height: number }>(null);
    const [id] = useState(props.id);
    const [isUploading, setIsUploading] = useState(false);
    const touchableRef = useRef<View>(null);
@@ -107,26 +106,15 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
 
       const finalFullUri = getImageFullUrl(uploadResponse.data.fileNameBig);
 
-      // This helps with the image catching
-      Image.getSize(
-         finalFullUri,
-         (width, height) => {
-            setImageSize({ width, height });
-            setFullUri(finalFullUri);
-            setUri(uploadResponse.data.fileNameBig);
-            setIsUploading(false);
-         },
-         () => {
-            setIsUploading(false);
-         }
-      );
+      setFullUri(finalFullUri);
+      setUri(uploadResponse.data.fileNameBig);
+      setIsUploading(false);
    };
 
    const handleDeleteImage = () => {
       hideMenu();
       setUri(null);
       setFullUri(null);
-      setImageSize(null);
       onImageDeleted(id);
    };
 
@@ -149,11 +137,11 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
                      <ImageBackground
                         style={[styles.imageBackground, { opacity: repositionMode ? 0.25 : 1 }]}
                         imageStyle={styles.image as ImageStyle}
-                        source={{ uri: fullUri }}
+                        source={fullUri}
                         blurRadius={Platform.OS === "ios" ? 120 : 60}
                      >
                         <Image
-                           source={{ uri: fullUri }}
+                           source={fullUri}
                            resizeMode={"contain"}
                            style={styles.image as ImageStyle}
                         />
