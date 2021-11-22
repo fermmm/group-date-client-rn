@@ -41,15 +41,8 @@ const ContactPage: FC = () => {
          <AppBarHeader onBackPress={goBack} />
          <BasicScreenContainer style={styles.mainContainer}>
             <TitleText extraSize style={styles.title}>
-               Grupo para intercambiar ideas y aportes
+               Grupo de Facebook para intercambiar ideas y aportes
             </TitleText>
-            <Text style={styles.text}>
-               Tenemos un grupo de Facebook que visitamos todos los dias los creadores de la app
-               donde puedes dejar tus criticas, sugerencias o cualquier forma de colaboración desde
-               tu profesión o forma de ver el mundo, así como también disfrutar de lo que sucede
-               ahí. Este proyecto no es comercial y son estas colaboraciones diversas las que lo
-               hacen funcionar.
-            </Text>
             <EmptySpace height={15} />
             <Button onPress={handleCollaborationGroupPress} mode="text" color={colors.accent2}>
                Visitar grupo de Facebook
