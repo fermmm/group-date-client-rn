@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { StyleSheet, GestureResponderEvent, ViewStyle, StyleProp } from "react-native";
-import { Avatar as PaperAvatar } from "react-native-paper";
+import { Avatar as PaperAvatar, List } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 import { ImageSize, useImageFullUrl } from "../../../api/tools/useImageFullUrl";
@@ -16,8 +16,12 @@ const Avatar: FC<PropsAvatar> = props => {
    const { source, size, onPress, style } = props;
    const { getImageFullUrl, isLoading } = useImageFullUrl();
 
-   if (isLoading || !source) {
+   if (isLoading) {
       return null;
+   }
+
+   if (source == null) {
+      return <List.Icon style={{ marginLeft: 5, marginRight: 8 }} icon="account-circle" />;
    }
 
    const finalSource = getImageFullUrl(source, ImageSize.Small);

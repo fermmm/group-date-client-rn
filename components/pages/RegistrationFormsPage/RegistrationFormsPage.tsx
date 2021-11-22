@@ -34,7 +34,6 @@ import GenderForm from "./GenderForm/GenderForm";
 import { IsCoupleQuestion } from "./IsCoupleQuestion/IsCoupleQuestion";
 import { useAnalyticsForRegistration } from "../../../common-tools/analytics/registrationFormsPage/useAnalyticsForRegistration";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
-import TitleSmallText from "../../common/TitleSmallText/TitleSmallText";
 import TitleMediumText from "../../common/TitleMediumText/TitleMediumText";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 

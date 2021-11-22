@@ -88,10 +88,6 @@ const ProfileImagesForm: FC<PropsProfileImagesForm> = props => {
    };
 
    const getErrors = (): string | null => {
-      if (getImagesArray().length === 0) {
-         return "Debes subir al menos una foto en la que se te vea, lxs que pongan cualquier imagen para hacer trampa serán invisibles ya que son tomados como spam.";
-      }
-
       if (imageToReposition != null) {
          return "Debes elegir la nueva posición para tu foto.";
       }
