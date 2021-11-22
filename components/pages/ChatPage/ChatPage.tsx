@@ -85,7 +85,7 @@ const ChatPage: FC = () => {
                   createdAt: moment(message.time, "X").toDate(),
                   user: {
                      _id: message.authorUserId,
-                     name: usr?.name,
+                     name: usr?.name ?? "[Abandonó el grupo]",
                      avatar: usr?.images?.[0]
                   }
                };
@@ -194,7 +194,8 @@ const ChatPage: FC = () => {
                            getColorForUser(
                               props.currentMessage.user._id as string,
                               group,
-                              chatNamesColors
+                              chatNamesColors,
+                              "white"
                            )
                         )
                            .desaturate(0.3)

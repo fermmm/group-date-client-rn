@@ -1,9 +1,14 @@
 import { ChatMessage } from "../../../../api/server/shared-tools/endpoints-interfaces/common";
 import { Group } from "../../../../api/server/shared-tools/endpoints-interfaces/groups";
 
-export const getColorForUser = (userId: string, group: Group, colors: string[]) => {
+export const getColorForUser = (
+   userId: string,
+   group: Group,
+   colors: string[],
+   defaultColor = "black"
+) => {
    const memberIndex = group.members.findIndex(m => m.userId === userId);
-   return colors[memberIndex] ?? "black";
+   return colors[memberIndex] ?? defaultColor;
 };
 
 export const getUnknownUsersFromChat = (group: Group, updatedChat: ChatMessage[]): string[] => {

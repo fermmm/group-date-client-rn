@@ -66,8 +66,11 @@ const VotingPoll: FC<VotingPollProps> = props => {
                      </Text>
                      <Text style={styles.votersText}>
                         {votingOption.voters
-                           .map(id =>
-                              toFirstUpperCase(potentialVoters.find(v => v.userId === id).name)
+                           .map(
+                              id =>
+                                 toFirstUpperCase(
+                                    potentialVoters.find(v => v.userId === id)?.name
+                                 ) ?? "[Abandonó el grupo]"
                            )
                            .join(", ")}
                      </Text>
