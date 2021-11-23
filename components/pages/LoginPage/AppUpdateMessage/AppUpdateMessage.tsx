@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { Linking, Platform, StyleSheet, View } from "react-native";
 import * as Application from "expo-application";
+import * as Updates from "expo-updates";
 import { Text } from "react-native-paper";
 import { ServerInfoResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/server-info";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
@@ -41,9 +42,19 @@ const AppUpdateMessage: FC<PropsAppUpdateMessage> = ({ serverInfo }) => {
 
    if (serverInfo?.codeVersionIsCompatible === false) {
       return (
-         <Text style={styles.textBlock}>
-            Debes actualizar la app, reiniciala para que se actualice
-         </Text>
+         <View style={styles.mainContainer}>
+            <Text style={styles.textBlock}>
+               Debes actualizar la app, reiniciala para que se actualice
+            </Text>
+            <ButtonStyled
+               color={colors.textLogin}
+               style={styles.button}
+               contentStyle={styles.buttonContent}
+               onPress={Updates.reloadAsync}
+            >
+               Reiniciar
+            </ButtonStyled>
+         </View>
       );
    }
 
