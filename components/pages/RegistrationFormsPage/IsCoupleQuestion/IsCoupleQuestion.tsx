@@ -78,7 +78,7 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
             false
          );
 
-         return true;
+         return isUnicornHunterInsisting;
       };
 
       props.onChange(changes);
