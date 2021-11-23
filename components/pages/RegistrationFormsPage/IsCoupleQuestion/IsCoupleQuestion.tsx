@@ -78,7 +78,7 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
             false
          );
 
-         return false;
+         return true;
       };
 
       props.onChange(changes);
