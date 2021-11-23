@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { GiftedChat, Bubble, Send, IMessage } from "react-native-gifted-chat";
@@ -145,7 +145,7 @@ const ChatPage: FC = () => {
       <>
          <AppBarHeader title={!isContactChat ? "" : "Contáctanos"} onBackPress={goBack} />
          <PageBackgroundGradient>
-            {/* Tal vez este mensaje condiciona a los usuarios implantándoles una realidad en su mente que tal vez nunca suceda*/}
+            {/* Tal vez este mensaje condiciona a los usuarios agregando una realidad en su mente que tal vez nunca suceda*/}
             {/* 
                !isContactChat && (
                   <HelpBanner
@@ -159,7 +159,6 @@ const ChatPage: FC = () => {
                   />
                )
             */}
-
             <GiftedChat
                messages={messages}
                onSend={messages => handleSend(messages)}
@@ -238,11 +237,14 @@ const ChatPage: FC = () => {
                   <Send {...props} label={"Enviar"} textStyle={{ color: colors.primary }} />
                )}
                keyboardShouldPersistTaps={"never"}
+               isKeyboardInternallyHandled={false}
                maxInputLength={5000}
                locale={I18n.locale}
+               bottomOffset={-40}
                scrollToBottom
                alignTop
             />
+            {Platform.OS === "android" && <KeyboardAvoidingView behavior="height" />}
             <Dialog visible={showIntroDialog} onDismiss={() => setShowIntroDialog(false)}>
                {params?.introDialogText}
             </Dialog>
