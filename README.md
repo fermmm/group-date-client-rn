@@ -150,4 +150,7 @@ For final build and publishing of the app you may find useful the [instructions 
 4. **Google login**: As mentioned in the previos step Google Play signs your app so also Google login is affected:
     1. In Google Play Console, on the left panel under "Release" go to Setup -> App Integrity, copy the "SHA-1 certificate fingerprint", the one that is under "App signing key certificate"
     2. Go to the [https://console.cloud.google.com/apis/credentials](credentials page) of Google Cloud, then click on "+ Create credentials" -> "OAuth client ID" -> android -> paste the corresponding field the SHA-1 copied in the previous step, then click create. Now google login should work on the published app.
- 
+
+## Update Expo SDK
+
+To update Expo SDK follow the instructions on the Expo documentation. Then search for this on the android manifest: ```expo.modules.updates.EXPO_SDK_VERSION``` and replace the version number with the new Expo SDK version.
