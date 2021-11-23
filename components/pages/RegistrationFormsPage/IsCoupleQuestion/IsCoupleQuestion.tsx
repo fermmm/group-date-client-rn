@@ -1,5 +1,7 @@
 import React, { FC } from "react";
 import { Alert, Linking } from "react-native";
+import { useAuthentication } from "../../../../api/authentication/useAuthentication";
+import { sendUserProps } from "../../../../api/server/user";
 import { analyticsLogEvent } from "../../../../common-tools/analytics/tools/analyticsLog";
 import { AlertAsync } from "../../../../common-tools/device-native-api/dialogs/AlertAsync";
 import PropAsQuestionForm, {
@@ -13,6 +15,7 @@ interface PropsIsCoupleQuestion extends PropsPropAsQuestionForm {
 
 export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
    const { formName, propNamesToChange, initialData, isOnFocus } = props;
+   const { token } = useAuthentication();
 
    const onChange = (changes: OnChangeFormParams) => {
       if (!isOnFocus) {
@@ -25,11 +28,14 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
          }
 
          const isUnicornHunter = await AlertAsync({
-            message: "¿Estás buscando a alguien para sumar a tu pareja, un trio o swinger?",
+            message: "¿Estás buscando a alguien para sumar a tu pareja?",
             buttons: [
                { text: "No", onPressReturns: false },
-               { text: "Si, solo quiero algo de eso", onPressReturns: true }
-            ]
+               { text: "Si, busco trio", onPressReturns: true }
+            ],
+            options: {
+               cancelable: false
+            }
          });
 
          if (isUnicornHunter === false) {
@@ -38,25 +44,43 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
 
          analyticsLogEvent(`is_unicorn_hunter`);
 
-         Alert.alert(
-            "",
-            "Entonces esta app no te sirve, aquí los encuentros son entre muchas personas, no es una app para trios, es una propuesta nueva. Cada app tiene su público. La app 3Fun tiene lo que buscas.",
-            [
+         const isUnicornHunterInsisting = await AlertAsync({
+            message:
+               "Entonces esta app no te sirve, aquí los encuentros son entre muchas personas para disfrutar el hecho de ser muchxs, no es una app para trios, es una propuesta nueva. Cada app tiene su público. La app 3Fun tiene lo que buscas.",
+            buttons: [
                {
-                  text: "Descargar 3Fun",
-                  onPress: () =>
-                     Linking.openURL(
-                        "https://play.google.com/store/apps/details?id=com.threesome.swingers.app.threefun"
-                     )
+                  text: "Cancelar",
+                  onPressReturns: false
                },
                {
-                  text: "Me importa una mierda" // Implement shadow ban
+                  text: "Continuar buscando trio",
+                  onPressReturns: true
+               },
+               {
+                  text: "Descargar 3Fun",
+                  onPress: () => {
+                     Linking.openURL("market://details?id=com.threesome.swingers.app.threefun");
+                     return false;
+                  }
                }
-            ]
+            ],
+            options: {
+               cancelable: false
+            }
+         });
+
+         sendUserProps(
+            {
+               token,
+               props: { isUnicornHunter, isUnicornHunterInsisting },
+               updateProfileCompletedProp: false
+            },
+            false
          );
 
          return false;
       };
+
       props.onChange(changes);
    };
 

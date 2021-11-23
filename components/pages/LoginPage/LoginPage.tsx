@@ -30,8 +30,6 @@ import { analyticsLogUser } from "../../../common-tools/analytics/tools/analytic
 import VersionIndicator from "./VersionIndicator/VersionIndicator";
 
 const LoginPage: FC = () => {
-   // These are constants for debugging:
-   const showDebugButtons: boolean = false;
    const { colors } = useTheme();
    const { navigateWithoutHistory } = useNavigation();
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
@@ -90,8 +88,6 @@ const LoginPage: FC = () => {
       }
    }, [profileStatusData, sendLoginPropsCompleted]);
 
-   const handleCancelPress = (timeWaitedMs: number) => {};
-
    const showAuthenticationButtons: boolean =
       profileStatusError ||
       (canUseServer &&
@@ -127,19 +123,6 @@ const LoginPage: FC = () => {
                </Text>
             )}
             <AppUpdateMessage serverInfo={serverInfoData} />
-            {showDebugButtons && (
-               <>
-                  <ButtonStyled
-                     color={colors.textLogin}
-                     style={styles.button}
-                     onPress={() => {
-                        removeAllLocalStorage();
-                     }}
-                  >
-                     Debug button
-                  </ButtonStyled>
-               </>
-            )}
             <AuthenticationButtons show={showAuthenticationButtons} authentication={auth} />
             <VersionIndicator />
          </View>

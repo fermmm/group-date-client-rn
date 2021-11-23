@@ -9,7 +9,15 @@ export async function AlertAsync<T>(props: AlertAsyncProps<T>) {
       props.message ?? "",
       props.buttons.map(button => ({
          text: button.text,
-         onPress: () => resolvePromise(button.onPressReturns)
+         onPress: () => {
+            if (button.onPressReturns != null) {
+               resolvePromise(button.onPressReturns);
+            }
+
+            if (button.onPress) {
+               resolvePromise(button.onPress());
+            }
+         }
       })),
       props.options
    );
@@ -26,6 +34,7 @@ export interface AlertAsyncProps<T> {
 
 export interface AlertAsyncButton<T> {
    text: string;
-   onPressReturns: T;
+   onPressReturns?: T;
    style?: "default" | "cancel" | "destructive";
+   onPress?: () => T;
 }
