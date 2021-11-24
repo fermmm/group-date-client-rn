@@ -165,7 +165,7 @@ const ChatPage: FC = () => {
                   />
                )
             */}
-            {!useGiftedChat && <Chat />}
+            {!useGiftedChat && <Chat messages={groupChatFromServer?.messages} />}
             {useGiftedChat && (
                <GiftedChat
                   messages={messages}
