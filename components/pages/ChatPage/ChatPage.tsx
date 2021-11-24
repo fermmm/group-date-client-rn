@@ -25,6 +25,7 @@ import { getColorForUser, getUnknownUsersFromChat } from "./tools/chat-tools";
 import { stringIsEmptyOrSpacesOnly } from "../../../common-tools/js-tools/js-tools";
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
+import Chat from "../../common/Chat/Chat";
 
 export interface ChatPageState {
    messages: IMessage[];
@@ -63,6 +64,11 @@ const ChatPage: FC = () => {
       whenBackNotAvailable: { goToRoute: "Group", params: { groupId: params?.groupId } }
    });
    const isLoading: boolean = group == null || user == null;
+
+   /**
+    * TEMP
+    */
+   const useGiftedChat = false;
 
    useFocusEffect(
       useCallback(() => {
@@ -159,91 +165,96 @@ const ChatPage: FC = () => {
                   />
                )
             */}
-            <GiftedChat
-               messages={messages}
-               onSend={messages => handleSend(messages)}
-               user={{
-                  _id: user.userId
-               }}
-               renderUsernameOnMessage={true}
-               alwaysShowSend
-               placeholder={"Escribir un mensaje..."}
-               renderAvatar={props => {
-                  return <Avatar size={48} source={props.currentMessage.user.avatar as string} />;
-               }}
-               renderBubble={props => (
-                  <Bubble
-                     {...props}
-                     renderTime={() => null}
-                     renderTicks={() => null}
-                     textStyle={{
-                        right: {
-                           color: colors.text2,
-                           fontFamily: font.regular,
-                           fontSize: 14
-                        },
-                        left: {
-                           color: colors.text2,
-                           fontFamily: font.regular,
-                           fontSize: 14
-                        }
-                     }}
-                     usernameStyle={{
-                        color: color(
-                           getColorForUser(
-                              props.currentMessage.user._id as string,
-                              group,
-                              chatNamesColors,
-                              "white"
-                           )
-                        )
-                           .desaturate(0.3)
-                           .lighten(0.3)
-                           .toString(),
-                        fontFamily: font.semiBold,
-                        fontSize: 10
-                     }}
-                     wrapperStyle={{
-                        right: {
-                           backgroundColor: props.currentMessage.pending
-                              ? color(colors.specialBackground1)
-                                   .alpha(0.5)
-                                   .desaturate(0.5)
-                                   .toString()
-                              : color(colors.specialBackground1)
-                                   .darken(0.4)
-                                   .desaturate(0.5)
-                                   .toString(),
-                           padding: 3
-                        },
-                        left: {
-                           backgroundColor: color(
+            {!useGiftedChat && <Chat />}
+            {useGiftedChat && (
+               <GiftedChat
+                  messages={messages}
+                  onSend={messages => handleSend(messages)}
+                  user={{
+                     _id: user.userId
+                  }}
+                  renderUsernameOnMessage={true}
+                  alwaysShowSend
+                  placeholder={"Escribir un mensaje..."}
+                  renderAvatar={props => {
+                     return (
+                        <Avatar size={48} source={props.currentMessage.user.avatar as string} />
+                     );
+                  }}
+                  renderBubble={props => (
+                     <Bubble
+                        {...props}
+                        renderTime={() => null}
+                        renderTicks={() => null}
+                        textStyle={{
+                           right: {
+                              color: colors.text2,
+                              fontFamily: font.regular,
+                              fontSize: 14
+                           },
+                           left: {
+                              color: colors.text2,
+                              fontFamily: font.regular,
+                              fontSize: 14
+                           }
+                        }}
+                        usernameStyle={{
+                           color: color(
                               getColorForUser(
                                  props.currentMessage.user._id as string,
                                  group,
-                                 chatNamesColors
+                                 chatNamesColors,
+                                 "white"
                               )
                            )
-                              .darken(0.4)
-                              .desaturate(0.8)
+                              .desaturate(0.3)
+                              .lighten(0.3)
                               .toString(),
-                           padding: 3
-                        }
-                     }}
-                  />
-               )}
-               // renderInputToolbar={() => null} // This will be required when remaking input toolbar
-               renderSend={props => (
-                  <Send {...props} label={"Enviar"} textStyle={{ color: colors.primary }} />
-               )}
-               keyboardShouldPersistTaps={"never"}
-               isKeyboardInternallyHandled={false}
-               maxInputLength={5000}
-               locale={I18n.locale}
-               bottomOffset={-40}
-               scrollToBottom
-               alignTop
-            />
+                           fontFamily: font.semiBold,
+                           fontSize: 10
+                        }}
+                        wrapperStyle={{
+                           right: {
+                              backgroundColor: props.currentMessage.pending
+                                 ? color(colors.specialBackground1)
+                                      .alpha(0.5)
+                                      .desaturate(0.5)
+                                      .toString()
+                                 : color(colors.specialBackground1)
+                                      .darken(0.4)
+                                      .desaturate(0.5)
+                                      .toString(),
+                              padding: 3
+                           },
+                           left: {
+                              backgroundColor: color(
+                                 getColorForUser(
+                                    props.currentMessage.user._id as string,
+                                    group,
+                                    chatNamesColors
+                                 )
+                              )
+                                 .darken(0.4)
+                                 .desaturate(0.8)
+                                 .toString(),
+                              padding: 3
+                           }
+                        }}
+                     />
+                  )}
+                  // renderInputToolbar={() => null} // This will be required when remaking input toolbar
+                  renderSend={props => (
+                     <Send {...props} label={"Enviar"} textStyle={{ color: colors.primary }} />
+                  )}
+                  keyboardShouldPersistTaps={"never"}
+                  isKeyboardInternallyHandled={false}
+                  maxInputLength={5000}
+                  locale={I18n.locale}
+                  bottomOffset={-40}
+                  scrollToBottom
+                  alignTop
+               />
+            )}
             {Platform.OS === "android" && <KeyboardAvoidingView behavior="height" />}
             <Dialog visible={showIntroDialog} onDismiss={() => setShowIntroDialog(false)}>
                {params?.introDialogText}
