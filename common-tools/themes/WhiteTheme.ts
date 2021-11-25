@@ -33,15 +33,17 @@ export default {
       deviceNotificationLed: "#5EFFF4"
    },
    chatNamesColors: [
+      "#29b516",
       "#a85b7c",
+      "#006cff",
       "#379ba8",
       "#f72e62",
+      "#f0ff00",
       "#2b8129",
       "#2d2981",
       "#000000",
       "#7778b1",
       "#755c72",
-      "#29b516",
       "#878900",
       "#00bab3",
       "#660000",
@@ -49,10 +51,8 @@ export default {
       "#de5b5b",
       "#d95bde",
       "#9600ff",
-      "#006cff",
       "#a2ff00",
-      "#0c00ff",
-      "#f0ff00"
+      "#0c00ff"
    ],
    font: montserrat,
    fonts: montserratForPaper,

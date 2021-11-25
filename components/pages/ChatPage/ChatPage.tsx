@@ -6,7 +6,6 @@ import { GiftedChat, Bubble, Send, IMessage } from "react-native-gifted-chat";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import Dialog from "../../common/Dialog/Dialog";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
-import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { PageBackgroundGradient } from "../../common/PageBackgroundGradient/PageBackgroundGradient";
@@ -22,10 +21,13 @@ import Avatar from "../../common/Avatar/Avatar";
 import { revalidate } from "../../../api/tools/useCache/useCache";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { getColorForUser, getUnknownUsersFromChat } from "./tools/chat-tools";
-import { stringIsEmptyOrSpacesOnly } from "../../../common-tools/js-tools/js-tools";
+import {
+   stringIsEmptyOrSpacesOnly,
+   toFirstUpperCase
+} from "../../../common-tools/js-tools/js-tools";
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
-import Chat from "../../common/Chat/Chat";
+import Chat, { ChatMessageProps } from "../../common/Chat/Chat";
 
 export interface ChatPageState {
    messages: IMessage[];
@@ -44,7 +46,8 @@ const ChatPage: FC = () => {
    const { colors, font, chatNamesColors } = useTheme();
    const analyticsSent = useRef(false);
    const { params } = useRoute<RouteProps<ParamsChat>>();
-   const [messages, setMessages] = useState<IMessage[]>([]);
+   const [messagesOLD, setMessagesOLD] = useState<IMessage[]>([]);
+   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
    const [showIntroDialog, setShowIntroDialog] = useState(params?.introDialogText != null);
    const isContactChat = params?.contactChat ?? false;
    const { token } = useAuthentication();
@@ -81,7 +84,7 @@ const ChatPage: FC = () => {
          return;
       }
 
-      setMessages(
+      setMessagesOLD(
          groupChatFromServer.messages
             ?.map(message => {
                const usr = getGroupMember(message.authorUserId, group);
@@ -111,6 +114,59 @@ const ChatPage: FC = () => {
       }
    }, [groupChatFromServer, group]);
 
+   /**
+    * Effect to transform the format of the chat from server to Chat component.
+    * Also revalidate the chat request when an unknown user is found.
+    */
+   useEffect(() => {
+      if (groupChatFromServer == null || groupChatFromServer.messages == null) {
+         return;
+      }
+
+      setMessages(
+         groupChatFromServer.messages.map(message => {
+            const usr = getGroupMember(message.authorUserId, group);
+            const isOwnMessage = message.authorUserId === user?.userId;
+            const bubbleColor = isOwnMessage
+               ? color(colors.specialBackground1).darken(0.3).desaturate(0.75).toString()
+               : color(getColorForUser(message.authorUserId, group, chatNamesColors))
+                    .darken(0.3)
+                    .desaturate(0.7)
+                    .toString();
+            const nameColor = color(
+               getColorForUser(message.authorUserId, group, chatNamesColors, "white")
+            )
+               .desaturate(0.3)
+               .lighten(0.5)
+               .toString();
+
+            return {
+               authorUserId: message.authorUserId,
+               authorName: usr?.name != null ? toFirstUpperCase(usr.name) : "[Abandonó el grupo]",
+               messageId: message.chatMessageId,
+               avatar: usr?.images?.[0],
+               textContent: message.messageText,
+               time: message.time,
+               isOwnMessage,
+               bubbleColor,
+               nameColor,
+               textColor: "white"
+            };
+         })
+      );
+
+      if (getUnknownUsersFromChat(group, groupChatFromServer.messages).length > 0) {
+         revalidate("group" + params?.groupId);
+      }
+
+      if (analyticsSent.current === false) {
+         analyticsLogEvent("chat_page_opened", {
+            messagesAmount: groupChatFromServer?.messages?.length ?? 0
+         });
+         analyticsSent.current = true;
+      }
+   }, [groupChatFromServer, group]);
+
    const handleSend = useCallback(
       (messages: IMessage[] = []) => {
          const msg = messages[0];
@@ -123,7 +179,7 @@ const ChatPage: FC = () => {
             return;
          }
 
-         setMessages(previousMessages =>
+         setMessagesOLD(previousMessages =>
             GiftedChat.append(previousMessages, [{ ...msg, pending: true }])
          );
          sendChatMessage({ token, groupId: group.groupId, message: messages[0].text });
@@ -165,10 +221,12 @@ const ChatPage: FC = () => {
                   />
                )
             */}
-            {!useGiftedChat && <Chat messages={groupChatFromServer?.messages} />}
+            {!useGiftedChat && (
+               <Chat messages={messages} onSend={text => console.log("SEND", text)} />
+            )}
             {useGiftedChat && (
                <GiftedChat
-                  messages={messages}
+                  messages={messagesOLD}
                   onSend={messages => handleSend(messages)}
                   user={{
                      _id: user.userId
