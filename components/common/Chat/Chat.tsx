@@ -1,5 +1,13 @@
-import React, { FC, useCallback, useEffect } from "react";
-import { FlatList, ListRenderItem, StyleSheet, View } from "react-native";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import {
+   FlatList,
+   ListRenderItem,
+   NativeScrollEvent,
+   NativeSyntheticEvent,
+   StyleSheet,
+   View
+} from "react-native";
+import { FAB } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 import Bubble from "./Bubble/Bubble";
@@ -7,13 +15,18 @@ import ChatInputField from "./ChatInputField/ChatInputField";
 
 export interface PropChat {
    messages?: ChatMessageProps[];
-   onSend?: (message: string) => void;
+   onSend?: (props: { messageText: string; respondingToChatMessageId?: string }) => void;
+   selectedMessageId?: string;
+   onMessageSelect: (message: ChatMessageProps) => void;
+   respondingToMessage?: ChatMessageProps;
+   onRemoveReply: () => void;
 }
 
 export interface ChatMessageProps {
    authorUserId: string;
    authorName: string;
    messageId: string;
+   time: number; // Time in unix format
    avatar?: string;
    textContent?: string;
    bubbleColor?: string;
@@ -23,9 +36,16 @@ export interface ChatMessageProps {
 }
 
 const Chat: FC<PropChat> = props => {
-   const { messages = [], onSend } = props;
-   const flatListRef = React.useRef<FlatList<ChatMessageProps>>(null);
-
+   const {
+      messages = [],
+      onSend,
+      onMessageSelect,
+      selectedMessageId,
+      respondingToMessage,
+      onRemoveReply
+   } = props;
+   const flatListRef = useRef<FlatList<ChatMessageProps>>(null);
+   const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
    const keyExtractor = useCallback((message: ChatMessageProps) => message.messageId, []);
 
    const renderChatMessage = useCallback<ListRenderItem<ChatMessageProps>>(
@@ -37,11 +57,23 @@ const Chat: FC<PropChat> = props => {
             <Bubble
                messageData={message}
                previousMessageIsSameAuthor={previousMessageIsSameAuthor}
+               selected={selectedMessageId === message.messageId}
+               onPress={() => onMessageSelect(message)}
             />
          );
       },
-      [messages]
+      [messages, selectedMessageId]
    );
+
+   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (event.nativeEvent.contentOffset.y > 100 && !showScrollToBottomButton) {
+         setShowScrollToBottomButton(true);
+      }
+
+      if (event.nativeEvent.contentOffset.y < 100 && showScrollToBottomButton) {
+         setShowScrollToBottomButton(false);
+      }
+   };
 
    const scrollToBottom = useCallback(() => {
       flatListRef.current?.scrollToEnd({ animated: true });
@@ -59,8 +91,23 @@ const Chat: FC<PropChat> = props => {
             inverted
             style={styles.chatScroll}
             contentContainerStyle={styles.contentContainerStyle}
+            onScroll={onScroll}
          />
-         <ChatInputField style={styles.chatInput} onSend={onSend} />
+         {showScrollToBottomButton && (
+            <FAB
+               style={styles.buttonScrollToBottom}
+               small
+               icon="chevron-down"
+               color={currentTheme.colors.text2}
+               onPress={scrollToBottom}
+            />
+         )}
+         <ChatInputField
+            style={styles.chatInput}
+            onSend={onSend}
+            respondingToMessage={respondingToMessage}
+            onRemoveReply={onRemoveReply}
+         />
       </View>
    );
 };
@@ -79,6 +126,13 @@ const styles: Styles = StyleSheet.create({
    },
    chatInput: {
       position: "absolute"
+   },
+   buttonScrollToBottom: {
+      position: "absolute",
+      bottom: 80,
+      right: 19,
+      width: 40,
+      backgroundColor: currentTheme.colors.primary
    }
 });
 

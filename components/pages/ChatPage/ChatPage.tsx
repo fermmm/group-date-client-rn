@@ -1,15 +1,12 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet, ToastAndroid, View } from "react-native";
 import { Text } from "react-native-paper";
+import Clipboard from "expo-clipboard";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { GiftedChat, Bubble, Send, IMessage } from "react-native-gifted-chat";
-import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
-import Dialog from "../../common/Dialog/Dialog";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { PageBackgroundGradient } from "../../common/PageBackgroundGradient/PageBackgroundGradient";
-import I18n from "i18n-js";
 import { CHAT_REFRESH_INTERVAL } from "../../../config";
 import { sendChatMessage, useChat, useGroup } from "../../../api/server/groups";
 import moment from "moment";
@@ -17,7 +14,6 @@ import { getGroupMember } from "../../../api/tools/groupTools";
 import { useUser } from "../../../api/server/user";
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import color from "color";
-import Avatar from "../../common/Avatar/Avatar";
 import { revalidate } from "../../../api/tools/useCache/useCache";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { getColorForUser, getUnknownUsersFromChat } from "./tools/chat-tools";
@@ -28,14 +24,12 @@ import {
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 import Chat, { ChatMessageProps } from "../../common/Chat/Chat";
+import ChatAppBar from "./ChatAppBar/ChatAppBar";
 
 export interface ChatPageState {
-   messages: IMessage[];
-   adviseBannerVisible: boolean;
    isContactChat: boolean;
-   showIntroDialog: boolean;
-   introDialogText: string;
 }
+
 interface ParamsChat {
    groupId?: string;
    contactChat?: boolean;
@@ -43,12 +37,12 @@ interface ParamsChat {
 }
 
 const ChatPage: FC = () => {
-   const { colors, font, chatNamesColors } = useTheme();
+   const { colors, chatNamesColors } = useTheme();
    const analyticsSent = useRef(false);
    const { params } = useRoute<RouteProps<ParamsChat>>();
-   const [messagesOLD, setMessagesOLD] = useState<IMessage[]>([]);
    const [messages, setMessages] = useState<ChatMessageProps[]>([]);
-   const [showIntroDialog, setShowIntroDialog] = useState(params?.introDialogText != null);
+   const [messageSelected, setMessageSelected] = useState<ChatMessageProps>();
+   const [respondingToMessage, setRespondingToMessage] = useState<ChatMessageProps>();
    const isContactChat = params?.contactChat ?? false;
    const { token } = useAuthentication();
    const { data: user } = useUser();
@@ -56,7 +50,7 @@ const ChatPage: FC = () => {
       groupId: params?.groupId,
       config: { enabled: !isContactChat }
    });
-   const { data: groupChatFromServer } = useChat({
+   const { data: groupChatFromServer, revalidate: revalidateChat } = useChat({
       groupId: params?.groupId,
       config: {
          refreshInterval: CHAT_REFRESH_INTERVAL,
@@ -67,52 +61,20 @@ const ChatPage: FC = () => {
       whenBackNotAvailable: { goToRoute: "Group", params: { groupId: params?.groupId } }
    });
    const isLoading: boolean = group == null || user == null;
-
-   /**
-    * TEMP
-    */
-   const useGiftedChat = false;
+   const ownMessageBubbleColor = color(colors.specialBackground1)
+      .darken(0.3)
+      .desaturate(0.75)
+      .toString();
+   const ownMessageNameColor = color(colors.specialBackground1)
+      .lighten(0.2)
+      .desaturate(0.2)
+      .toString();
 
    useFocusEffect(
       useCallback(() => {
          revalidate("group/chat" + params?.groupId);
       }, [])
    );
-
-   useEffect(() => {
-      if (groupChatFromServer == null || groupChatFromServer.messages == null) {
-         return;
-      }
-
-      setMessagesOLD(
-         groupChatFromServer.messages
-            ?.map(message => {
-               const usr = getGroupMember(message.authorUserId, group);
-               return {
-                  _id: message.chatMessageId,
-                  text: message.messageText,
-                  createdAt: moment(message.time, "X").toDate(),
-                  user: {
-                     _id: message.authorUserId,
-                     name: usr?.name ?? "[Abandonó el grupo]",
-                     avatar: usr?.images?.[0]
-                  }
-               };
-            })
-            .reverse() ?? []
-      );
-
-      if (getUnknownUsersFromChat(group, groupChatFromServer.messages).length > 0) {
-         revalidate("group" + params?.groupId);
-      }
-
-      if (analyticsSent.current === false) {
-         analyticsLogEvent("chat_page_opened", {
-            messagesAmount: groupChatFromServer?.messages?.length ?? 0
-         });
-         analyticsSent.current = true;
-      }
-   }, [groupChatFromServer, group]);
 
    /**
     * Effect to transform the format of the chat from server to Chat component.
@@ -123,22 +85,22 @@ const ChatPage: FC = () => {
          return;
       }
 
-      setMessages(
-         groupChatFromServer.messages.map(message => {
+      setMessages([
+         ...groupChatFromServer.messages.map(message => {
             const usr = getGroupMember(message.authorUserId, group);
             const isOwnMessage = message.authorUserId === user?.userId;
             const bubbleColor = isOwnMessage
-               ? color(colors.specialBackground1).darken(0.3).desaturate(0.75).toString()
+               ? ownMessageBubbleColor
                : color(getColorForUser(message.authorUserId, group, chatNamesColors))
                     .darken(0.3)
                     .desaturate(0.7)
                     .toString();
-            const nameColor = color(
-               getColorForUser(message.authorUserId, group, chatNamesColors, "white")
-            )
-               .desaturate(0.3)
-               .lighten(0.5)
-               .toString();
+            const nameColor = isOwnMessage
+               ? ownMessageNameColor
+               : color(getColorForUser(message.authorUserId, group, chatNamesColors, "white"))
+                    .desaturate(0.3)
+                    .lighten(0.5)
+                    .toString();
 
             return {
                authorUserId: message.authorUserId,
@@ -153,7 +115,7 @@ const ChatPage: FC = () => {
                textColor: "white"
             };
          })
-      );
+      ]);
 
       if (getUnknownUsersFromChat(group, groupChatFromServer.messages).length > 0) {
          revalidate("group" + params?.groupId);
@@ -168,30 +130,76 @@ const ChatPage: FC = () => {
    }, [groupChatFromServer, group]);
 
    const handleSend = useCallback(
-      (messages: IMessage[] = []) => {
-         const msg = messages[0];
+      async (props: { messageText: string; respondingToChatMessageId?: string }) => {
+         const { messageText, respondingToChatMessageId } = props;
 
-         if (msg?.text == null) {
+         if (group == null || user == null) {
             return;
          }
 
-         if (stringIsEmptyOrSpacesOnly(msg?.text)) {
+         if (stringIsEmptyOrSpacesOnly(messageText)) {
             return;
          }
 
-         setMessagesOLD(previousMessages =>
-            GiftedChat.append(previousMessages, [{ ...msg, pending: true }])
-         );
-         sendChatMessage({ token, groupId: group.groupId, message: messages[0].text });
+         const message: ChatMessageProps = {
+            authorUserId: user.userId,
+            authorName: user.name,
+            messageId: String(messages.length),
+            textContent: messageText.trim(),
+            isOwnMessage: true,
+            time: moment().unix(),
+            nameColor: ownMessageNameColor,
+            bubbleColor: color(colors.specialBackground1).alpha(0.5).desaturate(0.5).toString()
+         };
+
+         setMessages([...messages, message]);
+         await sendChatMessage({
+            token,
+            groupId: group.groupId,
+            message: message.textContent,
+            respondingToChatMessageId
+         });
+         await revalidateChat();
          analyticsLogEvent("chat_message_sent");
       },
-      [group?.groupId]
+      [messages]
    );
+
+   const handleMessageSelect = (message: ChatMessageProps) => {
+      if (messageSelected?.messageId === message.messageId) {
+         setMessageSelected(undefined);
+      } else {
+         setMessageSelected(message);
+      }
+   };
+
+   const handleMessageCopy = () => {
+      Clipboard?.setString?.(messageSelected?.textContent);
+      setMessageSelected(undefined);
+      if (Platform.OS === "android") {
+         ToastAndroid.show("Mensaje copiado", ToastAndroid.LONG);
+      }
+   };
+
+   const handleMessageReply = () => {
+      setRespondingToMessage(messageSelected);
+      setMessageSelected(undefined);
+   };
+
+   const handleRemoveReply = () => {
+      setRespondingToMessage(undefined);
+   };
 
    if (isContactChat) {
       return (
          <>
-            <AppBarHeader title={!isContactChat ? "" : "Contáctanos"} onBackPress={goBack} />
+            <ChatAppBar
+               isContactChat={isContactChat}
+               selectedMessage={messageSelected}
+               onBackPress={goBack}
+               onCopyPress={handleMessageCopy}
+               onReplyPress={handleMessageReply}
+            />
             <PageBackgroundGradient>
                <Text style={{ padding: 45, fontSize: 20 }}>Sección sin terminar =(</Text>
             </PageBackgroundGradient>
@@ -205,9 +213,14 @@ const ChatPage: FC = () => {
 
    return (
       <>
-         <AppBarHeader title={!isContactChat ? "" : "Contáctanos"} onBackPress={goBack} />
+         <ChatAppBar
+            isContactChat={isContactChat}
+            selectedMessage={messageSelected}
+            onBackPress={goBack}
+            onCopyPress={handleMessageCopy}
+            onReplyPress={handleMessageReply}
+         />
          <PageBackgroundGradient>
-            {/* Tal vez este mensaje condiciona a los usuarios agregando una realidad en su mente que tal vez nunca suceda*/}
             {/* 
                !isContactChat && (
                   <HelpBanner
@@ -221,102 +234,14 @@ const ChatPage: FC = () => {
                   />
                )
             */}
-            {!useGiftedChat && (
-               <Chat messages={messages} onSend={text => console.log("SEND", text)} />
-            )}
-            {useGiftedChat && (
-               <GiftedChat
-                  messages={messagesOLD}
-                  onSend={messages => handleSend(messages)}
-                  user={{
-                     _id: user.userId
-                  }}
-                  renderUsernameOnMessage={true}
-                  alwaysShowSend
-                  placeholder={"Escribir un mensaje..."}
-                  renderAvatar={props => {
-                     return (
-                        <Avatar size={48} source={props.currentMessage.user.avatar as string} />
-                     );
-                  }}
-                  renderBubble={props => (
-                     <Bubble
-                        {...props}
-                        renderTime={() => null}
-                        renderTicks={() => null}
-                        textStyle={{
-                           right: {
-                              color: colors.text2,
-                              fontFamily: font.regular,
-                              fontSize: 14
-                           },
-                           left: {
-                              color: colors.text2,
-                              fontFamily: font.regular,
-                              fontSize: 14
-                           }
-                        }}
-                        usernameStyle={{
-                           color: color(
-                              getColorForUser(
-                                 props.currentMessage.user._id as string,
-                                 group,
-                                 chatNamesColors,
-                                 "white"
-                              )
-                           )
-                              .desaturate(0.3)
-                              .lighten(0.3)
-                              .toString(),
-                           fontFamily: font.semiBold,
-                           fontSize: 10
-                        }}
-                        wrapperStyle={{
-                           right: {
-                              backgroundColor: props.currentMessage.pending
-                                 ? color(colors.specialBackground1)
-                                      .alpha(0.5)
-                                      .desaturate(0.5)
-                                      .toString()
-                                 : color(colors.specialBackground1)
-                                      .darken(0.4)
-                                      .desaturate(0.5)
-                                      .toString(),
-                              padding: 3
-                           },
-                           left: {
-                              backgroundColor: color(
-                                 getColorForUser(
-                                    props.currentMessage.user._id as string,
-                                    group,
-                                    chatNamesColors
-                                 )
-                              )
-                                 .darken(0.4)
-                                 .desaturate(0.8)
-                                 .toString(),
-                              padding: 3
-                           }
-                        }}
-                     />
-                  )}
-                  // renderInputToolbar={() => null} // This will be required when remaking input toolbar
-                  renderSend={props => (
-                     <Send {...props} label={"Enviar"} textStyle={{ color: colors.primary }} />
-                  )}
-                  keyboardShouldPersistTaps={"never"}
-                  isKeyboardInternallyHandled={false}
-                  maxInputLength={5000}
-                  locale={I18n.locale}
-                  bottomOffset={-40}
-                  scrollToBottom
-                  alignTop
-               />
-            )}
-            {Platform.OS === "android" && <KeyboardAvoidingView behavior="height" />}
-            <Dialog visible={showIntroDialog} onDismiss={() => setShowIntroDialog(false)}>
-               {params?.introDialogText}
-            </Dialog>
+            <Chat
+               messages={messages}
+               onSend={handleSend}
+               selectedMessageId={messageSelected?.messageId}
+               onMessageSelect={handleMessageSelect}
+               respondingToMessage={respondingToMessage}
+               onRemoveReply={handleRemoveReply}
+            />
          </PageBackgroundGradient>
       </>
    );

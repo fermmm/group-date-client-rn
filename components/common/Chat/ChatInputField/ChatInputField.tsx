@@ -6,19 +6,23 @@ import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
 import { ViewTouchable } from "../../ViewTouchable/ViewTouchable";
+import Bubble from "../Bubble/Bubble";
+import { ChatMessageProps } from "../Chat";
 
 export interface PropsChatInputField {
    style?: StyleProp<ViewStyle>;
-   onSend?: (message: string) => void;
+   onSend?: (props: { messageText: string; respondingToChatMessageId?: string }) => void;
+   respondingToMessage?: ChatMessageProps;
+   onRemoveReply: () => void;
 }
 
 const ChatInputField: FC<PropsChatInputField> = props => {
-   const { onSend } = props;
+   const { onSend, respondingToMessage, onRemoveReply } = props;
    const [text, setText] = useState("");
    const { colors } = useTheme();
 
    const handleSend = () => {
-      onSend?.(text);
+      onSend?.({ messageText: text });
       setText("");
    };
 
@@ -37,6 +41,14 @@ const ChatInputField: FC<PropsChatInputField> = props => {
          <ViewTouchable onPress={handleSend} style={styles.sendButton}>
             <Icon name={"send"} color={colors.accent2} size={30} />
          </ViewTouchable>
+         {respondingToMessage != null && (
+            <Bubble
+               style={styles.replyBubble}
+               messageData={respondingToMessage}
+               previousMessageIsSameAuthor={true}
+               onPress={onRemoveReply}
+            />
+         )}
       </View>
    );
 };
@@ -68,6 +80,12 @@ const styles: Styles = StyleSheet.create({
       paddingTop: 5,
       marginBottom: 4,
       marginLeft: 5
+   },
+   replyBubble: {
+      position: "absolute",
+      bottom: 50,
+      opacity: 0.8,
+      left: 0
    }
 });
 

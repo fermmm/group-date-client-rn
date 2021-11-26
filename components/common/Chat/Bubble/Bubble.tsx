@@ -1,18 +1,24 @@
+import moment from "moment";
 import React, { FC } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Text } from "react-native-paper";
+import { humanizeUnixTime } from "../../../../common-tools/strings/humanizeUnixTime";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
 import Avatar from "../../Avatar/Avatar";
+import { ViewTouchable } from "../../ViewTouchable/ViewTouchable";
 import { ChatMessageProps } from "../Chat";
 
 export interface PropsBubble {
    messageData: ChatMessageProps;
    previousMessageIsSameAuthor?: boolean;
+   selected?: boolean;
+   onPress?: () => void;
+   style?: StyleProp<ViewStyle>;
 }
 
 const Bubble: FC<PropsBubble> = props => {
-   const { messageData, previousMessageIsSameAuthor } = props;
+   const { messageData, previousMessageIsSameAuthor, selected, onPress } = props;
    const {
       authorName,
       avatar,
@@ -20,38 +26,51 @@ const Bubble: FC<PropsBubble> = props => {
       textColor = "white",
       nameColor = "white",
       bubbleColor,
-      isOwnMessage
+      isOwnMessage,
+      time
    } = messageData;
 
    const avatarCanBeDisplayed = !previousMessageIsSameAuthor && avatar;
 
    return (
-      <View
+      <ViewTouchable
          style={[
             styles.messageContainer,
             !avatarCanBeDisplayed && !isOwnMessage && styles.messageContainerWithoutAvatar,
             isOwnMessage && styles.messageContainerOwnMessage,
-            isOwnMessage && previousMessageIsSameAuthor && styles.messageContainerOwnMessageAgain
+            isOwnMessage && previousMessageIsSameAuthor && styles.messageContainerOwnMessageAgain,
+            selected && styles.messageContainerSelected,
+            props.style
          ]}
+         onPress={onPress}
       >
-         {avatarCanBeDisplayed && !isOwnMessage && <Avatar size={48} source={messageData.avatar} />}
-         <View
-            style={[
-               styles.bubble,
-               !isOwnMessage &&
-                  (avatarCanBeDisplayed ? styles.bubbleWithAvatar : styles.bubbleWithoutAvatar),
-               { backgroundColor: bubbleColor },
-               isOwnMessage && styles.bubbleOwnMessage
-            ]}
-         >
-            {authorName != null && !previousMessageIsSameAuthor && (
-               <Text style={[styles.nameText, { color: nameColor }]}>{authorName}</Text>
+         <>
+            {avatarCanBeDisplayed && !isOwnMessage && (
+               <Avatar size={48} source={messageData.avatar} />
             )}
-            {textContent && (
-               <Text style={[styles.textContent, { color: textColor }]}>{textContent}</Text>
-            )}
-         </View>
-      </View>
+            <View
+               style={[
+                  styles.bubble,
+                  !isOwnMessage &&
+                     (avatarCanBeDisplayed ? styles.bubbleWithAvatar : styles.bubbleWithoutAvatar),
+                  { backgroundColor: bubbleColor },
+                  isOwnMessage && styles.bubbleOwnMessage
+               ]}
+            >
+               {authorName != null && !previousMessageIsSameAuthor && (
+                  <Text style={[styles.nameText, { color: nameColor }]}>{authorName}</Text>
+               )}
+               {textContent && (
+                  <Text style={[styles.textContent, { color: textColor }]}>{textContent}</Text>
+               )}
+               {time != null && !previousMessageIsSameAuthor && (
+                  <Text style={[styles.timeText, { color: nameColor }]}>
+                     {humanizeUnixTime(moment().unix() - time)}
+                  </Text>
+               )}
+            </View>
+         </>
+      </ViewTouchable>
    );
 };
 
@@ -62,6 +81,7 @@ const messagesSeparationSameAuthor = 2;
 const styles: Styles = StyleSheet.create({
    messageContainer: {
       flexDirection: "row",
+      alignItems: "flex-end",
       marginTop: messagesSeparation,
       paddingLeft: 10,
       paddingRight: 10
@@ -75,6 +95,9 @@ const styles: Styles = StyleSheet.create({
    messageContainerOwnMessageAgain: {
       marginTop: messagesSeparationSameAuthor
    },
+   messageContainerSelected: {
+      backgroundColor: currentTheme.colors.primary
+   },
    bubble: {
       flexDirection: "column",
       flexShrink: 1,
@@ -87,7 +110,7 @@ const styles: Styles = StyleSheet.create({
       borderBottomLeftRadius: 0
    },
    bubbleWithoutAvatar: {
-      marginLeft: 48 + 10,
+      marginLeft: 25,
       borderTopLeftRadius: 0
    },
    bubbleOwnMessage: {
@@ -105,6 +128,12 @@ const styles: Styles = StyleSheet.create({
       alignSelf: "flex-start",
       letterSpacing: 0.1,
       lineHeight: 18
+   },
+   timeText: {
+      fontFamily: currentTheme.font.regular,
+      fontSize: 9,
+      alignSelf: "flex-end",
+      marginTop: 2
    }
 });
 
