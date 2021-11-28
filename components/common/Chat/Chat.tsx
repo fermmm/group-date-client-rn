@@ -42,9 +42,7 @@ const Chat: FC<PropChat> = props => {
    const flatListRef = useRef<FlatList<ChatMessageProps>>(null);
    const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
    const keyExtractor = useCallback((message: ChatMessageProps) => message.messageId, []);
-   const [messages, setMessages] = useState<ChatMessageProps[]>(
-      [...(props.messages ?? [])].reverse()
-   );
+   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
 
    // Effect to update the messages state when the messages arrive
    useEffect(() => {
@@ -75,15 +73,15 @@ const Chat: FC<PropChat> = props => {
       [messages, selectedMessageId]
    );
 
-   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      if (event.nativeEvent.contentOffset.y > 100 && !showScrollToBottomButton) {
+   const onScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (event.nativeEvent.contentOffset.y > 100) {
          setShowScrollToBottomButton(true);
       }
 
-      if (event.nativeEvent.contentOffset.y < 100 && showScrollToBottomButton) {
+      if (event.nativeEvent.contentOffset.y < 100) {
          setShowScrollToBottomButton(false);
       }
-   };
+   }, []);
 
    const scrollToBottom = useCallback(() => {
       flatListRef.current.scrollToIndex({ index: 0, animated: true });

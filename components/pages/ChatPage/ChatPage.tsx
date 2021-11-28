@@ -25,6 +25,7 @@ import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExt
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 import Chat, { ChatMessageProps } from "../../common/Chat/Chat";
 import ChatAppBar from "./ChatAppBar/ChatAppBar";
+import { ChatMessage } from "../../../api/server/shared-tools/endpoints-interfaces/common";
 
 export interface ChatPageState {
    isContactChat: boolean;
@@ -86,49 +87,13 @@ const ChatPage: FC = () => {
       }
 
       setMessages([
-         ...groupChatFromServer.messages.map(message => {
-            const usr = getGroupMember(message.authorUserId, group);
-            const isOwnMessage = message.authorUserId === user?.userId;
-            const bubbleColor = isOwnMessage
-               ? ownMessageBubbleColor
-               : color(getColorForUser(message.authorUserId, group, chatNamesColors))
-                    .darken(0.3)
-                    .desaturate(0.7)
-                    .toString();
-            const nameColor = isOwnMessage
-               ? ownMessageNameColor
-               : color(getColorForUser(message.authorUserId, group, chatNamesColors, "white"))
-                    .desaturate(0.3)
-                    .lighten(0.5)
-                    .toString();
-
-            return {
-               authorUserId: message.authorUserId,
-               authorName: usr?.name != null ? toFirstUpperCase(usr.name) : "[Abandonó el grupo]",
-               messageId: message.chatMessageId,
-               avatar: usr?.images?.[0],
-               textContent: message.messageText,
-               time: message.time,
-               isOwnMessage,
-               bubbleColor,
-               nameColor,
-               textColor: "white",
-               respondingToMessage: messages.find(
-                  m => m.messageId === message.respondingToChatMessageId
-               )
-            };
-         })
+         ...groupChatFromServer.messages.map(message =>
+            fromMessageDataToChatMessageProps(groupChatFromServer.messages, message)
+         )
       ]);
 
       if (getUnknownUsersFromChat(group, groupChatFromServer.messages).length > 0) {
          revalidate("group" + params?.groupId);
-      }
-
-      if (analyticsSent.current === false) {
-         analyticsLogEvent("chat_page_opened", {
-            messagesAmount: groupChatFromServer?.messages?.length ?? 0
-         });
-         analyticsSent.current = true;
       }
    }, [groupChatFromServer, group]);
 
@@ -192,6 +157,51 @@ const ChatPage: FC = () => {
 
    const handleRemoveReply = () => {
       setRespondingToMessage(undefined);
+   };
+
+   const fromMessageDataToChatMessageProps = (
+      allMessages: ChatMessage[],
+      message: ChatMessage,
+      computeRespondingMessage = true
+   ): ChatMessageProps => {
+      if (message == null || allMessages == null) {
+         return null;
+      }
+
+      const usr = getGroupMember(message.authorUserId, group);
+      const isOwnMessage = message.authorUserId === user?.userId;
+      const bubbleColor = isOwnMessage
+         ? ownMessageBubbleColor
+         : color(getColorForUser(message.authorUserId, group, chatNamesColors))
+              .darken(0.3)
+              .desaturate(0.7)
+              .toString();
+      const nameColor = isOwnMessage
+         ? ownMessageNameColor
+         : color(getColorForUser(message.authorUserId, group, chatNamesColors, "white"))
+              .desaturate(0.3)
+              .lighten(0.5)
+              .toString();
+
+      return {
+         authorUserId: message.authorUserId,
+         authorName: usr?.name != null ? toFirstUpperCase(usr.name) : "[Abandonó el grupo]",
+         messageId: message.chatMessageId,
+         avatar: usr?.images?.[0],
+         textContent: message.messageText,
+         time: message.time,
+         isOwnMessage,
+         bubbleColor,
+         nameColor,
+         textColor: "white",
+         respondingToMessage: computeRespondingMessage
+            ? fromMessageDataToChatMessageProps(
+                 allMessages,
+                 allMessages.find(m => m.chatMessageId === message.respondingToChatMessageId),
+                 false
+              )
+            : undefined
+      };
    };
 
    if (isContactChat) {

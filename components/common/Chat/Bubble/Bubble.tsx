@@ -38,7 +38,6 @@ const Bubble: FC<PropsBubble> = props => {
    } = props;
    const {
       authorName,
-      authorUserId,
       avatar,
       textContent,
       textColor = "white",
