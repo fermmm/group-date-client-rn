@@ -143,7 +143,7 @@ const ChatPage: FC = () => {
    };
 
    const handleMessageCopy = () => {
-      Clipboard.setString.(messageSelected?.textContent);
+      Clipboard.setString(messageSelected?.textContent ?? "");
       setMessageSelected(undefined);
       if (Platform.OS === "android") {
          ToastAndroid.show("Mensaje copiado", ToastAndroid.LONG);
