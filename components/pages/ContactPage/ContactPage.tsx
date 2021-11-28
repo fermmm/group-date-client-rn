@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { StyleSheet, Linking } from "react-native";
-import Clipboard from "expo-clipboard";
+import * as Clipboard from "expo-clipboard";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { Button, Text } from "react-native-paper";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
@@ -27,7 +27,7 @@ const ContactPage: FC = () => {
       Linking.openURL("https://www.facebook.com/polycommunityapp");
    };
    const handleCopyEmailPress = () => {
-      Clipboard?.setString?.("poly.app.team@gmail.com");
+      Clipboard.setString("poly.app.team@gmail.com");
    };
    const handleSendEmailPress = () => {
       Linking.openURL("mailto:poly.app.team@gmail.com");

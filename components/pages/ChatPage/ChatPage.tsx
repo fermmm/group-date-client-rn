@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, ToastAndroid, View } from "react-native";
 import { Text } from "react-native-paper";
-import Clipboard from "expo-clipboard";
+import * as Clipboard from "expo-clipboard";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
@@ -143,7 +143,7 @@ const ChatPage: FC = () => {
    };
 
    const handleMessageCopy = () => {
-      Clipboard?.setString?.(messageSelected?.textContent);
+      Clipboard.setString.(messageSelected?.textContent);
       setMessageSelected(undefined);
       if (Platform.OS === "android") {
          ToastAndroid.show("Mensaje copiado", ToastAndroid.LONG);
