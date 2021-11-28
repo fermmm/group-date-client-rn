@@ -7,7 +7,12 @@ export const getColorForUser = (
    colors: string[],
    defaultColor = "black"
 ) => {
-   const memberIndex = group.members.findIndex(m => m.userId === userId);
+   const memberIndex = group?.members?.findIndex(m => m.userId === userId);
+
+   if (memberIndex == null || memberIndex === -1) {
+      return defaultColor;
+   }
+
    return colors[memberIndex] ?? defaultColor;
 };
 
@@ -19,7 +24,7 @@ export const getUnknownUsersFromChat = (group: Group, updatedChat: ChatMessage[]
    }
 
    const groupMembers = new Set<string>();
-   group.members.forEach(member => groupMembers.add(member.userId));
+   group?.members?.forEach(member => groupMembers.add(member.userId));
    updatedChat.forEach(message => {
       if (!groupMembers.has(message.authorUserId)) {
          result.push(message.authorUserId);

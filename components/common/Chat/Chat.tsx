@@ -33,32 +33,42 @@ export interface ChatMessageProps {
    textColor?: string;
    nameColor?: string;
    isOwnMessage?: boolean;
+   respondingToMessage?: ChatMessageProps;
 }
 
 const Chat: FC<PropChat> = props => {
-   const {
-      messages = [],
-      onSend,
-      onMessageSelect,
-      selectedMessageId,
-      respondingToMessage,
-      onRemoveReply
-   } = props;
+   const { onSend, onMessageSelect, selectedMessageId, respondingToMessage, onRemoveReply } = props;
+
    const flatListRef = useRef<FlatList<ChatMessageProps>>(null);
    const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
    const keyExtractor = useCallback((message: ChatMessageProps) => message.messageId, []);
+   const [messages, setMessages] = useState<ChatMessageProps[]>(
+      [...(props.messages ?? [])].reverse()
+   );
+
+   // Effect to update the messages state when the messages arrive
+   useEffect(() => {
+      setMessages([...(props.messages ?? [])].reverse());
+   }, [props.messages]);
 
    const renderChatMessage = useCallback<ListRenderItem<ChatMessageProps>>(
       ({ item: message, index }) => {
          const previousMessageIsSameAuthor =
-            messages?.[index - 1]?.authorUserId === message.authorUserId;
+            messages?.[index + 1]?.authorUserId === message.authorUserId;
 
          return (
             <Bubble
                messageData={message}
-               previousMessageIsSameAuthor={previousMessageIsSameAuthor}
+               compact={previousMessageIsSameAuthor}
+               showAvatar={!message.isOwnMessage && !previousMessageIsSameAuthor}
                selected={selectedMessageId === message.messageId}
                onPress={() => onMessageSelect(message)}
+               onReplyPress={message => {
+                  flatListRef.current.scrollToIndex({
+                     index: messages.findIndex(m => m.messageId === message.messageId),
+                     animated: true
+                  });
+               }}
             />
          );
       },
@@ -76,32 +86,34 @@ const Chat: FC<PropChat> = props => {
    };
 
    const scrollToBottom = useCallback(() => {
-      flatListRef.current?.scrollToEnd({ animated: true });
+      flatListRef.current.scrollToIndex({ index: 0, animated: true });
    }, [flatListRef.current]);
 
    return (
       <View style={styles.mainContainer}>
-         <FlatList
-            data={messages}
-            keyExtractor={keyExtractor}
-            renderItem={renderChatMessage}
-            ref={flatListRef}
-            initialNumToRender={40}
-            maxToRenderPerBatch={50}
-            inverted
-            style={styles.chatScroll}
-            contentContainerStyle={styles.contentContainerStyle}
-            onScroll={onScroll}
-         />
-         {showScrollToBottomButton && (
-            <FAB
-               style={styles.buttonScrollToBottom}
-               small
-               icon="chevron-down"
-               color={currentTheme.colors.text2}
-               onPress={scrollToBottom}
+         <View style={styles.messagesListContainer}>
+            <FlatList
+               data={messages}
+               inverted
+               keyExtractor={keyExtractor}
+               renderItem={renderChatMessage}
+               ref={flatListRef}
+               initialNumToRender={40}
+               maxToRenderPerBatch={50}
+               style={styles.chatScroll}
+               contentContainerStyle={styles.contentContainerStyle}
+               onScroll={onScroll}
             />
-         )}
+            {showScrollToBottomButton && (
+               <FAB
+                  style={styles.buttonScrollToBottom}
+                  small
+                  icon="chevron-down"
+                  color={currentTheme.colors.text2}
+                  onPress={scrollToBottom}
+               />
+            )}
+         </View>
          <ChatInputField
             style={styles.chatInput}
             onSend={onSend}
@@ -118,19 +130,21 @@ const styles: Styles = StyleSheet.create({
       flexDirection: "column",
       backgroundColor: currentTheme.colors.background2
    },
+   messagesListContainer: {
+      flex: 1,
+      flexDirection: "column"
+   },
    chatScroll: {},
    contentContainerStyle: {
-      flexDirection: "column-reverse",
-      paddingTop: 75, // Since the scroll is inverted top is bottom and bottom is top
+      // flexDirection: "column-reverse",    // This is buggy at mount, sadly the only solution is array.reverse()
+      paddingTop: 20, // Since the scroll is inverted top is bottom and bottom is top
       paddingBottom: 20
    },
-   chatInput: {
-      position: "absolute"
-   },
+   chatInput: {},
    buttonScrollToBottom: {
       position: "absolute",
-      bottom: 80,
-      right: 19,
+      bottom: 30,
+      right: 20,
       width: 40,
       backgroundColor: currentTheme.colors.primary
    }

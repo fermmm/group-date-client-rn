@@ -1,3 +1,4 @@
+import color from "color";
 import moment from "moment";
 import React, { FC } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
@@ -11,59 +12,93 @@ import { ChatMessageProps } from "../Chat";
 
 export interface PropsBubble {
    messageData: ChatMessageProps;
-   previousMessageIsSameAuthor?: boolean;
+   compact?: boolean;
+   showAvatar?: boolean;
+   showDate?: boolean;
    selected?: boolean;
    onPress?: () => void;
+   onReplyPress?: (messageData: ChatMessageProps) => void;
    style?: StyleProp<ViewStyle>;
+   bubbleStyle?: StyleProp<ViewStyle>;
+   showResponsePreview?: boolean;
+   extraDarkBackground?: boolean;
 }
 
 const Bubble: FC<PropsBubble> = props => {
-   const { messageData, previousMessageIsSameAuthor, selected, onPress } = props;
+   const {
+      messageData,
+      compact,
+      selected,
+      onPress,
+      onReplyPress,
+      showAvatar = true,
+      showDate = true,
+      showResponsePreview = true,
+      extraDarkBackground = false
+   } = props;
    const {
       authorName,
+      authorUserId,
       avatar,
       textContent,
       textColor = "white",
       nameColor = "white",
       bubbleColor,
       isOwnMessage,
-      time
+      time,
+      respondingToMessage
    } = messageData;
 
-   const avatarCanBeDisplayed = !previousMessageIsSameAuthor && avatar;
+   const avatarCanBeDisplayed = avatar && showAvatar;
 
    return (
       <ViewTouchable
          style={[
             styles.messageContainer,
-            !avatarCanBeDisplayed && !isOwnMessage && styles.messageContainerWithoutAvatar,
+            !avatarCanBeDisplayed && styles.messageContainerWithoutAvatar,
             isOwnMessage && styles.messageContainerOwnMessage,
-            isOwnMessage && previousMessageIsSameAuthor && styles.messageContainerOwnMessageAgain,
+            isOwnMessage && compact && styles.messageContainerOwnMessageAgain,
             selected && styles.messageContainerSelected,
             props.style
          ]}
          onPress={onPress}
+         onLongPress={onPress}
       >
          <>
-            {avatarCanBeDisplayed && !isOwnMessage && (
-               <Avatar size={48} source={messageData.avatar} />
-            )}
+            {avatarCanBeDisplayed && <Avatar size={48} source={messageData.avatar} />}
             <View
                style={[
                   styles.bubble,
-                  !isOwnMessage &&
-                     (avatarCanBeDisplayed ? styles.bubbleWithAvatar : styles.bubbleWithoutAvatar),
+                  avatarCanBeDisplayed ? styles.bubbleWithAvatar : styles.bubbleWithoutAvatar,
                   { backgroundColor: bubbleColor },
-                  isOwnMessage && styles.bubbleOwnMessage
+                  extraDarkBackground && {
+                     backgroundColor: color(bubbleColor).darken(0.2).toString()
+                  },
+                  isOwnMessage && styles.bubbleOwnMessage,
+                  props.bubbleStyle
                ]}
             >
-               {authorName != null && !previousMessageIsSameAuthor && (
+               {showResponsePreview && respondingToMessage != null && (
+                  <Bubble
+                     style={styles.replyPreviewBubbleContainer}
+                     bubbleStyle={styles.replyPreviewBubble}
+                     messageData={respondingToMessage}
+                     showAvatar={false} // If this is set as true it works but looks too overcharged
+                     compact={false}
+                     showDate={false}
+                     extraDarkBackground
+                     showResponsePreview={false} // Setting this to true shows the whole history of responses inside a single message, but clicking to follow the conversation scales better
+                     onPress={() => onReplyPress(respondingToMessage)}
+                     onReplyPress={messageData => onReplyPress(messageData)}
+                  />
+               )}
+               {authorName != null && (!compact || respondingToMessage != null) && (
                   <Text style={[styles.nameText, { color: nameColor }]}>{authorName}</Text>
                )}
                {textContent && (
                   <Text style={[styles.textContent, { color: textColor }]}>{textContent}</Text>
                )}
-               {time != null && !previousMessageIsSameAuthor && (
+               {time != null && !compact && showDate && (
                   <Text style={[styles.timeText, { color: nameColor }]}>
                      {humanizeUnixTime(moment().unix() - time)}
                   </Text>
@@ -134,6 +169,15 @@ const styles: Styles = StyleSheet.create({
       fontSize: 9,
       alignSelf: "flex-end",
       marginTop: 2
+   },
+   replyPreviewBubbleContainer: {
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginTop: 0,
+      marginBottom: 10
+   },
+   replyPreviewBubble: {
+      marginLeft: 0
    }
 });
 

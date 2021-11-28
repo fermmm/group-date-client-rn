@@ -112,7 +112,10 @@ const ChatPage: FC = () => {
                isOwnMessage,
                bubbleColor,
                nameColor,
-               textColor: "white"
+               textColor: "white",
+               respondingToMessage: messages.find(
+                  m => m.messageId === message.respondingToChatMessageId
+               )
             };
          })
       ]);
@@ -149,7 +152,8 @@ const ChatPage: FC = () => {
             isOwnMessage: true,
             time: moment().unix(),
             nameColor: ownMessageNameColor,
-            bubbleColor: color(colors.specialBackground1).alpha(0.5).desaturate(0.5).toString()
+            bubbleColor: color(colors.specialBackground1).alpha(0.5).desaturate(0.5).toString(),
+            respondingToMessage: messages.find(m => m.messageId === respondingToChatMessageId)
          };
 
          setMessages([...messages, message]);

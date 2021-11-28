@@ -1,13 +1,13 @@
-import React, { FC, useState } from "react";
-import { View, StyleSheet, StyleProp, ViewStyle } from "react-native";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { View, StyleSheet, StyleProp, ViewStyle, TextInput as RNTextInput } from "react-native";
 import { TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
 import { ViewTouchable } from "../../ViewTouchable/ViewTouchable";
-import Bubble from "../Bubble/Bubble";
 import { ChatMessageProps } from "../Chat";
+import RespondPreview from "./RespondPreview/RespondPreview";
 
 export interface PropsChatInputField {
    style?: StyleProp<ViewStyle>;
@@ -19,36 +19,49 @@ export interface PropsChatInputField {
 const ChatInputField: FC<PropsChatInputField> = props => {
    const { onSend, respondingToMessage, onRemoveReply } = props;
    const [text, setText] = useState("");
+   const inputRef = useRef<RNTextInput>(null);
    const { colors } = useTheme();
 
    const handleSend = () => {
-      onSend?.({ messageText: text });
+      onSend?.({
+         ...{ messageText: text },
+         ...(respondingToMessage != null
+            ? { respondingToChatMessageId: respondingToMessage?.messageId }
+            : {})
+      });
+      onRemoveReply();
       setText("");
+      inputRef.current.blur();
    };
 
+   // Effect to focus the text input when pressing to respond a message
+   useEffect(() => {
+      if (respondingToMessage == null) {
+         return;
+      }
+
+      inputRef.current.focus();
+   }, [respondingToMessage]);
+
    return (
-      <View style={[styles.mainContainer, props.style]}>
-         <TextInput
-            mode={"outlined"}
-            value={text}
-            dense={false}
-            style={styles.textInput}
-            multiline
-            onChangeText={t => {
-               setText(t);
-            }}
-         />
-         <ViewTouchable onPress={handleSend} style={styles.sendButton}>
-            <Icon name={"send"} color={colors.accent2} size={30} />
-         </ViewTouchable>
-         {respondingToMessage != null && (
-            <Bubble
-               style={styles.replyBubble}
-               messageData={respondingToMessage}
-               previousMessageIsSameAuthor={true}
-               onPress={onRemoveReply}
+      <View>
+         <RespondPreview respondingToMessage={respondingToMessage} onRemoveReply={onRemoveReply} />
+         <View style={[styles.mainContainer, props.style]}>
+            <TextInput
+               mode={"outlined"}
+               value={text}
+               dense={false}
+               style={styles.textInput}
+               multiline
+               onChangeText={t => {
+                  setText(t);
+               }}
+               ref={inputRef}
             />
-         )}
+            <ViewTouchable onPress={handleSend} style={styles.sendButton}>
+               <Icon name={"send"} color={colors.accent2} size={30} />
+            </ViewTouchable>
+         </View>
       </View>
    );
 };
@@ -80,12 +93,6 @@ const styles: Styles = StyleSheet.create({
       paddingTop: 5,
       marginBottom: 4,
       marginLeft: 5
-   },
-   replyBubble: {
-      position: "absolute",
-      bottom: 50,
-      opacity: 0.8,
-      left: 0
    }
 });
 
