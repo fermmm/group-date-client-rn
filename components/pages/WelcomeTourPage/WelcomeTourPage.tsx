@@ -66,7 +66,7 @@ const WelcomeTourPage: FC = () => {
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
                      Es para disfrutar el hecho de ser muchxs. Una situación que no se da en nuestra
-                     cultura contemporanea.
+                     cultura contemporánea.
                   </Text>
                </View>
             </View>
@@ -76,7 +76,7 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     No sirve a quienes buscan algo específico ej.: tríos o pareja. Segun quienes se
+                     No sirve a quienes buscan algo específico ej.: tríos o pareja. Según quienes se
                      gustan, la app decide la cantidad de personas en una cita.
                   </Text>
                </View>
