@@ -28,10 +28,11 @@ import {
 } from "../../../common-tools/analytics/loginPage/loginSteps";
 import { analyticsLogUser } from "../../../common-tools/analytics/tools/analyticsLogUser";
 import VersionIndicator from "./VersionIndicator/VersionIndicator";
+import { ViewTouchable } from "../../common/ViewTouchable/ViewTouchable";
 
 const LoginPage: FC = () => {
    const { colors } = useTheme();
-   const { navigateWithoutHistory } = useNavigation();
+   const { navigateWithoutHistory, navigate } = useNavigation();
    const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
    const isFocused = useIsFocused();
    const { buildVersion, codeVersion } = getAppVersion();
@@ -112,7 +113,9 @@ const LoginPage: FC = () => {
             />
             <View style={styles.logo}>
                <LogoAnimator>
-                  <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
+                  <ViewTouchable onPress={() => navigate("WelcomeTour")}>
+                     <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
+                  </ViewTouchable>
                </LogoAnimator>
             </View>
             {serverOperating === false && (
