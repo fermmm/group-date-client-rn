@@ -111,9 +111,9 @@ const LoginPage: FC = () => {
                onTimeoutButtonPress={auth.logout}
             />
             <View style={styles.logo}>
-               {/* <LogoAnimator onAnimationComplete={() => setLogoAnimCompleted(true)}> */}
-               <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
-               {/* </LogoAnimator> */}
+               <LogoAnimator>
+                  <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
+               </LogoAnimator>
             </View>
             {serverOperating === false && (
                <Text style={styles.textBlock}>

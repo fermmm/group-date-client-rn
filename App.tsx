@@ -79,7 +79,7 @@ const App: FC = () => {
       <CacheConfigProvider>
          <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
             <ModalProvider stack={modalsStack}>
-               <StatusBar style="light" />
+               <StatusBar style="light" translucent backgroundColor={"transparent"} />
                <NavigationContainerWithNotifications>
                   <Stack.Navigator
                      initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}

@@ -52,5 +52,4 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
    experiments: {
       turboModules: true
    }
-   // plugins: ["react-native-email-link"]
 });
