@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import {
    View,
    Image,
@@ -12,7 +12,6 @@ import {
    ImageSourcePropType
 } from "react-native";
 import DotsIndicator from "../DotsIndicator/DotsIndicator";
-import { Asset } from "expo-asset";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 export interface PropsImagesScroll {
@@ -43,10 +42,6 @@ const ImagesScroll: FC<PropsImagesScroll> = props => {
    const [imagesHeight, setImagesHeight] = useState(0);
    const [currentPictureFocused, setCurrentPictureFocused] = useState(0);
 
-   // useEffect(() => {
-   //    cacheImages();
-   // }, []);
-
    const findImageToRender = (
       image: ImageSourcePropType,
       imageProps: ImageProps,
@@ -67,16 +62,6 @@ const ImagesScroll: FC<PropsImagesScroll> = props => {
       );
    };
 
-   // const cacheImages = (): Promise<void> | unknown => {
-   //    return images?.map(image => {
-   //       if (typeof image === "string") {
-   //          return Image.prefetch(image);
-   //       } else {
-   //          return Asset.fromModule(image).downloadAsync();
-   //       }
-   //    });
-   // };
-
    return (
       <View
          style={[{ height: 200 }, style]}
@@ -92,33 +77,22 @@ const ImagesScroll: FC<PropsImagesScroll> = props => {
             showsHorizontalScrollIndicator={false}
             onScroll={event => onScroll(event)}
          >
-            {images?.map((value: ImageSourcePropType, i: number) =>
-               !onImageClick ? (
-                  findImageToRender(
+            {images?.map((value: ImageSourcePropType, i: number) => (
+               <ViewTouchable
+                  onPress={onImageClick ? () => onImageClick?.(i) : null}
+                  style={{ borderRadius: 0 }}
+                  key={i}
+               >
+                  {findImageToRender(
                      value,
                      {
                         style: [{ width: imagesWidth, height: imagesHeight }, imagesStyle],
                         source: value
                      },
                      i
-                  )
-               ) : (
-                  <ViewTouchable
-                     onPress={() => onImageClick && onImageClick(i)}
-                     style={{ borderRadius: 0 }}
-                     key={i}
-                  >
-                     {findImageToRender(
-                        value,
-                        {
-                           style: [{ width: imagesWidth, height: imagesHeight }, imagesStyle],
-                           source: value
-                        },
-                        i
-                     )}
-                  </ViewTouchable>
-               )
-            )}
+                  )}
+               </ViewTouchable>
+            ))}
          </ScrollView>
          {showDots && <DotsIndicator totalDots={images.length} activeDot={currentPictureFocused} />}
       </View>

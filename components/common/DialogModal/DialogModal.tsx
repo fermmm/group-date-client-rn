@@ -32,7 +32,7 @@ const DialogModal: FC<PropsDialog> = ({ modal: { closeModal, getParam } }) => {
    const message = getParam<keyof DialogModalProps, string>("message") as string;
    const blockClosing = getParam<keyof DialogModalProps, boolean>("blockClosing") as boolean;
    const buttons = getParam<keyof DialogModalProps, DialogButton[]>("buttons", [
-      { label: "Aceptar" }
+      { label: "Ok" }
    ]) as DialogButton[];
 
    const handleButtonPress = (action?: () => void) => {

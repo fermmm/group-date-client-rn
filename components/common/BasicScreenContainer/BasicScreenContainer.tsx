@@ -40,7 +40,8 @@ const BasicScreenContainer: FC<BasicScreenProps> = props => {
                {...props}
                contentContainerStyle={[
                   styles.scrollViewContainer,
-                  (showBackButton || showContinueButton) && { paddingBottom: 70 }
+                  (showBackButton || showContinueButton) && { paddingBottom: 70 },
+                  props.contentContainerStyle
                ]}
             >
                {props.children}

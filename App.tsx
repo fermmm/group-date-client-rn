@@ -38,6 +38,7 @@ import "intl/locale-data/jsonp/es";
 import "dayjs/locale/en";
 import "dayjs/locale/es";
 import EmailLoginModal from "./components/common/EmailLoginModal/EmailLoginModal";
+import RemoveSeenWizardPage from "./components/pages/RemoveSeenWizardPage/RemoveSeenWizardPage";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -97,6 +98,7 @@ const App: FC = () => {
                      <Stack.Screen name="Admin" component={AdminPage} />
                      <Stack.Screen name="CreateTag" component={CreateTagPage} />
                      <Stack.Screen name="ContactPage" component={ContactPage} />
+                     <Stack.Screen name="RemoveSeenWizardPage" component={RemoveSeenWizardPage} />
                   </Stack.Navigator>
                </NavigationContainerWithNotifications>
             </ModalProvider>
