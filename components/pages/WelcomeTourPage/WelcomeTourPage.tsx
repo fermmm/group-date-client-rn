@@ -49,8 +49,10 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Poly es una propuesta: Salir en grupo con lxs que te gustan. Cuando se gustan
-                     entre muchxs se habilita un chat grupal.
+                     Poly es la primera app de citas grupales.{"\n"}
+                     <Text style={styles.textBold}>
+                        Cuando se gustan entre muchxs se habilita un chat grupal.
+                     </Text>
                   </Text>
                </View>
             </View>
@@ -65,19 +67,24 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Es para disfrutar el hecho de ser muchxs. Una situación que no se da en nuestra
-                     cultura contemporánea.
+                     Es para <Text style={styles.textBold}>disfrutar el hecho de ser muchxs</Text>{" "}
+                     en una cita. {"\n"}Una situación que no se da en nuestra cultura contemporánea
+                     pero si antiguamente.
                   </Text>
                </View>
             </View>
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
-                  <Text style={[styles.bigText, { color: topColor }]}>¡Atención!</Text>
+                  <Text style={[styles.bigText, { color: topColor }]}>¡Hetero Friendly!</Text>
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     No sirve a quienes buscan algo específico ej.: tríos o pareja. Según quienes se
-                     gustan, la app decide la cantidad de personas en una cita.
+                     Para que la app forme un grupo{" "}
+                     <Text style={styles.textBold}>
+                        no hace falta que se gusten todxs entre sí al 100%
+                     </Text>
+                     , todas las orientaciones y tipos de vínculos pueden ser parte de una cita
+                     grupal
                   </Text>
                </View>
             </View>
@@ -87,9 +94,11 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Es una propuesta nueva: No se espera que sepas o hagas algo en particular, solo
-                     tener ganas de socializar sin perspectivas monógamas que consideramos del
-                     patriarcado
+                     No se espera que sepas o hagas algo en particular, solo disfrutar de amistades
+                     y vínculos{" "}
+                     <Text style={styles.textBold}>
+                        sin perspectivas monógamas que consideramos del patriarcado
+                     </Text>
                   </Text>
                </View>
             </View>
@@ -100,7 +109,11 @@ const WelcomeTourPage: FC = () => {
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
                      No tenemos interés monetario y funcionamos gracias a colaboraciones diversas.
-                     Si te gusta la app no olvides mencionarla en las redes o donde creas oportuno
+                     {"\n"}
+                     <Text style={styles.textBold}>
+                        Si te gusta la app no olvides mencionarla en las redes o donde creas
+                        oportuno
+                     </Text>
                   </Text>
                </View>
             </View>
@@ -136,6 +149,13 @@ const styles: Styles = StyleSheet.create({
    text: {
       textAlign: "center",
       fontFamily: currentTheme.font.light,
+      fontSize: 18,
+      lineHeight: 25,
+      color: currentTheme.colors.textLogin
+   },
+   textBold: {
+      textAlign: "center",
+      fontFamily: currentTheme.font.semiBold,
       fontSize: 18,
       lineHeight: 25,
       color: currentTheme.colors.textLogin
