@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useFocusEffect, useIsFocused, useRoute } from "@react-navigation/native";
-import { List } from "react-native-paper";
+import { Button, List } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import Avatar from "../../common/Avatar/Avatar";
@@ -85,6 +85,15 @@ const GroupPage: FC = () => {
                onModifyVotePress={() => navigate("DateVoting", { group })}
                loading={voteResultsFromServer == null}
             />
+            <SurfaceStyled>
+               <TitleText>Puedes elegir a quien volver a ver en tu próxima cita grupal</TitleText>
+               <Button
+                  uppercase={false}
+                  onPress={() => navigate("RemoveSeenWizardPage", { groupId: group.groupId })}
+               >
+                  Elegir
+               </Button>
+            </SurfaceStyled>
             <SurfaceStyled>
                <TitleText>Miembros del grupo:</TitleText>
                <List.Section>

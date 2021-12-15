@@ -65,7 +65,7 @@ const QuestionToRemoveSeen: FC<PropsQuestionToRemoveSeen> = props => {
             cita grupal?
          </TitleText>
          <TitleText style={styles.questionExtraText}>
-            Si no se han podido conocer en persona contesta "Incluir a {user.name}"
+            Si no se han podido conocer en persona recomendamos tocar "Incluir a {user.name}"
          </TitleText>
          <ButtonStyled
             color={colors.text}

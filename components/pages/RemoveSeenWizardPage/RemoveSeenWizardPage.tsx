@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import LimitedChildrenRenderer from "../../common/LimitedChildrenRenderer/LimitedChildrenRenderer";
@@ -32,6 +32,7 @@ const RemoveSeenWizardPage: FC = () => {
    const [currentMemberDisplaying, setCurrentMemberDisplaying] = useState(0);
    const [answers, setAnswers] = useState<{ [key: string]: boolean }>({});
    const [sendingAnswers, setSendingAnswers] = useState<boolean>(false);
+   const [sendingCompleted, setSendingCompleted] = useState<boolean>(false);
    // With this we get the info required to know where to redirect on finish
    const { shouldRedirectToRequiredPage, redirectToRequiredPage, shouldRedirectIsLoading } =
       useShouldRedirectToRequiredPage();
@@ -39,7 +40,8 @@ const RemoveSeenWizardPage: FC = () => {
       ?.filter(match => match.matches.includes(user?.userId))
       .map(match => match.userId);
 
-   const isLoading = groupLoading || userLoading || shouldRedirectIsLoading || sendingAnswers;
+   const isLoading =
+      groupLoading || userLoading || shouldRedirectIsLoading || sendingAnswers || sendingCompleted;
 
    useCustomBackButtonAction(() => {
       if (currentMemberDisplaying === 0) {
@@ -102,12 +104,21 @@ const RemoveSeenWizardPage: FC = () => {
       }
 
       setSendingAnswers(false);
+      setSendingCompleted(true);
+   };
+
+   // This effect exits the page when all is done
+   useEffect(() => {
+      if (!sendingCompleted) {
+         return;
+      }
+
       if (shouldRedirectToRequiredPage) {
          redirectToRequiredPage();
       } else {
          navigateWithoutHistory("Main");
       }
-   };
+   }, [sendingCompleted, shouldRedirectToRequiredPage, redirectToRequiredPage]);
 
    if (isLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
