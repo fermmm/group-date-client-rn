@@ -15,7 +15,11 @@ import {
    Notification,
    ReportUserPostParams,
    DeleteAccountPostParams,
-   DeleteAccountResponse
+   DeleteAccountResponse,
+   SetSeenPostParams,
+   SetSeenResponse,
+   TaskCompletedPostParams,
+   TaskCompletedResponse
 } from "./shared-tools/endpoints-interfaces/user";
 import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
@@ -106,10 +110,34 @@ export async function sendReportUser(params: ReportUserPostParams) {
    return await defaultHttpRequest("user/report", "POST", params, { handleErrors: true });
 }
 
+export async function setTaskAsCompleted<
+   Params = TaskCompletedPostParams,
+   Response = TaskCompletedResponse
+>(params: Params, autoRevalidateRelated: boolean = true) {
+   const response = await defaultHttpRequest<Params, Response>(
+      "user/tasks/completed",
+      "POST",
+      params,
+      {
+         handleErrors: true
+      }
+   );
+
+   if (autoRevalidateRelated) {
+      await revalidate("user", { exactMatch: true });
+   }
+
+   return response;
+}
+
 export async function deleteAccount(
    params: DeleteAccountPostParams
 ): Promise<DeleteAccountResponse> {
    return await defaultHttpRequest("user/delete", "POST", params, { handleErrors: true });
+}
+
+export async function setSeen(params: SetSeenPostParams): Promise<SetSeenResponse> {
+   return await defaultHttpRequest("user/set-seen", "POST", params, { handleErrors: true });
 }
 
 export async function uploadImage(

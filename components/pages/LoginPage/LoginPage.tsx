@@ -3,7 +3,6 @@ import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LogoSvg } from "../../../assets/LogoSvg";
-import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 import { currentTheme } from "../../../config";
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
@@ -11,15 +10,12 @@ import { useIsFocused } from "@react-navigation/native";
 import { useServerInfo } from "../../../api/server/server-info";
 import { LoadingAnimation } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useUserProfileStatus } from "../../../api/server/user";
-import { userHasFinishedRegistration } from "../../../api/tools/userTools";
 import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useSendPropsToUpdateAtLogin } from "./tools/useSendPropsToUpdateAtLogin";
-import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
 import BackgroundArtistic from "../../common/BackgroundArtistic/BackgroundArtistic";
 import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 import { AuthenticationButtons } from "./AuthenticationButtons/AuthenticationButtons";
-import { removeAllLocalStorage } from "../../../common-tools/device-native-api/storage/removeAllLocalStorage";
 import { getAppVersion } from "../../../common-tools/device-native-api/versions/versions";
 import AppUpdateMessage from "./AppUpdateMessage/AppUpdateMessage";
 import {
@@ -29,11 +25,11 @@ import {
 import { analyticsLogUser } from "../../../common-tools/analytics/tools/analyticsLogUser";
 import VersionIndicator from "./VersionIndicator/VersionIndicator";
 import { ViewTouchable } from "../../common/ViewTouchable/ViewTouchable";
+import { useShouldRedirectToRequiredPage } from "../../../common-tools/navigation/useShouldRedirectToRequiredPage";
 
 const LoginPage: FC = () => {
    const { colors } = useTheme();
    const { navigateWithoutHistory, navigate } = useNavigation();
-   const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
    const isFocused = useIsFocused();
    const { buildVersion, codeVersion } = getAppVersion();
    const { data: serverInfoData, isLoading: serverInfoLoading, error } = useServerInfo();
@@ -58,7 +54,11 @@ const LoginPage: FC = () => {
       requestParams: { token: auth.token }
    });
 
-   const finishedRegistration = userHasFinishedRegistration(profileStatusData);
+   // With this we get the info required to know where to redirect after login
+   const { shouldRedirectToRequiredPage, redirectToRequiredPage, shouldRedirectIsLoading } =
+      useShouldRedirectToRequiredPage({
+         enabled: profileStatusData != null
+      });
 
    // If we have a valid user we can send the user props that needs to be updated at each login
    const sendLoginPropsCompleted = useSendPropsToUpdateAtLogin(auth.token, serverInfoData, {
@@ -67,27 +67,25 @@ const LoginPage: FC = () => {
 
    // If the user has props missing redirect to RegistrationForms otherwise redirect to Main or notification press
    useEffect(() => {
-      if (profileStatusData == null || !isFocused || !sendLoginPropsCompleted) {
+      if (
+         profileStatusData == null ||
+         !isFocused ||
+         !sendLoginPropsCompleted ||
+         shouldRedirectIsLoading
+      ) {
          return;
       }
 
       analyticsLogUser(profileStatusData.user);
       logAnalyticsLoginStep(LoginStep.LoginCompleted, { buildVersion, codeVersion });
 
-      if (!finishedRegistration) {
-         navigateWithoutHistory("RegistrationForms");
+      if (shouldRedirectToRequiredPage) {
+         redirectToRequiredPage();
       } else {
-         if (redirectFromPushNotificationPress != null) {
-            const isRedirecting = redirectFromPushNotificationPress();
-            if (!isRedirecting) {
-               navigateWithoutHistory("Main");
-            }
-         } else {
-            navigateWithoutHistory("Main");
-         }
+         navigateWithoutHistory("Main");
          showBetaVersionMessage();
       }
-   }, [profileStatusData, sendLoginPropsCompleted]);
+   }, [profileStatusData, sendLoginPropsCompleted, shouldRedirectIsLoading]);
 
    const showAuthenticationButtons: boolean =
       profileStatusError ||
@@ -100,7 +98,7 @@ const LoginPage: FC = () => {
       canUseServer &&
       !showAuthenticationButtons &&
       !profileStatusError &&
-      (auth.isLoading || serverInfoLoading || !profileStatusData);
+      (auth.isLoading || serverInfoLoading || shouldRedirectIsLoading || !profileStatusData);
 
    return (
       <BackgroundArtistic useImageBackground={true}>

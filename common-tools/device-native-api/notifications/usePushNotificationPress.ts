@@ -6,18 +6,20 @@ import {
 import { useSetNotificationAsSeen } from "../../../components/pages/NotificationsPage/tools/useSetNotificationAsSeen";
 
 /**
- * This hook may return a function redirectFromPushNotificationPress, if the function is not null it means the
- * user pressed on a push notification and the app should redirect to corresponding page which is what the
- * function does, after calling it becomes null.
+ * If the user pressed a notification, this function will update the notification as seen and provide a function
+ * and booleans to redirect and know when to redirect.
  * You must provide a function that redirects to the provided route. For an easier hook that already handles this
  * use usePushNotificationPressRedirect.
  */
 export function usePushNotificationPress(props: {
    redirect: (route: string, params?: object) => void;
-}) {
-   const { data } = useCache<{ notification: NotificationData }>("notification-press", () => ({
-      notification: null
-   }));
+}): UsePushNotificationPress {
+   const { data, isLoading } = useCache<{ notification: NotificationData }>(
+      "notification-press",
+      () => ({
+         notification: null
+      })
+   );
    const { setNotificationAsSeen } = useSetNotificationAsSeen();
    const { redirect } = props;
 
@@ -25,7 +27,7 @@ export function usePushNotificationPress(props: {
    let params: object;
 
    if (data?.notification == null) {
-      return { redirectFromPushNotificationPress: null };
+      return { isLoading, redirectFromPushNotificationPress: () => {}, shouldRedirect: false };
    }
 
    switch (data.notification.type) {
@@ -50,20 +52,25 @@ export function usePushNotificationPress(props: {
          break;
    }
 
+   const redirectFromPushNotificationPress = () => {
+      route != null && redirect(route, params);
+      mutateCache("notification-press", { notification: null });
+      data.notification.type !== NotificationType.NearbyPartyOrEvent &&
+         setNotificationAsSeen(data.notification.notificationId);
+   };
+
    return {
-      redirectFromPushNotificationPress: () => {
-         route != null && redirect(route, params);
-         mutateCache("notification-press", { notification: null });
-         data.notification.type !== NotificationType.NearbyPartyOrEvent &&
-            setNotificationAsSeen(data.notification.notificationId);
-         return route != null;
-      }
+      isLoading,
+      shouldRedirect: route != null,
+      redirectFromPushNotificationPress
    };
 }
 
 export interface UsePushNotificationPress {
+   isLoading: boolean;
    /**
-    * Returns true if there is a real redirection, false if no redirection to make
+    * Is true when there is a redirection to make
     */
-   redirectFromPushNotificationPress?: () => boolean;
+   shouldRedirect: boolean;
+   redirectFromPushNotificationPress?: () => void;
 }

@@ -8,7 +8,6 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { useNotificationsInfo } from "../../pages/NotificationsPage/tools/useNotificationsInfo";
 import { TagsPage } from "../TagsPage/TagsPage";
 import CustomTabBar from "./CustomTabBar/CustomTabBar";
-import { useRedirectWhenTaskFound } from "./tools/useRedirectWhenTaskFound";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,8 +23,6 @@ const MainPage: FC = () => {
    useEffect(() => {
       setBadgeNumbers({ ...badgeNumbers, Notifications: notSeenNotifications?.length ?? 0 });
    }, [notSeenNotifications]);
-
-   useRedirectWhenTaskFound();
 
    return (
       <Tab.Navigator

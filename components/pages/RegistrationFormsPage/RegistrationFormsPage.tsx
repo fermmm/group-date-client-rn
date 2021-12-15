@@ -27,7 +27,6 @@ import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import { revalidate } from "../../../api/tools/useCache/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
-import { usePushNotificationPressRedirect } from "../../../common-tools/device-native-api/notifications/usePushNotificationPressRedirect";
 import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
 import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 import GenderForm from "./GenderForm/GenderForm";
@@ -36,6 +35,7 @@ import { useAnalyticsForRegistration } from "../../../common-tools/analytics/reg
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 import TitleMediumText from "../../common/TitleMediumText/TitleMediumText";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
+import { useShouldRedirectToRequiredPage } from "../../../common-tools/navigation/useShouldRedirectToRequiredPage";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -59,7 +59,9 @@ const RegistrationFormsPage: FC = () => {
    const goToNextStepIsPossible = useRef<() => Promise<boolean>>();
    const tagsToUpdate = useRef<Record<string, TagsToUpdate>>({});
    const questionsShowed = useRef<string[]>(null);
-   const { redirectFromPushNotificationPress } = usePushNotificationPressRedirect();
+   // With this we get the info required to know where to redirect on finish
+   const { shouldRedirectToRequiredPage, redirectToRequiredPage, shouldRedirectIsLoading } =
+      useShouldRedirectToRequiredPage();
    const { data: profileStatus } = useUserProfileStatus();
    const { data: tagsAsQuestions } = useTagsAsQuestions();
    const {
@@ -146,15 +148,12 @@ const RegistrationFormsPage: FC = () => {
       if (params != null) {
          goBack();
       } else {
-         if (redirectFromPushNotificationPress != null) {
-            const redirected = redirectFromPushNotificationPress();
-            if (!redirected) {
-               navigateWithoutHistory("Main");
-            }
+         if (shouldRedirectToRequiredPage) {
+            redirectToRequiredPage();
          } else {
             navigateWithoutHistory("Main");
+            showBetaVersionMessage();
          }
-         showBetaVersionMessage();
       }
    };
 

@@ -15,15 +15,15 @@ export function usePushNotificationRedirectWhileUsingApp(
    const navigationRef = useRef<NavigationContainerRef>();
    const routeNameRef = useRef<string>();
    const [redirectEnabled, setRedirectEnabled] = useState<boolean>(false);
-   const { redirectFromPushNotificationPress } = usePushNotificationPress({
+   const { redirectFromPushNotificationPress, shouldRedirect } = usePushNotificationPress({
       redirect: (route: string, params?: object) => navigationRef?.current?.navigate(route, params)
    });
 
    useEffect(() => {
-      if (redirectFromPushNotificationPress != null && redirectEnabled === true) {
+      if (shouldRedirect && redirectEnabled === true) {
          redirectFromPushNotificationPress();
       }
-   }, [redirectFromPushNotificationPress, redirectEnabled]);
+   }, [redirectEnabled, shouldRedirect]);
 
    const onNavigationReady = useCallback(() => {
       routeNameRef.current = navigationRef?.current?.getCurrentRoute().name;
