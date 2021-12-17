@@ -9,6 +9,8 @@ import { useRedirectToPendingTask } from "./useRedirectToPendingTask";
  * "Main" after login. Also provides a function that redirects to the required page if needed.
  * The user may be required to be redirected because he has not finished registration, clicked on
  * a notification or has pending tasks.
+ * In order for this hook to be up to date all cache should be updated, it's recommended to call
+ * redirectToRequiredPage() inside a useEffect that executes when the cache is updated.
  */
 export function useShouldRedirectToRequiredPage(props?: { enabled?: boolean }) {
    const { enabled = true } = props ?? {};

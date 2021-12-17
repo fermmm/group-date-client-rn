@@ -1,4 +1,4 @@
-import React, { useState, FC, useRef, useCallback } from "react";
+import React, { useState, FC, useRef, useCallback, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
@@ -54,6 +54,7 @@ const RegistrationFormsPage: FC = () => {
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
    const [exitDialogVisible, setExitDialogVisible] = useState(false);
    const [sendingToServer, setSendingToServer] = useState(null);
+   const [shouldExit, setShouldExit] = useState(false);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
    const goToNextStepIsPossible = useRef<() => Promise<boolean>>();
@@ -144,19 +145,6 @@ const RegistrationFormsPage: FC = () => {
       return true;
    }, []);
 
-   const exit = () => {
-      if (params != null) {
-         goBack();
-      } else {
-         if (shouldRedirectToRequiredPage) {
-            redirectToRequiredPage();
-         } else {
-            navigateWithoutHistory("Main");
-            showBetaVersionMessage();
-         }
-      }
-   };
-
    const handleContinueButtonClick = useCallback(async () => {
       if (goToNextStepIsPossible.current != null && !(await goToNextStepIsPossible.current())) {
          return;
@@ -170,14 +158,8 @@ const RegistrationFormsPage: FC = () => {
       if (currentStep < formsRequired.length - 1) {
          setCurrentStep(currentStep + 1);
       } else {
-         if (userChangedSomething()) {
-            await sendDataToServer();
-            exit();
-         } else {
-            if (canGoBack()) {
-               goBack();
-            }
-         }
+         await sendDataToServer();
+         setShouldExit(true);
       }
    }, [
       currentStep,
@@ -186,6 +168,30 @@ const RegistrationFormsPage: FC = () => {
       tagsToUpdate.current,
       questionsShowed.current
    ]);
+
+   // Effect in charge of exiting and determining where to exit
+   useEffect(() => {
+      if (!shouldExit) {
+         return;
+      }
+
+      if (userChangedSomething()) {
+         if (params != null) {
+            goBack();
+         } else {
+            if (shouldRedirectToRequiredPage) {
+               redirectToRequiredPage();
+            } else {
+               navigateWithoutHistory("Main");
+               showBetaVersionMessage();
+            }
+         }
+      } else {
+         if (canGoBack()) {
+            goBack();
+         }
+      }
+   }, [shouldExit, shouldRedirectToRequiredPage]);
 
    const sendDataToServer = async () => {
       let propsToSend: EditableUserProps = propsGathered.current;
@@ -263,12 +269,12 @@ const RegistrationFormsPage: FC = () => {
       }
 
       if (thereAreRecommendationsRelatedChanges || thereAreTagsChanges) {
-         revalidate("cards-game/recommendations");
+         await revalidate("cards-game/recommendations");
       }
 
       if (thereArePropsToSend || thereAreTagsChanges) {
          // This component uses profileStatus.user to update the components status so this is required to have the updated data next time this component mounts
-         revalidate("user/profile-status");
+         await revalidate("user/profile-status");
       }
 
       if (profileStatus?.user != null && !profileStatus?.user?.profileCompleted) {

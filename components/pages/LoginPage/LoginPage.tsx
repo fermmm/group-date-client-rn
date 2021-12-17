@@ -85,7 +85,12 @@ const LoginPage: FC = () => {
          navigateWithoutHistory("Main");
          showBetaVersionMessage();
       }
-   }, [profileStatusData, sendLoginPropsCompleted, shouldRedirectIsLoading]);
+   }, [
+      profileStatusData,
+      sendLoginPropsCompleted,
+      shouldRedirectIsLoading,
+      shouldRedirectToRequiredPage
+   ]);
 
    const showAuthenticationButtons: boolean =
       profileStatusError ||
