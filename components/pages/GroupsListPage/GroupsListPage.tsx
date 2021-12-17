@@ -48,7 +48,7 @@ const GroupsListPage: FC = () => {
       return (
          <EmptyPageMessage
             text={
-               "Aquí van a aparecer tus citas grupales. Las citas se forman cuando se gustan varias personas formando un grupo."
+               "Aquí van a aparecer tus chats grupales. \n\nCuando se gustan varias personas entre sí formando un grupo se habilita un chat grupal."
             }
          />
       );
