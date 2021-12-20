@@ -51,7 +51,7 @@ const WelcomeTourPage: FC = () => {
                   <Text style={styles.text}>
                      Poly es la primera app de citas grupales.{"\n"}
                      <Text style={styles.textBold}>
-                        Cuando se gustan entre muchxs se habilita un chat grupal.
+                        Se habilita un chat grupal cuando se gustan entre 4 o más.
                      </Text>
                   </Text>
                </View>
