@@ -201,6 +201,10 @@ export async function getGeolocationAddress(
       let result: Location.LocationGeocodedAddress = null;
       if (reverseGeocoding != null && reverseGeocoding.length > 0) {
          result = reverseGeocoding[0];
+      } else {
+         throw new Error(
+            "Location service not available, try again later. expo-location function reverseGeocodeAsync() returned null or invalid"
+         );
       }
 
       return Promise.resolve(result);
