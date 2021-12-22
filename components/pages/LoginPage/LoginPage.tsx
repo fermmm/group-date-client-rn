@@ -103,7 +103,11 @@ const LoginPage: FC = () => {
       canUseServer &&
       !showAuthenticationButtons &&
       !profileStatusError &&
-      (auth.isLoading || serverInfoLoading || shouldRedirectIsLoading || !profileStatusData);
+      (auth.isLoading ||
+         serverInfoLoading ||
+         shouldRedirectIsLoading ||
+         !profileStatusData ||
+         !sendLoginPropsCompleted);
 
    return (
       <BackgroundArtistic useImageBackground={true}>
