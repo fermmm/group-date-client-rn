@@ -27,6 +27,7 @@ import { revalidate } from "../../../api/tools/useCache/useCache";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
+import { useGroupSeenChecker } from "../GroupsListPage/tools/useGroupSeenChecker";
 
 export interface ParamsGroupPage {
    groupId: string;
@@ -48,6 +49,7 @@ const GroupPage: FC = () => {
       groupId: params?.groupId,
       config: { refreshInterval: UNREAD_CHAT_BADGE_REFRESH_INTERVAL, enabled: focused }
    });
+   useGroupSeenChecker();
    const isLoading = group == null;
 
    useFocusEffect(

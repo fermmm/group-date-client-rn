@@ -26,6 +26,7 @@ import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyti
 import Chat, { ChatMessageProps } from "../../common/Chat/Chat";
 import ChatAppBar from "./ChatAppBar/ChatAppBar";
 import { ChatMessage } from "../../../api/server/shared-tools/endpoints-interfaces/common";
+import { useGroupSeenChecker } from "../GroupsListPage/tools/useGroupSeenChecker";
 
 export interface ChatPageState {
    isContactChat: boolean;
@@ -76,6 +77,7 @@ const ChatPage: FC = () => {
          revalidate("group/chat" + params?.groupId);
       }, [])
    );
+   useGroupSeenChecker();
 
    /**
     * Effect to transform the format of the chat from server to Chat component.

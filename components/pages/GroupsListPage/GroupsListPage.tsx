@@ -6,45 +6,22 @@ import GraphSvg2 from "../../../assets/GraphSvg2";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import TitleText from "../../common/TitleText/TitleText";
 import EmptyPageMessage from "../../common/EmptyPageMessage/EmptyPageMessage";
-import { sendSeenToGroup, useUserGroupList } from "../../../api/server/groups";
+import { useUserGroupList } from "../../../api/server/groups";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
-import { useUser } from "../../../api/server/user";
 import { firstBy } from "thenby";
 import { useServerInfo } from "../../../api/server/server-info";
 import { getSlotStatusInfoText } from "./tools/getSlotsInfoText";
-import { useAuthentication } from "../../../api/authentication/useAuthentication";
-import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
+import { useGroupSeenChecker } from "./tools/useGroupSeenChecker";
 
 const GroupsListPage: FC = () => {
    const { navigate } = useNavigation();
    const { data: groups } = useUserGroupList();
-   const { data: user } = useUser();
    const { data: serverInfo } = useServerInfo();
    const slotsStatusInfoText = getSlotStatusInfoText(serverInfo, groups);
-   const { token } = useAuthentication(user?.token);
+   useGroupSeenChecker();
 
-   // Effect to show a notification when the group is not seen and send the seen request so it doesn't appear again
-   useEffect(() => {
-      if (groups == null || user == null || token == null) {
-         return;
-      }
-
-      const notSeenGroup = groups.find(group => !group.seenBy.includes(user.userId));
-
-      if (notSeenGroup != null) {
-         Alert.alert(
-            "Estas en un grupo",
-            "¡¡Se formó un grupo y estás en el!!. Ve a la sección de grupos para verlo."
-         );
-         sendSeenToGroup({ token, userId: user.userId, groupId: notSeenGroup.groupId });
-         analyticsLogEvent("user_has_new_group", {
-            groupMembersAmount: notSeenGroup.membersAmount
-         });
-      }
-   }, [groups, user, token]);
-
-   if (groups == null || user == null || groups?.length === 0) {
+   if (groups == null || groups?.length === 0) {
       return (
          <EmptyPageMessage
             text={
