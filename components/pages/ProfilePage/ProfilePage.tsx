@@ -10,6 +10,7 @@ import { Alert } from "react-native";
 
 export interface ParamsProfilePage {
    user?: User;
+   userId?: string;
    requestFullInfo?: boolean;
    editMode?: boolean;
 }
@@ -17,11 +18,10 @@ export interface ParamsProfilePage {
 const ProfilePage: FC = () => {
    const { params } = useRoute<RouteProps<ParamsProfilePage>>();
    const { user: userFromParams, requestFullInfo, editMode } = params ?? {};
+   const userIdFromParams = params?.userId ?? userFromParams?.userId;
    const { data: deviceUser } = useUser();
    const { data: userRequested } = useUser(
-      requestFullInfo && userFromParams
-         ? { requestParams: { userId: userFromParams.userId } }
-         : null
+      requestFullInfo && userIdFromParams ? { requestParams: { userId: userIdFromParams } } : null
    );
    const user = !requestFullInfo && userFromParams ? userFromParams : userRequested;
    const isDeviceUser = user?.userId === deviceUser?.userId;

@@ -3,6 +3,7 @@ import moment from "moment";
 import React, { FC } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Text } from "react-native-paper";
+import { useNavigation } from "../../../../common-tools/navigation/useNavigation";
 import { humanizeUnixTime } from "../../../../common-tools/strings/humanizeUnixTime";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
@@ -16,8 +17,10 @@ export interface PropsBubble {
    showAvatar?: boolean;
    showDate?: boolean;
    selected?: boolean;
+   highlighted?: boolean;
    onPress?: () => void;
    onReplyPress?: (messageData: ChatMessageProps) => void;
+   onAvatarPress?: () => void;
    style?: StyleProp<ViewStyle>;
    bubbleStyle?: StyleProp<ViewStyle>;
    showResponsePreview?: boolean;
@@ -29,8 +32,10 @@ const Bubble: FC<PropsBubble> = props => {
       messageData,
       compact,
       selected,
+      highlighted,
       onPress,
       onReplyPress,
+      onAvatarPress,
       showAvatar = true,
       showDate = true,
       showResponsePreview = true,
@@ -47,7 +52,6 @@ const Bubble: FC<PropsBubble> = props => {
       time,
       respondingToMessage
    } = messageData;
-
    const avatarCanBeDisplayed = avatar && showAvatar;
 
    return (
@@ -58,13 +62,16 @@ const Bubble: FC<PropsBubble> = props => {
             isOwnMessage && styles.messageContainerOwnMessage,
             isOwnMessage && compact && styles.messageContainerOwnMessageAgain,
             selected && styles.messageContainerSelected,
+            highlighted && styles.messageContainerHighlighted,
             props.style
          ]}
          onPress={onPress}
          onLongPress={onPress}
       >
          <>
-            {avatarCanBeDisplayed && <Avatar size={48} source={messageData.avatar} />}
+            {avatarCanBeDisplayed && (
+               <Avatar size={48} source={messageData.avatar} onPress={onAvatarPress} />
+            )}
             <View
                style={[
                   styles.bubble,
@@ -111,14 +118,16 @@ const Bubble: FC<PropsBubble> = props => {
 const bubblesBorderRadius = 17;
 const messagesSeparation = 18;
 const messagesSeparationSameAuthor = 2;
+const authorSideMargin = 50;
 
 const styles: Styles = StyleSheet.create({
    messageContainer: {
       flexDirection: "row",
       alignItems: "flex-end",
       marginTop: messagesSeparation,
-      paddingLeft: 10,
-      paddingRight: 10
+      borderRadius: 0,
+      marginRight: 10,
+      marginLeft: 10
    },
    messageContainerWithoutAvatar: {
       marginTop: messagesSeparationSameAuthor
@@ -132,15 +141,19 @@ const styles: Styles = StyleSheet.create({
    messageContainerSelected: {
       backgroundColor: currentTheme.colors.primary
    },
+   messageContainerHighlighted: {
+      backgroundColor: currentTheme.colors.primary2
+   },
    bubble: {
       flexDirection: "column",
       flexShrink: 1,
       alignSelf: "flex-start",
       padding: 12,
       borderRadius: bubblesBorderRadius,
-      marginLeft: 10
+      marginRight: authorSideMargin
    },
    bubbleWithAvatar: {
+      marginLeft: 10,
       borderBottomLeftRadius: 0
    },
    bubbleWithoutAvatar: {
@@ -148,6 +161,8 @@ const styles: Styles = StyleSheet.create({
       borderTopLeftRadius: 0
    },
    bubbleOwnMessage: {
+      marginRight: 0,
+      marginLeft: authorSideMargin,
       borderTopLeftRadius: bubblesBorderRadius,
       borderBottomRightRadius: 0
    },

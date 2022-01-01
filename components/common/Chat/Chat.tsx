@@ -8,6 +8,7 @@ import {
    View
 } from "react-native";
 import { FAB } from "react-native-paper";
+import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 import Bubble from "./Bubble/Bubble";
@@ -41,13 +42,23 @@ const Chat: FC<PropChat> = props => {
 
    const flatListRef = useRef<FlatList<ChatMessageProps>>(null);
    const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
+   const [highlightedMessageId, setHighlightedMessageId] = useState<string>();
    const keyExtractor = useCallback((message: ChatMessageProps) => message.messageId, []);
    const [messages, setMessages] = useState<ChatMessageProps[]>([]);
+   const { navigate } = useNavigation();
 
    // Effect to update the messages state when the messages arrive
    useEffect(() => {
       setMessages([...(props.messages ?? [])].reverse());
    }, [props.messages]);
+
+   const onReplyPress = (messageId: string) => {
+      setHighlightedMessageId(messageId);
+      flatListRef.current.scrollToIndex({
+         index: messages.findIndex(m => m.messageId === messageId),
+         animated: true
+      });
+   };
 
    const renderChatMessage = useCallback<ListRenderItem<ChatMessageProps>>(
       ({ item: message, index }) => {
@@ -60,13 +71,12 @@ const Chat: FC<PropChat> = props => {
                compact={previousMessageIsSameAuthor}
                showAvatar={!message.isOwnMessage && !previousMessageIsSameAuthor}
                selected={selectedMessageId === message.messageId}
+               highlighted={highlightedMessageId === message.messageId}
                onPress={() => onMessageSelect(message)}
-               onReplyPress={message => {
-                  flatListRef.current.scrollToIndex({
-                     index: messages.findIndex(m => m.messageId === message.messageId),
-                     animated: true
-                  });
-               }}
+               onReplyPress={message => onReplyPress(message.messageId)}
+               onAvatarPress={() =>
+                  navigate("Profile", { userId: message.authorUserId, requestFullInfo: true })
+               }
             />
          );
       },
