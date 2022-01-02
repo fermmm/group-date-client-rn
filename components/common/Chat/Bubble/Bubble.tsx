@@ -10,6 +10,7 @@ import { currentTheme } from "../../../../config";
 import Avatar from "../../Avatar/Avatar";
 import { ViewTouchable } from "../../ViewTouchable/ViewTouchable";
 import { ChatMessageProps } from "../Chat";
+import BubbleAnimation from "./tools/BubbleAnimation";
 
 export interface PropsBubble {
    messageData: ChatMessageProps;
@@ -19,7 +20,7 @@ export interface PropsBubble {
    selected?: boolean;
    highlighted?: boolean;
    onPress?: () => void;
-   onReplyPress?: (messageData: ChatMessageProps) => void;
+   onReplyPreviewPress?: (messageData: ChatMessageProps) => void;
    onAvatarPress?: () => void;
    style?: StyleProp<ViewStyle>;
    bubbleStyle?: StyleProp<ViewStyle>;
@@ -34,7 +35,7 @@ const Bubble: FC<PropsBubble> = props => {
       selected,
       highlighted,
       onPress,
-      onReplyPress,
+      onReplyPreviewPress,
       onAvatarPress,
       showAvatar = true,
       showDate = true,
@@ -55,20 +56,20 @@ const Bubble: FC<PropsBubble> = props => {
    const avatarCanBeDisplayed = avatar && showAvatar;
 
    return (
-      <ViewTouchable
-         style={[
-            styles.messageContainer,
-            !avatarCanBeDisplayed && styles.messageContainerWithoutAvatar,
-            isOwnMessage && styles.messageContainerOwnMessage,
-            isOwnMessage && compact && styles.messageContainerOwnMessageAgain,
-            selected && styles.messageContainerSelected,
-            highlighted && styles.messageContainerHighlighted,
-            props.style
-         ]}
-         onPress={onPress}
-         onLongPress={onPress}
-      >
-         <>
+      <ViewTouchable style={styles.touchableContainer} onPress={onPress} onLongPress={onPress}>
+         <BubbleAnimation
+            style={[
+               styles.messageContainer,
+               !avatarCanBeDisplayed && styles.messageContainerWithoutAvatar,
+               isOwnMessage && styles.messageContainerOwnMessage,
+               isOwnMessage && compact && styles.messageContainerOwnMessageAgain,
+               // highlighted && styles.messageContainerHighlighted,
+               selected && styles.messageContainerSelected,
+               props.style
+            ]}
+            animateHighlight={highlighted}
+            highlightColor={"red"}
+         >
             {avatarCanBeDisplayed && (
                <Avatar size={48} source={messageData.avatar} onPress={onAvatarPress} />
             )}
@@ -94,8 +95,8 @@ const Bubble: FC<PropsBubble> = props => {
                      showDate={false}
                      extraDarkBackground
                      showResponsePreview={false} // Setting this to true shows the whole history of responses inside a single message, but clicking to follow the conversation scales better
-                     onPress={() => onReplyPress(respondingToMessage)}
-                     onReplyPress={messageData => onReplyPress(messageData)}
+                     onPress={() => onReplyPreviewPress(respondingToMessage)}
+                     onReplyPreviewPress={messageData => onReplyPreviewPress(messageData)}
                   />
                )}
                {authorName != null && (!compact || respondingToMessage != null) && (
@@ -110,7 +111,7 @@ const Bubble: FC<PropsBubble> = props => {
                   </Text>
                )}
             </View>
-         </>
+         </BubbleAnimation>
       </ViewTouchable>
    );
 };
@@ -121,19 +122,24 @@ const messagesSeparationSameAuthor = 2;
 const authorSideMargin = 50;
 
 const styles: Styles = StyleSheet.create({
+   touchableContainer: {
+      borderRadius: 0
+   },
    messageContainer: {
       flexDirection: "row",
       alignItems: "flex-end",
       marginTop: messagesSeparation,
-      borderRadius: 0,
       marginRight: 10,
-      marginLeft: 10
+      marginLeft: 10,
+      borderRadius: bubblesBorderRadius
    },
    messageContainerWithoutAvatar: {
       marginTop: messagesSeparationSameAuthor
    },
    messageContainerOwnMessage: {
-      justifyContent: "flex-end"
+      justifyContent: "flex-end",
+      borderTopLeftRadius: bubblesBorderRadius,
+      borderBottomRightRadius: 0
    },
    messageContainerOwnMessageAgain: {
       marginTop: messagesSeparationSameAuthor
@@ -142,7 +148,7 @@ const styles: Styles = StyleSheet.create({
       backgroundColor: currentTheme.colors.primary
    },
    messageContainerHighlighted: {
-      backgroundColor: currentTheme.colors.primary2
+      backgroundColor: currentTheme.colors.notification
    },
    bubble: {
       flexDirection: "column",

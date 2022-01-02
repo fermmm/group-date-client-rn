@@ -52,7 +52,12 @@ const Chat: FC<PropChat> = props => {
       setMessages([...(props.messages ?? [])].reverse());
    }, [props.messages]);
 
-   const onReplyPress = (messageId: string) => {
+   const onMessagePress = (message: ChatMessageProps) => {
+      onMessageSelect(message);
+      setHighlightedMessageId(null);
+   };
+
+   const onReplyPreviewPress = (messageId: string) => {
       setHighlightedMessageId(messageId);
       flatListRef.current.scrollToIndex({
          index: messages.findIndex(m => m.messageId === messageId),
@@ -72,15 +77,15 @@ const Chat: FC<PropChat> = props => {
                showAvatar={!message.isOwnMessage && !previousMessageIsSameAuthor}
                selected={selectedMessageId === message.messageId}
                highlighted={highlightedMessageId === message.messageId}
-               onPress={() => onMessageSelect(message)}
-               onReplyPress={message => onReplyPress(message.messageId)}
+               onPress={() => onMessagePress(message)}
+               onReplyPreviewPress={message => onReplyPreviewPress(message.messageId)}
                onAvatarPress={() =>
                   navigate("Profile", { userId: message.authorUserId, requestFullInfo: true })
                }
             />
          );
       },
-      [messages, selectedMessageId]
+      [messages, selectedMessageId, highlightedMessageId]
    );
 
    const onScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {

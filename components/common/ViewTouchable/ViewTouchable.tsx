@@ -15,14 +15,15 @@ type TouchableRippleProps = Omit<
 
 export const ViewTouchable: FC<TouchableRippleProps & PropsViewTouchable> = props => {
    const { colors, roundness } = useTheme();
+   const rippleColor = color(props?.defaultRippleColor ?? "black")
+      .alpha(props?.defaultAlpha ?? 0.2)
+      .toString();
 
    return (
       // @ts-ignore
       <TouchableRipple
          borderless
-         rippleColor={color(props?.defaultRippleColor ?? "black")
-            .alpha(props?.defaultAlpha ?? 0.2)
-            .toString()}
+         rippleColor={rippleColor}
          {...props}
          style={[{ borderRadius: roundness, flexShrink: 1 }, props.style]}
       >
