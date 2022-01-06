@@ -181,8 +181,8 @@ const ChatPage: FC = () => {
       const nameColor = isOwnMessage
          ? ownMessageNameColor
          : color(getColorForUser(message.authorUserId, group, chatNamesColors, "white"))
-              .desaturate(0.3)
-              .lighten(0.5)
+              .desaturate(0)
+              .lighten(0.6)
               .toString();
 
       return {
@@ -257,6 +257,9 @@ const ChatPage: FC = () => {
                onMessageSelect={handleMessageSelect}
                respondingToMessage={respondingToMessage}
                onRemoveReply={handleRemoveReply}
+               ownMessageBubbleColor={ownMessageBubbleColor}
+               ownMessageNameColor={ownMessageNameColor}
+               externalMessageBubbleColor={color("white").darken(0.67).toString()}
             />
          </PageBackgroundGradient>
       </>

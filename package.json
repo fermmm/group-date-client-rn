@@ -59,7 +59,6 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
-    "react-native-animation-hooks": "^1.0.1",
     "react-native-dev-console": "^0.0.1",
     "react-native-email-link": "^1.12.2",
     "react-native-gesture-handler": "~1.10.2",

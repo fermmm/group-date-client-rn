@@ -12,9 +12,19 @@ import { ChatMessageProps } from "../../Chat";
 interface PropsRespondPreview {
    respondingToMessage?: ChatMessageProps;
    onRemoveReply: () => void;
+   ownMessageBubbleColor?: string;
+   ownMessageNameColor?: string;
+   externalMessageBubbleColor?: string;
 }
 const RespondPreview: FC<PropsRespondPreview> = props => {
-   const { respondingToMessage, onRemoveReply } = props;
+   const {
+      respondingToMessage,
+      onRemoveReply,
+      ownMessageBubbleColor,
+      ownMessageNameColor,
+      externalMessageBubbleColor
+   } = props;
+
    const { colors } = useTheme();
 
    if (respondingToMessage == null) {
@@ -35,6 +45,9 @@ const RespondPreview: FC<PropsRespondPreview> = props => {
                showResponsePreview={false}
                showAvatar={false}
                showDate={false}
+               ownMessageBubbleColor={ownMessageBubbleColor}
+               ownMessageNameColor={ownMessageNameColor}
+               externalMessageBubbleColor={externalMessageBubbleColor}
             />
          </View>
       </View>

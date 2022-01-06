@@ -14,10 +14,21 @@ export interface PropsChatInputField {
    onSend?: (props: { messageText: string; respondingToChatMessageId?: string }) => void;
    respondingToMessage?: ChatMessageProps;
    onRemoveReply: () => void;
+   ownMessageBubbleColor?: string;
+   ownMessageNameColor?: string;
+   externalMessageBubbleColor?: string;
 }
 
 const ChatInputField: FC<PropsChatInputField> = props => {
-   const { onSend, respondingToMessage, onRemoveReply } = props;
+   const {
+      onSend,
+      respondingToMessage,
+      onRemoveReply,
+      ownMessageBubbleColor,
+      ownMessageNameColor,
+      externalMessageBubbleColor
+   } = props;
+
    const [text, setText] = useState("");
    const inputRef = useRef<RNTextInput>(null);
    const { colors } = useTheme();
@@ -45,7 +56,13 @@ const ChatInputField: FC<PropsChatInputField> = props => {
 
    return (
       <View>
-         <RespondPreview respondingToMessage={respondingToMessage} onRemoveReply={onRemoveReply} />
+         <RespondPreview
+            respondingToMessage={respondingToMessage}
+            onRemoveReply={onRemoveReply}
+            ownMessageBubbleColor={ownMessageBubbleColor}
+            ownMessageNameColor={ownMessageNameColor}
+            externalMessageBubbleColor={externalMessageBubbleColor}
+         />
          <View style={[styles.mainContainer, props.style]}>
             <TextInput
                mode={"outlined"}

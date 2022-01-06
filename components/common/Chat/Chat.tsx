@@ -21,6 +21,9 @@ export interface PropChat {
    onMessageSelect: (message: ChatMessageProps) => void;
    respondingToMessage?: ChatMessageProps;
    onRemoveReply: () => void;
+   ownMessageBubbleColor?: string;
+   ownMessageNameColor?: string;
+   externalMessageBubbleColor?: string;
 }
 
 export interface ChatMessageProps {
@@ -38,7 +41,16 @@ export interface ChatMessageProps {
 }
 
 const Chat: FC<PropChat> = props => {
-   const { onSend, onMessageSelect, selectedMessageId, respondingToMessage, onRemoveReply } = props;
+   const {
+      onSend,
+      onMessageSelect,
+      selectedMessageId,
+      respondingToMessage,
+      onRemoveReply,
+      ownMessageBubbleColor,
+      ownMessageNameColor,
+      externalMessageBubbleColor
+   } = props;
 
    const flatListRef = useRef<FlatList<ChatMessageProps>>(null);
    const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
@@ -58,7 +70,10 @@ const Chat: FC<PropChat> = props => {
    };
 
    const onReplyPreviewPress = (messageId: string) => {
-      setHighlightedMessageId(messageId);
+      setHighlightedMessageId(null);
+      setTimeout(() => {
+         setHighlightedMessageId(messageId);
+      }, 500);
       flatListRef.current.scrollToIndex({
          index: messages.findIndex(m => m.messageId === messageId),
          animated: true
@@ -82,6 +97,9 @@ const Chat: FC<PropChat> = props => {
                onAvatarPress={() =>
                   navigate("Profile", { userId: message.authorUserId, requestFullInfo: true })
                }
+               ownMessageBubbleColor={ownMessageBubbleColor}
+               ownMessageNameColor={ownMessageNameColor}
+               externalMessageBubbleColor={externalMessageBubbleColor}
             />
          );
       },
@@ -132,6 +150,9 @@ const Chat: FC<PropChat> = props => {
             onSend={onSend}
             respondingToMessage={respondingToMessage}
             onRemoveReply={onRemoveReply}
+            ownMessageBubbleColor={ownMessageBubbleColor}
+            ownMessageNameColor={ownMessageNameColor}
+            externalMessageBubbleColor={externalMessageBubbleColor}
          />
       </View>
    );

@@ -3,7 +3,6 @@ import moment from "moment";
 import React, { FC } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Text } from "react-native-paper";
-import { useNavigation } from "../../../../common-tools/navigation/useNavigation";
 import { humanizeUnixTime } from "../../../../common-tools/strings/humanizeUnixTime";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
@@ -26,6 +25,9 @@ export interface PropsBubble {
    bubbleStyle?: StyleProp<ViewStyle>;
    showResponsePreview?: boolean;
    extraDarkBackground?: boolean;
+   ownMessageBubbleColor?: string;
+   ownMessageNameColor?: string;
+   externalMessageBubbleColor?: string;
 }
 
 const Bubble: FC<PropsBubble> = props => {
@@ -40,7 +42,10 @@ const Bubble: FC<PropsBubble> = props => {
       showAvatar = true,
       showDate = true,
       showResponsePreview = true,
-      extraDarkBackground = false
+      extraDarkBackground = false,
+      ownMessageBubbleColor,
+      ownMessageNameColor,
+      externalMessageBubbleColor
    } = props;
    const {
       authorName,
@@ -54,21 +59,27 @@ const Bubble: FC<PropsBubble> = props => {
       respondingToMessage
    } = messageData;
    const avatarCanBeDisplayed = avatar && showAvatar;
+   const finalBubbleColor =
+      isOwnMessage && ownMessageBubbleColor
+         ? ownMessageBubbleColor
+         : !isOwnMessage && externalMessageBubbleColor
+         ? externalMessageBubbleColor
+         : bubbleColor;
+   const finalNameColor = isOwnMessage && ownMessageNameColor ? ownMessageNameColor : nameColor;
 
    return (
       <ViewTouchable style={styles.touchableContainer} onPress={onPress} onLongPress={onPress}>
          <BubbleAnimation
+            animateHighlight={highlighted}
+            highlightColor={"grey"}
             style={[
                styles.messageContainer,
                !avatarCanBeDisplayed && styles.messageContainerWithoutAvatar,
                isOwnMessage && styles.messageContainerOwnMessage,
                isOwnMessage && compact && styles.messageContainerOwnMessageAgain,
-               // highlighted && styles.messageContainerHighlighted,
                selected && styles.messageContainerSelected,
                props.style
             ]}
-            animateHighlight={highlighted}
-            highlightColor={"red"}
          >
             {avatarCanBeDisplayed && (
                <Avatar size={48} source={messageData.avatar} onPress={onAvatarPress} />
@@ -77,9 +88,9 @@ const Bubble: FC<PropsBubble> = props => {
                style={[
                   styles.bubble,
                   avatarCanBeDisplayed ? styles.bubbleWithAvatar : styles.bubbleWithoutAvatar,
-                  { backgroundColor: bubbleColor },
+                  { backgroundColor: finalBubbleColor },
                   extraDarkBackground && {
-                     backgroundColor: color(bubbleColor).darken(0.2).toString()
+                     backgroundColor: color(finalBubbleColor).darken(0.2).toString()
                   },
                   isOwnMessage && styles.bubbleOwnMessage,
                   props.bubbleStyle
@@ -97,16 +108,19 @@ const Bubble: FC<PropsBubble> = props => {
                      showResponsePreview={false} // Setting this to true shows the whole history of responses inside a single message, but clicking to follow the conversation scales better
                      onPress={() => onReplyPreviewPress(respondingToMessage)}
                      onReplyPreviewPress={messageData => onReplyPreviewPress(messageData)}
+                     ownMessageBubbleColor={ownMessageBubbleColor}
+                     ownMessageNameColor={ownMessageNameColor}
+                     externalMessageBubbleColor={externalMessageBubbleColor}
                   />
                )}
                {authorName != null && (!compact || respondingToMessage != null) && (
-                  <Text style={[styles.nameText, { color: nameColor }]}>{authorName}</Text>
+                  <Text style={[styles.nameText, { color: finalNameColor }]}>{authorName}</Text>
                )}
                {textContent && (
                   <Text style={[styles.textContent, { color: textColor }]}>{textContent}</Text>
                )}
                {time != null && !compact && showDate && (
-                  <Text style={[styles.timeText, { color: nameColor }]}>
+                  <Text style={[styles.timeText, { color: finalNameColor }]}>
                      {humanizeUnixTime(moment().unix() - time)}
                   </Text>
                )}
@@ -131,14 +145,14 @@ const styles: Styles = StyleSheet.create({
       marginTop: messagesSeparation,
       marginRight: 10,
       marginLeft: 10,
-      borderRadius: bubblesBorderRadius
+      borderRadius: bubblesBorderRadius,
+      borderBottomRightRadius: bubblesBorderRadius // For some reason this is needed to make the border radius appear
    },
    messageContainerWithoutAvatar: {
       marginTop: messagesSeparationSameAuthor
    },
    messageContainerOwnMessage: {
       justifyContent: "flex-end",
-      borderTopLeftRadius: bubblesBorderRadius,
       borderBottomRightRadius: 0
    },
    messageContainerOwnMessageAgain: {
@@ -174,7 +188,8 @@ const styles: Styles = StyleSheet.create({
    },
    nameText: {
       fontFamily: currentTheme.font.semiBold,
-      fontSize: 10,
+      fontSize: 13,
+      marginBottom: 2,
       alignSelf: "flex-start"
    },
    textContent: {
