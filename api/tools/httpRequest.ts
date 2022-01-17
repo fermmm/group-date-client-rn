@@ -147,8 +147,14 @@ export async function defaultHttpRequest<Params = void, Response = void>(
  * executing in production there is no localhost part on the url so it remains unchanged.
  */
 export function prepareUrl(url: string): string {
-   if (url.includes("localhost")) {
-      return url.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
+   if (url.includes("localhost") || url.includes("127.0.0.1")) {
+      if (url.includes("localhost")) {
+         return url.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
+      }
+
+      if (url.includes("127.0.0.1")) {
+         return url.replace("127.0.0.1", Constants.manifest.debuggerHost.split(`:`).shift());
+      }
    } else {
       return url;
    }
