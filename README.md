@@ -14,7 +14,7 @@ This project uses TypeScript + React Native + Expo with "bare" workflow (not the
 4. Create an empty file named `google-services.json` inside android/app folder.
 This is required by expo to compile, the file will be empty but you will replace it with a real one in the future.
 
-5. Install "Expo Go" app from your phone store, you will need it to test the app in your phone.
+5. Create an account on https://expo.dev/ and then run ´expo login´ command. Also install "Expo Go" app from your phone store, you will need it to test the app in your phone. Also 
 
 6. You need to create your own package identifier, it's a string identifier for your app, the current one is on app.config.ts > ```android.package```. Search for that package name inside all the project files using your code editor and replace the current one by a new one everywhere, the new identifier can be whatever you want in this format "com.whatever.anything", use your creativity, the only important thing is no other app published has the same identifier.
 
