@@ -18,22 +18,22 @@ const ContactPage: FC = () => {
    const { colors } = useTheme();
 
    const handleCollaborationGroupPress = () => {
-      Linking.openURL("https://www.facebook.com/groups/133790728893669");
+      Linking.openURL(process.env.FACEBOOK_GROUP);
    };
    const handleInstagramAccountPress = () => {
-      Linking.openURL("https://www.instagram.com/poly.community.app");
+      Linking.openURL(process.env.INSTAGRAM_PAGE);
    };
    const handleFacebookAccountPress = () => {
-      Linking.openURL("https://www.facebook.com/polycommunityapp");
+      Linking.openURL(process.env.FACEBOOK_PAGE);
    };
    const handleCopyEmailPress = () => {
-      Clipboard.setString("poly.app.team@gmail.com");
+      Clipboard.setString(process.env.CONTACT_EMAIL);
    };
    const handleSendEmailPress = () => {
-      Linking.openURL("mailto:poly.app.team@gmail.com");
+      Linking.openURL(`mailto:${process.env.CONTACT_EMAIL}`);
    };
    const handleWebPress = () => {
-      Linking.openURL("https://polycommunity.app");
+      Linking.openURL(process.env.WEBSITE_URL);
    };
 
    return (

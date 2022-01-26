@@ -137,9 +137,11 @@ For final build and publishing of the app you may find useful the [instructions 
 
 1. **Change the icons**: Once you have your icon designed use "Asset Studio" inside Android Studio to export your icon in all the sizes required by an app. Open Android Studio, inside the "project" panel select the folder app/res, then click on File > New > Image asset, import the source asset (your icon image) and follow instructions to generate the images, the images will be generated in the correct folders, build and enjoy.
 
-2. **Change app bundle identifier**: If you didn't do this in the setup steps or the store required you to change the app package identifier, the current one is on app.config.ts > ```android.package```. Search for that package name inside all the project files using your code editor and replace the current one by the new one. If you followed the steps required to setup notifications you have to repeat all of them with the new package name, which implies creating a new app in Firebase. If you followed the steps required to setup google login you need to change the package name in the android client of the Google Cloud platform credentials setup. Also the Facebook app must have the updated identifier.
+1. **Change the app name**: In android change the string with name ```app_name``` value in the file located at ```android/app/src/main/res/values/strings.xml```
 
-3. **Facebook login**: When you publish your app in Google Play and test it you'll notice a Key Hash error when login with Facebook, this is because when uploading an .aap bundle the final app is signed by Google Play with their own key, you need to add this key to the facebook app configuration:
+3. **Change app bundle identifier**: If you didn't do this in the setup steps or the store required you to change the app package identifier, the current one is on app.config.ts > ```android.package```. Search for that package name inside all the project files using your code editor and replace the current one by the new one. If you followed the steps required to setup notifications you have to repeat all of them with the new package name, which implies creating a new app in Firebase. If you followed the steps required to setup google login you need to change the package name in the android client of the Google Cloud platform credentials setup. Also the Facebook app must have the updated identifier.
+
+4. **Facebook login**: When you publish your app in Google Play and test it you'll notice a Key Hash error when login with Facebook, this is because when uploading an .aap bundle the final app is signed by Google Play with their own key, you need to add this key to the facebook app configuration:
     1. In Google Play Console, on the left panel under "Release" go to Setup -> App Integrity, copy the "SHA-1 certificate fingerprint", the one that is under "App signing key certificate"
     2. Convert the SHA-1 key you copied into the base64 format that Facebook requires by running this command (replace YOUR_COPIED_SHA1_KEY):
 
@@ -147,7 +149,7 @@ For final build and publishing of the app you may find useful the [instructions 
     
     3. Paste the base64 code returned into the "Key Hashes" field in your Facebook app configuration
 
-4. **Google login**: As mentioned in the previos step Google Play signs your app so also Google login is affected:
+5. **Google login**: As mentioned in the previos step Google Play signs your app so also Google login is affected:
     1. In Google Play Console, on the left panel under "Release" go to Setup -> App Integrity, copy the "SHA-1 certificate fingerprint", the one that is under "App signing key certificate"
     2. Go to the [https://console.cloud.google.com/apis/credentials](credentials page) of Google Cloud, then click on "+ Create credentials" -> "OAuth client ID" -> android -> paste the corresponding field the SHA-1 copied in the previous step, then click create. Now google login should work on the published app.
 

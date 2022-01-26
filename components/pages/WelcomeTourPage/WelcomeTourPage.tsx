@@ -49,7 +49,7 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Poly es la primera app de citas grupales.{"\n"}
+                     GroupDate es la primera app de citas grupales.{"\n"}
                      <Text style={styles.textBold}>
                         Se habilita un chat grupal cuando se gustan entre 4 o más.
                      </Text>
