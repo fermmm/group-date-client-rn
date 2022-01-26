@@ -26,6 +26,7 @@ import { analyticsLogUser } from "../../../common-tools/analytics/tools/analytic
 import VersionIndicator from "./VersionIndicator/VersionIndicator";
 import { ViewTouchable } from "../../common/ViewTouchable/ViewTouchable";
 import { useShouldRedirectToRequiredPage } from "../../../common-tools/navigation/useShouldRedirectToRequiredPage";
+import LegalMessage from "./LegalMessage/LegalMessage";
 
 const LoginPage: FC = () => {
    const { colors } = useTheme();
@@ -134,6 +135,7 @@ const LoginPage: FC = () => {
             )}
             <AppUpdateMessage serverInfo={serverInfoData} />
             <AuthenticationButtons show={showAuthenticationButtons} authentication={auth} />
+            <LegalMessage visible={showAuthenticationButtons} />
             <VersionIndicator />
          </View>
       </BackgroundArtistic>

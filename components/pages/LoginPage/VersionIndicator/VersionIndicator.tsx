@@ -5,7 +5,6 @@ import ConsoleProvider from "react-native-dev-console";
 import { getAppVersion } from "../../../../common-tools/device-native-api/versions/versions";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
-import { ViewTouchable } from "../../../common/ViewTouchable/ViewTouchable";
 
 const VersionIndicator: FC = () => {
    const { buildVersion, codeVersion } = getAppVersion();
@@ -17,9 +16,9 @@ const VersionIndicator: FC = () => {
 
    return (
       <>
-         <ViewTouchable onPress={handlePress}>
-            <Text style={styles.text}>{codeVersion}</Text>
-         </ViewTouchable>
+         <Text style={styles.text} onPress={handlePress}>
+            {codeVersion}
+         </Text>
          <View
             pointerEvents="box-none"
             style={[
