@@ -5,16 +5,14 @@ export function useModal<T = {}>(modalComponent: React.FC<T & ModalRequiredProps
    const [modals, setModals] = useContext(GlobalModalsContext);
    const modalId = useMemo(() => String(Math.random()), []);
 
-   const openModal = <T = {}>(params?: { modalProps?: T }) => {
-      const { modalProps = {} } = params ?? {};
-
+   const openModal = (modalProps?: T) => {
       const isAlreadyOpen = modals.find(d => d.modalId === modalId) !== undefined;
 
       if (isAlreadyOpen) {
          return;
       }
 
-      setModals([...modals, { modalComponent, modalId, props: modalProps }]);
+      setModals(modals => [...modals, { modalComponent, modalId, props: modalProps }]);
    };
 
    const closeModal = () => {

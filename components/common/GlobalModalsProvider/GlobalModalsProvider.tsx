@@ -1,6 +1,7 @@
-import React, { createContext, FC, useState } from "react";
+import React, { createContext, Dispatch, FC, SetStateAction, useState } from "react";
 
-export const GlobalModalsContext = createContext([]);
+export const GlobalModalsContext =
+   createContext<[NewModalProps[], Dispatch<SetStateAction<NewModalProps[]>>]>(null);
 
 export interface NewModalProps<T = {}> {
    modalId: string;
@@ -13,15 +14,12 @@ export interface ModalRequiredProps {
    close?: () => void;
 }
 
-/**
- * This component needs to be placed at the root of the project. Not to be used as a normal component.
- */
 const GlobalModalsProvider: FC = ({ children }) => {
    const state = useState<NewModalProps[]>([]);
    const [modals, setModals] = state;
 
    const closeModal = (modalId: string) => {
-      setModals(modals.filter(modal => modal.modalId !== modalId));
+      setModals(modals => modals.filter(modal => modal.modalId !== modalId));
    };
 
    return (
@@ -31,6 +29,7 @@ const GlobalModalsProvider: FC = ({ children }) => {
             <modal.modalComponent
                {...(modal.props ?? {})}
                close={() => closeModal(modal.modalId)}
+               key={modal.modalId}
             />
          ))}
       </GlobalModalsContext.Provider>

@@ -1,18 +1,14 @@
 import React, { FC } from "react";
 import { View, StyleSheet } from "react-native";
-import { UsableModalComponentProp } from "react-native-modalfy";
 import { Paragraph, Button } from "react-native-paper";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
+import { ModalRequiredProps } from "../GlobalModalsProvider/GlobalModalsProvider";
 import ModalBackground from "../ModalBackground/ModalBackground";
 import ModalWindow from "../ModalWindow/ModalWindow";
 
-export interface PropsDialog {
-   modal: UsableModalComponentProp<any, any>;
-}
-
-export interface DialogModalProps {
+export interface PropsDialogModal extends ModalRequiredProps {
    message: string;
    buttons?: DialogButton[];
    blockClosing?: boolean;
@@ -27,40 +23,31 @@ export interface DialogButton {
 /**
  * When creating a new modal it needs to be added in App.tsx
  */
-const DialogModal: FC<PropsDialog> = ({ modal: { closeModal, getParam } }) => {
+const DialogModal: FC<PropsDialogModal> = props => {
+   const { close, message, blockClosing, buttons = [{ label: "Ok" }] } = props;
    const theme = useTheme();
-   const message = getParam<keyof DialogModalProps, string>("message") as string;
-   const blockClosing = getParam<keyof DialogModalProps, boolean>("blockClosing") as boolean;
-   const buttons = getParam<keyof DialogModalProps, DialogButton[]>("buttons", [
-      { label: "Ok" }
-   ]) as DialogButton[];
 
    const handleButtonPress = (action?: () => void) => {
-      if (action == null) {
-         return;
-      }
-
-      // This allows to chain modals, if the action is called immediately the next modal won't open.
-      setTimeout(action, 16);
+      action?.();
    };
 
    return (
-      <ModalBackground onClose={blockClosing ? null : () => closeModal()}>
+      <ModalBackground onClose={blockClosing ? null : () => close()}>
          <ModalWindow>
             <Paragraph style={styles.text}>{message}</Paragraph>
             <View
                style={[
                   styles.buttonsContainer,
-                  buttons.length === 1 && styles.buttonsContainerSingle
+                  buttons?.length === 1 && styles.buttonsContainerSingle
                ]}
             >
-               {buttons.map((button, i) => (
+               {buttons?.map((button, i) => (
                   <Button
                      color={theme.colors.accent2}
-                     style={[styles.button, buttons.length === 1 && styles.buttonSingle]}
+                     style={[styles.button, buttons?.length === 1 && styles.buttonSingle]}
                      onPress={() => {
                         handleButtonPress(button.onPress);
-                        button.closesModal === false ? null : closeModal();
+                        button.closesModal === false ? null : close();
                      }}
                      key={i}
                   >

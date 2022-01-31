@@ -10,11 +10,6 @@ interface PropsModalTransparent {
    closeWithBackButton?: boolean;
 }
 
-/**
- * TODO: When a modal is open the back button handler is disabled. The only tool available to
- * handle this is the onBackButtonPress prop, that forces bad design in other parts of the code.
- * To fix this react-native-modalfy should replace Modal and also it should be used instead of Alert
- */
 export const ModalTransparent: FC<PropsModalTransparent> = props => {
    const {
       visible = true,

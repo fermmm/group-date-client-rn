@@ -1,12 +1,7 @@
-import { useModal } from "react-native-modalfy";
-import { DialogModalProps } from "../DialogModal";
+import { useModal } from "../../GlobalModalsProvider/tools/useModal";
+import DialogModal from "../DialogModal";
 
 export function useDialogModal() {
-   const { openModal, closeModal } = useModal();
-
-   const openDialogModal = (props: DialogModalProps) => {
-      openModal("DialogModal", props);
-   };
-
-   return { openDialogModal, closeDialogModal: closeModal };
+   const { openModal, closeModal } = useModal(DialogModal);
+   return { openDialogModal: openModal, closeDialogModal: closeModal };
 }

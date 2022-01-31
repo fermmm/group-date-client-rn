@@ -1,6 +1,5 @@
 import React, { FC, useCallback, useState } from "react";
 import { View, StyleSheet, ScrollView, Dimensions, Alert } from "react-native";
-import { UsableModalComponentProp } from "react-native-modalfy";
 import { emailLoginGet, emailLoginResetPasswordPost } from "../../../api/server/email-login";
 import { LoginResponse } from "../../../api/server/shared-tools/endpoints-interfaces/email-login";
 import { tryToGetErrorMessage } from "../../../api/tools/httpRequest";
@@ -10,6 +9,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 import CenterContainer from "../CenterContainer/CenterContainer";
 import { useDialogModal } from "../DialogModal/tools/useDialogModal";
+import { ModalRequiredProps } from "../GlobalModalsProvider/GlobalModalsProvider";
 import ModalBackground from "../ModalBackground/ModalBackground";
 import { ScreensStepper } from "../ScreensStepper/ScreensStepper";
 import EmailStep from "./EmailStep/EmailStep";
@@ -17,11 +17,7 @@ import EmailValidationStep from "./EmailValidationStep/EmailValidationStep";
 import MainStep from "./MainStep/MainStep";
 import PasswordStep from "./PasswordStep/PasswordStep";
 
-interface Props {
-   modal: UsableModalComponentProp<any, any>;
-}
-
-export interface EmailLoginModalProps {
+export interface PropsEmailLoginModal extends ModalRequiredProps {
    onLogin: (token: string) => void;
    onDismiss: () => void;
 }
@@ -32,11 +28,7 @@ const modalWidthPercentage = 100;
  * Having all the forms in one component it's not the best design but it's the easiest way to support
  * the back button.
  */
-const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
-   const onDismiss = getParam<keyof EmailLoginModalProps, () => void>("onDismiss") as () => void;
-   const onLogin = getParam<keyof EmailLoginModalProps, (token: string) => void>("onLogin") as (
-      token: string
-   ) => void;
+const EmailLoginModal: FC<PropsEmailLoginModal> = ({ onLogin, onDismiss, close }) => {
    const [isLoading, setIsLoading] = useState(false);
    const [currentStep, setCurrentStep] = useState(0);
    const [width, setWidth] = useState(null);
@@ -53,7 +45,7 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
          message: "Has creado tu cuenta con éxito =)",
          buttons: [{ label: "Ok" }]
       });
-      closeModal("EmailLoginModal");
+      close();
    };
 
    const handleLogin = async (password: string) => {
@@ -68,7 +60,7 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
 
       if (response?.userExists && response?.token) {
          onLogin?.(response.token);
-         closeModal("EmailLoginModal");
+         close();
       } else {
          // Loading is falso only when there is an error because it looks better like this
          setIsLoading(false);
@@ -85,7 +77,7 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
    };
 
    const handleModalDismiss = () => {
-      closeModal("EmailLoginModal");
+      close();
       onDismiss?.();
    };
 
