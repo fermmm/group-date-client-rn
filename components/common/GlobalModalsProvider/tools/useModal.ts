@@ -1,9 +1,8 @@
-import { useMemo } from "react";
-import { useRecoilState } from "recoil";
-import { atomGlobalModals, ModalRequiredProps } from "./atoms";
+import { useContext, useMemo } from "react";
+import { GlobalModalsContext, ModalRequiredProps } from "../GlobalModalsProvider";
 
 export function useModal<T = {}>(modalComponent: React.FC<T & ModalRequiredProps>) {
-   const [modals, setModals] = useRecoilState(atomGlobalModals);
+   const [modals, setModals] = useContext(GlobalModalsContext);
    const modalId = useMemo(() => String(Math.random()), []);
 
    const openModal = <T = {}>(params?: { modalProps?: T }) => {

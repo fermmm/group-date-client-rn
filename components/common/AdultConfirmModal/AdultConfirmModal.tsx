@@ -4,13 +4,13 @@ import { Paragraph, Button, Text } from "react-native-paper";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
+import { ModalRequiredProps } from "../GlobalModalsProvider/GlobalModalsProvider";
 import ModalBackground from "../ModalBackground/ModalBackground";
 import ModalWindow from "../ModalWindow/ModalWindow";
 
-export interface PropsAdultConfirmModal {
+export interface PropsAdultConfirmModal extends ModalRequiredProps {
    onConfirm: () => void;
    onCancel?: () => void;
-   close?: () => void;
 }
 
 const AdultConfirmModal: FC<PropsAdultConfirmModal> = ({ onConfirm, onCancel, close }) => {
@@ -31,7 +31,7 @@ const AdultConfirmModal: FC<PropsAdultConfirmModal> = ({ onConfirm, onCancel, cl
          <ModalWindow>
             <Text style={styles.sign18}>18+</Text>
             <Paragraph style={styles.text}>
-               {"Es posible que aparezca algún contenido para adultos"}
+               {"Es posible que te aparezca algún contenido para adultos"}
             </Paragraph>
             <View style={[styles.buttonsContainerSingle]}>
                <Button

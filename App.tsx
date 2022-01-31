@@ -1,7 +1,6 @@
 import * as Localization from "expo-localization";
 import i18n from "i18n-js";
 import React, { FC, useEffect, useState } from "react";
-import { RecoilRoot } from "recoil";
 import AppLoading from "expo-app-loading";
 import { Provider as PaperProvider } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
@@ -40,7 +39,7 @@ import "dayjs/locale/en";
 import "dayjs/locale/es";
 import EmailLoginModal from "./components/common/EmailLoginModal/EmailLoginModal";
 import RemoveSeenWizardPage from "./components/pages/RemoveSeenWizardPage/RemoveSeenWizardPage";
-import GlobalModalRenderer from "./components/common/GlobalModalRenderer/GlobalModalRenderer";
+import GlobalModalsProvider from "./components/common/GlobalModalsProvider/GlobalModalsProvider";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -79,9 +78,9 @@ const App: FC = () => {
    }
 
    return (
-      <RecoilRoot>
-         <CacheConfigProvider>
-            <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
+      <CacheConfigProvider>
+         <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
+            <GlobalModalsProvider>
                <ModalProvider stack={modalsStack}>
                   <StatusBar style="light" translucent backgroundColor={"transparent"} />
                   <NavigationContainerWithNotifications>
@@ -108,10 +107,9 @@ const App: FC = () => {
                      </Stack.Navigator>
                   </NavigationContainerWithNotifications>
                </ModalProvider>
-               <GlobalModalRenderer />
-            </PaperProvider>
-         </CacheConfigProvider>
-      </RecoilRoot>
+            </GlobalModalsProvider>
+         </PaperProvider>
+      </CacheConfigProvider>
    );
 };
 

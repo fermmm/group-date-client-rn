@@ -1,4 +1,4 @@
-import { useModal } from "../../GlobalModalRenderer/tools/useModal";
+import { useModal } from "../../GlobalModalsProvider/tools/useModal";
 import AdultConfirmModal, { PropsAdultConfirmModal } from "../AdultConfirmModal";
 
 export function useAdultConfirmDialog() {
