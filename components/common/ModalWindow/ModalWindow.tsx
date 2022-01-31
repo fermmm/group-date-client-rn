@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 
-const ModalContainer: FC = ({ children }) => {
+const ModalWindow: FC = ({ children }) => {
    return (
       <View style={styles.centerContainer}>
          <View style={styles.modalBody}>{children}</View>
@@ -31,4 +31,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default ModalContainer;
+export default ModalWindow;

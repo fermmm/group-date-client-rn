@@ -12,6 +12,7 @@ import {
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
+import { useAdultConfirmDialog } from "../../../common/AdultConfirmModal/tools/useAdultConfirmModa";
 import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
 
 interface PropsAuthenticationButtons {
@@ -23,6 +24,7 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
    const { authentication, show } = props;
    const { getNewToken } = authentication;
    const { data: serverInfo, isLoading: isLoadingServerInfo } = useServerInfo();
+   const { openAdultConfirmDialog } = useAdultConfirmDialog();
    const { colors } = useTheme();
    const color = colors.textLogin;
    const facebookLoginAvailable =
@@ -33,18 +35,30 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
       facebookLoginAvailable || googleLoginAvailable || serverInfo.emailLoginEnabled;
 
    const handleGoogleButtonPress = () => {
-      getNewToken(AuthenticationProvider.Google);
-      logAnalyticsLoginStep(LoginStep.ClickedLoginButtonGl);
+      openAdultConfirmDialog({
+         onConfirm: () => {
+            getNewToken(AuthenticationProvider.Google);
+            logAnalyticsLoginStep(LoginStep.ClickedLoginButtonGl);
+         }
+      });
    };
 
    const handleFacebookButtonPress = () => {
-      getNewToken(AuthenticationProvider.Facebook);
-      logAnalyticsLoginStep(LoginStep.ClickedLoginButtonFb);
+      openAdultConfirmDialog({
+         onConfirm: () => {
+            getNewToken(AuthenticationProvider.Facebook);
+            logAnalyticsLoginStep(LoginStep.ClickedLoginButtonFb);
+         }
+      });
    };
 
    const handleEmailButtonPress = () => {
-      getNewToken(AuthenticationProvider.Email);
-      logAnalyticsLoginStep(LoginStep.ClickedLoginButtonMl);
+      openAdultConfirmDialog({
+         onConfirm: () => {
+            getNewToken(AuthenticationProvider.Email);
+            logAnalyticsLoginStep(LoginStep.ClickedLoginButtonMl);
+         }
+      });
    };
 
    if (!show) {

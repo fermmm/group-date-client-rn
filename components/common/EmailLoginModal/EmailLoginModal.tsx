@@ -10,7 +10,7 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 import CenterContainer from "../CenterContainer/CenterContainer";
 import { useDialogModal } from "../DialogModal/tools/useDialogModal";
-import ModalCloseManager from "../ModalCloseManager/ModalCloseManager";
+import ModalBackground from "../ModalBackground/ModalBackground";
 import { ScreensStepper } from "../ScreensStepper/ScreensStepper";
 import EmailStep from "./EmailStep/EmailStep";
 import EmailValidationStep from "./EmailValidationStep/EmailValidationStep";
@@ -139,7 +139,7 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
    }, []);
 
    return (
-      <ModalCloseManager onClose={handleModalDismiss} contentPosition={"bottom"}>
+      <ModalBackground onClose={handleModalDismiss} contentPosition={"bottom"}>
          <CenterContainer>
             <View style={styles.mainContainer}>
                <ScrollView
@@ -229,7 +229,7 @@ const EmailLoginModal: FC<Props> = ({ modal: { closeModal, getParam } }) => {
                </ScrollView>
             </View>
          </CenterContainer>
-      </ModalCloseManager>
+      </ModalBackground>
    );
 };
 

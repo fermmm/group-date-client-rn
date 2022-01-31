@@ -1,6 +1,7 @@
 import * as Localization from "expo-localization";
 import i18n from "i18n-js";
 import React, { FC, useEffect, useState } from "react";
+import { RecoilRoot } from "recoil";
 import AppLoading from "expo-app-loading";
 import { Provider as PaperProvider } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
@@ -39,6 +40,7 @@ import "dayjs/locale/en";
 import "dayjs/locale/es";
 import EmailLoginModal from "./components/common/EmailLoginModal/EmailLoginModal";
 import RemoveSeenWizardPage from "./components/pages/RemoveSeenWizardPage/RemoveSeenWizardPage";
+import GlobalModalRenderer from "./components/common/GlobalModalRenderer/GlobalModalRenderer";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -77,33 +79,39 @@ const App: FC = () => {
    }
 
    return (
-      <CacheConfigProvider>
-         <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
-            <ModalProvider stack={modalsStack}>
-               <StatusBar style="light" translucent backgroundColor={"transparent"} />
-               <NavigationContainerWithNotifications>
-                  <Stack.Navigator
-                     initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}
-                     headerMode={"none"}
-                  >
-                     <Stack.Screen name="WelcomeTour" component={WelcomeTourPage} />
-                     <Stack.Screen name="Login" component={LoginPage} />
-                     <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
-                     <Stack.Screen name="Main" component={MainPage} />
-                     <Stack.Screen name="Profile" component={ProfilePage} />
-                     <Stack.Screen name="About" component={AboutPage} />
-                     <Stack.Screen name="Group" component={GroupPage} />
-                     <Stack.Screen name="Chat" component={ChatPage} />
-                     <Stack.Screen name="DateVoting" component={DateVotingPage} />
-                     <Stack.Screen name="Admin" component={AdminPage} />
-                     <Stack.Screen name="CreateTag" component={CreateTagPage} />
-                     <Stack.Screen name="ContactPage" component={ContactPage} />
-                     <Stack.Screen name="RemoveSeenWizardPage" component={RemoveSeenWizardPage} />
-                  </Stack.Navigator>
-               </NavigationContainerWithNotifications>
-            </ModalProvider>
-         </PaperProvider>
-      </CacheConfigProvider>
+      <RecoilRoot>
+         <CacheConfigProvider>
+            <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
+               <ModalProvider stack={modalsStack}>
+                  <StatusBar style="light" translucent backgroundColor={"transparent"} />
+                  <NavigationContainerWithNotifications>
+                     <Stack.Navigator
+                        initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}
+                        headerMode={"none"}
+                     >
+                        <Stack.Screen name="WelcomeTour" component={WelcomeTourPage} />
+                        <Stack.Screen name="Login" component={LoginPage} />
+                        <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
+                        <Stack.Screen name="Main" component={MainPage} />
+                        <Stack.Screen name="Profile" component={ProfilePage} />
+                        <Stack.Screen name="About" component={AboutPage} />
+                        <Stack.Screen name="Group" component={GroupPage} />
+                        <Stack.Screen name="Chat" component={ChatPage} />
+                        <Stack.Screen name="DateVoting" component={DateVotingPage} />
+                        <Stack.Screen name="Admin" component={AdminPage} />
+                        <Stack.Screen name="CreateTag" component={CreateTagPage} />
+                        <Stack.Screen name="ContactPage" component={ContactPage} />
+                        <Stack.Screen
+                           name="RemoveSeenWizardPage"
+                           component={RemoveSeenWizardPage}
+                        />
+                     </Stack.Navigator>
+                  </NavigationContainerWithNotifications>
+               </ModalProvider>
+               <GlobalModalRenderer />
+            </PaperProvider>
+         </CacheConfigProvider>
+      </RecoilRoot>
    );
 };
 

@@ -14,10 +14,10 @@ export function useGoBackExtended<T = object>(
    const { canGoBack, navigateWithoutHistory, goBack: nativeGoBack } = useNavigation();
 
    const handleBackButton = useCallback((): boolean => {
-      if (options?.replaceBackAction?.goToRoute != null) {
+      if (options?.replaceBackRoute?.goToRoute != null) {
          navigateWithoutHistory(
-            options.replaceBackAction.goToRoute,
-            options.replaceBackAction.params
+            options.replaceBackRoute.goToRoute,
+            options.replaceBackRoute.params
          );
 
          return true;
@@ -28,6 +28,11 @@ export function useGoBackExtended<T = object>(
             options.whenBackNotAvailable.goToRoute,
             options.whenBackNotAvailable.params
          );
+         return true;
+      }
+
+      if (options?.onBackPress) {
+         options?.onBackPress();
          return true;
       }
 
@@ -58,7 +63,17 @@ export interface UseGoBackExtended {
 }
 
 export interface UseGoBackExtendedOptions<T> {
-   replaceBackAction?: RouteRedirection<T>;
+   /**
+    * Route to go instead of the default one when the system back is executed.
+    */
+   replaceBackRoute?: RouteRedirection<T>;
+   /**
+    * Custom function to execute instead system back action.
+    */
+   onBackPress?: () => void;
+   /**
+    * Route to go when system back action is executed but this one only is executed when the system default action has nowhere to go.
+    */
    whenBackNotAvailable?: RouteRedirection<T>;
 }
 

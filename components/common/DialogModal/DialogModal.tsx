@@ -5,8 +5,8 @@ import { Paragraph, Button } from "react-native-paper";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
-import ModalCloseManager from "../ModalCloseManager/ModalCloseManager";
-import ModalContainer from "../ModalContainer/ModalContainer";
+import ModalBackground from "../ModalBackground/ModalBackground";
+import ModalWindow from "../ModalWindow/ModalWindow";
 
 export interface PropsDialog {
    modal: UsableModalComponentProp<any, any>;
@@ -45,8 +45,8 @@ const DialogModal: FC<PropsDialog> = ({ modal: { closeModal, getParam } }) => {
    };
 
    return (
-      <ModalCloseManager onClose={blockClosing ? null : () => closeModal()}>
-         <ModalContainer>
+      <ModalBackground onClose={blockClosing ? null : () => closeModal()}>
+         <ModalWindow>
             <Paragraph style={styles.text}>{message}</Paragraph>
             <View
                style={[
@@ -68,8 +68,8 @@ const DialogModal: FC<PropsDialog> = ({ modal: { closeModal, getParam } }) => {
                   </Button>
                ))}
             </View>
-         </ModalContainer>
-      </ModalCloseManager>
+         </ModalWindow>
+      </ModalBackground>
    );
 };
 

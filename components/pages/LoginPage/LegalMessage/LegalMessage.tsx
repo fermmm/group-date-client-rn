@@ -22,9 +22,9 @@ const LegalMessage: FC<PropsLegalMessage> = props => {
    return (
       <View style={styles.mainContainer}>
          <Text style={[styles.text]}>
-            Al iniciar sesión aceptas nuestras{" "}
+            Al continuar aceptas nuestra{" "}
             <Text style={styles.textClickable} onPress={handlePrivacyPress}>
-               políticas de privacidad
+               política de privacidad
             </Text>
             ,{" "}
             <Text style={styles.textClickable} onPress={handleCommunityPress}>
