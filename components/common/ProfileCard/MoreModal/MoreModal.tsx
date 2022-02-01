@@ -66,7 +66,7 @@ const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
                         >
                            <Text style={styles.responseText}>No hay foto de la persona</Text>
                            <Text style={styles.responseExtraText}>
-                              Con más reportes será invisible hasta que suba una foto
+                              Se le pedirá que suba una foto para seguir usando la app
                            </Text>
                         </RadioButtonImproved>
                         <RadioButtonImproved
@@ -76,7 +76,8 @@ const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
                         >
                            <Text style={styles.responseText}>Perfil no ético</Text>
                            <Text style={styles.responseExtraText}>
-                              Revisaremos la situación y la persona será bloqueada de la app
+                              Su perfil contiene elementos no éticos o incumple las normas
+                              comunitarias
                            </Text>
                         </RadioButtonImproved>
                      </View>
