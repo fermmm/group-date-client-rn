@@ -94,7 +94,7 @@ The build will be on android/app/build/outputs/bundle/release
 
 ----
 
-## Run in emulator:
+## Run in emulator (Android):
 
 This is an alternative way to debug and code with live updating, similar to Expo Go but uses a real built .apk. In this approach the libraries that has native logic works (in Expo Go only expo native libraries work), this means you have all the features of the app working on this mode, the downside is that the performance and confort is worst.
 To be able to use this you need at least once to follow the instructions on this readme under "Required setup steps to make a debug or release build".
@@ -112,6 +112,18 @@ npm run emulator:android
 ```
 
 In this mode the app will connect to the server on the url of SERVER_URL_PRODUCTION (.env file)
+
+## Run in emulator (IOS):
+
+// TODO: Completar esto
+
+// Lo que sirvio:
+brew install cocoapods
+npx pod-install
+Open Poly.xcworkspace with xcode
+
+// Cosas que faltan:
+Parece que expo run:ios corre pero solo en una terminal de roseta 
 
 ## Make a quick update
 
