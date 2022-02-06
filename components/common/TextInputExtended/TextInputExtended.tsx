@@ -20,6 +20,7 @@ import { currentTheme } from "../../../config";
 import TitleMediumText from "../TitleMediumText/TitleMediumText";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
+import KeyboardAvoidingViewExtended from "../KeyboardAvoidingViewExtended/KeyboardAvoidingViewExtended";
 
 export interface TextInputExtendedProps {
    title?: string;
@@ -191,42 +192,44 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                visible
                transparent
             >
-               <View style={styles.modal}>
-                  {title && <TitleMediumText style={styles.title}>{title}</TitleMediumText>}
-                  {titleLine2 && (
-                     <TitleMediumText style={styles.titleLine2}>{titleLine2}</TitleMediumText>
-                  )}
-                  <TextInput
-                     mode={mode}
-                     onBlur={disableEditMode}
-                     keyboardType={keyboardType}
-                     value={value}
-                     multiline={multiline}
-                     onChangeText={onChangeText}
-                     numberOfLines={200}
-                     style={[
-                        { flex: multiline ? 1 : 0 },
-                        styles.inputFullScreen,
-                        styleInputFullScreen
-                     ]}
-                     ref={fullScreenInputRef}
-                     secureTextEntry={secureTextEntry}
-                     returnKeyType={returnKeyType}
-                     autoCapitalize={autoCapitalize}
-                     autoCompleteType={autoCompleteType}
-                     textContentType={textContentType}
-                  />
-                  {errorText && canShowError && (
-                     <TitleMediumText style={styles.errorText}>{errorText}</TitleMediumText>
-                  )}
-                  <ButtonStyled
-                     onPress={disableEditMode}
-                     style={styles.buttonSave}
-                     color={currentTheme.colors.text2}
-                  >
-                     {saveButtonText}
-                  </ButtonStyled>
-               </View>
+               <KeyboardAvoidingViewExtended disableOnAndroid>
+                  <View style={styles.modal}>
+                     {title && <TitleMediumText style={styles.title}>{title}</TitleMediumText>}
+                     {titleLine2 && (
+                        <TitleMediumText style={styles.titleLine2}>{titleLine2}</TitleMediumText>
+                     )}
+                     <TextInput
+                        mode={mode}
+                        onBlur={disableEditMode}
+                        keyboardType={keyboardType}
+                        value={value}
+                        multiline={multiline}
+                        onChangeText={onChangeText}
+                        numberOfLines={200}
+                        style={[
+                           { flex: multiline ? 1 : 0 },
+                           styles.inputFullScreen,
+                           styleInputFullScreen
+                        ]}
+                        ref={fullScreenInputRef}
+                        secureTextEntry={secureTextEntry}
+                        returnKeyType={returnKeyType}
+                        autoCapitalize={autoCapitalize}
+                        autoCompleteType={autoCompleteType}
+                        textContentType={textContentType}
+                     />
+                     {errorText && canShowError && (
+                        <TitleMediumText style={styles.errorText}>{errorText}</TitleMediumText>
+                     )}
+                     <ButtonStyled
+                        onPress={disableEditMode}
+                        style={styles.buttonSave}
+                        color={currentTheme.colors.text2}
+                     >
+                        {saveButtonText}
+                     </ButtonStyled>
+                  </View>
+               </KeyboardAvoidingViewExtended>
             </Modal>
          )}
       </>

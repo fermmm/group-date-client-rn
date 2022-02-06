@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { Modal } from "react-native";
 import { Dialog as PaperDialog, Paragraph, Button } from "react-native-paper";
 
 export interface PropsDialog {

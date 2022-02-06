@@ -32,6 +32,7 @@ import "dayjs/locale/en";
 import "dayjs/locale/es";
 import RemoveSeenWizardPage from "./components/pages/RemoveSeenWizardPage/RemoveSeenWizardPage";
 import GlobalModalsProvider from "./components/common/GlobalModalsProvider/GlobalModalsProvider";
+import KeyboardAvoidingViewExtended from "./components/common/KeyboardAvoidingViewExtended/KeyboardAvoidingViewExtended";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -63,33 +64,38 @@ const App: FC = () => {
    }
 
    return (
-      <CacheConfigProvider>
-         <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
-            <GlobalModalsProvider>
-               <StatusBar style="light" translucent backgroundColor={"transparent"} />
-               <NavigationContainerWithNotifications>
-                  <Stack.Navigator
-                     initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}
-                     headerMode={"none"}
-                  >
-                     <Stack.Screen name="WelcomeTour" component={WelcomeTourPage} />
-                     <Stack.Screen name="Login" component={LoginPage} />
-                     <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
-                     <Stack.Screen name="Main" component={MainPage} />
-                     <Stack.Screen name="Profile" component={ProfilePage} />
-                     <Stack.Screen name="About" component={AboutPage} />
-                     <Stack.Screen name="Group" component={GroupPage} />
-                     <Stack.Screen name="Chat" component={ChatPage} />
-                     <Stack.Screen name="DateVoting" component={DateVotingPage} />
-                     <Stack.Screen name="Admin" component={AdminPage} />
-                     <Stack.Screen name="CreateTag" component={CreateTagPage} />
-                     <Stack.Screen name="ContactPage" component={ContactPage} />
-                     <Stack.Screen name="RemoveSeenWizardPage" component={RemoveSeenWizardPage} />
-                  </Stack.Navigator>
-               </NavigationContainerWithNotifications>
-            </GlobalModalsProvider>
-         </PaperProvider>
-      </CacheConfigProvider>
+      <KeyboardAvoidingViewExtended disableOnAndroid>
+         <CacheConfigProvider>
+            <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
+               <GlobalModalsProvider>
+                  <StatusBar style="light" translucent backgroundColor={"transparent"} />
+                  <NavigationContainerWithNotifications>
+                     <Stack.Navigator
+                        initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}
+                        headerMode={"none"}
+                     >
+                        <Stack.Screen name="WelcomeTour" component={WelcomeTourPage} />
+                        <Stack.Screen name="Login" component={LoginPage} />
+                        <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
+                        <Stack.Screen name="Main" component={MainPage} />
+                        <Stack.Screen name="Profile" component={ProfilePage} />
+                        <Stack.Screen name="About" component={AboutPage} />
+                        <Stack.Screen name="Group" component={GroupPage} />
+                        <Stack.Screen name="Chat" component={ChatPage} />
+                        <Stack.Screen name="DateVoting" component={DateVotingPage} />
+                        <Stack.Screen name="Admin" component={AdminPage} />
+                        <Stack.Screen name="CreateTag" component={CreateTagPage} />
+                        <Stack.Screen name="ContactPage" component={ContactPage} />
+                        <Stack.Screen
+                           name="RemoveSeenWizardPage"
+                           component={RemoveSeenWizardPage}
+                        />
+                     </Stack.Navigator>
+                  </NavigationContainerWithNotifications>
+               </GlobalModalsProvider>
+            </PaperProvider>
+         </CacheConfigProvider>
+      </KeyboardAvoidingViewExtended>
    );
 };
 
