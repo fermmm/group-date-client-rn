@@ -5,7 +5,7 @@
     "start:native": "react-native start",
     "emulator:android": "react-native run-android",
     "emulator:ios": "npx react-native run-ios",
-    "emulator:ios2": "expo run:ios",
+    "emulator:ios-expo": "expo run:ios",
     "logcat": "adb logcat *:W",
     "inspector": "react-devtools",
     "build:apk": "cd android && ./gradlew assembleRelease && cd app/build/outputs/apk/release && xdg-open .",

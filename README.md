@@ -115,16 +115,19 @@ In this mode the app will connect to the server on the url of SERVER_URL_PRODUCT
 
 ## Run in emulator (IOS):
 
-// TODO: Completar esto
+The first time you run the app using the emulator, you need to execute the following commands:
 
-// Lo que sirvio:
-brew install cocoapods
-npx pod-install
-Open Poly.xcworkspace with xcode
+```brew install cocoapods```
 
-// Cosas que faltan:
-Parece que expo run:ios corre pero solo en una terminal de roseta 
+```npx pod-install```
 
+```sudo ln -s "$(which node)" /usr/local/bin/node```
+
+### Running using xcode
+  1. Open `Poly.xcworkspace` file with xcode and hit the "Run" button
+
+### Without xcode
+  1. Run `npm run emulator:ios-expo`
 ## Make a quick update
 
 ```

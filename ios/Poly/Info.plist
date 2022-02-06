@@ -31,6 +31,11 @@
           <key>NSExceptionAllowsInsecureHTTPLoads</key>
           <true/>
         </dict>
+        <key>poly-env.eba-mce3nhsg.us-east-1.elasticbeanstalk.com</key>
+        <dict>
+            <key>NSExceptionAllowsInsecureHTTPLoads</key>
+            <true/>
+        </dict>
       </dict>
     </dict>
     <key>NSLocationWhenInUseUsageDescription</key>
