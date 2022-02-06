@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { StyleSheet, Modal, Image, ImageProps, StatusBar, ImageSourcePropType } from "react-native";
+import Constants from "expo-constants";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Gallery from "./Gallery/Gallery";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -62,7 +63,7 @@ const styles: Styles = StyleSheet.create({
       opacity: 0.8,
       marginLeft: 10,
       marginTop: 10,
-      paddingTop: StatusBar.currentHeight
+      paddingTop: Constants.statusBarHeight
    }
 });
 

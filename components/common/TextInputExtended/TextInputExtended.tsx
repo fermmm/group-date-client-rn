@@ -11,6 +11,7 @@ import {
    ViewStyle,
    ReturnKeyTypeOptions
 } from "react-native";
+import Constants from "expo-constants";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { TextInput } from "react-native-paper";
@@ -113,7 +114,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       autoCapitalize,
       autoCompleteType,
       textContentType
-   }: TextInputExtendedProps = props;
+   } = props;
    const theme = useTheme();
    const [fullScreenMode, setFullScreenMode] = useState(false);
    const [canShowError, setCanShowError] = useState(false);
@@ -133,6 +134,12 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       };
    }, [fullScreenMode]);
 
+   const handleInputClick = () => {
+      if (fullScreenTyping) {
+         setFullScreenMode(true);
+      }
+   };
+
    return (
       <>
          <View style={[styles.mainContainer, containerStyle]}>
@@ -140,33 +147,32 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
             {titleLine2 && (
                <TitleMediumText style={styles.titleLine2}>{titleLine2}</TitleMediumText>
             )}
-            <ViewTouchable
-               onPress={fullScreenTyping ? () => setFullScreenMode(true) : null}
-               defaultAlpha={0.15}
-            >
-               <TextInput
-                  dense={small}
-                  placeholder={placeholderText}
-                  mode={mode}
-                  keyboardType={keyboardType}
-                  value={value}
-                  onChangeText={onChangeText}
-                  style={[styles.input, style]}
-                  multiline={multiline}
-                  ref={inputRef}
-                  secureTextEntry={secureTextEntry}
-                  render={innerProps => (
-                     <NativeTextInput
-                        {...innerProps}
-                        style={[
-                           innerProps.style,
-                           iconButton ? styles.inputWithIconButton : null,
-                           multiline ? styles.inputMultiline : null
-                        ]}
-                     />
-                  )}
-                  disabled={fullScreenTyping}
-               />
+            <ViewTouchable onPress={handleInputClick} defaultAlpha={0.15}>
+               <View pointerEvents={fullScreenTyping ? "none" : undefined}>
+                  <TextInput
+                     dense={small}
+                     placeholder={placeholderText}
+                     mode={mode}
+                     keyboardType={keyboardType}
+                     value={value}
+                     onChangeText={onChangeText}
+                     style={[styles.input, style]}
+                     multiline={multiline}
+                     ref={inputRef}
+                     secureTextEntry={secureTextEntry}
+                     disabled={fullScreenTyping}
+                     render={innerProps => (
+                        <NativeTextInput
+                           {...innerProps}
+                           style={[
+                              innerProps.style,
+                              iconButton ? styles.inputWithIconButton : null,
+                              multiline ? styles.inputMultiline : null
+                           ]}
+                        />
+                     )}
+                  />
+               </View>
             </ViewTouchable>
             {iconButton && (
                <ViewTouchable style={styles.iconButton} onPress={onIconButtonPress}>
@@ -275,6 +281,7 @@ const styles: Styles = StyleSheet.create({
       backgroundColor: currentTheme.colors.background,
       padding: 10,
       paddingBottom: 0,
+      paddingTop: Constants.statusBarHeight,
       zIndex: 100,
       top: 0,
       left: 0,

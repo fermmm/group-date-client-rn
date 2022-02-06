@@ -20,7 +20,6 @@ export const ViewTouchable: FC<TouchableRippleProps & PropsViewTouchable> = prop
       .toString();
 
    return (
-      // @ts-ignore
       <TouchableRipple
          borderless
          rippleColor={rippleColor}

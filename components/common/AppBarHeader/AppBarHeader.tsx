@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { StyleSheet, ImageBackground, View, StatusBar, Text } from "react-native";
 import { Appbar } from "react-native-paper";
+import Constants from "expo-constants";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../config";
 import ShadowBottom from "../ShadowBottom/ShadowBottom";
@@ -75,14 +76,14 @@ const styles: Styles = StyleSheet.create({
       flex: 1,
       width: "100%",
       justifyContent: "center",
-      paddingTop: StatusBar.currentHeight
+      paddingTop: Constants.statusBarHeight
    },
    colorBackground: {
       flex: 1,
       width: "100%",
       justifyContent: "center",
       backgroundColor: currentTheme.colors.primary,
-      paddingTop: StatusBar.currentHeight
+      paddingTop: Constants.statusBarHeight
    },
    contentContainer: {
       flexDirection: "row",

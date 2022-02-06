@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { ImageBackground, View, StyleSheet, StatusBar } from "react-native";
+import Constants from "expo-constants";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { MaterialTopTabBarProps } from "@react-navigation/material-top-tabs";
 import GraphSvg2 from "../../../../assets/GraphSvg2";
@@ -124,7 +125,7 @@ const styles: Styles = StyleSheet.create({
    tabBar: {
       flexDirection: "row",
       height: 75,
-      paddingTop: StatusBar.currentHeight,
+      paddingTop: Constants.statusBarHeight,
       zIndex: 1
    },
    buttonContainer: {
