@@ -15,13 +15,21 @@ export function useUserTags(tagsFromServer: Tag[]) {
          return [];
       }
 
-      const tagsSubscribedCompleteInfo = userTagsSubscribed?.map(userTag =>
+      let tagsSubscribedCompleteInfo = userTagsSubscribed?.map(userTag =>
          tagList.find(tag => userTag.tagId === tag.tagId)
       );
 
-      const tagsBlockedCompleteInfo = userTagsBlocked?.map(userTag =>
+      let tagsBlockedCompleteInfo = userTagsBlocked?.map(userTag =>
          tagList.find(tag => userTag.tagId === tag.tagId)
       );
+
+      /*
+       * Users may potentially move from one country to another: All the tags that the user
+       * subscribed in a different country will be null here, so we have to remove them.
+       * This is because tagList is per country.
+       */
+      tagsSubscribedCompleteInfo = tagsSubscribedCompleteInfo.filter(tag => tag != null);
+      tagsBlockedCompleteInfo = tagsBlockedCompleteInfo.filter(tag => tag != null);
 
       return [
          {
