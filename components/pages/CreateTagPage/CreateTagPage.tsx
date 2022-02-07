@@ -1,7 +1,6 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
-import { Picker } from "@react-native-picker/picker";
 import { useServerInfo } from "../../../api/server/server-info";
 import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 import { createTag, sendTags, TagEditAction } from "../../../api/server/tags";
@@ -21,6 +20,7 @@ import TextInputExtended from "../../common/TextInputExtended/TextInputExtended"
 import TitleText from "../../common/TitleText/TitleText";
 import { TAGS_BANNED_WORDS, TAGS_CATEGORIES } from "../../../config";
 import { textContainsAnyWord } from "../../../common-tools/strings/textContainsWord";
+import Picker from "../../common/Picker/Picker";
 
 const CreateTagPage: FC = () => {
    const [name, setName] = useState("");
@@ -33,6 +33,10 @@ const CreateTagPage: FC = () => {
    const { token } = useAuthentication();
    const { goBack } = useNavigation();
    const { data: serverInfo } = useServerInfo();
+   const categoryOptions = useMemo(
+      () => TAGS_CATEGORIES.map((option, i) => ({ label: option, value: i })),
+      []
+   );
 
    const getCharactersError = (
       text: string,
@@ -149,16 +153,12 @@ const CreateTagPage: FC = () => {
                />
                <TitleText style={styles.title}>Categoría</TitleText>
                <Picker
-                  selectedValue={TAGS_CATEGORIES.indexOf(category)}
-                  style={styles.categoryPicker}
-                  onValueChange={itemValue =>
+                  items={categoryOptions}
+                  value={TAGS_CATEGORIES.indexOf(category)}
+                  onChange={itemValue =>
                      setCategory(itemValue !== 0 ? TAGS_CATEGORIES[itemValue] : "")
                   }
-               >
-                  {TAGS_CATEGORIES.map((value, i) => (
-                     <Picker.Item label={value} value={i} key={i} />
-                  ))}
-               </Picker>
+               />
                {name != null && name != "" && (
                   <>
                      <TitleText style={styles.title}>Vista previa</TitleText>

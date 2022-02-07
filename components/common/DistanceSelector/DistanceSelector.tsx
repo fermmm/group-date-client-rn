@@ -1,8 +1,8 @@
-import React, { FC, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import React, { FC, useMemo } from "react";
+import { StyleSheet } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { DEFAULT_TARGET_DISTANCE, AVAILABLE_DISTANCES } from "../../../config";
+import Picker from "../Picker/Picker";
 
 export interface PropsDistanceSelector {
    value: number;
@@ -10,41 +10,30 @@ export interface PropsDistanceSelector {
 }
 
 const DistanceSelector: FC<PropsDistanceSelector> = props => {
-   const [distanceOptions] = useState(AVAILABLE_DISTANCES);
-
    const distanceToString = (distance: number) => {
       return `${distance} Km ${distance === DEFAULT_TARGET_DISTANCE ? " (Recomendado)" : ""}`;
    };
 
+   const distanceOptions = useMemo(
+      () =>
+         AVAILABLE_DISTANCES.map(distance => ({
+            label: distanceToString(distance),
+            value: distance
+         })),
+      []
+   );
+
    return (
-      <View style={styles.mainContainer}>
-         <Picker
-            selectedValue={props.value}
-            style={styles.picker}
-            onValueChange={itemValue => props.onChange(Number(itemValue))}
-         >
-            {distanceOptions.map((distance, i) => (
-               <Picker.Item label={distanceToString(distance)} value={distance} key={i} />
-            ))}
-         </Picker>
-      </View>
+      <Picker
+         items={distanceOptions}
+         value={props.value}
+         onChange={itemValue => props.onChange(Number(itemValue))}
+      />
    );
 };
 
 const styles: Styles = StyleSheet.create({
-   mainContainer: {
-      flex: 1,
-      flexDirection: "row",
-      alignItems: "center"
-   },
-   picker: {
-      width: "100%",
-      height: 45
-   },
-   text: {
-      marginRight: 20,
-      fontSize: 18
-   }
+   mainContainer: {}
 });
 
 export default DistanceSelector;

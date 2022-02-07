@@ -1,9 +1,9 @@
-import React, { FC } from "react";
-import { StyleSheet, View } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import React, { FC, useMemo } from "react";
+import { Platform, StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { MONTHS_NAMES, MONTHS_NUMBERS } from "../../../api/tools/date-tools";
 import I18n from "i18n-js";
+import Picker from "../Picker/Picker";
 
 export interface PropsMonthSelector {
    value: number;
@@ -11,34 +11,30 @@ export interface PropsMonthSelector {
 }
 
 const MonthSelector: FC<PropsMonthSelector> = props => {
+   const items = useMemo(
+      () =>
+         MONTHS_NUMBERS.map(month => ({
+            label: I18n.t(MONTHS_NAMES[month]),
+            value: month
+         })),
+      []
+   );
+
    return (
       <View style={styles.mainContainer}>
          <Picker
-            selectedValue={props.value}
-            style={styles.picker}
-            onValueChange={itemValue => props.onChange(Number(itemValue))}
-         >
-            {MONTHS_NUMBERS.map((month, i) => (
-               <Picker.Item label={I18n.t(MONTHS_NAMES[month])} value={month} key={i} />
-            ))}
-         </Picker>
+            items={items}
+            value={props.value}
+            onChange={itemValue => props.onChange(Number(itemValue))}
+         />
       </View>
    );
 };
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
-      flex: 1,
-      flexDirection: "row",
-      alignItems: "center"
-   },
-   picker: {
-      width: 180,
-      height: 45
-   },
-   text: {
-      marginRight: 20,
-      fontSize: 18
+      alignItems: Platform.OS === "ios" ? "center" : "flex-start",
+      justifyContent: Platform.OS === "ios" ? "center" : "flex-start"
    }
 });
 

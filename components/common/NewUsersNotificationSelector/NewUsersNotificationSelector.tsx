@@ -1,10 +1,10 @@
-import React, { FC, useRef } from "react";
-import { StyleSheet, View, StyleProp, ViewStyle } from "react-native";
+import React, { FC, useMemo, useRef } from "react";
+import { StyleSheet, View, StyleProp, ViewStyle, Platform } from "react-native";
 import { Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { Picker } from "@react-native-picker/picker";
 import CheckboxButton from "../CheckboxButton/CheckboxButton";
 import { currentTheme } from "../../../config";
+import Picker from "../Picker/Picker";
 
 export interface NewUsersSelectorProps {
    style?: StyleProp<ViewStyle>;
@@ -15,7 +15,10 @@ export interface NewUsersSelectorProps {
 }
 
 const NewUsersNotificationSelector: FC<NewUsersSelectorProps> = props => {
-   const amountOptions = useRef<number[]>([1, 2, 3, 4, 5, 10, 15]);
+   const amountOptions = useMemo(
+      () => [1, 2, 3, 4, 5, 10, 15].map(option => ({ label: option.toString(), value: option })),
+      []
+   );
    const {
       amountSelected,
       checked,
@@ -32,14 +35,10 @@ const NewUsersNotificationSelector: FC<NewUsersSelectorProps> = props => {
             <View style={styles.amountSelectorContainer}>
                <Text style={styles.text}>Cuando haya</Text>
                <Picker
-                  selectedValue={amountSelected}
-                  style={styles.picker}
-                  onValueChange={itemValue => onAmountChange(Number(itemValue))}
-               >
-                  {amountOptions.current.map((amount, i) => (
-                     <Picker.Item label={amount.toString()} value={amount} key={i} />
-                  ))}
-               </Picker>
+                  items={amountOptions}
+                  value={amountSelected}
+                  onChange={itemValue => onAmountChange(Number(itemValue))}
+               />
                <Text style={styles.text}>usuarixs nuevxs</Text>
             </View>
          )}
@@ -50,8 +49,7 @@ const NewUsersNotificationSelector: FC<NewUsersSelectorProps> = props => {
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       width: "100%",
-      flexDirection: "column",
-      justifyContent: "flex-start"
+      flexDirection: "column"
    },
    text: {
       marginRight: 0,
@@ -59,18 +57,15 @@ const styles: Styles = StyleSheet.create({
       fontFamily: currentTheme.font.light
    },
    picker: {
-      width: 85,
-      height: 40,
-      marginRight: -12,
-      transform: [{ scale: 0.8 }],
-      marginTop: -10,
-      marginBottom: -10
+      transform: Platform.OS === "android" ? [{ scale: 0.8 }] : [],
+      marginTop: Platform.OS === "android" ? -10 : 0,
+      marginBottom: Platform.OS === "android" ? -10 : 0
    },
    amountSelectorContainer: {
       flexDirection: "row",
       alignItems: "center",
-      flexWrap: "wrap",
-      marginLeft: 37
+      justifyContent: "center",
+      marginBottom: Platform.OS === "ios" ? 40 : 0
    }
 });
 

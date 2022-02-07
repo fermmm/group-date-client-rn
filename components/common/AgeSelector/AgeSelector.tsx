@@ -1,8 +1,8 @@
 import React, { FC, useState } from "react";
-import { StyleSheet, View, Text, StyleProp, ViewStyle } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { StyleSheet, View, Text, StyleProp, ViewStyle, Platform } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { MAX_AGE_ALLOWED, MIN_AGE_ALLOWED } from "../../../config";
+import Picker from "../Picker/Picker";
 
 export interface PropsAgeRangeSelector {
    min?: number;
@@ -13,35 +13,29 @@ export interface PropsAgeRangeSelector {
 
 export const AgeRangeSelector: FC<PropsAgeRangeSelector> = ({ min, max, onChange, style }) => {
    const [ageOptions] = useState(
-      Array.from({ length: MAX_AGE_ALLOWED }, (v, k) => ++k).slice(MIN_AGE_ALLOWED - 1)
+      Array.from({ length: MAX_AGE_ALLOWED }, (v, k) => ++k)
+         .slice(MIN_AGE_ALLOWED - 1)
+         .map(age => ({ label: age.toString(), value: age }))
    );
 
    return (
       <View style={[styles.mainContainer, style]}>
          <Text style={styles.text}>De:</Text>
          <Picker
-            selectedValue={min}
-            style={styles.picker}
-            onValueChange={newMin =>
+            items={ageOptions}
+            value={min}
+            onChange={newMin =>
                onChange({ min: Number(newMin), max: Number(newMin) > max ? Number(newMin) : max })
             }
-         >
-            {ageOptions.map((age, i) => (
-               <Picker.Item label={age.toString()} value={age} key={i} />
-            ))}
-         </Picker>
+         />
          <Text style={styles.text}>a:</Text>
          <Picker
-            selectedValue={max}
-            style={styles.picker}
-            onValueChange={newMax =>
+            items={ageOptions}
+            value={max}
+            onChange={newMax =>
                onChange({ max: Number(newMax), min: Number(newMax) < min ? Number(newMax) : min })
             }
-         >
-            {ageOptions.map((age, i) => (
-               <Picker.Item label={age.toString()} value={age} key={i} />
-            ))}
-         </Picker>
+         />
       </View>
    );
 };

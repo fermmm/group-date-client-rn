@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { StyleSheet, ImageBackground, View, StatusBar, Text } from "react-native";
+import { StyleSheet, ImageBackground, View, StatusBar, Text, Platform } from "react-native";
 import { Appbar } from "react-native-paper";
 import Constants from "expo-constants";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -70,7 +70,7 @@ const styles: Styles = StyleSheet.create({
    mainContainer: {
       position: "relative",
       width: "100%",
-      height: 80
+      height: Platform.OS === "ios" ? 100 : 80
    },
    imageBackground: {
       flex: 1,

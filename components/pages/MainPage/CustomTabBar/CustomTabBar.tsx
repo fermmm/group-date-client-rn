@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { ImageBackground, View, StyleSheet, StatusBar } from "react-native";
+import { ImageBackground, View, StyleSheet, StatusBar, Platform } from "react-native";
 import Constants from "expo-constants";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { MaterialTopTabBarProps } from "@react-navigation/material-top-tabs";
@@ -124,7 +124,7 @@ export default CustomTabBar;
 const styles: Styles = StyleSheet.create({
    tabBar: {
       flexDirection: "row",
-      height: 75,
+      height: Platform.OS === "ios" ? 100 : 80,
       paddingTop: Constants.statusBarHeight,
       zIndex: 1
    },
