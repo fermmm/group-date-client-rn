@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { UseAuthentication } from "../../../../api/authentication/useAuthentication";
@@ -28,11 +28,13 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
    const { colors } = useTheme();
    const color = colors.textLogin;
    const facebookLoginAvailable =
-      Boolean(process.env.FACEBOOK_APP_ID) && Boolean(process.env.FACEBOOK_APP_NAME);
-   const googleLoginAvailable = Boolean(process.env.GOOGLE_CLIENT_WEB_EXPO);
-
-   const anyLoginAvailable =
-      facebookLoginAvailable || googleLoginAvailable || serverInfo.emailLoginEnabled;
+      Boolean(process.env.FACEBOOK_APP_ID) &&
+      Boolean(process.env.FACEBOOK_APP_NAME) &&
+      Platform.OS !== "ios";
+   const googleLoginAvailable =
+      Boolean(process.env.GOOGLE_CLIENT_WEB_EXPO) && Platform.OS !== "ios";
+   const emailLoginAvailable = serverInfo.emailLoginEnabled;
+   const anyLoginAvailable = facebookLoginAvailable || googleLoginAvailable || emailLoginAvailable;
 
    const handleGoogleButtonPress = () => {
       openAdultConfirmDialog({
@@ -93,7 +95,7 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
                Iniciar sesión con Facebook
             </ButtonStyled>
          )}
-         {serverInfo.emailLoginEnabled && (
+         {emailLoginAvailable && (
             <ButtonStyled
                color={color}
                style={styles.button}
@@ -101,7 +103,7 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
                icon={() => <Icon name={"email-outline"} color={color} size={23} />}
                onPress={handleEmailButtonPress}
             >
-               Iniciar sesión con tu email
+               {"Iniciar sesión con tu email"}
             </ButtonStyled>
          )}
          {!anyLoginAvailable && (
