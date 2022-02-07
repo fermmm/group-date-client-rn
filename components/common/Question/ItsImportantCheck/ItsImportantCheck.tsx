@@ -61,7 +61,9 @@ const ItsImportantCheck: FC<PropsItsImportantCheck> = props => {
          title="Usar de filtro"
          description={() => getIsImportantDescriptionText()}
          left={() => (
-            <Checkbox status={checked && incompatibilities.length > 0 ? "checked" : "unchecked"} />
+            <Checkbox.Android
+               status={checked && incompatibilities.length > 0 ? "checked" : "unchecked"}
+            />
          )}
          onPress={() => onChange(!checked)}
          disabled={incompatibilities.length === 0}

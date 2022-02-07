@@ -42,7 +42,7 @@ const RadioButtonImproved: FC<RadioButtonImprovedProps> = props => {
                {iconElement != null ? (
                   iconElement(checked)
                ) : (
-                  <RadioButton value={""} status={checked ? "checked" : "unchecked"} />
+                  <RadioButton.Android value={""} status={checked ? "checked" : "unchecked"} />
                )}
             </View>
             <View style={styles.childrenContainer} onLayout={measureView}>

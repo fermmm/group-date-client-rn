@@ -7,7 +7,7 @@ import RadioButtonImproved, {
 const CheckboxButton: FC<RadioButtonImprovedProps> = props => {
    return (
       <RadioButtonImproved
-         iconElement={checked => <Checkbox status={checked ? "checked" : "unchecked"} />}
+         iconElement={checked => <Checkbox.Android status={checked ? "checked" : "unchecked"} />}
          {...props}
       >
          {props.children}

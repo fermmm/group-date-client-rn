@@ -111,7 +111,6 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       flex: 1,
-      alignItems: "center",
       justifyContent: "center",
       padding: 20,
       marginBottom: 150
