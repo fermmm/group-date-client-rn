@@ -8,8 +8,8 @@ import { IMAGES_ASPECT_RATIO, LOCK_IMAGES_ASPECT_RATIO } from "../../../config";
 export const callCameraPicture = async (): Promise<string | null> => {
    await askForPermission(
       {
-         getter: () => Camera.getPermissionsAsync(),
-         requester: () => Camera.requestPermissionsAsync()
+         getter: () => Camera.getCameraPermissionsAsync(),
+         requester: () => Camera.requestCameraPermissionsAsync()
       },
       {
          rejectedDialogTexts: {
@@ -18,12 +18,12 @@ export const callCameraPicture = async (): Promise<string | null> => {
       }
    );
 
-   const result: ImageInfo = ((await ImagePicker.launchCameraAsync({
+   const result: ImageInfo = (await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 1,
       aspect: LOCK_IMAGES_ASPECT_RATIO ? IMAGES_ASPECT_RATIO : null
-   })) as unknown) as ImageInfo;
+   })) as unknown as ImageInfo;
 
    return Promise.resolve(result.uri || null);
 };

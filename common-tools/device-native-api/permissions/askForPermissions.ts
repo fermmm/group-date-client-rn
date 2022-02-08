@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { PermissionResponse } from "unimodules-permissions-interface";
+import { PermissionResponse } from "expo-modules-core";
 import {
    showRejectedPermissionsDialog,
    RejectedDialogSettings
@@ -35,8 +35,10 @@ export function usePermission(
             }
          });
       }
-      return () => (mounted.current = false);
-   }, [enabled]);
+      return () => {
+         mounted.current = false;
+      };
+   }, [enabled, granted]);
    return granted;
 }
 

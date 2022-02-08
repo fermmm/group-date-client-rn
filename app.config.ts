@@ -51,5 +51,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
    assetBundlePatterns: ["**/*"],
    experiments: {
       turboModules: true
-   }
+   },
+   plugins: [
+      [
+         "expo-image-picker",
+         {
+            photosPermission:
+               "The app accesses your photos to let you share them in your profile. Only the photos you select are sent to the application."
+         }
+      ]
+   ]
 });

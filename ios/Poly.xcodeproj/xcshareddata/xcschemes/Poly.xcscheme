@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "poly.app"
-               BlueprintName = "Poly"
+               BuildableName = "GroupDate.app"
+               BlueprintName = "GroupDate"
                ReferencedContainer = "container:Poly.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -55,7 +55,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "poly.app"
+            BuildableName = "GroupDate.app"
             BlueprintName = "Poly"
             ReferencedContainer = "container:Poly.xcodeproj">
          </BuildableReference>
@@ -72,8 +72,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "poly.app"
-            BlueprintName = "Poly"
+            BuildableName = "GroupDate.app"
+            BlueprintName = "GroupDate"
             ReferencedContainer = "container:Poly.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
