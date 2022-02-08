@@ -1,7 +1,8 @@
 import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
-import * as IntentLauncher from "expo-intent-launcher";
 import { List, Text } from "react-native-paper";
+import { ActivityAction } from "expo-intent-launcher";
+import { openDeviceAction } from "../../../common-tools/device-native-api/device-action/openDeviceAction";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import EmptySpace from "../../common/EmptySpace/EmptySpace";
@@ -10,7 +11,6 @@ import Avatar from "../../common/Avatar/Avatar";
 import { ParamsRegistrationFormsPage } from "../RegistrationFormsPage/RegistrationFormsPage";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
-import { openDeviceAction } from "../../../common-tools/device-native-api/device-action/openDeviceAction";
 import { currentTheme } from "../../../config";
 import { getAppVersion } from "../../../common-tools/device-native-api/versions/versions";
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
@@ -89,7 +89,7 @@ const SettingsPage: FC = () => {
                <List.Icon {...props} style={styles.optionIcon} icon="cellphone-sound" />
             )}
             onPress={() =>
-               openDeviceAction(IntentLauncher.ACTION_APP_NOTIFICATION_SETTINGS, "app-settings:")
+               openDeviceAction(ActivityAction.APP_NOTIFICATION_SETTINGS, "app-settings:")
             }
          />
          <List.Item
@@ -101,8 +101,8 @@ const SettingsPage: FC = () => {
          {/* 
                This must be enabled when having a lot of users:
                <List.Item
-                  title="Doná para la causa"
-                  description="Doná la cantidad que puedas para que podamos publicitar mejor la app."
+                  title="Dona para la causa y verás más personas"
+                  description="Automáticamente va a publicidad en la ciudad y géneros deseados de cada persona que dona."
                   left={props => 
                      <List.Icon 
                         {...props} 

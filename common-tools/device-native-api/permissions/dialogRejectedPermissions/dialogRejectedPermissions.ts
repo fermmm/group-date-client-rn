@@ -1,5 +1,5 @@
 import { Alert, BackHandler } from "react-native";
-import * as IntentLauncher from "expo-intent-launcher";
+import { ActivityAction } from "expo-intent-launcher";
 import i18n from "i18n-js";
 import { openDeviceAction } from "../../device-action/openDeviceAction";
 
@@ -28,7 +28,7 @@ export async function showRejectedPermissionsDialog(
             text: dialogSettings.openSettingsButtonText,
             onPress: async () => {
                await openDeviceAction(
-                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                  ActivityAction.APPLICATION_DETAILS_SETTINGS,
                   "app-settings:",
                   dialogSettings.instructionsToastText
                );

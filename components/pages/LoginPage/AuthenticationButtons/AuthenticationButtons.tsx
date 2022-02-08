@@ -33,7 +33,7 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
       Platform.OS !== "ios";
    const googleLoginAvailable =
       Boolean(process.env.GOOGLE_CLIENT_WEB_EXPO) && Platform.OS !== "ios";
-   const emailLoginAvailable = serverInfo.emailLoginEnabled;
+   const emailLoginAvailable = serverInfo?.emailLoginEnabled;
    const anyLoginAvailable = facebookLoginAvailable || googleLoginAvailable || emailLoginAvailable;
 
    const handleGoogleButtonPress = () => {
