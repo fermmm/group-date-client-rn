@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
                BuildableName = "GroupDate.app"
-               BlueprintName = "GroupDate"
+               BlueprintName = "Poly"
                ReferencedContainer = "container:Poly.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -73,7 +73,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "GroupDate.app"
-            BlueprintName = "GroupDate"
+            BlueprintName = "Poly"
             ReferencedContainer = "container:Poly.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
