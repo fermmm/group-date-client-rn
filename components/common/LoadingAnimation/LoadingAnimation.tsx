@@ -45,7 +45,7 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = props => {
       animationStyle,
       enableTimeoutButton,
       onTimeoutButtonPress,
-      timeoutButtonTime = 5000,
+      timeoutButtonTime = 4000,
       timeoutButtonColor = "black"
    } = props;
 
@@ -126,10 +126,12 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = props => {
                   style={styles.cancelButtonContainer}
                >
                   <TitleMediumText
-                     style={{
-                        color: timeoutButtonColor,
-                        fontFamily: currentTheme.font.semiBold
-                     }}
+                     style={[
+                        styles.buttonText,
+                        {
+                           color: timeoutButtonColor
+                        }
+                     ]}
                   >
                      Cancelar
                   </TitleMediumText>
@@ -159,9 +161,15 @@ const styles: Styles = StyleSheet.create({
       width: "40%"
    },
    cancelButtonContainer: {
-      position: "absolute",
-      top: -5,
-      height: 40,
-      padding: 10
+      overflow: "visible",
+      marginTop: -45
+   },
+   buttonText: {
+      fontFamily: currentTheme.font.semiBold,
+      textAlign: "center",
+      textAlignVertical: "center",
+      paddingLeft: 0,
+      marginTop: 15,
+      marginBottom: 15
    }
 });

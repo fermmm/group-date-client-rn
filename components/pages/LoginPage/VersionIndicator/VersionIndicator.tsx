@@ -1,36 +1,19 @@
-import React, { FC, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { FC } from "react";
+import { StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
-import ConsoleProvider from "react-native-dev-console";
 import { getAppVersion } from "../../../../common-tools/device-native-api/versions/versions";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
 
 const VersionIndicator: FC = () => {
    const { buildVersion, codeVersion } = getAppVersion();
-   const [consoleOpen, setConsoleOpen] = useState(false);
 
-   const handlePress = () => {
-      setConsoleOpen(true);
-   };
+   const handlePress = () => {};
 
    return (
-      <>
-         <Text style={styles.text} onPress={handlePress}>
-            {codeVersion}
-         </Text>
-         <View
-            pointerEvents="box-none"
-            style={[
-               styles.consoleContainer,
-               {
-                  opacity: consoleOpen ? 1 : 0
-               }
-            ]}
-         >
-            <ConsoleProvider />
-         </View>
-      </>
+      <Text style={styles.text} onPress={handlePress}>
+         {codeVersion}
+      </Text>
    );
 };
 
@@ -38,14 +21,6 @@ const styles: Styles = StyleSheet.create({
    text: {
       fontFamily: currentTheme.font.light,
       color: currentTheme.colors.textLogin
-   },
-   consoleContainer: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      flex: 1
    }
 });
 

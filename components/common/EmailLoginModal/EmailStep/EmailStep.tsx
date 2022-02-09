@@ -39,6 +39,10 @@ const EmailStep: FC<PropsEmailStep> = props => {
       onSubmit(email);
    };
 
+   const handleInputChange = (text: string) => {
+      setEmail(text.trim());
+   };
+
    return (
       <View style={styles.stepContainer}>
          {title != null && <TitleText style={styles.title}>{title}</TitleText>}
@@ -47,7 +51,7 @@ const EmailStep: FC<PropsEmailStep> = props => {
             errorText={getEmailError()}
             mode="outlined"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={handleInputChange}
             autoCapitalize="none"
             autoCompleteType="email"
             textContentType="emailAddress"
