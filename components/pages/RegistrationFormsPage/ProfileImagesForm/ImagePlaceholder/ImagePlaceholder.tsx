@@ -88,9 +88,10 @@ const ImagePlaceholder: FC<PropsImagePlaceholder> = props => {
    };
 
    const handleAddImage = async (source: "camera" | "gallery") => {
-      hideMenu();
       let localUrl: string =
          source === "gallery" ? await callImagePicker() : await callCameraPicture();
+
+      hideMenu();
 
       if (localUrl == null) {
          return;
