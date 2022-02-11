@@ -22,6 +22,7 @@ export const callCameraPicture = async (): Promise<string | null> => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 1,
+      presentationStyle: 0,
       aspect: LOCK_IMAGES_ASPECT_RATIO ? IMAGES_ASPECT_RATIO : null
    })) as unknown as ImageInfo;
 
