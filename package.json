@@ -11,7 +11,7 @@
     "inspector": "react-devtools",
     "build:apk": "cd android && ./gradlew assembleRelease && cd app/build/outputs/apk/release && xdg-open .",
     "build:bundle": "cd android && ./gradlew bundleRelease && cd app/build/outputs/bundle/release && xdg-open .",
-    "build:eas": "eas build:android",
+    "build:simulator:ios:eas": "eas build -p ios --profile simulator",
     "publish": "expo publish",
     "credentials": "expo credentials:manager"
   },
