@@ -18,6 +18,7 @@ import {
    loadFromDevice,
    saveOnDevice
 } from "../../../../common-tools/device-native-api/storage/storage";
+import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
 
 interface PropsNoMoreUsersMessage {
    onViewDislikedUsersPress: () => void;
@@ -77,17 +78,10 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
    }
 
    return (
-      <LinearGradient
-         style={{ flex: 1 }}
-         locations={[0.7, 1]}
-         colors={[
-            color(colors.background).string(),
-            color(colors.backgroundBottomGradient).alpha(1).string()
-         ]}
-      >
+      <BasicScreenContainer>
          <View style={styles.mainContainer}>
             <Text style={styles.text}>
-               En poco tiempo vas a ver más gente aquí, todos los días hay usuarixs nuevxs.
+               Eso es todo por ahora, en poco tiempo habrá más personas, todos los días entra gente.
             </Text>
             <EmptySpace />
             <NewUsersNotificationSelector
@@ -100,11 +94,11 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
             <Text style={styles.text}>
                Si te sirve puedes repasar a las personas que ocultaste:
             </Text>
-            <Button mode="text" onPress={onViewDislikedUsersPress}>
+            <Button mode="outlined" onPress={onViewDislikedUsersPress} style={{ marginTop: 20 }}>
                Repasar ocultadxs
             </Button>
          </View>
-      </LinearGradient>
+      </BasicScreenContainer>
    );
 };
 
@@ -112,8 +106,7 @@ const styles: Styles = StyleSheet.create({
    mainContainer: {
       flex: 1,
       justifyContent: "center",
-      padding: 20,
-      marginBottom: 150
+      padding: 20
    },
    text: {
       fontSize: 17,

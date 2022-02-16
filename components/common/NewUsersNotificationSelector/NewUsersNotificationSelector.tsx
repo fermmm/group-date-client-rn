@@ -29,7 +29,7 @@ const NewUsersNotificationSelector: FC<NewUsersSelectorProps> = props => {
    return (
       <View style={[styles.mainContainer, props.style]}>
          <CheckboxButton checked={checked} onPress={() => onCheckChange()}>
-            <Text style={styles.text}>Mostrarme una notificación cuando haya usuarixs nuevos</Text>
+            <Text style={styles.text}>Mostrarme una notificación cuando haya más personas</Text>
          </CheckboxButton>
          {checked && (
             <View style={styles.amountSelectorContainer}>
@@ -39,7 +39,7 @@ const NewUsersNotificationSelector: FC<NewUsersSelectorProps> = props => {
                   value={amountSelected}
                   onChange={itemValue => onAmountChange(Number(itemValue))}
                />
-               <Text style={styles.text}>usuarixs nuevxs</Text>
+               <Text style={styles.text}>personas nuevxs</Text>
             </View>
          )}
       </View>
