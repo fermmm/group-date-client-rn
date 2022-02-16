@@ -18,13 +18,13 @@ export function useSendPropsToUpdateAtLogin(
 ): boolean {
    const { enabled = true } = settings ?? {};
    const [completed, setCompleted] = useState<boolean>(false);
-   const { geolocation } = useGeolocation({ enabled });
    const [notificationsToken, setNotificationsToken] = useState<string>();
    const [notificationsPossible, setNotificationsPossible] = useState<boolean>();
    const [notificationTokenRequested, setNotificationTokenRequested] = useState(false);
    const [locationLat, setLocationLat] = useState<number>();
    const [locationLon, setLocationLon] = useState<number>();
    const [country, setCountry] = useState<string>();
+   const { geolocation } = useGeolocation({ enabled });
 
    // Effect to set the geolocation state when geolocation is ready
    useEffect(() => {
@@ -41,7 +41,11 @@ export function useSendPropsToUpdateAtLogin(
 
    // Effect to set notification state when is ready
    useEffect(() => {
-      if (serverInfo?.pushNotificationsChannels == null || notificationTokenRequested) {
+      if (
+         serverInfo?.pushNotificationsChannels == null ||
+         notificationTokenRequested ||
+         enabled === false
+      ) {
          return;
       }
 
@@ -53,7 +57,7 @@ export function useSendPropsToUpdateAtLogin(
          setNotificationsPossible(notificationsTokenResponse.notificationsArePossible);
       })();
       setNotificationTokenRequested(true);
-   }, [serverInfo?.pushNotificationsChannels, enabled]);
+   }, [serverInfo?.pushNotificationsChannels, enabled, notificationTokenRequested]);
 
    // Effect to send the data to the server when all the information is gathered
    useEffect(() => {
@@ -90,7 +94,8 @@ export function useSendPropsToUpdateAtLogin(
       token,
       enabled,
       notificationTokenRequested,
-      completed
+      completed,
+      notificationsPossible
    ]);
 
    return completed;
