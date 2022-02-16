@@ -4,20 +4,10 @@ import * as Device from "expo-device";
 import { NotificationChannelInfo } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { PUSH_NOTIFICATIONS_SETTINGS } from "../../../config";
 
-export async function getPermissionTokenForNotifications(
+export async function getExpoPushToken(
    notificationsChannels: NotificationChannelInfo[]
 ): Promise<GetPermissionTokenForNotifications | null> {
    let result: GetPermissionTokenForNotifications;
-   const { status: existingStatus } = await Notifications.getPermissionsAsync();
-   let status = existingStatus;
-   if (status !== "granted") {
-      const { status: afterRequestStatus } = await Notifications.requestPermissionsAsync();
-      status = afterRequestStatus;
-   }
-   if (status !== "granted") {
-      Alert.alert("Error", "Cannot get permission for push notifications!");
-      return null;
-   }
 
    if (Device.isDevice) {
       result = {

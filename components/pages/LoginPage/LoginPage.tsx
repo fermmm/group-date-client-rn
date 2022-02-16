@@ -122,7 +122,7 @@ const LoginPage: FC = () => {
             <View style={styles.logo}>
                <LogoAnimator>
                   <ViewTouchable onPress={() => navigate("WelcomeTour")}>
-                     <LogoSvg color={colors.logoColor} style={{ width: "100%", height: "100%" }} />
+                     <LogoSvg color={colors.logoColor} style={styles.logoSvg} />
                   </ViewTouchable>
                </LogoAnimator>
             </View>
@@ -154,6 +154,10 @@ const styles: Styles = StyleSheet.create({
       position: "absolute",
       top: "30%",
       width: "55%"
+   },
+   looSvg: {
+      width: "100%",
+      height: "100%"
    },
    textBlock: {
       textAlign: "center",

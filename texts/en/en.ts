@@ -2,13 +2,17 @@ export const en: { [key: string]: string } = {
    Error: "Error",
    OK: "OK",
    Cancel: "Cancel",
+   Close: "Close",
+   "I fixed it": "I fixed it",
    "Try again": "Try again",
+   notifications: "notifications",
+   location: "location",
    "Location is not available":
       "Location is not available, check if it's disabled or if Airplane mode is enabled",
    "Open app settings": "Open app settings",
    "Exit app": "Exit app",
-   "The app cannot continue without":
-      "The app cannot continue without you accepting the required permissions",
+   "The app only works if you accept":
+      "The app works and makes sense if you accept the permission that we require",
    "Touch on Permissions": 'Touch on "permissions"',
    "Touch on Camera": 'Touch on "Permissions" then allow "Camera"',
    "Unexpected error when uploading image": "Unexpected error when uploading image",

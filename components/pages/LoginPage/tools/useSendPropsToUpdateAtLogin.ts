@@ -1,9 +1,10 @@
 import { useGeolocation } from "./../../../../common-tools/device-native-api/geolocation/getGeolocation";
 import { useEffect, useState } from "react";
-import { getPermissionTokenForNotifications } from "../../../../common-tools/device-native-api/notifications/getPermissionTokenForNotifications";
+import { getExpoPushToken } from "../../../../common-tools/device-native-api/notifications/getPermissionTokenForNotifications";
 import { sendUserProps } from "../../../../api/server/user";
 import { ServerInfoResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/server-info";
 import { User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
+import { useNotificationPermission } from "../../../../common-tools/device-native-api/notifications/useNotificationsPermissions";
 
 /**
  * At every login there are some user props that need to be updated: The user may be in a different
@@ -18,13 +19,14 @@ export function useSendPropsToUpdateAtLogin(
 ): boolean {
    const { enabled = true } = settings ?? {};
    const [completed, setCompleted] = useState<boolean>(false);
-   const [notificationsToken, setNotificationsToken] = useState<string>();
+   const [expoPushToken, setExpoPushToken] = useState<string>();
    const [notificationsPossible, setNotificationsPossible] = useState<boolean>();
    const [notificationTokenRequested, setNotificationTokenRequested] = useState(false);
    const [locationLat, setLocationLat] = useState<number>();
    const [locationLon, setLocationLon] = useState<number>();
    const [country, setCountry] = useState<string>();
    const { geolocation } = useGeolocation({ enabled });
+   const notificationPermissionGranted = useNotificationPermission({ enabled });
 
    // Effect to set the geolocation state when geolocation is ready
    useEffect(() => {
@@ -44,20 +46,26 @@ export function useSendPropsToUpdateAtLogin(
       if (
          serverInfo?.pushNotificationsChannels == null ||
          notificationTokenRequested ||
-         enabled === false
+         enabled === false ||
+         !notificationPermissionGranted
       ) {
          return;
       }
 
+      setNotificationTokenRequested(true);
       (async () => {
-         const notificationsTokenResponse = await getPermissionTokenForNotifications(
+         const notificationsTokenResponse = await getExpoPushToken(
             serverInfo.pushNotificationsChannels
          );
-         setNotificationsToken(notificationsTokenResponse.notificationsToken);
+         setExpoPushToken(notificationsTokenResponse.notificationsToken);
          setNotificationsPossible(notificationsTokenResponse.notificationsArePossible);
       })();
-      setNotificationTokenRequested(true);
-   }, [serverInfo?.pushNotificationsChannels, enabled, notificationTokenRequested]);
+   }, [
+      serverInfo?.pushNotificationsChannels,
+      enabled,
+      notificationTokenRequested,
+      notificationPermissionGranted
+   ]);
 
    // Effect to send the data to the server when all the information is gathered
    useEffect(() => {
@@ -66,7 +74,7 @@ export function useSendPropsToUpdateAtLogin(
          locationLat != null &&
          locationLon != null &&
          country != null &&
-         (notificationsToken != null || notificationsPossible === false) &&
+         (expoPushToken != null || notificationsPossible === false) &&
          token != null &&
          enabled === true &&
          completed === false
@@ -78,7 +86,7 @@ export function useSendPropsToUpdateAtLogin(
          };
 
          if (notificationsPossible) {
-            props.notificationsToken = notificationsToken;
+            props.notificationsToken = expoPushToken;
          }
 
          (async () => {
@@ -87,7 +95,7 @@ export function useSendPropsToUpdateAtLogin(
          })();
       }
    }, [
-      notificationsToken,
+      expoPushToken,
       locationLat,
       locationLon,
       country,

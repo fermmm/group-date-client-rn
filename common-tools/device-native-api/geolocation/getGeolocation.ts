@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useLocalStorage } from "./../storage/useLocalStorage";
 import { useCache } from "../../../api/tools/useCache/useCache";
 import * as Location from "expo-location";
+import i18n from "i18n-js";
 import {
    showLocationDisabledDialog,
    DisabledLocationDialogSettings
@@ -24,7 +25,7 @@ export function useGeolocation(settings?: GetGeolocationParams) {
          getter: () => Location.getForegroundPermissionsAsync(),
          requester: () => Location.requestForegroundPermissionsAsync()
       },
-      { enabled: settings?.enabled ?? true }
+      { enabled: settings?.enabled ?? true, permissionName: i18n.t("location") }
    );
    const coords = useGeolocationCoords({ permissionGranted, settings });
    const address = useAddress({ permissionGranted, coords, settings });

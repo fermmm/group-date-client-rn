@@ -4,13 +4,17 @@ export const es: { [key: string]: string } = {
    Error: "Error",
    OK: "OK",
    Cancel: "Cancelar",
+   Close: "Cerrar",
+   "I fixed it": "Ya lo arreglé",
    "Try again": "Reintentar",
+   notifications: "notificaciones",
+   location: "ubicación",
    "Location is not available":
       "La localización del dispositivo no está disponible, fijate si hay algo desactivado o estás en modo avión",
    "Open app settings": "Ir a la configuración de la app",
    "Exit app": "Salir",
-   "The app cannot continue without":
-      "La app no puede continuar si no aceptas los permisos requeridos",
+   "The app only works if you accept":
+      "La app tiene sentido y funciona si aceptas el permiso que pedimos",
    "Touch on Permissions": 'Toca en "Permisos"',
    "Touch on Camera": 'Toca en "Permisos" y permite "Cámara"',
    "Unexpected error when uploading image": "Error inesperado al subir la imagen",

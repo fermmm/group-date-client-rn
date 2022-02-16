@@ -43,7 +43,7 @@ export function usePermission(
 }
 
 /**
- * Ask the user for a permission, shows error dialogs when the user rejects permission, the dialog offers the user
+ * Ask the user for a permission, shows error dialogs when the user rejects permission: this dialog offers the user
  * to go to permission settings of the app and enable permissions from there.
  * The Promise of this function is resolved when the user enabled the permissions by clicking allow, by
  * going to the permission settings or when the permissions were already granted.
@@ -57,7 +57,11 @@ export async function askForPermission(
    permissionsSource: PermissionSource,
    settings?: AskPermissionSettings
 ): Promise<void> {
-   const { allowContinueWithoutAccepting = false, rejectedDialogTexts = {} } = settings ?? {};
+   const {
+      allowContinueWithoutAccepting = false,
+      rejectedDialogTexts = {},
+      permissionName
+   } = settings ?? {};
 
    let result: PermissionResponse = await permissionsSource.getter();
 
@@ -69,7 +73,7 @@ export async function askForPermission(
       if (allowContinueWithoutAccepting) {
          return Promise.resolve();
       }
-      await showRejectedPermissionsDialog(rejectedDialogTexts);
+      await showRejectedPermissionsDialog({ ...rejectedDialogTexts, permissionName });
       return askForPermission(permissionsSource, settings);
    }
 
@@ -85,6 +89,10 @@ export interface AskPermissionSettings {
     * Default = {}. Texts to show in the permissions rejected error dialog, if this is not set then english generic texts are used
     */
    rejectedDialogTexts?: RejectedDialogSettings;
+   /**
+    * Default = undefined. Permission name to show in the permissions rejected error dialog, if this is not set then the texts adapts to communicate the issue without specifying the permission name.
+    */
+   permissionName?: string;
 }
 
 export interface PermissionSource {

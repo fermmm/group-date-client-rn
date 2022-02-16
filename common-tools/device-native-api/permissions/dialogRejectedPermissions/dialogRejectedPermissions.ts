@@ -1,4 +1,4 @@
-import { Alert, BackHandler } from "react-native";
+import { Alert, BackHandler, Platform } from "react-native";
 import { ActivityAction } from "expo-intent-launcher";
 import i18n from "i18n-js";
 import { openDeviceAction } from "../../device-action/openDeviceAction";
@@ -6,14 +6,16 @@ import { openDeviceAction } from "../../device-action/openDeviceAction";
 export async function showRejectedPermissionsDialog(
    dialogSettings: RejectedDialogSettings = {}
 ): Promise<void> {
-   dialogSettings.dialogTitle = dialogSettings.dialogTitle || i18n.t("Error");
-   dialogSettings.openSettingsButtonText =
-      dialogSettings.openSettingsButtonText || i18n.t("Open app settings");
-   dialogSettings.exitAppButtonText = dialogSettings.exitAppButtonText || i18n.t("Exit app");
-   dialogSettings.dialogText =
-      dialogSettings.dialogText || i18n.t("The app cannot continue without");
-   dialogSettings.instructionsToastText =
-      dialogSettings.instructionsToastText || i18n.t("Touch on Permissions");
+   const {
+      dialogTitle = i18n.t("Error"),
+      openSettingsButtonText = i18n.t("Open app settings"),
+      exitAppButtonText = i18n.t("Exit app"),
+      dialogText = i18n.t("The app only works if you accept"),
+      instructionsToastText = i18n.t("Touch on Permissions"),
+      cancelButtonText = i18n.t("Close"),
+      retryButtonText = i18n.t("I fixed it"),
+      permissionName
+   } = dialogSettings;
 
    let promiseResolve: () => void = null;
    const resultPromise: Promise<void> = new Promise(resolve => {
@@ -21,21 +23,32 @@ export async function showRejectedPermissionsDialog(
    });
 
    Alert.alert(
-      dialogSettings.dialogTitle,
-      dialogSettings.dialogText,
+      dialogTitle,
+      `${dialogText}${permissionName ? `: ${permissionName}` : ""}`,
       [
          {
-            text: dialogSettings.openSettingsButtonText,
+            text: openSettingsButtonText,
             onPress: async () => {
                await openDeviceAction(
                   ActivityAction.APPLICATION_DETAILS_SETTINGS,
                   "app-settings:",
-                  dialogSettings.instructionsToastText
+                  instructionsToastText
                );
                promiseResolve();
             }
          },
-         { text: dialogSettings.exitAppButtonText, onPress: () => BackHandler.exitApp() }
+         {
+            text: retryButtonText,
+            onPress: () => {
+               promiseResolve();
+            }
+         },
+         Platform.OS === "android"
+            ? {
+                 text: exitAppButtonText,
+                 onPress: () => BackHandler.exitApp()
+              }
+            : { text: cancelButtonText }
       ],
       { cancelable: false }
    );
@@ -49,4 +62,7 @@ export interface RejectedDialogSettings {
    exitAppButtonText?: string;
    dialogText?: string;
    instructionsToastText?: string;
+   cancelButtonText?: string;
+   retryButtonText?: string;
+   permissionName?: string;
 }
