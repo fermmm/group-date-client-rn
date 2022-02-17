@@ -1,0 +1,18 @@
+/* 
+  InfoPlist.strings
+  Poly
+
+  Created by Fer on 16/02/2022.
+  
+*/
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Será utilizada para obtener el nombre de tu ciudad al registrarte y luego para mostrarte usuarios cercanos.";
+
+"NSLocationAlwaysUsageDescription" = "Será utilizada para obtener el nombre de tu ciudad al registrarte y luego para mostrarte usuarios cercanos.";
+
+"NSLocationWhenInUseUsageDescription" = "Será utilizada para obtener el nombre de tu ciudad al registrarte y luego para mostrarte usuarios cercanos.";
+
+"NSCameraUsageDescription" = "Solo se accede a la cámara mientras sacas la foto.";
+
+"NSMicrophoneUsageDescription" = "Este permiso se necesita para la cámara, la app no utiliza el micrófono.";
+
+"NSPhotoLibraryUsageDescription" = "La app solo tiene acceso a las fotos que tu seleccionas.";
