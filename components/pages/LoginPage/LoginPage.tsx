@@ -1,6 +1,5 @@
 import React, { FC, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LogoSvg } from "../../../assets/LogoSvg";
 import { currentTheme } from "../../../config";
@@ -27,6 +26,7 @@ import VersionIndicator from "./VersionIndicator/VersionIndicator";
 import { ViewTouchable } from "../../common/ViewTouchable/ViewTouchable";
 import { useShouldRedirectToRequiredPage } from "../../../common-tools/navigation/useShouldRedirectToRequiredPage";
 import LegalMessage from "./LegalMessage/LegalMessage";
+import LoginError from "./LoginError/LoginError";
 
 const LoginPage: FC = () => {
    const { colors } = useTheme();
@@ -126,17 +126,11 @@ const LoginPage: FC = () => {
                   </ViewTouchable>
                </LogoAnimator>
             </View>
-            {serverOperating === false && (
-               <Text style={styles.textBlock}>
-                  {serverInfoData?.serverMessage
-                     ? serverInfoData?.serverMessage
-                     : "No se puede conectar con el servidor, intenta mas tarde y si el problema persiste actualiza la app o buscanos en las redes sociales para saber si hubo algún problema"}
-               </Text>
-            )}
+            {serverOperating === false && <LoginError error={serverInfoData?.serverMessage} />}
             <AppUpdateMessage serverInfo={serverInfoData} />
             <AuthenticationButtons show={showAuthenticationButtons} authentication={auth} />
             <LegalMessage visible={showAuthenticationButtons} />
-            <VersionIndicator />
+            {!showAuthenticationButtons && <VersionIndicator />}
          </View>
       </BackgroundArtistic>
    );
@@ -158,13 +152,6 @@ const styles: Styles = StyleSheet.create({
    looSvg: {
       width: "100%",
       height: "100%"
-   },
-   textBlock: {
-      textAlign: "center",
-      fontFamily: currentTheme.font.medium,
-      color: currentTheme.colors.textLogin,
-      fontSize: 15,
-      marginBottom: 150
    },
    text: {
       fontFamily: currentTheme.font.light,

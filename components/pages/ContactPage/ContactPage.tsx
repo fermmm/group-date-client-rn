@@ -10,6 +10,13 @@ import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import { currentTheme } from "../../../config";
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
+import {
+   CONTACT_EMAIL,
+   FACEBOOK_GROUP,
+   FACEBOOK_PAGE,
+   INSTAGRAM_PAGE,
+   WEBSITE_URL
+} from "../../../env.config";
 
 const ContactPage: FC = () => {
    const { goBack } = useGoBackExtended({
@@ -18,22 +25,22 @@ const ContactPage: FC = () => {
    const { colors } = useTheme();
 
    const handleCollaborationGroupPress = () => {
-      Linking.openURL(process.env.FACEBOOK_GROUP);
+      Linking.openURL(FACEBOOK_GROUP);
    };
    const handleInstagramAccountPress = () => {
-      Linking.openURL(process.env.INSTAGRAM_PAGE);
+      Linking.openURL(INSTAGRAM_PAGE);
    };
    const handleFacebookAccountPress = () => {
-      Linking.openURL(process.env.FACEBOOK_PAGE);
+      Linking.openURL(FACEBOOK_PAGE);
    };
    const handleCopyEmailPress = () => {
-      Clipboard.setString(process.env.CONTACT_EMAIL);
+      Clipboard.setString(CONTACT_EMAIL);
    };
    const handleSendEmailPress = () => {
-      Linking.openURL(`mailto:${process.env.CONTACT_EMAIL}`);
+      Linking.openURL(`mailto:${CONTACT_EMAIL}`);
    };
    const handleWebPress = () => {
-      Linking.openURL(process.env.WEBSITE_URL);
+      Linking.openURL(WEBSITE_URL);
    };
 
    return (

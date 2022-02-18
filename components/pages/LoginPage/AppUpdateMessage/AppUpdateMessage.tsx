@@ -8,6 +8,7 @@ import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
 import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
+import { WEBSITE_URL } from "../../../../env.config";
 
 interface PropsAppUpdateMessage {
    serverInfo: ServerInfoResponse;
@@ -28,7 +29,8 @@ const AppUpdateMessage: FC<PropsAppUpdateMessage> = ({ serverInfo }) => {
                contentStyle={styles.buttonContent}
                onPress={() => {
                   if (Platform.OS === "ios") {
-                     // TODO: Implement for IOS
+                     // TODO: Implement a direct link to the app store
+                     Linking.openURL(WEBSITE_URL);
                   } else {
                      Linking.openURL(`market://details?id=${Application.applicationId}`);
                   }

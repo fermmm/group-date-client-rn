@@ -3,6 +3,11 @@ import { Linking, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
+import {
+   COMMUNITY_GUIDELINES_URL,
+   PRIVACY_POLICY_URL,
+   TERMS_AND_CONDITIONS_URL
+} from "../../../../env.config";
 
 interface PropsLegalMessage {
    visible: boolean;
@@ -15,9 +20,9 @@ const LegalMessage: FC<PropsLegalMessage> = props => {
       return null;
    }
 
-   const handlePrivacyPress = () => Linking.openURL(process.env.PRIVACY_POLICY_URL);
-   const handleCommunityPress = () => Linking.openURL(process.env.COMMUNITY_GUIDELINES_URL);
-   const handleTermsPress = () => Linking.openURL(process.env.TERMS_AND_CONDITIONS_URL);
+   const handlePrivacyPress = () => Linking.openURL(PRIVACY_POLICY_URL);
+   const handleCommunityPress = () => Linking.openURL(COMMUNITY_GUIDELINES_URL);
+   const handleTermsPress = () => Linking.openURL(TERMS_AND_CONDITIONS_URL);
 
    return (
       <View style={styles.mainContainer}>

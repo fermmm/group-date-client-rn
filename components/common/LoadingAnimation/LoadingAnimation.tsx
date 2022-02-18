@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { Animated, StyleProp, StyleSheet, View, ViewStyle, Dimensions } from "react-native";
 import LottieView from "lottie-react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -49,14 +49,10 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = props => {
       timeoutButtonColor = "black"
    } = props;
 
-   if (!visible) {
-      return null;
-   }
-
    const [animValue] = useState(new Animated.Value(0));
    const [timeoutButtonVisible, setTimeoutButtonVisible] = useState(false);
    const [timeStamp, setTimestamp] = useState<number>();
-   const [timeoutButtonId, setTimeoutButtonId] = useState<number>();
+   const timeoutId = useRef<number>();
 
    useEffect(() => {
       animValue.setValue(0);
@@ -73,20 +69,16 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = props => {
       }
 
       if (!visible) {
-         clearTimeout(timeoutButtonId);
          setTimeoutButtonVisible(false);
-         return () => clearTimeout(timeoutId);
       }
 
       setTimestamp(new Date().getTime());
-      clearTimeout(timeoutButtonId);
-      const timeoutId = setTimeout(
+      timeoutId.current = setTimeout(
          () => setTimeoutButtonVisible(true),
          timeoutButtonTime
       ) as unknown as number;
-      setTimeoutButtonId(timeoutId);
 
-      return () => clearTimeout(timeoutId);
+      return () => clearTimeout(timeoutId.current);
    }, [visible]);
 
    const getWaitedTime = () => {
@@ -105,6 +97,10 @@ export const LoadingAnimation: FC<PropsLoadingAnimation> = props => {
 
    if (centeredMethod === CenteredMethod.Absolute) {
       centeringStyle = styles.absolutePosition;
+   }
+
+   if (!visible) {
+      return null;
    }
 
    return (

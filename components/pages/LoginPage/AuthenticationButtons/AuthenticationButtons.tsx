@@ -12,6 +12,7 @@ import {
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
+import { FACEBOOK_APP_ID, FACEBOOK_APP_NAME, GOOGLE_CLIENT_WEB_EXPO } from "../../../../env.config";
 import { useAdultConfirmDialog } from "../../../common/AdultConfirmModal/tools/useAdultConfirmModa";
 import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
 
@@ -28,11 +29,8 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
    const { colors } = useTheme();
    const color = colors.textLogin;
    const facebookLoginAvailable =
-      Boolean(process.env.FACEBOOK_APP_ID) &&
-      Boolean(process.env.FACEBOOK_APP_NAME) &&
-      Platform.OS !== "ios";
-   const googleLoginAvailable =
-      Boolean(process.env.GOOGLE_CLIENT_WEB_EXPO) && Platform.OS !== "ios";
+      Boolean(FACEBOOK_APP_ID) && Boolean(FACEBOOK_APP_NAME) && Platform.OS !== "ios";
+   const googleLoginAvailable = Boolean(GOOGLE_CLIENT_WEB_EXPO) && Platform.OS !== "ios";
    const emailLoginAvailable = serverInfo?.emailLoginEnabled;
    const anyLoginAvailable = facebookLoginAvailable || googleLoginAvailable || emailLoginAvailable;
 

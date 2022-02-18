@@ -1,5 +1,14 @@
 import { ExpoConfig, ConfigContext } from "@expo/config";
 import "dotenv/config";
+import {
+   API_KEY,
+   APP_ID,
+   AUTH_DOMAIN,
+   MEASUREMENT_ID,
+   MESSAGE_SENDER_ID,
+   PROJECT_ID,
+   STORAGE_BUCKET
+} from "./env.config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
    ...config,
@@ -28,20 +37,34 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       buildNumber: "1.2.3",
       supportsTablet: false,
       infoPlist: {
-         NSCameraUsageDescription:
-            "This app uses the camera when the user wants to upload photos to his/her profile."
+         CFBundleAllowMixedLocalizations: true,
+         NSCameraUsageDescription: "The app only access your camera while you take the photo.",
+         NSLocationAlwaysAndWhenInUseUsageDescription:
+            "It will be used to find people in your area and auto complete your city name at registration.",
+         NSLocationAlwaysUsageDescription:
+            "It will be used to find people in your area and auto complete your city name at registration.",
+         NSLocationWhenInUseUsageDescription:
+            "It will be used to find people in your area and auto complete your city name at registration.",
+         NSMicrophoneUsageDescription:
+            "This is required to make the camera work, we don't use the microphone.",
+         NSPhotoLibraryUsageDescription: "The app only has access to the photos you select.",
+         NSUserTrackingUsageDescription:
+            "This identifier will be used to deliver personalized ads to you."
       }
+   },
+   locales: {
+      es: "./texts/appConfig/es.json"
    },
    web: {
       config: {
          firebase: {
-            apiKey: process.env.API_KEY,
-            authDomain: process.env.AUTH_DOMAIN,
-            projectId: process.env.PROJECT_ID,
-            storageBucket: process.env.STORAGE_BUCKET,
-            messagingSenderId: process.env.MESSAGE_SENDER_ID,
-            appId: process.env.APP_ID,
-            measurementId: process.env.MEASUREMENT_ID
+            apiKey: API_KEY,
+            authDomain: AUTH_DOMAIN,
+            projectId: PROJECT_ID,
+            storageBucket: STORAGE_BUCKET,
+            messagingSenderId: MESSAGE_SENDER_ID,
+            appId: APP_ID,
+            measurementId: MEASUREMENT_ID
          }
       }
    },
@@ -56,8 +79,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       [
          "expo-image-picker",
          {
-            photosPermission:
-               "The app accesses your photos to let you share them in your profile. Only the photos you select are sent to the application."
+            photosPermission: "The app only has access to the photos you select."
          }
       ]
    ]

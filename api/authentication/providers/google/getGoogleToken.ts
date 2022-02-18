@@ -4,6 +4,7 @@ import * as Google from "expo-auth-session/providers/google";
 import Constants, { AppOwnership } from "expo-constants";
 import { showRequestErrorAlert } from "../../../tools/showRequestErrorAlert";
 import { tryToGetErrorMessage } from "../../../tools/httpRequest";
+import { GOOGLE_CLIENT_WEB_EXPO } from "../../../../env.config";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -12,7 +13,7 @@ export function useGetGoogleToken(): () => Promise<string | null> {
 
    if (Constants.appOwnership === AppOwnership.Expo) {
       const [request, response, promptAsync] = Google.useAuthRequest({
-         expoClientId: process.env.GOOGLE_CLIENT_WEB_EXPO,
+         expoClientId: GOOGLE_CLIENT_WEB_EXPO,
          scopes: ["email"]
       });
 
@@ -35,14 +36,10 @@ export function useGetGoogleToken(): () => Promise<string | null> {
 
       getGoogleToken = async () => {
          try {
-            console.log("04");
             GoogleSignin.configure({});
             await GoogleSignin.hasPlayServices();
-            console.log("05");
             await GoogleSignin.signIn();
-            console.log("06");
             const tokens = await GoogleSignin.getTokens();
-            console.log("07");
 
             if (tokens?.accessToken == null) {
                throw Error("Error: Access token null");
@@ -50,7 +47,6 @@ export function useGetGoogleToken(): () => Promise<string | null> {
 
             return tokens.accessToken;
          } catch (error) {
-            console.log("08");
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                // user cancelled the login flow
                Alert.alert("", "statusCodes.SIGN_IN_CANCELLED");

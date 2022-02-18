@@ -8,8 +8,8 @@ This project uses TypeScript + React Native + Expo with "bare" workflow (not the
 
 2. Clone the repo, in the repo folder run `npm install`
 
-3. Duplicate the file `.env.example` and rename it: `.env`. In Linux and MacOS you can use this command: 
-  `cp .env.example .env`.
+3. Duplicate the file `env.config.example.js` and rename it: `env.config.js`. In Linux and MacOS you can use this command: 
+  `cp env.config.example.js env.config.js`.
 
 4. Create an empty file named `google-services.json` inside android/app folder.
 This is required by expo to compile, the file will be empty but you will replace it with a real one in the future.
@@ -131,7 +131,7 @@ The first time you run the app using the emulator, you need to execute the follo
 
 ### Troubleshooting
 
-  If you see any error you can try if this command fixes it, specially if everything was working and one day for no apparent reason the simulator stops working properly:
+  If you see any error on the console you can try if this command fixes it, specially if everything was working and one day for no apparent reason it doesn't work anymore:
   
   ```npm run reinstall-pods```
 

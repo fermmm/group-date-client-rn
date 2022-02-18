@@ -4,6 +4,7 @@ import Constants, { AppOwnership } from "expo-constants";
 import { showRequestErrorAlert } from "./showRequestErrorAlert";
 import { finishMeasureTime, measureTime } from "../../common-tools/js-tools/measureTime";
 import { analyticsResponseTimeLog } from "../../common-tools/analytics/tools/analyticsRequestTimeLog";
+import { SERVER_URL_DEVELOPMENT, SERVER_URL_PRODUCTION } from "../../env.config";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
    handleErrors?: boolean;
@@ -162,10 +163,10 @@ export function prepareUrl(url: string): string {
 
 export function getServerUrl(): string {
    if (__DEV__ && Constants.appOwnership === AppOwnership.Expo) {
-      return prepareUrl(process.env.SERVER_URL_DEVELOPMENT);
+      return prepareUrl(SERVER_URL_DEVELOPMENT);
    }
 
-   return prepareUrl(process.env.SERVER_URL_PRODUCTION);
+   return prepareUrl(SERVER_URL_PRODUCTION);
 }
 
 export interface RequestError {

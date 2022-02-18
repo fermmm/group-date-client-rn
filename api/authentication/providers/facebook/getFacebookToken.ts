@@ -1,11 +1,7 @@
 import { Alert } from "react-native";
-import {
-   FacebookLoginResult,
-   initializeAsync,
-   logInWithReadPermissionsAsync,
-   logOutAsync
-} from "expo-facebook";
+import { FacebookLoginResult, initializeAsync, logInWithReadPermissionsAsync } from "expo-facebook";
 import { Flatten } from "../../../../common-tools/ts-tools/common-ts-tools";
+import { FACEBOOK_APP_ID, FACEBOOK_APP_NAME } from "../../../../env.config";
 
 /**
  * Retrieves a new token from Facebook, if the user did not authorized the app it shows an authorization screen
@@ -14,8 +10,8 @@ import { Flatten } from "../../../../common-tools/ts-tools/common-ts-tools";
 export async function getFacebookToken(): Promise<string | null> {
    try {
       await initializeAsync({
-         appId: process.env.FACEBOOK_APP_ID,
-         appName: process.env.FACEBOOK_APP_NAME
+         appId: FACEBOOK_APP_ID,
+         appName: FACEBOOK_APP_NAME
       });
 
       let loginResult: FacebookLoginResult = null;
