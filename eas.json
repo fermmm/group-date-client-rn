@@ -15,11 +15,13 @@
     "simulator": {
       "distribution": "internal",
       "ios": {
-        "buildConfiguration": "Debug",
         "simulator": true
       }
     },
-    "production": {}
+    "production": {},
+    "preview": {
+      "distribution": "internal"
+    }
   },
   "submit": {
     "production": {}

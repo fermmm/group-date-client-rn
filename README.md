@@ -41,6 +41,75 @@ You also need to have the server running on your local computer so the app can c
 
 ----
 
+## Explanation of npm commands to build and test
+
+> The commands starting with ```eas:``` use a free service by expo called eas. This service uploads the code to their server, builds the final app and creates a download link with it, also handles all key files management and store submission.
+
+This command runs Expo Go (it's currently not working on IOS, I don't know why). Expo go is an app you install that runs the js code, works like if the app is running on the device but is not technically that, it's good to quickly run the app for testing and development in a device or emulator.
+```
+npm start
+```
+
+(Android only) Alternative to Expo Go from the React Native team.
+```
+npm run start:native
+```
+
+(Android only) Builds and runs app on simulator.
+```
+npm run simulator:android
+```
+
+(Android only) Builds the APK file to install on a device or emulator.
+```
+npm run build:apk
+```
+
+(Android only) Builds the bundle file ready to be dragged to the Google Play Console to submit the app (Bundle is a format like the APK but meant to be uploaded to Google Play).
+```
+npm run build:bundle
+```
+
+(Ios only) Builds and runs app on simulator, this command is implemented by the Expo team.
+```
+npm run simulator:ios:expo
+```
+
+(Ios only) Builds and runs app on simulator, this command is implemented by the React Native team.
+```
+npm run simulator:ios
+```
+
+(IOS Only) Creates a link to download a build file that can be dragged to the simulator to install the app and test it.
+```
+npm run eas:ios:build:simulator
+```
+
+(IOS Only) Creates a build that can be installed on a physical IOS device using a QR code. The first time you need to authorize the device running ```eas device:create``` and make a new build after new device is autorizad. More details in [this guide](https://docs.expo.dev/build/internal-distribution/)
+```
+npm run eas:ios:build:device
+```
+
+(IOS Only) Creates the production build ready to be submitted to the app store. Once the build is successful you can run ```eas submit -p ios``` to submit to the app store.
+```
+npm run eas:ios:build:production
+```
+
+Publishes a new version of the JS code that will be downloaded from the expo server by the users in the background when opening the app (it's a free service).
+```
+npm run publish
+```
+
+You need to run this command to setup push notification credentials. This command is from Eas.
+```
+npm run credentials:eas
+```
+
+You need to run this command to setup push notification credentials. (Legacy version, use eas one)
+```
+npm run credentials
+```
+
 ## Required setup steps to make a debug or release build
 
 Up until now you were running the app in Expo Go. But that is just a wrapper app of the JS code just for debugging and coding. The real app needs to be built in a different way:
