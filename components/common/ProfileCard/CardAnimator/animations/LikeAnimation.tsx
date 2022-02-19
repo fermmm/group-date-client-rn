@@ -1,5 +1,5 @@
 import { CardAnimation, CardAnimatedStyles } from "./interface/CardAnimation";
-import { Animated, Easing, Dimensions } from "react-native";
+import { Animated, Easing, Dimensions, Platform } from "react-native";
 
 export class LikeAnimation implements CardAnimation {
    async trigger(
@@ -40,11 +40,16 @@ export class LikeAnimation implements CardAnimation {
    ): CardAnimatedStyles {
       const rotationValue: Animated.AnimatedInterpolation = containerAnimValue.interpolate({
          inputRange: [0, 1],
-         outputRange: ["0deg", "-90deg"]
+         outputRange: ["0deg", Platform.OS !== "ios" ? "-90deg" : "0deg"] // It seems 3D rotation cannot be animated in IOS
       });
       const moveValue: Animated.AnimatedInterpolation = containerAnimValue.interpolate({
          inputRange: [0, 1],
-         outputRange: [0, -Dimensions.get("window").width * 0.55]
+         outputRange: [
+            0,
+            Platform.OS !== "ios"
+               ? -Dimensions.get("window").width * 0.55
+               : -Dimensions.get("window").width // If there is no 3D rotation because of IOS then the card moves away from the screen completely
+         ]
       });
       const logoMoveValue: Animated.AnimatedInterpolation = logoAnimValue.interpolate({
          inputRange: [0, 1],
