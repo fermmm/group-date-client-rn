@@ -90,7 +90,7 @@ npm run eas:ios:build:simulator
 npm run eas:ios:build:device
 ```
 
-(IOS Only) Creates the production build ready to be submitted to the app store. Once the build is successful you can run ```eas submit -p ios``` to submit to the app store.
+(IOS Only) Creates the production build ready to be submitted to the app store. Once the build is successful you can run ```npm run eas:ios:submit``` to submit to the app store.
 ```
 npm run eas:ios:build:production
 ```

@@ -11,6 +11,7 @@
     "eas:ios:build:simulator": "eas build -p ios --profile simulator",
     "eas:ios:build:device": "eas build --profile preview --platform ios",
     "eas:ios:build:production": "eas build --profile production --platform ios",
+    "eas:ios:submit": "eas submit -p ios",
     "publish": "expo publish",
     "credentials": "expo credentials:manager",
     "credentials:eas": "eas credentials",
