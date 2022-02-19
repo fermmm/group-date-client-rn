@@ -16,6 +16,7 @@
 		96905EF65AED1B983A6B3ABC /* libPods-Poly.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-Poly.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		C172538027BDD29D0073FA9C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C172538227BDD29D0073FA9C /* InfoPlist.strings */; };
+		C19109B627C1B1F100376697 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C19109B527C1B1F100376697 /* GoogleService-Info.plist */; };
 		E6E180123C01E9E74951799B /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AF64AB9E393731D85A67AF3 /* ExpoModulesProvider.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +38,7 @@
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		C172538127BDD29D0073FA9C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C172538327BDD5800073FA9C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C19109B527C1B1F100376697 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C3E482EFDEB045809A01A486 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "Poly/noop-file.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -68,6 +70,7 @@
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
 				AAACAE3404A841F0B7D23010 /* Poly-Bridging-Header.h */,
 				C3E482EFDEB045809A01A486 /* noop-file.swift */,
+				C19109B527C1B1F100376697 /* GoogleService-Info.plist */,
 				C172538227BDD29D0073FA9C /* InfoPlist.strings */,
 			);
 			name = Poly;
@@ -214,6 +217,7 @@
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
 				C172538027BDD29D0073FA9C /* InfoPlist.strings in Resources */,
+				C19109B627C1B1F100376697 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

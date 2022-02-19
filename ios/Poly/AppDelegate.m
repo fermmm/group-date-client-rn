@@ -1,4 +1,5 @@
 #import "AppDelegate.h"
+@import Firebase;
 
 #if RCT_DEV
 #import <React/RCTDevLoadingView.h>
@@ -33,6 +34,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
 #if defined(FB_SONARKIT_ENABLED) && __has_include(<FlipperKit/FlipperClient.h>)
   InitializeFlipper(application);
 #endif
