@@ -10,16 +10,13 @@ module.exports = {
 
    // Social and legal links:
    CONTACT_EMAIL: "poly.app.team@gmail.com",
-   WEBSITE_URL: "https://polycommunity.app",
+   WEBSITE_URL: "https://groupdateapp.com",
    FACEBOOK_GROUP: "https://www.facebook.com/groups/133790728893669",
    FACEBOOK_PAGE: "https://www.facebook.com/polycommunityapp",
-   INSTAGRAM_PAGE: "https://www.instagram.com/poly.community.app",
-   PRIVACY_POLICY_URL:
-      "http://poly-env.eba-mce3nhsg.us-east-1.elasticbeanstalk.com/legal/privacy.html",
-   COMMUNITY_GUIDELINES_URL:
-      "http://poly-env.eba-mce3nhsg.us-east-1.elasticbeanstalk.com/legal/community.html",
-   TERMS_AND_CONDITIONS_URL:
-      "http://poly-env.eba-mce3nhsg.us-east-1.elasticbeanstalk.com/legal/terms.html",
+   INSTAGRAM_PAGE: "https://www.instagram.com/group.date",
+   PRIVACY_POLICY_URL: "https://groupdateapp.com/legal/privacy.html",
+   COMMUNITY_GUIDELINES_URL: "https://groupdateapp.com/legal/community.html",
+   TERMS_AND_CONDITIONS_URL: "https://groupdateapp.com/legal/terms.html",
 
    // Analytics:
    API_KEY: "AIzaSyDiZWQKjBd0gJWJmIsm09pOStU158QheSM",
