@@ -5,6 +5,7 @@ import { sendUserProps } from "../../../../api/server/user";
 import { ServerInfoResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/server-info";
 import { User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useNotificationPermission } from "../../../../common-tools/device-native-api/notifications/useNotificationsPermissions";
+import { Platform } from "react-native";
 
 /**
  * At every login there are some user props that need to be updated: The user may be in a different
@@ -47,8 +48,13 @@ export function useSendPropsToUpdateAtLogin(
          serverInfo?.pushNotificationsChannels == null ||
          notificationTokenRequested ||
          enabled === false ||
-         !notificationPermissionGranted
+         notificationPermissionGranted == null
       ) {
+         return;
+      }
+
+      if (notificationPermissionGranted === false) {
+         setNotificationsPossible(false);
          return;
       }
 
@@ -70,7 +76,6 @@ export function useSendPropsToUpdateAtLogin(
    // Effect to send the data to the server when all the information is gathered
    useEffect(() => {
       if (
-         notificationTokenRequested &&
          locationLat != null &&
          locationLon != null &&
          country != null &&
@@ -101,7 +106,6 @@ export function useSendPropsToUpdateAtLogin(
       country,
       token,
       enabled,
-      notificationTokenRequested,
       completed,
       notificationsPossible
    ]);

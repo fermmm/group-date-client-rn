@@ -12,7 +12,6 @@ export async function showRejectedPermissionsDialog(
       exitAppButtonText = i18n.t("Exit app"),
       dialogText = i18n.t("The app only works if you accept"),
       instructionsToastText = i18n.t("Touch on Permissions"),
-      cancelButtonText = i18n.t("Close"),
       retryButtonText = i18n.t("I fixed it"),
       permissionName
    } = dialogSettings;
@@ -43,12 +42,10 @@ export async function showRejectedPermissionsDialog(
                promiseResolve();
             }
          },
-         Platform.OS === "android"
-            ? {
-                 text: exitAppButtonText,
-                 onPress: () => BackHandler.exitApp()
-              }
-            : { text: cancelButtonText }
+         Platform.OS === "android" && {
+            text: exitAppButtonText,
+            onPress: () => BackHandler.exitApp()
+         }
       ],
       { cancelable: false }
    );
@@ -62,7 +59,6 @@ export interface RejectedDialogSettings {
    exitAppButtonText?: string;
    dialogText?: string;
    instructionsToastText?: string;
-   cancelButtonText?: string;
    retryButtonText?: string;
    permissionName?: string;
 }

@@ -6,8 +6,20 @@ export function useNotificationPermission(props: { enabled: boolean }) {
    return usePermission(
       {
          getter: () => Notifications.getPermissionsAsync(),
-         requester: () => Notifications.requestPermissionsAsync()
+         requester: () =>
+            Notifications.requestPermissionsAsync({
+               ios: {
+                  allowAlert: true,
+                  allowBadge: true,
+                  allowSound: true,
+                  allowAnnouncements: true
+               }
+            })
       },
-      { enabled: props?.enabled ?? true, permissionName: i18n.t("notifications") }
+      {
+         enabled: props?.enabled ?? true,
+         permissionName: i18n.t("notifications"),
+         allowContinueWithoutAccepting: true // Apple requires the notifications permissions to be optional
+      }
    );
 }

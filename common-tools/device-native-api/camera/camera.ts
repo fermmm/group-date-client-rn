@@ -6,7 +6,7 @@ import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import { IMAGES_ASPECT_RATIO, LOCK_IMAGES_ASPECT_RATIO } from "../../../config";
 
 export const callCameraPicture = async (): Promise<string | null> => {
-   await askForPermission(
+   const granted = await askForPermission(
       {
          getter: () => Camera.getCameraPermissionsAsync(),
          requester: () => Camera.requestCameraPermissionsAsync()
@@ -17,6 +17,10 @@ export const callCameraPicture = async (): Promise<string | null> => {
          }
       }
    );
+
+   if (!granted) {
+      return Promise.resolve(null);
+   }
 
    const result: ImageInfo = (await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
