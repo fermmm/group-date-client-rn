@@ -5,7 +5,6 @@ import { sendUserProps } from "../../../../api/server/user";
 import { ServerInfoResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/server-info";
 import { User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useNotificationPermission } from "../../../../common-tools/device-native-api/notifications/useNotificationsPermissions";
-import { Platform } from "react-native";
 
 /**
  * At every login there are some user props that need to be updated: The user may be in a different
