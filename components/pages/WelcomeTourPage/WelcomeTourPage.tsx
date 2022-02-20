@@ -13,6 +13,8 @@ import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
 import GraphSvg2 from "../../../assets/GraphSvg2";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useWelcomeShowed } from "./tools/useWelcomeShowed";
+import Svg from "../../../common-tools/svg-tools/Svg";
+import screen1PortalSvg from "../../../assets/welcome_images/screen1-portal.svg";
 
 const WelcomeTourPage: FC = () => {
    const { setAsShowed } = useWelcomeShowed();
@@ -45,7 +47,7 @@ const WelcomeTourPage: FC = () => {
          >
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
-                  <Text style={[styles.bigText, { color: topColor }]}>¡Bienvenidx!</Text>
+                  <Svg src={screen1PortalSvg} />
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
@@ -130,8 +132,7 @@ const styles: Styles = StyleSheet.create({
       flex: 1,
       width: "100%",
       alignItems: "center",
-      justifyContent: "center",
-      padding: 30
+      justifyContent: "center"
    },
    logoContainer: {
       width: "100%",
