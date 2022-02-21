@@ -47,8 +47,13 @@ export function useSendPropsToUpdateAtLogin(
          serverInfo?.pushNotificationsChannels == null ||
          notificationTokenRequested ||
          enabled === false ||
-         !notificationPermissionGranted
+         notificationPermissionGranted == null
       ) {
+         return;
+      }
+
+      if (notificationPermissionGranted === false) {
+         setNotificationsPossible(false);
          return;
       }
 
@@ -70,7 +75,6 @@ export function useSendPropsToUpdateAtLogin(
    // Effect to send the data to the server when all the information is gathered
    useEffect(() => {
       if (
-         notificationTokenRequested &&
          locationLat != null &&
          locationLon != null &&
          country != null &&
@@ -101,7 +105,6 @@ export function useSendPropsToUpdateAtLogin(
       country,
       token,
       enabled,
-      notificationTokenRequested,
       completed,
       notificationsPossible
    ]);

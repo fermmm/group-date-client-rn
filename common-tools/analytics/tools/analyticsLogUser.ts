@@ -49,9 +49,7 @@ export function getUserPropertiesInAnalyticsFormat(user: Partial<User>): Record<
       targetAgeMax: user.targetAgeMax,
       targetDistance: user.targetDistance,
       genderCis: user.genders.filter(gender => CIS_GENDERS.includes(gender)),
-      genderFull: user.genders,
       attractedToCis: user.likesGenders.filter(gender => CIS_GENDERS.includes(gender)),
-      attractedToFull: user.likesGenders,
       attractedToOppositeSex: isAttractedToOppositeSex(
          user.genders,
          user.likesGenders,

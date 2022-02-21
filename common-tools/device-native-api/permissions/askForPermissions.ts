@@ -20,25 +20,28 @@ export function usePermission(
    permissionSource: PermissionSource,
    settings?: AskPermissionSettings & { enabled?: boolean }
 ) {
-   const [granted, setGranted] = useState(false);
+   const [granted, setGranted] = useState<boolean>(null);
    const mounted = useRef(true);
    const { enabled = true } = settings ?? {};
+
    useEffect(() => {
       if (!enabled) {
          return;
       }
 
       if (!granted) {
-         askForPermission(permissionSource, settings).then(() => {
+         askForPermission(permissionSource, settings).then(nowGranted => {
             if (mounted.current) {
-               setGranted(true);
+               setGranted(nowGranted);
             }
          });
       }
+
       return () => {
          mounted.current = false;
       };
    }, [enabled, granted]);
+
    return granted;
 }
 
@@ -56,7 +59,7 @@ export function usePermission(
 export async function askForPermission(
    permissionsSource: PermissionSource,
    settings?: AskPermissionSettings
-): Promise<void> {
+): Promise<boolean> {
    const {
       allowContinueWithoutAccepting = false,
       rejectedDialogTexts = {},
@@ -71,13 +74,13 @@ export async function askForPermission(
 
    if (result.status !== "granted") {
       if (allowContinueWithoutAccepting) {
-         return Promise.resolve();
+         return Promise.resolve(false);
       }
       await showRejectedPermissionsDialog({ ...rejectedDialogTexts, permissionName });
       return askForPermission(permissionsSource, settings);
    }
 
-   return Promise.resolve();
+   return Promise.resolve(true);
 }
 
 export interface AskPermissionSettings {

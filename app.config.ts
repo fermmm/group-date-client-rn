@@ -24,17 +24,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       resizeMode: "cover",
       backgroundColor: "#000000"
    },
-   version: "1.2.5",
+   version: "1.2.6",
    android: {
       package: "com.poly.dates",
-      versionCode: 125,
+      versionCode: 126,
       useNextNotificationsApi: true,
       permissions: ["CAMERA", "CAMERA_ROLL", "ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       googleServicesFile: "./android/app/google-services.json"
    },
    ios: {
       bundleIdentifier: "com.poly.dates",
-      buildNumber: "1.2.5",
+      buildNumber: "1.2.6",
       supportsTablet: false,
       infoPlist: {
          CFBundleAllowMixedLocalizations: true,
@@ -47,9 +47,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             "It will be used to find people in your area and auto complete your city name at registration.",
          NSMicrophoneUsageDescription:
             "This is required to make the camera work, we don't use the microphone.",
-         NSPhotoLibraryUsageDescription: "The app only has access to the photos you select.",
-         NSUserTrackingUsageDescription:
-            "This identifier will be used to deliver personalized ads to you."
+         NSPhotoLibraryUsageDescription: "The app only has access to the photos you select."
       }
    },
    locales: {
@@ -80,6 +78,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
          "expo-image-picker",
          {
             photosPermission: "The app only has access to the photos you select."
+         }
+      ],
+      [
+         "expo-facebook",
+         {
+            userTrackingPermission: false
          }
       ]
    ]
