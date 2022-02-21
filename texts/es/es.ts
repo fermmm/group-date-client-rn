@@ -13,6 +13,7 @@ export const es: { [key: string]: string } = {
       "La localización del dispositivo no está disponible, fijate si hay algo desactivado o estás en modo avión",
    "Open app settings": "Ir a la configuración de la app",
    "Exit app": "Salir",
+   "Error details": "Detalles del error",
    "The app only works if you accept":
       "La app tiene sentido y funciona si aceptas el permiso que pedimos",
    "Touch on Permissions": 'Toca en "Permisos"',

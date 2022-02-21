@@ -10,6 +10,8 @@ import {
 import { usePermission } from "../permissions/askForPermissions";
 import { LocalStorageKey } from "../../strings/LocalStorageKey";
 import { removeDigitsFromNumber } from "../../math/math-tools";
+import { tryToGetErrorMessage } from "../../../api/tools/httpRequest";
+import { tryToStringifyObject } from "../../debug-tools/tryToParseObject";
 
 /**
  * Gets geolocation data, asks for permissions Permissions.LOCATION. If the geolocation
@@ -125,14 +127,11 @@ function useAddress(params: {
 export async function getGeolocationPosition(
    settings?: GetGeolocationParams
 ): Promise<LocationCoords> {
-   if (settings == null) {
-      settings = {};
-   }
-
-   settings.allowContinueWithGeolocationDisabled =
-      settings.allowContinueWithGeolocationDisabled ?? false;
-   settings.errorDialogSettings = settings.errorDialogSettings ?? {};
-   settings.removePrecisionInCoordinates = settings.removePrecisionInCoordinates ?? true;
+   const {
+      allowContinueWithGeolocationDisabled = false,
+      errorDialogSettings = {},
+      removePrecisionInCoordinates = true
+   } = settings ?? {};
 
    let result: LocationCoords = null;
 
@@ -153,7 +152,7 @@ export async function getGeolocationPosition(
       }
       result = { ...position.coords };
 
-      if (settings.removePrecisionInCoordinates) {
+      if (removePrecisionInCoordinates) {
          result.latitude = removeDigitsFromNumber(result.latitude, {
             digitsToKeepInDecimalPart: 2
          });
@@ -165,10 +164,17 @@ export async function getGeolocationPosition(
       return Promise.resolve(result);
    } catch (error) {
       console.error(error);
-      if (settings.allowContinueWithGeolocationDisabled) {
+      if (allowContinueWithGeolocationDisabled) {
          return Promise.resolve(null);
       }
-      const retry = await showLocationDisabledDialog(settings.errorDialogSettings);
+
+      const retry = await showLocationDisabledDialog({
+         ...errorDialogSettings,
+         errorDetails:
+            errorDialogSettings?.errorDetails ??
+            " getGeolocationPosition " + tryToGetErrorMessage(error)
+      });
+
       if (retry) {
          return getGeolocationPosition(settings);
       } else {
@@ -188,33 +194,41 @@ export async function getGeolocationAddress(
    coords: LocationCoords,
    settings?: GetGeolocationParams
 ): Promise<Location.LocationGeocodedAddress> {
-   if (settings == null) {
-      settings = {};
-   }
-
-   settings.allowContinueWithGeolocationDisabled =
-      settings.allowContinueWithGeolocationDisabled ?? false;
-   settings.errorDialogSettings = settings.errorDialogSettings ?? {};
+   const { allowContinueWithGeolocationDisabled = false, errorDialogSettings = {} } =
+      settings ?? {};
 
    try {
-      // Sadly reverseGeocodeAsync() requires full Location permissions:
-      const reverseGeocoding = await Location.reverseGeocodeAsync(coords);
+      let reverseGeocoding: Location.LocationGeocodedAddress[];
+
+      try {
+         // Sadly reverseGeocodeAsync() requires full accurate Location permissions
+         const reverseGeocoding = await Location.reverseGeocodeAsync(coords);
+      } catch (e) {}
+
       let result: Location.LocationGeocodedAddress = null;
       if (reverseGeocoding != null && reverseGeocoding.length > 0) {
          result = reverseGeocoding[0];
       } else {
          throw new Error(
-            "Location service not available, try again later. expo-location function reverseGeocodeAsync() returned null or invalid"
+            "Location service not available, try again later. expo-location function reverseGeocodeAsync() returned invalid response: " +
+               tryToStringifyObject(reverseGeocoding)
          );
       }
 
       return Promise.resolve(result);
    } catch (error) {
       console.error(error);
-      if (settings.allowContinueWithGeolocationDisabled) {
+      if (allowContinueWithGeolocationDisabled) {
          return Promise.resolve(null);
       }
-      const retry = await showLocationDisabledDialog(settings.errorDialogSettings);
+
+      const retry = await showLocationDisabledDialog({
+         ...errorDialogSettings,
+         errorDetails:
+            errorDialogSettings?.errorDetails ??
+            " getGeolocationAddress " + tryToGetErrorMessage(error)
+      });
+
       if (retry) {
          return getGeolocationAddress(coords, settings);
       } else {
