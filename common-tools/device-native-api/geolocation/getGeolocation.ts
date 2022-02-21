@@ -205,9 +205,7 @@ export async function getGeolocationAddress(
          // Sadly reverseGeocodeAsync() requires full accurate Location permissions
          reverseGeocoding = await Location.reverseGeocodeAsync(coords);
       } catch (e) {
-         throw new Error(
-            "Try again later. Location.reverseGeocodeAsync failed:\n" + tryToGetErrorMessage(e)
-         );
+         throw new Error("Location.reverseGeocodeAsync failed:\n" + tryToGetErrorMessage(e));
       }
 
       let result: Location.LocationGeocodedAddress = null;
@@ -219,7 +217,7 @@ export async function getGeolocationAddress(
          result = reverseGeocoding[0];
       } else {
          throw new Error(
-            "Try again later. Location.reverseGeocodeAsync returned unexpected response:\n" +
+            "Location.reverseGeocodeAsync returned unexpected response:\n" +
                tryToStringifyObject(reverseGeocoding)
          );
       }
