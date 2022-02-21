@@ -140,8 +140,8 @@ android {
         applicationId 'com.poly.dates'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 127
-        versionName "1.2.7"
+        versionCode 128
+        versionName "1.2.8"
     }
     splits {
         abi {
