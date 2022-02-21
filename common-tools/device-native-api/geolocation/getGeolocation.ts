@@ -11,7 +11,8 @@ import { usePermission } from "../permissions/askForPermissions";
 import { LocalStorageKey } from "../../strings/LocalStorageKey";
 import { removeDigitsFromNumber } from "../../math/math-tools";
 import { tryToGetErrorMessage } from "../../../api/tools/httpRequest";
-import { tryToStringifyObject } from "../../debug-tools/tryToParseObject";
+import { tryToStringifyObject } from "../../debug-tools/tryToStringifyObject";
+import { withTimeout } from "../../withTimeout/withTimeout";
 
 /**
  * Gets geolocation data, asks for permissions Permissions.LOCATION. If the geolocation
@@ -170,9 +171,9 @@ export async function getGeolocationPosition(
 
       const retry = await showLocationDisabledDialog({
          ...errorDialogSettings,
-         errorDetails:
-            errorDialogSettings?.errorDetails ??
-            " getGeolocationPosition " + tryToGetErrorMessage(error)
+         errorDetails: `${
+            errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""
+         }getGeolocationPosition\n${tryToGetErrorMessage(error)}`
       });
 
       if (retry) {
@@ -202,15 +203,23 @@ export async function getGeolocationAddress(
 
       try {
          // Sadly reverseGeocodeAsync() requires full accurate Location permissions
-         const reverseGeocoding = await Location.reverseGeocodeAsync(coords);
-      } catch (e) {}
+         reverseGeocoding = await Location.reverseGeocodeAsync(coords);
+      } catch (e) {
+         throw new Error(
+            "Try again later. Location.reverseGeocodeAsync failed:\n" + tryToGetErrorMessage(e)
+         );
+      }
 
       let result: Location.LocationGeocodedAddress = null;
-      if (reverseGeocoding != null && reverseGeocoding.length > 0) {
+      if (
+         reverseGeocoding != null &&
+         Array.isArray(reverseGeocoding) &&
+         reverseGeocoding.length > 0
+      ) {
          result = reverseGeocoding[0];
       } else {
          throw new Error(
-            "Location service not available, try again later. expo-location function reverseGeocodeAsync() returned invalid response: " +
+            "Try again later. Location.reverseGeocodeAsync returned unexpected response:\n" +
                tryToStringifyObject(reverseGeocoding)
          );
       }
@@ -218,15 +227,16 @@ export async function getGeolocationAddress(
       return Promise.resolve(result);
    } catch (error) {
       console.error(error);
+
       if (allowContinueWithGeolocationDisabled) {
          return Promise.resolve(null);
       }
 
       const retry = await showLocationDisabledDialog({
          ...errorDialogSettings,
-         errorDetails:
-            errorDialogSettings?.errorDetails ??
-            " getGeolocationAddress " + tryToGetErrorMessage(error)
+         errorDetails: `${
+            errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""
+         }getGeolocationAddress\n${tryToStringifyObject(coords)}\n${tryToGetErrorMessage(error)}`
       });
 
       if (retry) {
