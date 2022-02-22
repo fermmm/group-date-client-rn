@@ -97,7 +97,6 @@ export function useSendPropsToUpdateAtLogin(
          }
 
          (async () => {
-            console.log("SEND USER PROPS ", props);
             await sendUserProps({ token, props }, false);
             setCompleted(true);
          })();
