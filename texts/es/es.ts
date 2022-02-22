@@ -10,7 +10,7 @@ export const es: { [key: string]: string } = {
    notifications: "notificaciones",
    location: "ubicación",
    "Location is not available":
-      "La localización del dispositivo no está disponible, fijate si hay algo desactivado o estás en modo avión",
+      "La localización GPS no está disponible, fijate si está desactivada o estás en modo avión",
    "Open app settings": "Ir a la configuración de la app",
    "Exit app": "Salir",
    "Error details": "Detalles del error",

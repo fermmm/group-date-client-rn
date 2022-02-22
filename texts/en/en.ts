@@ -8,7 +8,7 @@ export const en: { [key: string]: string } = {
    notifications: "notifications",
    location: "location",
    "Location is not available":
-      "Location is not available, check if it's disabled or if Airplane mode is enabled",
+      "GPS location is not available, check if it's disabled or Airplane mode is enabled",
    "Open app settings": "Open app settings",
    "Exit app": "Exit app",
    "Error details": "Error details",

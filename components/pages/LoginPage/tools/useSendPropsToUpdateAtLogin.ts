@@ -1,7 +1,7 @@
 import { useGeolocation } from "./../../../../common-tools/device-native-api/geolocation/getGeolocation";
 import { useEffect, useState } from "react";
 import { getExpoPushToken } from "../../../../common-tools/device-native-api/notifications/getPermissionTokenForNotifications";
-import { sendUserProps } from "../../../../api/server/user";
+import { sendUserProps, useUserProfileStatus } from "../../../../api/server/user";
 import { ServerInfoResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/server-info";
 import { User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useNotificationPermission } from "../../../../common-tools/device-native-api/notifications/useNotificationsPermissions";
@@ -25,21 +25,24 @@ export function useSendPropsToUpdateAtLogin(
    const [locationLat, setLocationLat] = useState<number>();
    const [locationLon, setLocationLon] = useState<number>();
    const [country, setCountry] = useState<string>();
-   const { geolocation } = useGeolocation({ enabled });
+   const { data: profileStatusData } = useUserProfileStatus();
+   const { geolocation, isLoading: geolocationLoading } = useGeolocation({ enabled });
    const notificationPermissionGranted = useNotificationPermission({ enabled });
 
    // Effect to set the geolocation state when geolocation is ready
    useEffect(() => {
-      if (
-         geolocation?.coords?.latitude != null &&
-         geolocation?.coords?.longitude != null &&
-         geolocation?.address?.isoCountryCode != null
-      ) {
+      if (geolocationLoading) {
+         return;
+      }
+
+      if (geolocation?.coords?.latitude != null && geolocation?.coords?.longitude != null) {
          setLocationLat(geolocation.coords.latitude);
          setLocationLon(geolocation.coords.longitude);
-         setCountry(geolocation.address.isoCountryCode);
+         setCountry(
+            geolocation.address?.isoCountryCode ?? profileStatusData?.user?.country ?? "UNKNOWN"
+         );
       }
-   }, [geolocation]);
+   }, [geolocation, geolocationLoading]);
 
    // Effect to set notification state when is ready
    useEffect(() => {
@@ -94,6 +97,7 @@ export function useSendPropsToUpdateAtLogin(
          }
 
          (async () => {
+            console.log("SEND USER PROPS ", props);
             await sendUserProps({ token, props }, false);
             setCompleted(true);
          })();
