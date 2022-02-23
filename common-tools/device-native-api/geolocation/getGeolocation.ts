@@ -12,6 +12,7 @@ import { LocalStorageKey } from "../../strings/LocalStorageKey";
 import { removeDigitsFromNumber } from "../../math/math-tools";
 import { tryToGetErrorMessage } from "../../../api/tools/httpRequest";
 import { tryToStringifyObject } from "../../debug-tools/tryToStringifyObject";
+import { showAddressDisabledDialog } from "./dialogAddressDisabled/dialogAddressDisabled";
 
 /**
  * Gets geolocation data, asks for permissions Permissions.LOCATION. If the geolocation
@@ -229,7 +230,7 @@ export async function getGeolocationAddress(
       let reverseGeocoding: Location.LocationGeocodedAddress[];
 
       try {
-         // Sadly reverseGeocodeAsync() requires full accurate Location permissions
+         // Sadly reverseGeocodeAsync() requires full accurate Location permissions on Android
          reverseGeocoding = await Location.reverseGeocodeAsync(coords);
       } catch (e) {
          throw new Error("Location.reverseGeocodeAsync failed:\n" + tryToGetErrorMessage(e));
@@ -257,7 +258,7 @@ export async function getGeolocationAddress(
          return Promise.resolve(null);
       }
 
-      const retry = await showLocationDisabledDialog({
+      const retry = await showAddressDisabledDialog({
          ...errorDialogSettings,
          errorDetails: `${
             errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""

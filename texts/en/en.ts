@@ -3,12 +3,16 @@ export const en: { [key: string]: string } = {
    OK: "OK",
    Cancel: "Cancel",
    Close: "Close",
+   Continue: "Continue",
    "I fixed it": "I fixed it",
    "Try again": "Try again",
    notifications: "notifications",
    location: "location",
+   "Open location settings": "Open location settings",
    "Location is not available":
       "GPS location is not available, check if it's disabled or Airplane mode is enabled",
+   "Address is not available":
+      "Part of your location cannot be read, we recommend to check if you have location disabled but you can continue anyway, probably the app still works fine",
    "Open app settings": "Open app settings",
    "Exit app": "Exit app",
    "Error details": "Error details",
