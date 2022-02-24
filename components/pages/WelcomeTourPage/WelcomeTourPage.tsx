@@ -15,6 +15,12 @@ import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useWelcomeShowed } from "./tools/useWelcomeShowed";
 import Svg from "../../../common-tools/svg-tools/Svg";
 import screen1PortalSvg from "../../../assets/welcome_images/screen1-portal.svg";
+import screen2HeartSvg from "../../../assets/welcome_images/screen2-heart.svg";
+import screen4PoolSvg from "../../../assets/welcome_images/screen4-pool.svg";
+import screen5PrimitivesSvg from "../../../assets/welcome_images/screen5-primitives.svg";
+import screen5PrimitivesOverlayLeftSvg from "../../../assets/welcome_images/screen5-primitives-overlay-left.svg";
+import screen5PrimitivesOverlayRightSvg from "../../../assets/welcome_images/screen5-primitives-overlay-right.svg";
+import screen5PrimitivesOverlayTopSvg from "../../../assets/welcome_images/screen5-primitives-overlay-top.svg";
 
 const WelcomeTourPage: FC = () => {
    const { setAsShowed } = useWelcomeShowed();
@@ -60,12 +66,7 @@ const WelcomeTourPage: FC = () => {
             </View>
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
-                  <GraphSvg2
-                     lineColor={topColor}
-                     circleColor={topColor}
-                     filled={false}
-                     style={styles.logoSvg}
-                  />
+                  <Svg src={screen2HeartSvg} />
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
@@ -92,7 +93,7 @@ const WelcomeTourPage: FC = () => {
             </View>
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
-                  <LogoSvg color={topColor} style={styles.logoSvg} />
+                  <Svg src={screen4PoolSvg} />
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
@@ -106,7 +107,22 @@ const WelcomeTourPage: FC = () => {
             </View>
             <View style={styles.mainContainer}>
                <View style={styles.logoContainer}>
-                  <Icon name={"account-multiple-plus"} color={topColor} size={iconSize} />
+                  <Svg src={screen5PrimitivesSvg} width={"85%"} />
+                  <Svg
+                     src={screen5PrimitivesOverlayLeftSvg}
+                     style={{ position: "absolute", left: -15 }}
+                     width={"40%"}
+                  />
+                  <Svg
+                     src={screen5PrimitivesOverlayRightSvg}
+                     style={{ position: "absolute", right: -15, top: 10 }}
+                     width={"40%"}
+                  />
+                  <Svg
+                     src={screen5PrimitivesOverlayTopSvg}
+                     style={{ position: "absolute", top: 20 }}
+                     height={"25%"}
+                  />
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>

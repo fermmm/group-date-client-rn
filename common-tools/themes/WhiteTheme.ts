@@ -1,5 +1,6 @@
 import color from "color";
-import { montserratForPaper, montserrat } from "./fonts/montserrat";
+// import { montserratForPaper, montserrat } from "./fonts/montserrat";
+import { polly, pollyForPaper } from "./fonts/polly";
 
 export default {
    dark: false,
@@ -54,8 +55,8 @@ export default {
       "#a2ff00",
       "#0c00ff"
    ],
-   font: montserrat,
-   fonts: montserratForPaper,
+   font: polly,
+   fonts: pollyForPaper,
    backgroundImage: require("../../assets/backgroundLight4.png"),
    backgroundImage2: require("../../assets/backgroundLight4_vertical.png"),
    backgroundForPictures: require("../../assets/backgroundSuperLight.png"),
