@@ -10,6 +10,9 @@ import {
 import { usePermission } from "../permissions/askForPermissions";
 import { LocalStorageKey } from "../../strings/LocalStorageKey";
 import { removeDigitsFromNumber } from "../../math/math-tools";
+import { tryToGetErrorMessage } from "../../../api/tools/httpRequest";
+import { tryToStringifyObject } from "../../debug-tools/tryToStringifyObject";
+import { showAddressDisabledDialog } from "./dialogAddressDisabled/dialogAddressDisabled";
 
 /**
  * Gets geolocation data, asks for permissions Permissions.LOCATION. If the geolocation
@@ -19,7 +22,7 @@ import { removeDigitsFromNumber } from "../../math/math-tools";
  * To change dialog texts use the settings parameter.
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
-export function useGeolocation(settings?: GetGeolocationParams) {
+export function useGeolocation(settings?: GetGeolocationParams): UseGeolocation {
    const permissionGranted = usePermission(
       {
          getter: () => Location.getForegroundPermissionsAsync(),
@@ -27,18 +30,27 @@ export function useGeolocation(settings?: GetGeolocationParams) {
       },
       { enabled: settings?.enabled ?? true, permissionName: i18n.t("location") }
    );
-   const coords = useGeolocationCoords({ permissionGranted, settings });
-   const address = useAddress({ permissionGranted, coords, settings });
+
+   const { coords, isLoading: coordsLoading } = useGeolocationCoords({
+      permissionGranted,
+      settings
+   });
+
+   const { address, isLoading: addressIsLoading } = useAddress({
+      permissionGranted,
+      coords,
+      settings
+   });
 
    return useMemo(
       () => ({
-         isLoading: coords == null || address == null,
+         isLoading: coordsLoading || addressIsLoading,
          geolocation: {
             coords,
             address
          }
       }),
-      [coords, address]
+      [coords, address, coordsLoading, addressIsLoading]
    );
 }
 
@@ -52,20 +64,33 @@ function useGeolocationCoords(params: {
 }) {
    const { permissionGranted, settings } = params;
 
-   const { value: storedCoords, setValue: setStoredCoords } = useLocalStorage<LocationCoords>(
-      LocalStorageKey.GeolocationCoords
-   );
+   const {
+      value: storedCoords,
+      setValue: setStoredCoords,
+      isLoading: localStorageIsLoading
+   } = useLocalStorage<LocationCoords>(LocalStorageKey.GeolocationCoords);
 
-   const { data: coords, error } = useCache(
+   const {
+      data: coords,
+      error,
+      isLoading
+   } = useCache(
       "_geolocationPos_",
-      () => getGeolocationPosition({ ...settings }),
+      () =>
+         getGeolocationPosition({
+            ...settings,
+            errorDialogSettings: { cancelable: storedCoords != null }
+         }),
       {
-         enabled: permissionGranted === true,
+         enabled: permissionGranted === true && !localStorageIsLoading,
          onSuccess: coords => setStoredCoords(coords)
       }
    );
 
-   return error == null ? coords : storedCoords;
+   return {
+      isLoading: isLoading || localStorageIsLoading,
+      coords: error == null ? coords : storedCoords
+   };
 }
 
 /**
@@ -99,20 +124,24 @@ function useAddress(params: {
    const shouldRequestAddress =
       (locationChanged || storedGeolocation?.address == null) && requirementsOk;
 
-   const { data: requestedAddress } = useCache(
-      "_geolocationAddress_",
-      () =>
-         getGeolocationAddress(coords, {
-            ...settings,
-            errorDialogSettings: { cancelable: storedGeolocation != null }
-         }),
-      {
-         enabled: shouldRequestAddress,
-         onSuccess: address => setStoredGeolocation({ coords, address })
-      }
-   );
+   const {
+      data: requestedAddress,
+      error,
+      isLoading: requesterIsLoading
+   } = useCache("_geolocationAddress_", () => getGeolocationAddress(coords, settings), {
+      enabled: shouldRequestAddress,
+      onSuccess: address => setStoredGeolocation({ coords, address }),
+      showAlertOnError: false
+   });
 
-   return shouldRequestAddress ? requestedAddress : storedGeolocation?.address;
+   return {
+      isLoading: requesterIsLoading || loadingStoredGeolocation,
+      address: shouldRequestAddress
+         ? error == null
+            ? requestedAddress
+            : storedGeolocation?.address
+         : storedGeolocation?.address
+   };
 }
 
 /**
@@ -125,14 +154,11 @@ function useAddress(params: {
 export async function getGeolocationPosition(
    settings?: GetGeolocationParams
 ): Promise<LocationCoords> {
-   if (settings == null) {
-      settings = {};
-   }
-
-   settings.allowContinueWithGeolocationDisabled =
-      settings.allowContinueWithGeolocationDisabled ?? false;
-   settings.errorDialogSettings = settings.errorDialogSettings ?? {};
-   settings.removePrecisionInCoordinates = settings.removePrecisionInCoordinates ?? true;
+   const {
+      allowContinueWithGeolocationDisabled = false,
+      errorDialogSettings = {},
+      removePrecisionInCoordinates = true
+   } = settings ?? {};
 
    let result: LocationCoords = null;
 
@@ -153,7 +179,7 @@ export async function getGeolocationPosition(
       }
       result = { ...position.coords };
 
-      if (settings.removePrecisionInCoordinates) {
+      if (removePrecisionInCoordinates) {
          result.latitude = removeDigitsFromNumber(result.latitude, {
             digitsToKeepInDecimalPart: 2
          });
@@ -165,10 +191,17 @@ export async function getGeolocationPosition(
       return Promise.resolve(result);
    } catch (error) {
       console.error(error);
-      if (settings.allowContinueWithGeolocationDisabled) {
+      if (allowContinueWithGeolocationDisabled) {
          return Promise.resolve(null);
       }
-      const retry = await showLocationDisabledDialog(settings.errorDialogSettings);
+
+      const retry = await showLocationDisabledDialog({
+         ...errorDialogSettings,
+         errorDetails: `${
+            errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""
+         }getGeolocationPosition\n${tryToGetErrorMessage(error)}`
+      });
+
       if (retry) {
          return getGeolocationPosition(settings);
       } else {
@@ -182,39 +215,57 @@ export async function getGeolocationPosition(
  * is disabled for other reason (airplane mode or something like that) shows a error dialog requesting the user
  * to fix the problem by disabling airplane mode or checking what's wrong.
  * To change dialog texts use the settings parameter.
+ * For some locations this function demonstrated to be not reliable, the app should be able to continue without
+ * the information returned here.
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 export async function getGeolocationAddress(
    coords: LocationCoords,
    settings?: GetGeolocationParams
 ): Promise<Location.LocationGeocodedAddress> {
-   if (settings == null) {
-      settings = {};
-   }
-
-   settings.allowContinueWithGeolocationDisabled =
-      settings.allowContinueWithGeolocationDisabled ?? false;
-   settings.errorDialogSettings = settings.errorDialogSettings ?? {};
+   const { allowContinueWithGeolocationDisabled = false, errorDialogSettings = {} } =
+      settings ?? {};
 
    try {
-      // Sadly reverseGeocodeAsync() requires full Location permissions:
-      const reverseGeocoding = await Location.reverseGeocodeAsync(coords);
+      let reverseGeocoding: Location.LocationGeocodedAddress[];
+
+      try {
+         // Sadly reverseGeocodeAsync() requires full accurate Location permissions on Android
+         reverseGeocoding = await Location.reverseGeocodeAsync(coords);
+      } catch (e) {
+         throw new Error("Location.reverseGeocodeAsync failed:\n" + tryToGetErrorMessage(e));
+      }
+
       let result: Location.LocationGeocodedAddress = null;
-      if (reverseGeocoding != null && reverseGeocoding.length > 0) {
+      if (
+         reverseGeocoding != null &&
+         Array.isArray(reverseGeocoding) &&
+         reverseGeocoding.length > 0
+      ) {
          result = reverseGeocoding[0];
       } else {
          throw new Error(
-            "Location service not available, try again later. expo-location function reverseGeocodeAsync() returned null or invalid"
+            "Location.reverseGeocodeAsync returned unexpected response:\n" +
+               tryToStringifyObject(reverseGeocoding)
          );
       }
 
       return Promise.resolve(result);
    } catch (error) {
       console.error(error);
-      if (settings.allowContinueWithGeolocationDisabled) {
+
+      if (allowContinueWithGeolocationDisabled) {
          return Promise.resolve(null);
       }
-      const retry = await showLocationDisabledDialog(settings.errorDialogSettings);
+
+      const retry = await showAddressDisabledDialog({
+         ...errorDialogSettings,
+         errorDetails: `${
+            errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""
+         }getGeolocationAddress\n${tryToStringifyObject(coords)}\n${tryToGetErrorMessage(error)}`,
+         cancelable: true // This is always cancellable since we should be able to continue without this info, an input where the user selects the country or city can be implemented.
+      });
+
       if (retry) {
          return getGeolocationAddress(coords, settings);
       } else {
@@ -229,11 +280,11 @@ export interface GetGeolocationParams {
     */
    enabled?: boolean;
    /**
-    * Default = false. If false shows a dialog asking the user to enable geolocation.
+    * Default = false. If false shows a dialog asking the user to enable geolocation and it does not allow the user to continue using the app until the geolocation is retrieved.
     */
    allowContinueWithGeolocationDisabled?: boolean;
    /**
-    * Default = {}. Texts to show in the location not available error dialog, if this is not set then english generic texts are used.
+    * Default = {}. Texts to show in the location not available error dialog, if this is not set then translated generic texts are used.
     */
    errorDialogSettings?: DisabledLocationDialogSettings;
    /**
@@ -250,4 +301,12 @@ export interface LocationData {
 export interface LocationCoords {
    latitude: number;
    longitude: number;
+}
+
+export interface UseGeolocation {
+   isLoading: boolean;
+   geolocation: {
+      coords: LocationCoords;
+      address?: Partial<Location.LocationGeocodedAddress>;
+   };
 }

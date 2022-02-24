@@ -4,12 +4,14 @@ import i18n from "i18n-js";
 export async function showLocationDisabledDialog(
    dialogSettings: DisabledLocationDialogSettings = {}
 ): Promise<boolean> {
-   dialogSettings.dialogTitle = dialogSettings.dialogTitle || i18n.t("Error");
-   dialogSettings.tryAgainButtonText = dialogSettings.tryAgainButtonText || i18n.t("Try again");
-   dialogSettings.useLastOneButtonText =
-      dialogSettings.useLastOneButtonText || i18n.t("Use last one");
-   dialogSettings.dialogText = dialogSettings.dialogText || i18n.t("Location is not available");
-   const cancelable = dialogSettings?.cancelable ?? true;
+   const {
+      dialogTitle = i18n.t("Error"),
+      tryAgainButtonText = i18n.t("Try again"),
+      useLastOneButtonText = i18n.t("Use last one"),
+      dialogText = i18n.t("Location is not available"),
+      cancelable = true,
+      errorDetails
+   } = dialogSettings ?? {};
 
    let promiseResolve: (retry: boolean) => void = null;
    const resultPromise: Promise<boolean> = new Promise(resolve => {
@@ -17,14 +19,14 @@ export async function showLocationDisabledDialog(
    });
 
    Alert.alert(
-      dialogSettings.dialogTitle,
-      dialogSettings.dialogText,
+      dialogTitle,
+      `${dialogText}${errorDetails ? `\n\n${i18n.t("Error details")}:\n${errorDetails}` : ""}`,
       cancelable
          ? [
-              { text: dialogSettings.tryAgainButtonText, onPress: () => promiseResolve(true) },
-              { text: dialogSettings.useLastOneButtonText, onPress: () => promiseResolve(false) }
+              { text: tryAgainButtonText, onPress: () => promiseResolve(true) },
+              { text: useLastOneButtonText, onPress: () => promiseResolve(false) }
            ]
-         : [{ text: dialogSettings.tryAgainButtonText, onPress: () => promiseResolve(true) }],
+         : [{ text: tryAgainButtonText, onPress: () => promiseResolve(true) }],
       { cancelable, onDismiss: cancelable ? () => promiseResolve(false) : null }
    );
 
@@ -37,4 +39,5 @@ export interface DisabledLocationDialogSettings {
    useLastOneButtonText?: string;
    dialogText?: string;
    cancelable?: boolean;
+   errorDetails?: string;
 }

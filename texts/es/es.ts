@@ -5,14 +5,19 @@ export const es: { [key: string]: string } = {
    OK: "OK",
    Cancel: "Cancelar",
    Close: "Cerrar",
+   Continue: "Continuar",
    "I fixed it": "Ya lo arreglé",
    "Try again": "Reintentar",
    notifications: "notificaciones",
    location: "ubicación",
+   "Open location settings": "Abrir opciones de localización",
    "Location is not available":
-      "La localización del dispositivo no está disponible, fijate si hay algo desactivado o estás en modo avión",
+      "La localización GPS no está disponible, fijate si está desactivada o estás en modo avión",
+   "Address is not available":
+      "Parte de tu ubicación no se puede leer, recomendamos fijarte que la localización esté activada pero puedes continuar, en teoría debería funcionar bien igualmente",
    "Open app settings": "Ir a la configuración de la app",
    "Exit app": "Salir",
+   "Error details": "Detalles del error",
    "The app only works if you accept":
       "La app tiene sentido y funciona si aceptas el permiso que pedimos",
    "Touch on Permissions": 'Toca en "Permisos"',
