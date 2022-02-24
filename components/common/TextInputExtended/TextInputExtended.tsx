@@ -45,7 +45,6 @@ export interface TextInputExtendedProps {
    value: string;
    secureTextEntry?: boolean;
    returnKeyType?: ReturnKeyTypeOptions;
-   autoCapitalize?: "none" | "sentences" | "words" | "characters";
    autoCompleteType?:
       | "name"
       | "username"
@@ -113,7 +112,6 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       inputRef,
       secureTextEntry,
       returnKeyType,
-      autoCapitalize,
       autoCompleteType,
       textContentType
    } = props;
@@ -176,6 +174,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                      ref={inputRefInternal}
                      secureTextEntry={secureTextEntry}
                      showSoftInputOnFocus={fullScreenTyping ? false : true}
+                     autoCapitalize={"none"}
                      render={innerProps => (
                         <NativeTextInput
                            {...innerProps}
@@ -228,7 +227,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                         ref={fullScreenInputRef}
                         secureTextEntry={secureTextEntry}
                         returnKeyType={returnKeyType}
-                        autoCapitalize={autoCapitalize}
+                        autoCapitalize={"none"}
                         autoCompleteType={autoCompleteType}
                         textContentType={textContentType}
                      />
