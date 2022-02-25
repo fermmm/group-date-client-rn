@@ -33,6 +33,7 @@ import RemoveSeenWizardPage from "./components/pages/RemoveSeenWizardPage/Remove
 import GlobalModalsProvider from "./components/common/GlobalModalsProvider/GlobalModalsProvider";
 import KeyboardAvoidingViewExtended from "./components/common/KeyboardAvoidingViewExtended/KeyboardAvoidingViewExtended";
 import { loadFontPolly } from "./common-tools/font-loaders/loadFontPolly";
+import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -53,8 +54,8 @@ const App: FC = () => {
 
    useEffect(() => {
       (async () => {
-         // await loadFontMontserrat();
-         await loadFontPolly();
+         await loadFontMontserrat();
+         // await loadFontPolly();
          setWelcomeShowed(await welcomeWasShowed());
          setResourcesLoaded(true);
       })();

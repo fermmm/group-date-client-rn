@@ -29,7 +29,7 @@ const polly: FontExt = Platform.select({
    }
 });
 
-const pollyForPaper: FontExt = configureFonts({
+const paperFonts = {
    default: {
       regular: {
          fontFamily: "PollyRounded-Regular"
@@ -43,7 +43,14 @@ const pollyForPaper: FontExt = configureFonts({
       thin: {
          fontFamily: "PollyRounded-Thin"
       }
-   }
-}) as unknown as FontExt;
+   },
+   ios: null,
+   android: null
+};
+
+paperFonts.ios = paperFonts.ios ?? paperFonts.default;
+paperFonts.android = paperFonts.android ?? paperFonts.default;
+
+const pollyForPaper: FontExt = configureFonts(paperFonts) as unknown as FontExt;
 
 export { polly, pollyForPaper };

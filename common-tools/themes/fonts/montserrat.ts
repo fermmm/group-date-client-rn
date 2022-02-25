@@ -29,7 +29,7 @@ const montserrat: FontExt = Platform.select({
    }
 });
 
-const montserratForPaper: FontExt = (configureFonts({
+const paperFonts = {
    default: {
       regular: {
          fontFamily: "Montserrat-Regular"
@@ -43,7 +43,14 @@ const montserratForPaper: FontExt = (configureFonts({
       thin: {
          fontFamily: "Montserrat-Thin"
       }
-   }
-}) as unknown) as FontExt;
+   },
+   ios: null,
+   android: null
+};
+
+paperFonts.ios = paperFonts.ios ?? paperFonts.default;
+paperFonts.android = paperFonts.android ?? paperFonts.default;
+
+const montserratForPaper: FontExt = configureFonts(paperFonts) as unknown as FontExt;
 
 export { montserrat, montserratForPaper };
