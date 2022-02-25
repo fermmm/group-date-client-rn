@@ -1,4 +1,4 @@
-import React, { useState, FC, useCallback, useRef, useEffect, Ref } from "react";
+import React, { useState, FC, useCallback, useRef, useEffect, Ref, MutableRefObject } from "react";
 import {
    StyleSheet,
    View,
@@ -21,6 +21,7 @@ import TitleMediumText from "../TitleMediumText/TitleMediumText";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import KeyboardAvoidingViewExtended from "../KeyboardAvoidingViewExtended/KeyboardAvoidingViewExtended";
+import { useEffectExceptOnMount } from "../../../common-tools/common-hooks/useEffectExceptoOnMount";
 
 export interface TextInputExtendedProps {
    title?: string;
@@ -36,7 +37,7 @@ export interface TextInputExtendedProps {
    mode?: "flat" | "outlined";
    small?: boolean;
    keyboardType?: KeyboardTypeOptions;
-   inputRef?: Ref<NativeTextInput>;
+   inputRef?: MutableRefObject<NativeTextInput>;
    // tslint:disable-next-line: ban-types
    onChangeText?: ((text: string) => void) & Function;
    iconButton?: string;
@@ -44,7 +45,6 @@ export interface TextInputExtendedProps {
    value: string;
    secureTextEntry?: boolean;
    returnKeyType?: ReturnKeyTypeOptions;
-   autoCapitalize?: "none" | "sentences" | "words" | "characters";
    autoCompleteType?:
       | "name"
       | "username"
@@ -112,14 +112,15 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       inputRef,
       secureTextEntry,
       returnKeyType,
-      autoCapitalize,
       autoCompleteType,
       textContentType
    } = props;
    const theme = useTheme();
    const [fullScreenMode, setFullScreenMode] = useState(false);
    const [canShowError, setCanShowError] = useState(false);
+   const inputRefInternal = useRef<NativeTextInput>(null);
    const fullScreenInputRef = useRef<NativeTextInput>();
+   const finalInputRef = inputRef ?? inputRefInternal;
 
    const disableEditMode = useCallback(() => {
       if (fullScreenMode) {
@@ -129,10 +130,21 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
    }, [fullScreenMode]);
 
    useEffect(() => {
-      Keyboard.addListener("keyboardDidHide", disableEditMode);
+      const subscription = Keyboard.addListener("keyboardDidHide", disableEditMode);
       return () => {
-         Keyboard.removeListener("keyboardDidHide", disableEditMode);
+         subscription.remove();
       };
+   }, [fullScreenMode]);
+
+   /*
+    *  If touch keyboard is disabled (ios reviewers sometimes have it disabled) the user needs
+    *  to have the input still on focus so a physical keyboard can be used. In that case the
+    *  full screen input mode does not work because a touch keyboard close signal is received.
+    */
+   useEffectExceptOnMount(() => {
+      if (!fullScreenMode) {
+         finalInputRef?.current?.focus();
+      }
    }, [fullScreenMode]);
 
    const handleInputClick = () => {
@@ -159,9 +171,10 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                      onChangeText={onChangeText}
                      style={[styles.input, style]}
                      multiline={multiline}
-                     ref={inputRef}
+                     ref={inputRefInternal}
                      secureTextEntry={secureTextEntry}
-                     disabled={fullScreenTyping}
+                     showSoftInputOnFocus={fullScreenTyping ? false : true}
+                     autoCapitalize={"none"}
                      render={innerProps => (
                         <NativeTextInput
                            {...innerProps}
@@ -214,7 +227,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
                         ref={fullScreenInputRef}
                         secureTextEntry={secureTextEntry}
                         returnKeyType={returnKeyType}
-                        autoCapitalize={autoCapitalize}
+                        autoCapitalize={"none"}
                         autoCompleteType={autoCompleteType}
                         textContentType={textContentType}
                      />

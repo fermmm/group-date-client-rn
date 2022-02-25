@@ -52,7 +52,6 @@ const EmailStep: FC<PropsEmailStep> = props => {
             mode="outlined"
             value={email}
             onChangeText={handleInputChange}
-            autoCapitalize="none"
             autoCompleteType="email"
             textContentType="emailAddress"
             keyboardType="email-address"
