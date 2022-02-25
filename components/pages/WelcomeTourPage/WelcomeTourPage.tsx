@@ -52,7 +52,7 @@ const WelcomeTourPage: FC = () => {
             swipeEnabled
          >
             <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
+               <View style={styles.imageContainer}>
                   <Svg src={screen1PortalSvg} />
                </View>
                <View style={styles.textContainer}>
@@ -65,7 +65,7 @@ const WelcomeTourPage: FC = () => {
                </View>
             </View>
             <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
+               <View style={styles.imageContainer}>
                   <Svg src={screen2HeartSvg} />
                </View>
                <View style={styles.textContainer}>
@@ -77,7 +77,7 @@ const WelcomeTourPage: FC = () => {
                </View>
             </View>
             <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
+               <View style={styles.imageContainer}>
                   <Text style={[styles.bigText, { color: topColor }]}>¡Hetero Friendly!</Text>
                </View>
                <View style={styles.textContainer}>
@@ -92,7 +92,7 @@ const WelcomeTourPage: FC = () => {
                </View>
             </View>
             <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
+               <View style={styles.imageContainer}>
                   <Svg src={screen4PoolSvg} />
                </View>
                <View style={styles.textContainer}>
@@ -106,7 +106,7 @@ const WelcomeTourPage: FC = () => {
                </View>
             </View>
             <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
+               <View style={styles.imageContainer}>
                   <Svg src={screen5PrimitivesSvg} width={"85%"} />
                   <Svg
                      src={screen5PrimitivesOverlayLeftSvg}
@@ -150,9 +150,10 @@ const styles: Styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "center"
    },
-   logoContainer: {
-      width: "100%",
-      height: "50%",
+   imageContainer: {
+      width: "85%",
+      height: "60%",
+      paddingTop: "20%",
       alignItems: "center",
       justifyContent: "center"
    },
