@@ -1,4 +1,4 @@
-import { useGeolocation } from "./../../../../common-tools/device-native-api/geolocation/getGeolocation";
+import { useGeolocation } from "../../../../common-tools/device-native-api/geolocation/useGeolocation";
 import { useEffect, useState } from "react";
 import { getExpoPushToken } from "../../../../common-tools/device-native-api/notifications/getPermissionTokenForNotifications";
 import { sendUserProps, useUserProfileStatus } from "../../../../api/server/user";

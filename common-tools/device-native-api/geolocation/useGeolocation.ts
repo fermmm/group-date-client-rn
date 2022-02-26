@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useLocalStorage } from "./../storage/useLocalStorage";
+import { useLocalStorage } from "../storage/useLocalStorage";
 import { useCache } from "../../../api/tools/useCache/useCache";
 import * as Location from "expo-location";
 import i18n from "i18n-js";
@@ -152,9 +152,7 @@ function useAddress(params: {
  * To change dialog texts use the settings parameter.
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
-export async function getGeolocationPosition(
-   settings?: GetGeolocationParams
-): Promise<LocationCoords> {
+async function getGeolocationPosition(settings?: GetGeolocationParams): Promise<LocationCoords> {
    const {
       allowContinueWithGeolocationDisabled = false,
       errorDialogSettings = {},
@@ -229,7 +227,7 @@ export async function getGeolocationPosition(
  * the information returned here.
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
-export async function getGeolocationAddress(
+async function getGeolocationAddress(
    coords: LocationCoords,
    settings?: GetGeolocationParams
 ): Promise<Location.LocationGeocodedAddress> {
