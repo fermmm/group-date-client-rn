@@ -11,6 +11,8 @@ export const es: { [key: string]: string } = {
    notifications: "notificaciones",
    location: "ubicación",
    "Open location settings": "Abrir opciones de localización",
+   "Continue without": "Continuar sin",
+   "Continue anyway": "Continuar igualmente",
    "Location is not available":
       "La localización GPS no está disponible, fijate si está desactivada o estás en modo avión",
    "Address is not available":

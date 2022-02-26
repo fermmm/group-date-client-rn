@@ -13,6 +13,8 @@ import { removeDigitsFromNumber } from "../../math/math-tools";
 import { tryToGetErrorMessage } from "../../../api/tools/httpRequest";
 import { tryToStringifyObject } from "../../debug-tools/tryToStringifyObject";
 import { showAddressDisabledDialog } from "./dialogAddressDisabled/dialogAddressDisabled";
+import { Platform } from "react-native";
+import { useUserProfileStatus } from "../../../api/server/user";
 
 /**
  * Gets geolocation data, asks for permissions Permissions.LOCATION. If the geolocation
@@ -20,26 +22,49 @@ import { showAddressDisabledDialog } from "./dialogAddressDisabled/dialogAddress
  * then it shows a error dialog requesting the user to fix the problem by disabling airplane
  * mode or checking what's wrong.
  * To change dialog texts use the settings parameter.
+ *
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 export function useGeolocation(settings?: GetGeolocationParams): UseGeolocation {
+   const allowContinueWithGeolocationDisabled =
+      Platform.OS === "ios" ? true : settings?.allowContinueWithGeolocationDisabled ?? false;
+
    const permissionGranted = usePermission(
       {
          getter: () => Location.getForegroundPermissionsAsync(),
          requester: () => Location.requestForegroundPermissionsAsync()
       },
-      { enabled: settings?.enabled ?? true, permissionName: i18n.t("location") }
+      {
+         enabled: settings?.enabled ?? true,
+         allowContinueWithoutAccepting: allowContinueWithGeolocationDisabled,
+         insistOnAcceptingOnce: true,
+         permissionName: i18n.t("location")
+      }
    );
 
+   const { data: profileStatusData } = useUserProfileStatus();
+
    const { coords, isLoading: coordsLoading } = useGeolocationCoords({
-      permissionGranted,
-      settings
+      enabled: permissionGranted != null && profileStatusData != null,
+      settings: {
+         ...settings,
+         permissionGranted,
+         allowContinueWithGeolocationDisabled,
+         backupCoords:
+            profileStatusData?.user?.locationLat != null &&
+            profileStatusData?.user?.locationLon != null
+               ? {
+                    latitude: profileStatusData.user.locationLat,
+                    longitude: profileStatusData.user.locationLon
+                 }
+               : undefined
+      }
    });
 
    const { address, isLoading: addressIsLoading } = useAddress({
       permissionGranted,
       coords,
-      settings
+      settings: { ...settings, allowContinueWithGeolocationDisabled }
    });
 
    return useMemo(
@@ -55,42 +80,18 @@ export function useGeolocation(settings?: GetGeolocationParams): UseGeolocation 
 }
 
 /**
- * Requests the geolocation coords and caches them during all the session.
- * This requires Permissions.LOCATION to be granted, when granted you pass permissionGranted as true.
+ * This just converts getGeolocationPosition() into a hook and caches the result.
  */
-function useGeolocationCoords(params: {
-   permissionGranted: boolean;
-   settings?: GetGeolocationParams;
-}) {
-   const { permissionGranted, settings } = params;
+function useGeolocationCoords(params: { settings: GetGeolocationParams; enabled?: boolean }) {
+   const { settings, enabled = true } = params;
 
-   const {
-      value: storedCoords,
-      setValue: setStoredCoords,
-      isLoading: localStorageIsLoading
-   } = useLocalStorage<LocationCoords>(LocalStorageKey.GeolocationCoords);
-
-   const {
-      data: coords,
-      error,
-      isLoading
-   } = useCache(
+   const { data: coords, isLoading } = useCache(
       "_geolocationPos_",
-      () =>
-         getGeolocationPosition({
-            ...settings,
-            errorDialogSettings: { cancelable: storedCoords != null }
-         }),
-      {
-         enabled: permissionGranted === true && !localStorageIsLoading,
-         onSuccess: coords => setStoredCoords(coords)
-      }
+      () => getGeolocationPosition(settings),
+      { enabled }
    );
 
-   return {
-      isLoading: isLoading || localStorageIsLoading,
-      coords: error == null ? coords : storedCoords
-   };
+   return { isLoading, coords };
 }
 
 /**
@@ -157,7 +158,9 @@ export async function getGeolocationPosition(
    const {
       allowContinueWithGeolocationDisabled = false,
       errorDialogSettings = {},
-      removePrecisionInCoordinates = true
+      removePrecisionInCoordinates = true,
+      permissionGranted,
+      backupCoords
    } = settings ?? {};
 
    let result: LocationCoords = null;
@@ -191,21 +194,28 @@ export async function getGeolocationPosition(
       return Promise.resolve(result);
    } catch (error) {
       console.error(error);
-      if (allowContinueWithGeolocationDisabled) {
-         return Promise.resolve(null);
-      }
 
-      const retry = await showLocationDisabledDialog({
-         ...errorDialogSettings,
-         errorDetails: `${
-            errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""
-         }getGeolocationPosition\n${tryToGetErrorMessage(error)}`
-      });
+      let retry: boolean = false;
+
+      // If permissions are granted then we have an error to show to the user, otherwise we know what is happening, no error dialog needed.
+      if (permissionGranted) {
+         retry = await showLocationDisabledDialog({
+            ...errorDialogSettings,
+            cancelable: allowContinueWithGeolocationDisabled,
+            errorDetails: `${
+               errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""
+            }getGeolocationPosition\n${tryToGetErrorMessage(error)}`
+         });
+      }
 
       if (retry) {
          return getGeolocationPosition(settings);
       } else {
-         throw new Error(error);
+         if (allowContinueWithGeolocationDisabled) {
+            return Promise.resolve(backupCoords ?? { latitude: 2.0, longitude: -157.39 });
+         } else {
+            throw new Error(error);
+         }
       }
    }
 }
@@ -223,8 +233,11 @@ export async function getGeolocationAddress(
    coords: LocationCoords,
    settings?: GetGeolocationParams
 ): Promise<Location.LocationGeocodedAddress> {
-   const { allowContinueWithGeolocationDisabled = false, errorDialogSettings = {} } =
-      settings ?? {};
+   const {
+      allowContinueWithGeolocationDisabled = false,
+      errorDialogSettings = {},
+      permissionGranted
+   } = settings ?? {};
 
    try {
       let reverseGeocoding: Location.LocationGeocodedAddress[];
@@ -254,7 +267,7 @@ export async function getGeolocationAddress(
    } catch (error) {
       console.error(error);
 
-      if (allowContinueWithGeolocationDisabled) {
+      if (permissionGranted === false && allowContinueWithGeolocationDisabled) {
          return Promise.resolve(null);
       }
 
@@ -291,6 +304,14 @@ export interface GetGeolocationParams {
     * Default = true. Removes latitude and longitude number precision to 2 decimal places in order to protect user privacy.
     */
    removePrecisionInCoordinates?: boolean;
+   /**
+    * If the user does not prive location permission then cords on this prop will be used, if not provided in this prop then an island in the middle of nowhere will be the location.
+    */
+   backupCoords?: LocationCoords;
+   /**
+    * The result of requesting location permissions.
+    */
+   permissionGranted?: boolean;
 }
 
 export interface LocationData {

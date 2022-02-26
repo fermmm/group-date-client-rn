@@ -1,4 +1,4 @@
-import { Alert, BackHandler, Platform } from "react-native";
+import { Alert, AlertButton, BackHandler, Platform } from "react-native";
 import { ActivityAction } from "expo-intent-launcher";
 import i18n from "i18n-js";
 import { openDeviceAction } from "../../device-action/openDeviceAction";
@@ -9,11 +9,11 @@ export async function showRejectedPermissionsDialog(
    const {
       dialogTitle = i18n.t("Error"),
       openSettingsButtonText = i18n.t("Open app settings"),
-      exitAppButtonText = i18n.t("Exit app"),
       dialogText = i18n.t("The app only works if you accept"),
       instructionsToastText = i18n.t("Touch on Permissions"),
       retryButtonText = i18n.t("I fixed it"),
-      permissionName
+      permissionName,
+      showContinueAnywayButton
    } = dialogSettings;
 
    let promiseResolve: () => void = null;
@@ -21,32 +21,42 @@ export async function showRejectedPermissionsDialog(
       promiseResolve = resolve;
    });
 
+   const buttons: AlertButton[] = [
+      {
+         text: openSettingsButtonText,
+         onPress: async () => {
+            await openDeviceAction(
+               ActivityAction.APPLICATION_DETAILS_SETTINGS,
+               "app-settings:",
+               instructionsToastText
+            );
+            promiseResolve();
+         }
+      },
+      {
+         text: retryButtonText,
+         onPress: () => {
+            promiseResolve();
+         }
+      }
+   ];
+
+   if (showContinueAnywayButton) {
+      buttons.push({
+         text: permissionName
+            ? `${i18n.t("Continue without")} ${permissionName}`
+            : i18n.t("Continue anyway"),
+         onPress: () => {
+            promiseResolve();
+         },
+         style: "cancel"
+      });
+   }
+
    Alert.alert(
       dialogTitle,
       `${dialogText}${permissionName ? `: ${permissionName}` : ""}`,
-      [
-         {
-            text: openSettingsButtonText,
-            onPress: async () => {
-               await openDeviceAction(
-                  ActivityAction.APPLICATION_DETAILS_SETTINGS,
-                  "app-settings:",
-                  instructionsToastText
-               );
-               promiseResolve();
-            }
-         },
-         {
-            text: retryButtonText,
-            onPress: () => {
-               promiseResolve();
-            }
-         },
-         Platform.OS === "android" && {
-            text: exitAppButtonText,
-            onPress: () => BackHandler.exitApp()
-         }
-      ],
+      buttons,
       { cancelable: false }
    );
 
@@ -56,9 +66,9 @@ export async function showRejectedPermissionsDialog(
 export interface RejectedDialogSettings {
    dialogTitle?: string;
    openSettingsButtonText?: string;
-   exitAppButtonText?: string;
    dialogText?: string;
    instructionsToastText?: string;
    retryButtonText?: string;
    permissionName?: string;
+   showContinueAnywayButton?: boolean;
 }
