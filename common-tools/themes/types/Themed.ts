@@ -21,6 +21,7 @@ export type ThemeExt = Merge<
          backgroundBottomGradient: string;
          specialBackground1: string;
          specialBackground2: string;
+         specialBackground3: string;
          surface: string;
          accent: string;
          accent2: string;

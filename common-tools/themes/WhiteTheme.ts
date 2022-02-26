@@ -17,6 +17,7 @@ export default {
       backgroundBottomGradient: "#DFE4EC",
       specialBackground1: "#9B63F8",
       specialBackground2: "#809FFC",
+      specialBackground3: "#FFD386",
       surface: "#FFFFFF",
       error: "#FF7A8F",
       text: "#000000",

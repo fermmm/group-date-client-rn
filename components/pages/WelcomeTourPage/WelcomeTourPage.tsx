@@ -21,6 +21,7 @@ import screen5PrimitivesSvg from "../../../assets/welcome_images/screen5-primiti
 import screen5PrimitivesOverlayLeftSvg from "../../../assets/welcome_images/screen5-primitives-overlay-left.svg";
 import screen5PrimitivesOverlayRightSvg from "../../../assets/welcome_images/screen5-primitives-overlay-right.svg";
 import screen5PrimitivesOverlayTopSvg from "../../../assets/welcome_images/screen5-primitives-overlay-top.svg";
+import TitleText from "../../common/TitleText/TitleText";
 
 const WelcomeTourPage: FC = () => {
    const { setAsShowed } = useWelcomeShowed();
@@ -57,22 +58,20 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     GroupDate es la primera app de citas grupales.{"\n"}
-                     <Text style={styles.textBold}>
-                        Se habilita un chat grupal cuando se gustan entre 4 o más.
-                     </Text>
+                     GroupDate es la primera app de citas grupales. Cuando se gustan entre muchxs se
+                     habilita un chat grupal.
                   </Text>
                </View>
             </View>
-            <View style={styles.mainContainer}>
+            <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground3 }]}>
                <View style={styles.imageContainer}>
                   <Svg src={screen2HeartSvg} />
                </View>
                <View style={styles.textContainer}>
+                  <TitleText style={styles.title}>Es para todxs</TitleText>
                   <Text style={styles.text}>
-                     Es para <Text style={styles.textBold}>disfrutar el hecho de ser muchxs</Text>{" "}
-                     en una cita. {"\n"}Una situación que no se da en nuestra cultura contemporánea
-                     pero si antiguamente.
+                     Todas las orientaciones y tipos de vínculos pueden ser parte de una cita
+                     grupal.
                   </Text>
                </View>
             </View>
@@ -82,12 +81,7 @@ const WelcomeTourPage: FC = () => {
                </View>
                <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                     Para que la app forme un grupo{" "}
-                     <Text style={styles.textBold}>
-                        no hace falta que se gusten todxs entre sí al 100%
-                     </Text>
-                     , todas las orientaciones y tipos de vínculos pueden ser parte de una cita
-                     grupal
+                     Todas las orientaciones y tipos de vínculos pueden ser parte de una cita grupal
                   </Text>
                </View>
             </View>
@@ -162,14 +156,27 @@ const styles: Styles = StyleSheet.create({
       height: 100
    },
    textContainer: {
+      width: "100%",
       height: "50%"
+   },
+   title: {
+      textAlign: "center",
+      fontFamily: currentTheme.font.semiBold,
+      textTransform: "uppercase",
+      fontSize: 32,
+      color: currentTheme.colors.textLogin,
+      letterSpacing: 2.4,
+      marginBottom: 40,
+      width: "100%"
    },
    text: {
       textAlign: "center",
-      fontFamily: currentTheme.font.light,
+      fontFamily: currentTheme.font.medium,
       fontSize: 18,
       lineHeight: 25,
-      color: currentTheme.colors.textLogin
+      color: currentTheme.colors.textLogin,
+      paddingLeft: 60,
+      paddingRight: 60
    },
    textBold: {
       textAlign: "center",
