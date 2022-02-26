@@ -32,7 +32,7 @@ export async function showAddressDisabledDialog(
       `${dialogText}${errorDetails ? `\n\n${i18n.t("Error details")}:\n${errorDetails}` : ""}`,
       [
          { text: openSettingsText, onPress: handleOpenSettingsPress },
-         Platform.OS === "ios" && { text: tryAgainButtonText, onPress: () => promiseResolve(true) },
+         { text: tryAgainButtonText, onPress: () => promiseResolve(true) },
          cancelable && { text: continueButtonText, onPress: () => promiseResolve(false) }
       ],
       { cancelable, onDismiss: cancelable ? () => promiseResolve(false) : null }

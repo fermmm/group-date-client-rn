@@ -133,11 +133,9 @@ function useToken(externallyProvidedToken?: string): UseToken {
 
    if (!fetchingNewToken && !attemptedFromDevice) {
       setAttemptedFromDevice(true);
-      console.log("AAA 01");
       // Try to get stored token from previous session
       loadFromDevice(LocalStorageKey.AuthenticationToken, { secure: true })
          .then(tokenFromDevice => {
-            console.log("AAA 02", tokenFromDevice, token);
             setIsLoading(false);
             if (tokenFromDevice == null) {
                return;
@@ -146,7 +144,6 @@ function useToken(externallyProvidedToken?: string): UseToken {
             setToken(tokenFromDevice);
          })
          .catch(error => {
-            console.log("AAA 03");
             setIsLoading(false);
          });
    }

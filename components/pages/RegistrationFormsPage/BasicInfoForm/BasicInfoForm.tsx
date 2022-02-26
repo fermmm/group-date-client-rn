@@ -70,13 +70,7 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
    }, [geolocation]);
 
    const getError = () => {
-      return (
-         getNameError() ||
-         getBirthYearError() ||
-         getCityNameError() ||
-         getHeightError() ||
-         getGeolocationError()
-      );
+      return getNameError() || getBirthYearError() || getCityNameError() || getHeightError();
    };
 
    const getNameError = () => {
@@ -142,18 +136,6 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
    const getHeightError = () => {
       if (height != null && height >= 300) {
          return "Tu altura es demasiado alta para ser la de un ser humano";
-      }
-
-      return null;
-   };
-
-   const getGeolocationError = () => {
-      if (
-         !geolocation?.coords?.latitude ||
-         !geolocation?.coords?.longitude ||
-         !geolocation?.address?.isoCountryCode
-      ) {
-         return "No se puede obtener tu localización, revisa los permisos de la app";
       }
 
       return null;

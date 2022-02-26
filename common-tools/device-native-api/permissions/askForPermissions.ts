@@ -29,7 +29,7 @@ export function usePermission(
          return;
       }
 
-      if (!granted) {
+      if (granted == null) {
          askForPermission(permissionSource, settings).then(nowGranted => {
             if (mounted.current) {
                setGranted(nowGranted);
@@ -62,6 +62,7 @@ export async function askForPermission(
 ): Promise<boolean> {
    const {
       allowContinueWithoutAccepting = false,
+      insistOnAcceptingOnce = false,
       rejectedDialogTexts = {},
       permissionName
    } = settings ?? {};
@@ -73,9 +74,26 @@ export async function askForPermission(
    }
 
    if (result.status !== "granted") {
+      if (insistOnAcceptingOnce && allowContinueWithoutAccepting) {
+         await showRejectedPermissionsDialog({
+            ...rejectedDialogTexts,
+            permissionName,
+            showContinueAnywayButton: true
+         });
+
+         result = await permissionsSource.requester();
+
+         if (result.status !== "granted") {
+            return Promise.resolve(false);
+         } else {
+            return Promise.resolve(true);
+         }
+      }
+
       if (allowContinueWithoutAccepting) {
          return Promise.resolve(false);
       }
+
       await showRejectedPermissionsDialog({ ...rejectedDialogTexts, permissionName });
       return askForPermission(permissionsSource, settings);
    }
@@ -88,6 +106,10 @@ export interface AskPermissionSettings {
     * Default = false. If false shows a dialog asking the user to enable permissions.
     */
    allowContinueWithoutAccepting?: boolean;
+   /**
+    * Default = false. If allowContinueWithoutAccepting is false this prop has no effect, otherwise it shows a dialog to insist to accept the permission once.
+    */
+   insistOnAcceptingOnce?: boolean;
    /**
     * Default = {}. Texts to show in the permissions rejected error dialog, if this is not set then english generic texts are used
     */
