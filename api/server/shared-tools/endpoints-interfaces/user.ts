@@ -51,6 +51,7 @@ export interface User {
    isUnicornHunter?: boolean;
    isUnicornHunterInsisting?: boolean;
    requiredTasks?: RequiredTask[];
+   unwantedUser?: boolean;
 }
 
 export type UserPropsValueTypes = ValueOf<User>;
@@ -190,6 +191,10 @@ export interface ReportUserPostParams extends TokenParameter {
    reportedUserId: string;
    reportType: ReportUserType;
    notes?: string;
+}
+
+export interface BlockOrUnblockUserParams extends TokenParameter {
+   targetUserId: string;
 }
 
 export interface DeleteAccountPostParams extends TokenParameter {}

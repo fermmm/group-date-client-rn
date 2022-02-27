@@ -6,6 +6,7 @@ export const es: { [key: string]: string } = {
    Cancel: "Cancelar",
    Close: "Cerrar",
    Continue: "Continuar",
+   Send: "Enviar",
    "I fixed it": "Ya lo arreglé",
    "Try again": "Reintentar",
    notifications: "notificaciones",
@@ -58,5 +59,20 @@ export const es: { [key: string]: string } = {
    "Non binary": "No binario",
    Other: "Otro",
    Pangender: "Pangénero",
-   "Two Spirit": "Género de los dos espíritus"
+   "Two Spirit": "Género de los dos espíritus",
+   "privacy policy": "política de privacidad",
+   "community guidelines": "normas comunitarias",
+   "terms of use": "términos de uso",
+   and: "y",
+   "If you continue you agree to our": "Al continuar aceptas nuestras",
+   "Report and/or block": "Reportar y/o bloquear",
+   Block: "Bloquear",
+   "There is no photo of the person": "No hay foto de la persona",
+   "The user will be prompted to upload a photo to continue using the app":
+      "Se le pedirá que suba una foto para seguir usando la app",
+   "Unethical profile": "Perfil no ético",
+   "The profile contains unethical elements or violates our community guidelines":
+      "Su perfil contiene elementos no éticos o viola nuestras normas comunitarias",
+   Comments: "Comentarios",
+   optional: "opcional"
 };

@@ -25,7 +25,7 @@ import { analyticsLogUser } from "../../../common-tools/analytics/tools/analytic
 import VersionIndicator from "./VersionIndicator/VersionIndicator";
 import { ViewTouchable } from "../../common/ViewTouchable/ViewTouchable";
 import { useShouldRedirectToRequiredPage } from "../../../common-tools/navigation/useShouldRedirectToRequiredPage";
-import LegalMessage from "./LegalMessage/LegalMessage";
+import LegalLinks from "./LegalLinks/LegalLinks";
 import LoginError from "./LoginError/LoginError";
 
 const LoginPage: FC = () => {
@@ -128,8 +128,8 @@ const LoginPage: FC = () => {
             </View>
             {serverOperating === false && <LoginError error={serverInfoData?.serverMessage} />}
             <AppUpdateMessage serverInfo={serverInfoData} />
+            <LegalLinks visible={showAuthenticationButtons} loginPageMode />
             <AuthenticationButtons show={showAuthenticationButtons} authentication={auth} />
-            <LegalMessage visible={showAuthenticationButtons} />
             {!showAuthenticationButtons && <VersionIndicator />}
          </View>
       </BackgroundArtistic>

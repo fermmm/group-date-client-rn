@@ -12,7 +12,7 @@ export interface LikeDislikeProps {
    onLikePress?: () => void;
    onDislikePress?: () => void;
    onUndoPress?: () => void;
-   onMorePress?: () => void;
+   onFlagPress?: () => void;
 }
 
 const LikeDislikeButtons: FC<LikeDislikeProps> = props => {
@@ -47,10 +47,10 @@ const LikeDislikeButtons: FC<LikeDislikeProps> = props => {
             />
          )}
          <FAB
-            style={styles.moreButton}
+            style={styles.flagButton}
             color={color(colors.background).darken(0.4).string()}
-            icon="dots-horizontal"
-            onPress={props.onMorePress}
+            icon="flag"
+            onPress={props.onFlagPress}
          />
       </>
    );
@@ -82,7 +82,7 @@ const styles: Styles = StyleSheet.create({
       elevation: 0,
       shadowOpacity: 0
    },
-   moreButton: {
+   flagButton: {
       position: "absolute",
       right: 60,
       bottom: 22,

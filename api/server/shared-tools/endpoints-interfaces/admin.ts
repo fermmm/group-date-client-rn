@@ -35,6 +35,10 @@ export interface AdminLogGetParams extends AdminProtectionParams {
    fileName: string;
 }
 
+export interface AdminGroupGetParams extends AdminProtectionParams {
+   groupId: string;
+}
+
 export interface UsageReport {
    amountOfUsers: number;
    incompleteUsers: number;
@@ -49,10 +53,25 @@ export interface VisualizerQueryParams extends AdminProtectionParams {
    nodeLimit: number;
 }
 
+export interface AdminQueryParams extends AdminProtectionParams {
+   query: string;
+}
+
+export interface AdminQueryResponse<QueryResult = any, Attributes = {}> {
+   _items: QueryResult[];
+   attributes: Attributes;
+   length: number;
+}
+
 export interface ImportDatabasePostParams extends AdminProtectionParams {
-   user: string;
-   password: string;
-   fileName: string;
+   filePaths: string[];
+   format: DatabaseContentFileFormat;
+}
+
+export enum DatabaseContentFileFormat {
+   NeptuneCsv,
+   GraphMl,
+   GremlinQuery,
 }
 
 export interface ExportDatabaseGetParams extends AdminProtectionParams {}
@@ -67,10 +86,16 @@ export interface CredentialsValidationResult {
 }
 
 export interface AdminNotificationPostParams extends AdminProtectionParams {
+   filters: AdminNotificationFilter;
    onlyReturnUsersAmount?: boolean;
    notificationContent?: NotificationContent;
+   sendEmailNotification?: boolean;
    channelId?: NotificationChannelId;
-   filters: AdminNotificationFilter;
+   logResult?: boolean;
+}
+
+export interface AdminNotificationStatusGet extends AdminProtectionParams {
+   ticketId: string;
 }
 
 export interface AdminNotificationFilter {

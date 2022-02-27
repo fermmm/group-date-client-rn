@@ -4,6 +4,7 @@ export const en: { [key: string]: string } = {
    Cancel: "Cancel",
    Close: "Close",
    Continue: "Continue",
+   Send: "Send",
    "I fixed it": "I fixed it",
    "Try again": "Try again",
    notifications: "notifications",
@@ -55,5 +56,20 @@ export const en: { [key: string]: string } = {
    "Non binary": "Non binary",
    Other: "Other",
    Pangender: "Pangender",
-   "Two Spirit": "Two Spirit"
+   "Two Spirit": "Two Spirit",
+   "privacy policy": "privacy policy",
+   "community guidelines": "community guidelines",
+   "terms of use": "terms of use",
+   and: "and",
+   "If you continue you agree to our": "If you continue you agree to our",
+   "Report and/or block": "Report and/or block",
+   Block: "Block",
+   "There is no photo of the person": "There is no photo of the person",
+   "The user will be prompted to upload a photo to continue using the app":
+      "The user will be prompted to upload a photo to continue using the app",
+   "Unethical profile": "Unethical profile",
+   "The profile contains unethical elements or violates our community guidelines":
+      "The profile contains unethical elements or violates our community guidelines",
+   Comments: "Comments",
+   optional: "optional"
 };
