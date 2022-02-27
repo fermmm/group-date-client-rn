@@ -19,7 +19,7 @@ interface PropsLegalLinks {
 const LegalLinks: FC<PropsLegalLinks> = props => {
    const { visible = true, loginPageMode } = props;
 
-   if (!visible) {
+   if (visible !== true) {
       return null;
    }
 
@@ -68,7 +68,8 @@ const styles: Styles = StyleSheet.create({
    },
    textClickable: {
       fontFamily: currentTheme.font.medium,
-      textDecorationLine: "underline"
+      textDecorationLine: "underline",
+      textAlign: "center"
    }
 });
 
