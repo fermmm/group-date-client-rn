@@ -24,7 +24,7 @@ import { getUnifiedTagsToUpdate } from "./tools/useUnifiedTagsToUpdate";
 import { sendTags, TagEditAction, useTagsAsQuestions } from "../../../api/server/tags";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
-import { useAuthentication } from "../../../api/authentication/useAuthentication";
+import { useAuthentication, useLogout } from "../../../api/authentication/useAuthentication";
 import { revalidate } from "../../../api/tools/useCache/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
 import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
@@ -76,6 +76,7 @@ const RegistrationFormsPage: FC = () => {
    );
    const { token } = useAuthentication(profileStatus?.user?.token);
    useAnalyticsForRegistration(profileStatus?.user, formsRequired, currentStep);
+   const { logout } = useLogout();
 
    const handleOnChangeForm = useCallback(
       (params: OnChangeFormParams) => {
@@ -139,6 +140,8 @@ const RegistrationFormsPage: FC = () => {
       } else {
          if (canGoBack()) {
             goBack();
+         } else {
+            logout();
          }
       }
 
