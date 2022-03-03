@@ -71,5 +71,11 @@ export const en: { [key: string]: string } = {
    "The profile contains unethical elements or violates our community guidelines":
       "The profile contains unethical elements or violates our community guidelines",
    Comments: "Comments",
-   optional: "optional"
+   optional: "optional",
+   "You declined permissions": "You declined permissions",
+   "Login with Facebook is not possible": "Login with Facebook is not possible",
+   "Maybe you need to login on the Facebook app first. Error message":
+      "Maybe you need to login on the Facebook app first. Error message",
+   "If you make a screenshot of this error and send it to us that would help a lot thanks.":
+      "If you make a screenshot of this error and send it to us that would help a lot thanks."
 };
