@@ -17,7 +17,7 @@ import {
 import { useEmailToken } from "./providers/email/getEmailToken";
 import { checkEmailToken } from "./providers/email/checkEmailToken";
 import { useNavigation } from "../../common-tools/navigation/useNavigation";
-import { getFacebookTokenV2 } from "./providers/facebook/getFacebookTokenV2";
+import { getFacebookToken } from "./providers/facebook/getFacebookToken";
 
 let fasterTokenCache: string = null;
 
@@ -85,7 +85,7 @@ function useToken(externallyProvidedToken?: string): UseToken {
       let tokenGetter: () => Promise<string | null>;
       switch (provider) {
          case AuthenticationProvider.Facebook:
-            tokenGetter = getFacebookTokenV2;
+            tokenGetter = getFacebookToken;
             break;
          case AuthenticationProvider.Google:
             tokenGetter = getGoogleToken;

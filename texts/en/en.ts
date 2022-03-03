@@ -72,17 +72,19 @@ export const en: { [key: string]: string } = {
       "The profile contains unethical elements or violates our community guidelines",
    Comments: "Comments",
    optional: "optional",
-   "You declined permissions": "You declined permissions",
+   "You declined Facebook permissions that are required":
+      "You declined Facebook permissions that are required",
    "Login with Facebook is not possible": "Login with Facebook is not possible",
-   "Maybe you need to login on the Facebook app first. Error message":
-      "Maybe you need to login on the Facebook app first. Error message",
-   "If you make a screenshot of this error and send it to us that would help a lot thanks.":
-      "If you make a screenshot of this error and send it to us that would help a lot thanks.",
+   "Maybe you need to login on the Facebook app first":
+      "Maybe you need to login on the Facebook app first",
+   "If you make a screenshot of this error and send it to us that would help a lot thanks":
+      "If you make a screenshot of this error and send it to us that would help a lot thanks",
    "Bad Photo": "Bad Photo",
    "Aggressive/Harassment": "Aggressive/Harassment",
    "Sexual Harassment": "Sexual Harassment",
    "Spammer/Scammer/Fake": "Spammer/Scammer/Fake",
    "Minor (under 18 years old)": "Minor (under 18 years old)",
    "Offsite behavior: assault / abuse / violence / weapon in a photo":
-      "Offsite behavior: assault / abuse / violence / weapon in a photo"
+      "Offsite behavior: assault / abuse / violence / weapon in a photo",
+   "Error message": "Error message"
 };
