@@ -80,5 +80,12 @@ export const es: { [key: string]: string } = {
    "Maybe you need to login on the Facebook app first. Error message":
       "Tal vez primero debes iniciar sesión en la app Facebook. Mensaje del error",
    "If you make a screenshot of this error and send it to us that would help a lot thanks.":
-      "Si haces una captura de pantalla de este error y nos la envías, sería de gran ayuda, gracias"
+      "Si haces una captura de pantalla de este error y nos la envías, sería de gran ayuda, gracias",
+   "Bad Photo": "No hay foto de la persona o es muy mala",
+   "Aggressive/Harassment": "Agresividad/Acoso",
+   "Sexual Harassment": "Acoso sexual",
+   "Spammer/Scammer/Fake": "Spam/Estafador/Fake",
+   "Minor (under 18 years old)": "Menor (menos de 18 años)",
+   "Offsite behavior: assault / abuse / violence / weapon in a photo":
+      "Comportamiento desubicado: agresividad / abuso / violencia / arma en su foto"
 };

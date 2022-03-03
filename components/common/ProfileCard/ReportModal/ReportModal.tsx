@@ -38,8 +38,7 @@ const ReportModal: FC<PropsReportModal> = ({ onClose, targetUserId }) => {
          await sendReportUser({ token, reportedUserId: targetUserId, reportType, notes });
       }
 
-      // Non ethical reporting also blocks user
-      if (blockUser || reportType === ReportUserType.NonEthical) {
+      if (blockUser) {
          await sendBlockUser({ token, targetUserId });
          refreshCards();
       }
@@ -75,44 +74,22 @@ const ReportModal: FC<PropsReportModal> = ({ onClose, targetUserId }) => {
                         >
                            <Text style={styles.responseText}>{I18n.t("Block")}</Text>
                         </CheckboxButton>
-                        <RadioButtonImproved
-                           checked={reportType === ReportUserType.MissingPicture}
-                           onPress={() =>
-                              setReportType(type =>
-                                 type === ReportUserType.MissingPicture
-                                    ? null
-                                    : ReportUserType.MissingPicture
-                              )
-                           }
-                           style={styles.radioButton}
-                        >
-                           <Text style={styles.responseText}>
-                              {I18n.t("There is no photo of the person")}
-                           </Text>
-                           <Text style={styles.responseExtraText}>
-                              {I18n.t(
-                                 "The user will be prompted to upload a photo to continue using the app"
-                              )}
-                           </Text>
-                        </RadioButtonImproved>
-                        <RadioButtonImproved
-                           checked={reportType === ReportUserType.NonEthical}
-                           onPress={() =>
-                              setReportType(type =>
-                                 type === ReportUserType.NonEthical
-                                    ? null
-                                    : ReportUserType.NonEthical
-                              )
-                           }
-                           style={styles.radioButton}
-                        >
-                           <Text style={styles.responseText}>{I18n.t("Unethical profile")}</Text>
-                           <Text style={styles.responseExtraText}>
-                              {I18n.t(
-                                 "The profile contains unethical elements or violates our community guidelines"
-                              )}
-                           </Text>
-                        </RadioButtonImproved>
+                        {Object.values(ReportUserType).map((reportUserType, i) => (
+                           <RadioButtonImproved
+                              checked={reportType === reportUserType}
+                              onPress={() =>
+                                 setReportType(type =>
+                                    type === reportUserType
+                                       ? null
+                                       : (reportUserType as ReportUserType)
+                                 )
+                              }
+                              style={styles.radioButton}
+                              key={i}
+                           >
+                              <Text style={styles.responseText}>{I18n.t(reportUserType)}</Text>
+                           </RadioButtonImproved>
+                        ))}
                      </View>
                      {reportType != null && (
                         <View style={styles.commentsContainer}>
