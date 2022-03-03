@@ -6,7 +6,6 @@ import {
 } from "../../common-tools/device-native-api/storage/storage";
 import { useEffect, useRef, useState } from "react";
 import { LocalStorageKey } from "../../common-tools/strings/LocalStorageKey";
-import { getFacebookToken } from "./providers/facebook/getFacebookToken";
 import { checkFacebookToken } from "./providers/facebook/checkFacebookToken";
 import { checkGoogleToken } from "./providers/google/checkGoogleToken";
 import { useGetGoogleToken } from "./providers/google/getGoogleToken";
@@ -18,6 +17,7 @@ import {
 import { useEmailToken } from "./providers/email/getEmailToken";
 import { checkEmailToken } from "./providers/email/checkEmailToken";
 import { useNavigation } from "../../common-tools/navigation/useNavigation";
+import { getFacebookTokenV2 } from "./providers/facebook/getFacebookTokenV2";
 
 let fasterTokenCache: string = null;
 
@@ -85,7 +85,7 @@ function useToken(externallyProvidedToken?: string): UseToken {
       let tokenGetter: () => Promise<string | null>;
       switch (provider) {
          case AuthenticationProvider.Facebook:
-            tokenGetter = getFacebookToken;
+            tokenGetter = getFacebookTokenV2;
             break;
          case AuthenticationProvider.Google:
             tokenGetter = getGoogleToken;

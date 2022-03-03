@@ -136,7 +136,7 @@ const ReportModal: FC<PropsReportModal> = ({ onClose, targetUserId }) => {
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       width: "90%",
-      backgroundColor: currentTheme.colors.backgroundBottomGradient,
+      backgroundColor: currentTheme.colors.background,
       borderRadius: currentTheme.roundnessSmall,
       marginTop: 50,
       marginBottom: 50
@@ -149,7 +149,7 @@ const styles: Styles = StyleSheet.create({
       width: "100%"
    },
    radioButtonsContainer: {
-      marginBottom: 25,
+      marginBottom: 5,
       width: "100%"
    },
    title: { marginBottom: 30 },
@@ -171,8 +171,7 @@ const styles: Styles = StyleSheet.create({
    },
    radioButton: {
       marginLeft: 20,
-      marginRight: 20,
-      marginTop: 20
+      marginRight: 20
    }
 });
 

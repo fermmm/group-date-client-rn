@@ -11,7 +11,7 @@ Settings.initializeSDK();
  * Retrieves a new token from Facebook, if the user did not authorized the app it shows an authorization screen
  * executed by the Facebook API.
  */
-export async function getFacebookToken(): Promise<string | null> {
+export async function getFacebookTokenV2(): Promise<string | null> {
    try {
       const { grantedPermissions, declinedPermissions, isCancelled } =
          await LoginManager.logInWithPermissions(["public_profile", "email"]);

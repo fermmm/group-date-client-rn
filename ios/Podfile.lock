@@ -22,10 +22,6 @@ PODS:
     - ExpoModulesCore
   - EXErrorRecovery (3.0.5):
     - ExpoModulesCore
-  - EXFacebook (12.1.1):
-    - ExpoModulesCore
-    - FacebookSDK/CoreKit (= 9.2.0)
-    - FacebookSDK/LoginKit (= 9.2.0)
   - EXFileSystem (13.1.4):
     - ExpoModulesCore
   - EXFirebaseAnalytics (6.0.1):
@@ -57,6 +53,10 @@ PODS:
     - ExpoModulesCore
   - Expo (44.0.6):
     - ExpoModulesCore
+  - ExpoAdapterFBSDKNext (7.3.2):
+    - ExpoModulesCore
+    - FBSDKCoreKit
+    - React-Core
   - ExpoLinearGradient (11.0.3):
     - ExpoModulesCore
   - ExpoLocalization (12.0.1):
@@ -81,10 +81,8 @@ PODS:
   - EXUpdatesInterface (0.5.1)
   - EXWebBrowser (10.1.1):
     - ExpoModulesCore
-  - FacebookSDK/CoreKit (9.2.0):
-    - FBSDKCoreKit (~> 9.2.0)
-  - FacebookSDK/LoginKit (9.2.0):
-    - FacebookSDK/CoreKit
+  - FBAEMKit (12.3.2):
+    - FBSDKCoreKit_Basics (= 12.3.2)
   - FBLazyVector (0.64.3)
   - FBReactNativeSpec (0.64.3):
     - RCT-Folly (= 2020.01.13.00)
@@ -93,12 +91,14 @@ PODS:
     - React-Core (= 0.64.3)
     - React-jsi (= 0.64.3)
     - ReactCommon/turbomodule/core (= 0.64.3)
-  - FBSDKCoreKit (9.2.0):
-    - FBSDKCoreKit/Basics (= 9.2.0)
-    - FBSDKCoreKit/Core (= 9.2.0)
-  - FBSDKCoreKit/Basics (9.2.0)
-  - FBSDKCoreKit/Core (9.2.0):
-    - FBSDKCoreKit/Basics
+  - FBSDKCoreKit (12.3.2):
+    - FBAEMKit (= 12.3.2)
+    - FBSDKCoreKit_Basics (= 12.3.2)
+  - FBSDKCoreKit_Basics (12.3.2)
+  - FBSDKLoginKit (12.3.2):
+    - FBSDKCoreKit (= 12.3.2)
+  - FBSDKShareKit (12.3.2):
+    - FBSDKCoreKit (= 12.3.2)
   - Firebase/Core (7.7.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 7.7.0)
@@ -368,6 +368,20 @@ PODS:
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
   - React-jsinspector (0.64.3)
+  - react-native-fbsdk-next (7.3.2):
+    - React-Core
+    - react-native-fbsdk-next/Core (= 7.3.2)
+    - react-native-fbsdk-next/Login (= 7.3.2)
+    - react-native-fbsdk-next/Share (= 7.3.2)
+  - react-native-fbsdk-next/Core (7.3.2):
+    - FBSDKCoreKit (~> 12.3.2)
+    - React-Core
+  - react-native-fbsdk-next/Login (7.3.2):
+    - FBSDKLoginKit (~> 12.3.2)
+    - React-Core
+  - react-native-fbsdk-next/Share (7.3.2):
+    - FBSDKShareKit (~> 12.3.2)
+    - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
   - React-perflogger (0.64.3)
@@ -496,7 +510,6 @@ DEPENDENCIES:
   - EXCrypto (from `../node_modules/expo-crypto/ios`)
   - EXDevice (from `../node_modules/expo-device/ios`)
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
-  - EXFacebook (from `../node_modules/expo-facebook/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFirebaseAnalytics (from `../node_modules/expo-firebase-analytics/ios`)
   - EXFirebaseCore (from `../node_modules/expo-firebase-core/ios`)
@@ -510,6 +523,7 @@ DEPENDENCIES:
   - EXManifests (from `../node_modules/expo-manifests/ios`)
   - EXNotifications (from `../node_modules/expo-notifications/ios`)
   - Expo (from `../node_modules/expo/ios`)
+  - ExpoAdapterFBSDKNext (from `../node_modules/react-native-fbsdk-next/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
@@ -537,6 +551,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -567,8 +582,11 @@ SPEC REPOS:
   trunk:
     - AppAuth
     - boost-for-react-native
-    - FacebookSDK
+    - FBAEMKit
     - FBSDKCoreKit
+    - FBSDKCoreKit_Basics
+    - FBSDKLoginKit
+    - FBSDKShareKit
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -603,8 +621,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-device/ios"
   EXErrorRecovery:
     :path: "../node_modules/expo-error-recovery/ios"
-  EXFacebook:
-    :path: "../node_modules/expo-facebook/ios"
   EXFileSystem:
     :path: "../node_modules/expo-file-system/ios"
   EXFirebaseAnalytics:
@@ -631,6 +647,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-notifications/ios"
   Expo:
     :path: "../node_modules/expo/ios"
+  ExpoAdapterFBSDKNext:
+    :path: "../node_modules/react-native-fbsdk-next/ios"
   ExpoLinearGradient:
     :path: "../node_modules/expo-linear-gradient/ios"
   ExpoLocalization:
@@ -681,6 +699,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-fbsdk-next:
+    :path: "../node_modules/react-native-fbsdk-next"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-perflogger:
@@ -744,7 +764,6 @@ SPEC CHECKSUMS:
   EXCrypto: ab2ba0df3136a5f2407b8c7e70eb498ac20d704f
   EXDevice: aa5e1edbf350481a948c3258b750dd11e6e4579e
   EXErrorRecovery: b0d7582714a2cc896e94a2308a356f94dbf14ef7
-  EXFacebook: f145a9d0a61d9f0ba88e221e2f69cf06f39a2265
   EXFileSystem: 08a3033ac372b6346becf07839e1ccef26fb1058
   EXFirebaseAnalytics: a7ec2dd1394ad0de5c0c63fac0deee496f798284
   EXFirebaseCore: 52151d0b008b99983e6a120cea94466ee760a4e9
@@ -758,6 +777,7 @@ SPEC CHECKSUMS:
   EXManifests: d3464cd2278f4a19cd80c1aa673231570b534c11
   EXNotifications: a7d582fa800d77f4a75bd22d52e84e2fbcee26df
   Expo: 534e51e607aba8229293297da5585f4b26f50fa1
+  ExpoAdapterFBSDKNext: 4b5cd8325f2ce42301a3e956e6a0c301856debaa
   ExpoLinearGradient: fd591c223c81f6779036ed4cef4deb20ecb87c50
   ExpoLocalization: 72b4524c167da6c4e2a0bbe09176ff8b2c4eddbe
   ExpoModulesCore: 32c0ccb47f477d330ee93db72505380adf0de09a
@@ -768,10 +788,13 @@ SPEC CHECKSUMS:
   EXUpdates: bd5fa64f02685ed3e96be86b5ca350cdc2cd8d02
   EXUpdatesInterface: a9814f422d3cd6e7cfd260d13c27786148ece20e
   EXWebBrowser: f1573262c5de753987ed526c630076eda130804d
-  FacebookSDK: 4b9bb8e2824898b47f18c666dc145c09b40609e6
+  FBAEMKit: 955ca52eba8219c20f90774e8c6ff8bc7b3192a3
   FBLazyVector: c71c5917ec0ad2de41d5d06a5855f6d5eda06971
   FBReactNativeSpec: 04804fe7c81596e00c33f6ec976174579d03ed61
-  FBSDKCoreKit: dace5abafc2fd9272733e6d027bcf18102712117
+  FBSDKCoreKit: 678f64eda3f0ff25c189c2ebbfe87b1d96a85a6d
+  FBSDKCoreKit_Basics: 6bee7c1f0932432901781203fa5e587ec5099148
+  FBSDKLoginKit: 56d55e23fe66a6db045826190b0b4dbc0e1ca0a0
+  FBSDKShareKit: 4ef957addab76816116ea92bd872e792f7137669
   Firebase: cd2ab85eec8170dc260186159f21072ecb679ad5
   FirebaseAnalytics: f3f8f75de34fe04141a69bb1c4bd7e24a80178e1
   FirebaseCore: ac35d680a0bf32319a59966a1478e0741536b97b
@@ -799,6 +822,7 @@ SPEC CHECKSUMS:
   React-jsi: a8b09c29521c798f1783348b37b511ba7b3dbeb3
   React-jsiexecutor: df6abc9fafbecb8e5b7a5fbc5e6d4bd017d594d5
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
+  react-native-fbsdk-next: 5d8803a1a933e0522a0ecb86eb4f750397e0ca54
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c
   React-RCTActionSheet: 7448f049318d8d7e8a9a1ebb742ada721757eea8
