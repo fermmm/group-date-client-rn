@@ -80,6 +80,10 @@ export function tryToGetErrorMessage(error: any): string {
       return "";
    }
 
+   if (typeof error === "string") {
+      return error;
+   }
+
    if (error.response?.data?.error?.message) {
       return error.response.data.error.message;
    }

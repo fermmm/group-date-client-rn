@@ -15,6 +15,7 @@ import { tryToStringifyObject } from "../../debug-tools/tryToStringifyObject";
 import { showAddressDisabledDialog } from "./dialogAddressDisabled/dialogAddressDisabled";
 import { Platform } from "react-native";
 import { useUserProfileStatus } from "../../../api/server/user";
+import { withTimeout } from "../../withTimeout/withTimeout";
 
 /**
  * Gets geolocation data, asks for permissions Permissions.LOCATION. If the geolocation
@@ -172,11 +173,14 @@ async function getGeolocationPosition(settings?: GetGeolocationParams): Promise<
        * Getting much lower accuracy "coarse location" like a city level precision seems to be not possible
        * so we "manually" remove digits to get that result, this is better to protect users' privacy.
        */
-      let position = await Location.getLastKnownPositionAsync();
+      let position = await withTimeout(Location.getLastKnownPositionAsync());
+
       if (position == null) {
-         position = await Location.getCurrentPositionAsync({
-            accuracy: Location.LocationAccuracy.Lowest
-         });
+         position = await withTimeout(
+            Location.getCurrentPositionAsync({
+               accuracy: Location.LocationAccuracy.Lowest
+            })
+         );
       }
       result = { ...position.coords };
 
