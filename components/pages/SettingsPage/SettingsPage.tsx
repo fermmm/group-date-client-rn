@@ -15,6 +15,7 @@ import { currentTheme } from "../../../config";
 import { getAppVersion } from "../../../common-tools/device-native-api/versions/versions";
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import { useAccountDelete } from "./tools/useAccountDelete";
+import LegalLinks from "../LoginPage/LegalLinks/LegalLinks";
 
 const SettingsPage: FC = () => {
    const { navigate } = useNavigation();
@@ -156,6 +157,8 @@ const SettingsPage: FC = () => {
                onPress={() => navigate("Admin")}
             />
          )}
+         <EmptySpace />
+         <LegalLinks />
          <View style={styles.versionsContainer}>
             <Text style={styles.versionText}>Code version: {getAppVersion().codeVersion}</Text>
             <Text style={styles.versionText}>App version: {getAppVersion().buildVersion}</Text>

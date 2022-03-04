@@ -9,6 +9,7 @@ import {
    RequestMoreUsersReason,
    UseCardsDataManager
 } from "./useCardsDataManager";
+import { refreshCards } from "./refreshCards";
 
 /**
  * Sends attractions and request more cards when needed
@@ -87,9 +88,7 @@ function requestMoreCardsIfNeeded(params: UseRequestMoreCardsParams) {
     * because sending the attractions may affect the result of all types of users lists. This will only trigger
     * a server request on the endpoint being used.
     */
-   revalidate("cards-game/recommendations");
-   revalidate("cards-game/disliked-users");
-   revalidate("cards-game/from-tag-" + tagId);
+   refreshCards({ alsoRefreshCardsFromTagId: tagId, alsoRefreshDislikedUsersCache: true });
 }
 
 interface UseSendAttractionsParams {

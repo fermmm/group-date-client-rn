@@ -5,7 +5,7 @@ import { openDeviceAction } from "../../device-action/openDeviceAction";
 
 export async function showRejectedPermissionsDialog(
    dialogSettings: RejectedDialogSettings = {}
-): Promise<void> {
+): Promise<{ retry: boolean }> {
    const {
       dialogTitle = i18n.t("Error"),
       openSettingsButtonText = i18n.t("Open app settings"),
@@ -16,8 +16,8 @@ export async function showRejectedPermissionsDialog(
       showContinueAnywayButton
    } = dialogSettings;
 
-   let promiseResolve: () => void = null;
-   const resultPromise: Promise<void> = new Promise(resolve => {
+   let promiseResolve: ({ retry: boolean }) => void = null;
+   const resultPromise: Promise<{ retry: boolean }> = new Promise(resolve => {
       promiseResolve = resolve;
    });
 
@@ -30,13 +30,13 @@ export async function showRejectedPermissionsDialog(
                "app-settings:",
                instructionsToastText
             );
-            promiseResolve();
+            promiseResolve({ retry: true });
          }
       },
       {
          text: retryButtonText,
          onPress: () => {
-            promiseResolve();
+            promiseResolve({ retry: true });
          }
       }
    ];
@@ -47,7 +47,7 @@ export async function showRejectedPermissionsDialog(
             ? `${i18n.t("Continue without")} ${permissionName}`
             : i18n.t("Continue anyway"),
          onPress: () => {
-            promiseResolve();
+            promiseResolve({ retry: false });
          },
          style: "cancel"
       });

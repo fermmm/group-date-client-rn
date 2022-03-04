@@ -6,7 +6,6 @@ import {
 } from "../../common-tools/device-native-api/storage/storage";
 import { useEffect, useRef, useState } from "react";
 import { LocalStorageKey } from "../../common-tools/strings/LocalStorageKey";
-import { getFacebookToken } from "./providers/facebook/getFacebookToken";
 import { checkFacebookToken } from "./providers/facebook/checkFacebookToken";
 import { checkGoogleToken } from "./providers/google/checkGoogleToken";
 import { useGetGoogleToken } from "./providers/google/getGoogleToken";
@@ -18,6 +17,7 @@ import {
 import { useEmailToken } from "./providers/email/getEmailToken";
 import { checkEmailToken } from "./providers/email/checkEmailToken";
 import { useNavigation } from "../../common-tools/navigation/useNavigation";
+import { getFacebookToken } from "./providers/facebook/getFacebookToken";
 
 let fasterTokenCache: string = null;
 

@@ -61,7 +61,7 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
       });
    };
 
-   if (!show) {
+   if (show !== true) {
       return null;
    }
 

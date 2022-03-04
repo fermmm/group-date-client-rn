@@ -30,7 +30,7 @@ import CardAnimator, { CardAnimationType } from "./CardAnimator/CardAnimator";
 import { getGenderName } from "../../../common-tools/strings/gender";
 import { Tag } from "../../../api/server/shared-tools/endpoints-interfaces/tags";
 import TagChipList from "../TagChipList/TagChipList";
-import MoreModal from "./MoreModal/MoreModal";
+import ReportModal from "./ReportModal/ReportModal";
 import { useCallback } from "react";
 import { removeBannedWords } from "../../../common-tools/strings/social";
 import { useOnlyVisibleTags } from "../../../common-tools/tags/useOnlyVisibleTags";
@@ -73,7 +73,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
    const { navigate } = useNavigation();
    const { getImageFullUrl, isLoading: imagesFullUrlLoading } = useImageFullUrl();
    const [renderImageModal, setRenderImageModal] = useState(false);
-   const [showMoreOptionsModal, setShowMoreOptionsModal] = useState(false);
+   const [reportModalOpen, setReportModalOpen] = useState(false);
    const [imageSelected, setImageSelected] = useState(0);
    const [animate, setAnimate] = useState<CardAnimationType>(null);
    const [onAnimationFinish, setOnAnimationFinish] = useState<{ func: () => void }>(null);
@@ -112,12 +112,12 @@ const ProfileCard: FC<ProfileCardProps> = props => {
       setAnimate(CardAnimationType.Dislike);
    }, [onDislikePress]);
 
-   const handleMoreOptionsPress = useCallback(() => {
-      setShowMoreOptionsModal(true);
+   const handleFlagPress = useCallback(() => {
+      setReportModalOpen(true);
    }, []);
 
-   const handleMoreOptionsClose = useCallback(() => {
-      setShowMoreOptionsModal(false);
+   const handleReportModalClose = useCallback(() => {
+      setReportModalOpen(false);
    }, []);
 
    if (!localUser || tagsLoading || imagesFullUrlLoading) {
@@ -269,7 +269,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                      onLikePress={handleLikePress}
                      onDislikePress={handleDislikePress}
                      onUndoPress={onUndoPress}
-                     onMorePress={handleMoreOptionsPress}
+                     onFlagPress={handleFlagPress}
                   />
                )}
             </View>
@@ -282,8 +282,8 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                onClose={() => setRenderImageModal(false)}
             />
          )}
-         {showMoreOptionsModal === true && (
-            <MoreModal userToReportId={userId} onClose={handleMoreOptionsClose} />
+         {reportModalOpen === true && (
+            <ReportModal targetUserId={userId} onClose={handleReportModalClose} />
          )}
       </>
    );

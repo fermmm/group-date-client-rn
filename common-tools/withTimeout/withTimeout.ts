@@ -11,9 +11,12 @@
  * // With a custom time amount:
  * await withTimeout(doSomethingAsync(), 5000);
  */
-export function withTimeout<T>(promise: Promise<T>, timeoutMilliseconds: number = 10000) {
+export async function withTimeout<T>(
+   promise: Promise<T>,
+   timeoutMilliseconds: number = 10000
+): Promise<T> {
    const timeout = new Promise((resolve, reject) =>
       setTimeout(() => reject(`Timed out after ${timeoutMilliseconds} ms.`), timeoutMilliseconds)
    );
-   return Promise.race([promise, timeout]);
+   return Promise.race([promise, timeout]) as Promise<T>;
 }

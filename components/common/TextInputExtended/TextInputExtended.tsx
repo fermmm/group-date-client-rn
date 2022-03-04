@@ -9,7 +9,8 @@ import {
    TextInput as NativeTextInput,
    Modal,
    ViewStyle,
-   ReturnKeyTypeOptions
+   ReturnKeyTypeOptions,
+   Platform
 } from "react-native";
 import Constants from "expo-constants";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -137,11 +138,16 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
    }, [fullScreenMode]);
 
    /*
-    *  If touch keyboard is disabled (ios reviewers sometimes have it disabled) the user needs
-    *  to have the input still on focus so a physical keyboard can be used. In that case the
-    *  full screen input mode does not work because a touch keyboard close signal is received.
+    *  This effect fixes a problem in IOS. If touch keyboard is disabled (ios reviewers
+    *  sometimes have it disabled) the user needs to have the input still on focus so a physical
+    *  keyboard can be used. In that case the full screen input mode does not work because a
+    * touch keyboard close signal is received on IOS for some reason.
     */
    useEffectExceptOnMount(() => {
+      if (Platform.OS !== "ios") {
+         return;
+      }
+
       if (!fullScreenMode) {
          finalInputRef?.current?.focus();
       }

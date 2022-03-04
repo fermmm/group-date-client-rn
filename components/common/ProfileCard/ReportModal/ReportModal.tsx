@@ -3,7 +3,7 @@ import { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { ReportUserType } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
-import { sendReportUser } from "../../../../api/server/user";
+import { sendBlockUser, sendReportUser } from "../../../../api/server/user";
 import { useAuthentication } from "../../../../api/authentication/useAuthentication";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
@@ -13,28 +13,36 @@ import RadioButtonImproved from "../../RadioButtonImproved/RadioButtonImproved";
 import TextInputExtended from "../../TextInputExtended/TextInputExtended";
 import TitleMediumText from "../../TitleMediumText/TitleMediumText";
 import TitleText from "../../TitleText/TitleText";
+import CheckboxButton from "../../CheckboxButton/CheckboxButton";
+import { refreshCards } from "../../../pages/CardsPage/tools/refreshCards";
+import I18n from "i18n-js";
 
-interface PropsMoreModal {
-   userToReportId: string;
+interface PropsReportModal {
+   targetUserId: string;
    onClose: () => void;
 }
 
-const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
+const ReportModal: FC<PropsReportModal> = ({ onClose, targetUserId }) => {
    const maxCharactersAllowed: number = 4000;
    const [requestLoading, setRequestLoading] = useState(false);
+   const [blockUser, setBlockUser] = useState(false);
    const [notes, setNotes] = useState<string>();
    const [reportType, setReportType] = useState<ReportUserType>();
    const { token, isLoading: tokenLoading } = useAuthentication();
    const isLoading = tokenLoading || requestLoading;
 
    const handleSendReport = async () => {
-      if (reportType == null) {
-         onClose();
-         return;
+      setRequestLoading(true);
+
+      if (reportType != null) {
+         await sendReportUser({ token, reportedUserId: targetUserId, reportType, notes });
       }
 
-      setRequestLoading(true);
-      await sendReportUser({ token, reportedUserId: userToReportId, reportType, notes });
+      if (blockUser) {
+         await sendBlockUser({ token, targetUserId });
+         refreshCards();
+      }
+
       setRequestLoading(false);
       onClose();
    };
@@ -57,33 +65,37 @@ const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
             ) : (
                <ScrollView contentContainerStyle={styles.contentContainer}>
                   <>
-                     <TitleText style={styles.title}>Reportar</TitleText>
+                     <TitleText style={styles.title}>{I18n.t("Report and/or block")} </TitleText>
                      <View style={styles.radioButtonsContainer}>
-                        <RadioButtonImproved
-                           checked={reportType === ReportUserType.MissingPicture}
-                           onPress={() => setReportType(ReportUserType.MissingPicture)}
+                        <CheckboxButton
+                           checked={blockUser}
+                           onPress={() => setBlockUser(!blockUser)}
                            style={styles.radioButton}
                         >
-                           <Text style={styles.responseText}>No hay foto de la persona</Text>
-                           <Text style={styles.responseExtraText}>
-                              Se le pedirá que suba una foto para seguir usando la app
-                           </Text>
-                        </RadioButtonImproved>
-                        <RadioButtonImproved
-                           checked={reportType === ReportUserType.NonEthical}
-                           onPress={() => setReportType(ReportUserType.NonEthical)}
-                           style={styles.radioButton}
-                        >
-                           <Text style={styles.responseText}>Perfil no ético</Text>
-                           <Text style={styles.responseExtraText}>
-                              Su perfil contiene elementos no éticos o incumple las normas
-                              comunitarias
-                           </Text>
-                        </RadioButtonImproved>
+                           <Text style={styles.responseText}>{I18n.t("Block")}</Text>
+                        </CheckboxButton>
+                        {Object.values(ReportUserType).map((reportUserType, i) => (
+                           <RadioButtonImproved
+                              checked={reportType === reportUserType}
+                              onPress={() =>
+                                 setReportType(type =>
+                                    type === reportUserType
+                                       ? null
+                                       : (reportUserType as ReportUserType)
+                                 )
+                              }
+                              style={styles.radioButton}
+                              key={i}
+                           >
+                              <Text style={styles.responseText}>{I18n.t(reportUserType)}</Text>
+                           </RadioButtonImproved>
+                        ))}
                      </View>
                      {reportType != null && (
                         <View style={styles.commentsContainer}>
-                           <TitleMediumText>Comentarios (opcional)</TitleMediumText>
+                           <TitleMediumText>
+                              {I18n.t("Comments")} ({I18n.t("optional")})
+                           </TitleMediumText>
                            <TextInputExtended
                               errorText={getError()}
                               mode="outlined"
@@ -99,7 +111,7 @@ const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
                   </>
                </ScrollView>
             )}
-            {reportType != null && !isLoading && (
+            {(reportType != null || blockUser) && !isLoading && (
                <View
                   style={{
                      flexDirection: "row",
@@ -112,7 +124,7 @@ const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
                      color={currentTheme.colors.accent2}
                      style={styles.button}
                   >
-                     {"Enviar"}
+                     {I18n.t("Send")}
                   </Button>
                </View>
             )}
@@ -124,7 +136,7 @@ const MoreModal: FC<PropsMoreModal> = ({ onClose, userToReportId }) => {
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       width: "90%",
-      backgroundColor: currentTheme.colors.backgroundBottomGradient,
+      backgroundColor: currentTheme.colors.background,
       borderRadius: currentTheme.roundnessSmall,
       marginTop: 50,
       marginBottom: 50
@@ -133,9 +145,13 @@ const styles: Styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "center",
       paddingTop: 25,
-      paddingBottom: 25
+      paddingBottom: 25,
+      width: "100%"
    },
-   radioButtonsContainer: { marginBottom: 25 },
+   radioButtonsContainer: {
+      marginBottom: 5,
+      width: "100%"
+   },
    title: { marginBottom: 30 },
    responseText: {
       fontSize: 17
@@ -154,9 +170,9 @@ const styles: Styles = StyleSheet.create({
       minWidth: 180
    },
    radioButton: {
-      paddingLeft: 40,
-      paddingRight: 50
+      marginLeft: 20,
+      marginRight: 20
    }
 });
 
-export default MoreModal;
+export default ReportModal;

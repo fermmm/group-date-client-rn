@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useLocalStorage } from "./../storage/useLocalStorage";
+import { useLocalStorage } from "../storage/useLocalStorage";
 import { useCache } from "../../../api/tools/useCache/useCache";
 import * as Location from "expo-location";
 import i18n from "i18n-js";
@@ -15,6 +15,7 @@ import { tryToStringifyObject } from "../../debug-tools/tryToStringifyObject";
 import { showAddressDisabledDialog } from "./dialogAddressDisabled/dialogAddressDisabled";
 import { Platform } from "react-native";
 import { useUserProfileStatus } from "../../../api/server/user";
+import { withTimeout } from "../../withTimeout/withTimeout";
 
 /**
  * Gets geolocation data, asks for permissions Permissions.LOCATION. If the geolocation
@@ -152,9 +153,7 @@ function useAddress(params: {
  * To change dialog texts use the settings parameter.
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
-export async function getGeolocationPosition(
-   settings?: GetGeolocationParams
-): Promise<LocationCoords> {
+async function getGeolocationPosition(settings?: GetGeolocationParams): Promise<LocationCoords> {
    const {
       allowContinueWithGeolocationDisabled = false,
       errorDialogSettings = {},
@@ -174,11 +173,14 @@ export async function getGeolocationPosition(
        * Getting much lower accuracy "coarse location" like a city level precision seems to be not possible
        * so we "manually" remove digits to get that result, this is better to protect users' privacy.
        */
-      let position = await Location.getLastKnownPositionAsync();
+      let position = await withTimeout(Location.getLastKnownPositionAsync());
+
       if (position == null) {
-         position = await Location.getCurrentPositionAsync({
-            accuracy: Location.LocationAccuracy.Lowest
-         });
+         position = await withTimeout(
+            Location.getCurrentPositionAsync({
+               accuracy: Location.LocationAccuracy.Lowest
+            })
+         );
       }
       result = { ...position.coords };
 
@@ -229,7 +231,7 @@ export async function getGeolocationPosition(
  * the information returned here.
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
-export async function getGeolocationAddress(
+async function getGeolocationAddress(
    coords: LocationCoords,
    settings?: GetGeolocationParams
 ): Promise<Location.LocationGeocodedAddress> {

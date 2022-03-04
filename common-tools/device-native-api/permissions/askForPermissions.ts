@@ -74,20 +74,20 @@ export async function askForPermission(
    }
 
    if (result.status !== "granted") {
+      let dialogResponse = { retry: false };
+
       if (insistOnAcceptingOnce && allowContinueWithoutAccepting) {
-         await showRejectedPermissionsDialog({
+         dialogResponse = await showRejectedPermissionsDialog({
             ...rejectedDialogTexts,
             permissionName,
             showContinueAnywayButton: true
          });
 
-         result = await permissionsSource.requester();
-
-         if (result.status !== "granted") {
-            return Promise.resolve(false);
-         } else {
-            return Promise.resolve(true);
+         if (dialogResponse.retry) {
+            return askForPermission(permissionsSource, settings);
          }
+
+         return Promise.resolve(false);
       }
 
       if (allowContinueWithoutAccepting) {

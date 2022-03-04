@@ -6,7 +6,7 @@ module.exports = {
    GOOGLE_CLIENT_WEB_EXPO:
       "537335782337-ndoo3v1u2c2svig4ma5apso716mnd2qi.apps.googleusercontent.com", // Looks like this: 12345-ab1c123.apps.googleusercontent.com
    FACEBOOK_APP_ID: "474353846815397",
-   FACEBOOK_APP_NAME: "Poly",
+   FACEBOOK_APP_NAME: "GroupDate",
 
    // Social and legal links:
    CONTACT_EMAIL: "poly.app.team@gmail.com",

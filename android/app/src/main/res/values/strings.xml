@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <resources>
   <string name="app_name">Group Date</string>
+  <string name="facebook_app_id">474353846815397</string>
+  <string name="facebook_client_token">13fcf614b9c87fa609aa05e5d383c5a2</string>
 </resources>

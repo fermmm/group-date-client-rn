@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { StyleSheet, View, StyleProp, ViewStyle, LayoutChangeEvent } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { RadioButton, TouchableRipple } from "react-native-paper";
+import { RadioButton } from "react-native-paper";
 import { ViewTouchable } from "../ViewTouchable/ViewTouchable";
 
 export interface RadioButtonImprovedProps {
@@ -36,8 +36,8 @@ const RadioButtonImproved: FC<RadioButtonImprovedProps> = props => {
    };
 
    return (
-      <ViewTouchable onPress={() => onPress()}>
-         <View pointerEvents={"none"} style={[style, styles.mainContainer]}>
+      <ViewTouchable onPress={() => onPress()} style={[style, styles.mainContainer]}>
+         <>
             <View style={{ marginRight: 15 }}>
                {iconElement != null ? (
                   iconElement(checked)
@@ -48,7 +48,7 @@ const RadioButtonImproved: FC<RadioButtonImprovedProps> = props => {
             <View style={styles.childrenContainer} onLayout={measureView}>
                {children}
             </View>
-         </View>
+         </>
       </ViewTouchable>
    );
 };
@@ -56,7 +56,11 @@ const RadioButtonImproved: FC<RadioButtonImprovedProps> = props => {
 const styles: Styles = StyleSheet.create({
    mainContainer: {
       flexDirection: "row",
-      alignItems: "center"
+      alignItems: "center",
+      paddingLeft: 5,
+      paddingRight: 13,
+      paddingTop: 4,
+      paddingBottom: 4
    },
    childrenContainer: {
       flexShrink: 1

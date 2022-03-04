@@ -19,7 +19,8 @@ import {
    SetSeenPostParams,
    SetSeenResponse,
    TaskCompletedPostParams,
-   TaskCompletedResponse
+   TaskCompletedResponse,
+   BlockOrUnblockUserParams
 } from "./shared-tools/endpoints-interfaces/user";
 import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
@@ -108,6 +109,14 @@ export async function sendAttraction(params: SetAttractionParams) {
 
 export async function sendReportUser(params: ReportUserPostParams) {
    return await defaultHttpRequest("user/report", "POST", params, { handleErrors: true });
+}
+
+export async function sendBlockUser(params: BlockOrUnblockUserParams) {
+   return await defaultHttpRequest("user/block", "POST", params, { handleErrors: true });
+}
+
+export async function sendUnblockUser(params: BlockOrUnblockUserParams) {
+   return await defaultHttpRequest("user/unblock", "POST", params, { handleErrors: true });
 }
 
 export async function setTaskAsCompleted<
