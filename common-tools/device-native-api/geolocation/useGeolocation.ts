@@ -151,6 +151,16 @@ function useAddress(params: {
  * is disabled for other reason (airplane mode or something like that) shows a error dialog requesting the user
  * to fix the problem by disabling airplane mode or checking what's wrong.
  * To change dialog texts use the settings parameter.
+ *
+ * About the location accuracy:
+ *
+ * If you only require the position in a city precision (not the exact location of the user), we use
+ * getCurrentPositionAsync({accuracy: Location.LocationAccuracy.Lowest}) the accuracy it's still
+ * very high, so it's better for performance to use getLastKnownPositionAsync() when is available,
+ * otherwise we use getCurrentPositionAsync().
+ * Getting much lower accuracy "coarse location" like a city level precision seems to be not possible
+ * so we "manually" remove digits to get that result, this is better to protect users' privacy.
+ *
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 async function getGeolocationPosition(settings?: GetGeolocationParams): Promise<LocationCoords> {
@@ -165,20 +175,18 @@ async function getGeolocationPosition(settings?: GetGeolocationParams): Promise<
    let result: LocationCoords = null;
 
    try {
-      /*
-       * We only require the position in a city precision, not the exact location of the user, but
-       * getCurrentPositionAsync({accuracy: Location.LocationAccuracy.Lowest}) the accuracy it's still
-       * very high, so it's better for performance to use getLastKnownPositionAsync() when is available,
-       * otherwise we use getCurrentPositionAsync().
-       * Getting much lower accuracy "coarse location" like a city level precision seems to be not possible
-       * so we "manually" remove digits to get that result, this is better to protect users' privacy.
-       */
-      let position = await withTimeout(Location.getLastKnownPositionAsync());
+      let position = await withTimeout(Location.getLastKnownPositionAsync, {
+         rejectOnTimeout: false,
+         returnValueOnTimeout: null,
+         timeoutMilliseconds: 4000
+      });
 
       if (position == null) {
          position = await withTimeout(
             Location.getCurrentPositionAsync({
-               accuracy: Location.LocationAccuracy.Lowest
+               accuracy: removePrecisionInCoordinates
+                  ? Location.LocationAccuracy.Lowest
+                  : Location.LocationAccuracy.Highest
             })
          );
       }
