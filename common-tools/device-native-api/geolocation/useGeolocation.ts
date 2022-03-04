@@ -237,6 +237,9 @@ async function getGeolocationPosition(settings?: GetGeolocationParams): Promise<
  * To change dialog texts use the settings parameter.
  * For some locations this function demonstrated to be not reliable, the app should be able to continue without
  * the information returned here.
+ * About the permission:
+ * Sadly this function requires full accurate Location permissions on Android because is required by reverseGeocodeAsync()
+ *
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */
 async function getGeolocationAddress(
@@ -253,8 +256,7 @@ async function getGeolocationAddress(
       let reverseGeocoding: Location.LocationGeocodedAddress[];
 
       try {
-         // Sadly reverseGeocodeAsync() requires full accurate Location permissions on Android
-         reverseGeocoding = await Location.reverseGeocodeAsync(coords);
+         reverseGeocoding = await withTimeout(Location.reverseGeocodeAsync(coords));
       } catch (e) {
          throw new Error("Location.reverseGeocodeAsync failed:\n" + tryToGetErrorMessage(e));
       }
