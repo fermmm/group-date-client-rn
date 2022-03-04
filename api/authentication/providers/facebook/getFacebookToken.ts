@@ -1,17 +1,22 @@
 import { Alert } from "react-native";
-import { AccessToken, Settings } from "react-native-fbsdk-next";
 import { LoginManager } from "react-native-fbsdk-next";
+import Constants, { AppOwnership } from "expo-constants";
 import I18n from "i18n-js";
 import { tryToGetErrorMessage } from "../../../tools/httpRequest";
-
-// This is here because the documentation says it should be executed as early as possible.
-Settings.initializeSDK();
 
 /**
  * Retrieves a new token from Facebook, if the user did not authorized the app it shows an authorization screen
  * executed by the Facebook API.
  */
 export async function getFacebookToken(): Promise<string | null> {
+   if (Constants.appOwnership === AppOwnership.Expo) {
+      Alert.alert("Error", "Facebook login does not work in Expo Go");
+      return;
+   }
+
+   const { AccessToken, Settings } = require("react-native-fbsdk-next");
+   Settings.initializeSDK();
+
    try {
       const { grantedPermissions, declinedPermissions, isCancelled } =
          await LoginManager.logInWithPermissions(["public_profile", "email"]);
