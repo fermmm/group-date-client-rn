@@ -77,7 +77,7 @@ const WelcomeTourPage: FC = () => {
                   <View style={styles.imageContainer}>
                      <Svg
                         src={screen1PortalSvg}
-                        style={{ transform: [{ scale: 1.7 }, { translateX: -10 }] }}
+                        style={{ transform: [{ scale: 1.5 }, { translateX: -10 }] }}
                      />
                   </View>
                   <View style={styles.textContainer}>
@@ -209,10 +209,10 @@ const WelcomeTourPage: FC = () => {
                      />
                   </View>
                   <View style={styles.textContainer}>
-                     <TitleText style={styles.title}>HECHA CON AMOR</TitleText>
+                     <TitleText style={styles.title}>GRATIS Y ÉTICA</TitleText>
                      <Text style={styles.text}>
-                        Siempre será gratis y ética. Si te gusta, no olvides mencionarla en las
-                        redes o dónde lo creas oportuno.
+                        Esta app siempre será gratis y ética. Si te gusta, no olvides mencionarla en
+                        las redes o dónde lo creas oportuno.
                      </Text>
                      {renderButtonContinue()}
                   </View>
@@ -262,7 +262,7 @@ const styles: Styles = StyleSheet.create({
    text: {
       textAlign: Platform.OS === "ios" ? "justify" : "center",
       fontFamily: currentTheme.font.medium,
-      fontSize: 18,
+      fontSize: 17,
       lineHeight: 25,
       color: currentTheme.colors.textLogin,
       paddingLeft: padding,
@@ -291,11 +291,14 @@ const styles: Styles = StyleSheet.create({
       borderWidth: 1
    },
    buttonContent: {
-      height: 34
+      height: 34,
+      alignItems: "center",
+      justifyContent: "center"
    },
    buttonText: {
       fontSize: 15,
-      letterSpacing: 0.5
+      letterSpacing: 0.5,
+      lineHeight: 15
    }
 });
 
