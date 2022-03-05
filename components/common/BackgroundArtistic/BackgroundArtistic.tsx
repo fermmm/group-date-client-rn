@@ -56,4 +56,4 @@ const styles: Styles = StyleSheet.create({
    }
 });
 
-export default BackgroundArtistic;
+export default React.memo(BackgroundArtistic);

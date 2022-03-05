@@ -26,12 +26,14 @@ const WelcomeTourPage: FC = () => {
    const { setAsShowed } = useWelcomeShowed();
    const { navigateWithoutHistory } = useNavigation();
    const [currentStep, setCurrentStep] = useState<number>(0);
+   const [amountToRender, setAmountToRender] = useState<number>(2);
    const { colors } = useTheme();
    const totalSteps = 6;
 
    const handleContinuePress = useCallback(() => {
       if (currentStep + 1 < totalSteps) {
          setCurrentStep(currentStep + 1);
+         setAmountToRender(amountToRender + 1);
       } else {
          navigateWithoutHistory("Login");
       }
@@ -67,157 +69,171 @@ const WelcomeTourPage: FC = () => {
             onScreenChange={newStep => setCurrentStep(newStep)}
             swipeEnabled
          >
-            <BackgroundArtistic
-               gradientColor1="#9A55FF"
-               gradientColor2="#6D94FF"
-               gradientStart={0}
-               gradientEnd={1}
-            >
-               <View style={styles.mainContainer}>
+            {amountToRender >= 1 && (
+               <BackgroundArtistic
+                  gradientColor1="#9A55FF"
+                  gradientColor2="#6D94FF"
+                  gradientStart={0}
+                  gradientEnd={1}
+               >
+                  <View style={styles.mainContainer}>
+                     <View style={styles.imageContainer}>
+                        <Svg
+                           src={screen1PortalSvg}
+                           style={{ transform: [{ scale: 1.5 }, { translateX: -10 }] }}
+                        />
+                     </View>
+                     <View style={styles.textContainer}>
+                        <TitleText style={styles.title} adjustsFontSizeToFit>
+                           BIENVENIDX!
+                        </TitleText>
+                        <Text style={styles.text}>
+                           GroupDate es la primera app de citas grupales. Cuando se gustan entre
+                           muchxs se habilita un chat grupal.
+                        </Text>
+                        {renderButtonContinue()}
+                     </View>
+                  </View>
+               </BackgroundArtistic>
+            )}
+            {amountToRender >= 2 && (
+               <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground3 }]}>
                   <View style={styles.imageContainer}>
                      <Svg
-                        src={screen1PortalSvg}
-                        style={{ transform: [{ scale: 1.5 }, { translateX: -10 }] }}
+                        src={screen2HeartSvg}
+                        style={{ transform: [{ scale: 0.9 }, { translateX: -6 }] }}
                      />
                   </View>
                   <View style={styles.textContainer}>
-                     <TitleText style={styles.title} adjustsFontSizeToFit>
-                        BIENVENIDX!
+                     <TitleText style={[styles.title, { color: "#502E92" }]}>
+                        Es para todxs
                      </TitleText>
-                     <Text style={styles.text}>
-                        GroupDate es la primera app de citas grupales. Cuando se gustan entre muchxs
-                        se habilita un chat grupal.
+                     <Text style={[styles.text, { color: "#502E92" }]}>
+                        Todas las orientaciones y tipos de vínculos pueden ser parte de una cita
+                        grupal.
                      </Text>
-                     {renderButtonContinue()}
+                     {renderButtonContinue({ color: "#502E92" })}
                   </View>
                </View>
-            </BackgroundArtistic>
-            <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground3 }]}>
-               <View style={styles.imageContainer}>
-                  <Svg
-                     src={screen2HeartSvg}
-                     style={{ transform: [{ scale: 0.9 }, { translateX: -6 }] }}
-                  />
-               </View>
-               <View style={styles.textContainer}>
-                  <TitleText style={[styles.title, { color: "#502E92" }]}>Es para todxs</TitleText>
-                  <Text style={[styles.text, { color: "#502E92" }]}>
-                     Todas las orientaciones y tipos de vínculos pueden ser parte de una cita
-                     grupal.
-                  </Text>
-                  {renderButtonContinue({ color: "#502E92" })}
-               </View>
-            </View>
-            <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground4 }]}>
-               <View style={styles.imageContainer}>
-                  <Svg
-                     src={screen3HeadSvg}
-                     style={{
-                        transform: [{ scale: 2.15 }, { translateX: 15 }, { translateY: 36 }]
-                     }}
-                  />
-               </View>
-               <View style={styles.textContainer}>
-                  <TitleText style={[styles.title, { color: "#502E92" }]}>
-                     SIN PRECONCEPTOS
-                  </TitleText>
-                  <Text style={[styles.text, { color: "#502E92" }]}>
-                     No hace falta que se gusten todxs entre sí al 100% ni que cumplas un rol o una
-                     expectativa en particular.
-                  </Text>
-                  {renderButtonContinue({ color: "#502E92" })}
-               </View>
-            </View>
-            <BackgroundArtistic
-               gradientColor1="#9A55FF"
-               gradientColor2="#6D94FF"
-               gradientStart={0}
-               gradientEnd={1}
-            >
-               <View style={styles.mainContainer}>
+            )}
+            {amountToRender >= 3 && (
+               <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground4 }]}>
                   <View style={styles.imageContainer}>
                      <Svg
-                        src={screen4PoolSvg}
+                        src={screen3HeadSvg}
                         style={{
-                           transform: [{ scale: 0.9 }, { translateY: 0 }]
+                           transform: [{ scale: 2.15 }, { translateX: 15 }, { translateY: 36 }]
                         }}
                      />
                   </View>
                   <View style={styles.textContainer}>
-                     <TitleText style={styles.title}>COMPARTIR Y DIVERTIRNOS</TitleText>
-                     <Text style={styles.text}>
-                        Es para conocernos todxs a la vez, probar que pasa cuando no formamos
-                        parejas, probar una forma de pensar en grupo
+                     <TitleText style={[styles.title, { color: "#502E92" }]}>
+                        SIN PRECONCEPTOS
+                     </TitleText>
+                     <Text style={[styles.text, { color: "#502E92" }]}>
+                        No hace falta que se gusten todxs entre sí al 100% ni que cumplas un rol o
+                        una expectativa en particular.
                      </Text>
-                     {renderButtonContinue()}
+                     {renderButtonContinue({ color: "#502E92" })}
                   </View>
                </View>
-            </BackgroundArtistic>
-            <BackgroundArtistic
-               gradientColor1="#9A55FF"
-               gradientColor2="#6D94FF"
-               gradientStart={0}
-               gradientEnd={1}
-            >
-               <View style={styles.mainContainer}>
-                  <View style={styles.imageContainer}>
-                     <Svg
-                        src={screen5PrimitivesSvg}
-                        style={{
-                           transform: [{ scale: 0.95 }, { translateY: -25 }]
-                        }}
-                     />
-                     <Svg
-                        src={screen5PrimitivesOverlayLeftSvg}
-                        style={{ position: "absolute", left: -15 }}
-                        width={"40%"}
-                     />
-                     <Svg
-                        src={screen5PrimitivesOverlayRightSvg}
-                        style={{ position: "absolute", right: -15, top: 10 }}
-                        width={"40%"}
-                     />
-                     <Svg
-                        src={screen5PrimitivesOverlayTopSvg}
-                        style={{ position: "absolute", top: 20 }}
-                        height={"25%"}
-                     />
+            )}
+            {amountToRender >= 4 && (
+               <BackgroundArtistic
+                  gradientColor1="#9A55FF"
+                  gradientColor2="#6D94FF"
+                  gradientStart={0}
+                  gradientEnd={1}
+               >
+                  <View style={styles.mainContainer}>
+                     <View style={styles.imageContainer}>
+                        <Svg
+                           src={screen4PoolSvg}
+                           style={{
+                              transform: [{ scale: 0.9 }, { translateY: 0 }]
+                           }}
+                        />
+                     </View>
+                     <View style={styles.textContainer}>
+                        <TitleText style={styles.title}>COMPARTIR Y DIVERTIRNOS</TitleText>
+                        <Text style={styles.text}>
+                           Es para conocernos todxs a la vez, probar que pasa cuando no formamos
+                           parejas, probar una forma de pensar en grupo
+                        </Text>
+                        {renderButtonContinue()}
+                     </View>
                   </View>
-                  <View style={styles.textContainer}>
-                     <TitleText style={styles.title}>ACERCARNOS{"\n"}A LO NATURAL</TitleText>
-                     <Text style={styles.text}>
-                        El poliamor (no-monogamia) en grupo fue lo más común hasta un cambio en la
-                        forma de pensar hace 10 mil años.
-                     </Text>
-                     {renderButtonContinue()}
+               </BackgroundArtistic>
+            )}
+            {amountToRender >= 5 && (
+               <BackgroundArtistic
+                  gradientColor1="#9A55FF"
+                  gradientColor2="#6D94FF"
+                  gradientStart={0}
+                  gradientEnd={1}
+               >
+                  <View style={styles.mainContainer}>
+                     <View style={styles.imageContainer}>
+                        <Svg
+                           src={screen5PrimitivesSvg}
+                           style={{
+                              transform: [{ scale: 0.95 }, { translateY: -25 }]
+                           }}
+                        />
+                        <Svg
+                           src={screen5PrimitivesOverlayLeftSvg}
+                           style={{ position: "absolute", left: -15 }}
+                           width={"40%"}
+                        />
+                        <Svg
+                           src={screen5PrimitivesOverlayRightSvg}
+                           style={{ position: "absolute", right: -15, top: 10 }}
+                           width={"40%"}
+                        />
+                        <Svg
+                           src={screen5PrimitivesOverlayTopSvg}
+                           style={{ position: "absolute", top: 20 }}
+                           height={"25%"}
+                        />
+                     </View>
+                     <View style={styles.textContainer}>
+                        <TitleText style={styles.title}>ACERCARNOS{"\n"}A LO NATURAL</TitleText>
+                        <Text style={styles.text}>
+                           El poliamor (no-monogamia) en grupo fue lo más común hasta un cambio en
+                           la forma de pensar hace 10 mil años.
+                        </Text>
+                        {renderButtonContinue()}
+                     </View>
                   </View>
-               </View>
-            </BackgroundArtistic>
-            <BackgroundArtistic
-               gradientColor1="#9A55FF"
-               gradientColor2="#6D94FF"
-               gradientStart={0}
-               gradientEnd={1}
-            >
-               <View style={styles.mainContainer}>
-                  <View style={styles.imageContainer}>
-                     <Svg
-                        src={screen6Heart2Svg}
-                        style={{
-                           transform: [{ scale: 2.3 }, { translateX: -17 }, { translateY: 10 }]
-                        }}
-                     />
+               </BackgroundArtistic>
+            )}
+            {amountToRender >= 6 && (
+               <BackgroundArtistic
+                  gradientColor1="#9A55FF"
+                  gradientColor2="#6D94FF"
+                  gradientStart={0}
+                  gradientEnd={1}
+               >
+                  <View style={styles.mainContainer}>
+                     <View style={styles.imageContainer}>
+                        <Svg
+                           src={screen6Heart2Svg}
+                           style={{
+                              transform: [{ scale: 2.3 }, { translateX: -17 }, { translateY: 10 }]
+                           }}
+                        />
+                     </View>
+                     <View style={styles.textContainer}>
+                        <TitleText style={styles.title}>GRATIS Y ÉTICA</TitleText>
+                        <Text style={styles.text}>
+                           Esta app siempre será gratis y ética. Si te gusta, no olvides mencionarla
+                           en las redes o dónde lo creas oportuno.
+                        </Text>
+                        {renderButtonContinue()}
+                     </View>
                   </View>
-                  <View style={styles.textContainer}>
-                     <TitleText style={styles.title}>GRATIS Y ÉTICA</TitleText>
-                     <Text style={styles.text}>
-                        Esta app siempre será gratis y ética. Si te gusta, no olvides mencionarla en
-                        las redes o dónde lo creas oportuno.
-                     </Text>
-                     {renderButtonContinue()}
-                  </View>
-               </View>
-            </BackgroundArtistic>
+               </BackgroundArtistic>
+            )}
          </ScreensStepper>
       </View>
    );
