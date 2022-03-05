@@ -13,7 +13,7 @@ import { LogoAnimator } from "./LogoAnimator/LogoAnimator";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useSendPropsToUpdateAtLogin } from "./tools/useSendPropsToUpdateAtLogin";
 import BackgroundArtistic from "../../common/BackgroundArtistic/BackgroundArtistic";
-import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
+import { showIntroMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 import { AuthenticationButtons } from "./AuthenticationButtons/AuthenticationButtons";
 import { getAppVersion } from "../../../common-tools/device-native-api/versions/versions";
 import AppUpdateMessage from "./AppUpdateMessage/AppUpdateMessage";
@@ -84,7 +84,7 @@ const LoginPage: FC = () => {
          redirectToRequiredPage();
       } else {
          navigateWithoutHistory("Main");
-         showBetaVersionMessage();
+         showIntroMessage();
       }
    }, [
       profileStatusData,

@@ -28,7 +28,7 @@ import { useAuthentication, useLogout } from "../../../api/authentication/useAut
 import { revalidate } from "../../../api/tools/useCache/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
 import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
-import { showBetaVersionMessage } from "../../../common-tools/messages/showBetaVersionMessage";
+import { showIntroMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 import GenderForm from "./GenderForm/GenderForm";
 import { IsCoupleQuestion } from "./IsCoupleQuestion/IsCoupleQuestion";
 import { useAnalyticsForRegistration } from "../../../common-tools/analytics/registrationFormsPage/useAnalyticsForRegistration";
@@ -186,7 +186,7 @@ const RegistrationFormsPage: FC = () => {
                redirectToRequiredPage();
             } else {
                navigateWithoutHistory("Main");
-               showBetaVersionMessage();
+               showIntroMessage();
             }
          }
       } else {
