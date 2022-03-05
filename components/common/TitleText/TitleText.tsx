@@ -8,6 +8,7 @@ export interface TitleTextProps {
    extraSize?: boolean;
    extraMarginLeft?: boolean;
    style?: StyleProp<TextStyle>;
+   adjustsFontSizeToFit?: boolean;
 }
 
 const TitleText: FC<TitleTextProps> = props => {
