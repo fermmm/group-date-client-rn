@@ -4,7 +4,6 @@ import React, { FC, useEffect, useState } from "react";
 import AppLoading from "expo-app-loading";
 import { Provider as PaperProvider } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
-import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
 import { currentTheme } from "./config";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainerWithNotifications } from "./components/common/NavigationContainerWithNotifications/NavigationContainerWithNotifications";
@@ -33,6 +32,8 @@ import "dayjs/locale/es";
 import RemoveSeenWizardPage from "./components/pages/RemoveSeenWizardPage/RemoveSeenWizardPage";
 import GlobalModalsProvider from "./components/common/GlobalModalsProvider/GlobalModalsProvider";
 import KeyboardAvoidingViewExtended from "./components/common/KeyboardAvoidingViewExtended/KeyboardAvoidingViewExtended";
+import { loadFontPolly } from "./common-tools/font-loaders/loadFontPolly";
+import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -54,6 +55,7 @@ const App: FC = () => {
    useEffect(() => {
       (async () => {
          await loadFontMontserrat();
+         // await loadFontPolly();
          setWelcomeShowed(await welcomeWasShowed());
          setResourcesLoaded(true);
       })();

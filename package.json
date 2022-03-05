@@ -2,6 +2,7 @@
   "scripts": {
     "preinstall": "npm install -g expo-cli",
     "start": "expo start",
+    "start:clean": "expo r -c",
     "start:native": "react-native start",
     "simulator:android": "react-native run-android",
     "simulator:ios": "npx react-native run-ios",
@@ -98,6 +99,7 @@
     "@types/react-native-keyboard-spacer": "^0.4.1",
     "@types/react-native-multi-slider": "^0.3.1",
     "@types/react-native-vector-icons": "^6.4.1",
+    "babel-plugin-inline-import": "^3.0.0",
     "babel-preset-expo": "9.0.2",
     "react-devtools": "^4.22.1",
     "tslint": "^5.17.0",

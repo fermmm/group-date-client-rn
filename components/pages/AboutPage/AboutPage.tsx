@@ -147,7 +147,9 @@ const styles: Styles = StyleSheet.create({
    },
    text: {
       fontSize: 16,
-      lineHeight: 21
+      lineHeight: 21,
+      fontWeight: "300",
+      fontFamily: null // This restores the system font, which is more legible for this cases where the user is reading big text blocks.
    }
 });
 

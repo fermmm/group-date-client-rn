@@ -7,26 +7,41 @@ import { Styles } from "../../../common-tools/ts-tools/Styles";
 interface PropsBackgroundArtistic {
    children?: ReactNode;
    useImageBackground?: boolean;
+   gradientColor1?: string;
+   gradientColor2?: string;
+   gradientStart?: number;
+   gradientEnd?: number;
 }
 
 const BackgroundArtistic: FC<PropsBackgroundArtistic> = props => {
+   const {
+      children,
+      useImageBackground,
+      gradientColor1,
+      gradientColor2,
+      gradientStart,
+      gradientEnd
+   } = props;
    const { backgroundImage, colors } = useTheme();
 
-   if (props.useImageBackground) {
+   if (useImageBackground) {
       return (
          <ImageBackground source={backgroundImage} style={styles.background}>
-            {props.children}
+            {children}
          </ImageBackground>
       );
    } else {
       return (
          <LinearGradient
-            colors={[colors.specialBackground1, colors.specialBackground2]}
+            colors={[
+               gradientColor1 ?? colors.specialBackground1,
+               gradientColor2 ?? colors.specialBackground2
+            ]}
             style={styles.background}
-            start={[0, 0.5]}
-            end={[0, 1.3]}
+            start={[0, gradientStart ?? 0.5]}
+            end={[0, gradientEnd ?? 1.3]}
          >
-            {props.children}
+            {children}
          </LinearGradient>
       );
    }

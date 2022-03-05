@@ -1,26 +1,33 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import color from "color";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import BackgroundArtistic from "../../common/BackgroundArtistic/BackgroundArtistic";
-import { LogoSvg } from "../../../assets/LogoSvg";
 import { currentTheme } from "../../../config";
 import ButtonStyled from "../../common/ButtonStyled/ButtonStyled";
-import GraphSvg2 from "../../../assets/GraphSvg2";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useWelcomeShowed } from "./tools/useWelcomeShowed";
+import Svg from "../../../common-tools/svg-tools/Svg";
+import screen1PortalSvg from "../../../assets/welcome_images/screen1-portal.svg";
+import screen2HeartSvg from "../../../assets/welcome_images/screen2-heart.svg";
+import screen3HeadSvg from "../../../assets/welcome_images/screen3-head.svg";
+import screen4PoolSvg from "../../../assets/welcome_images/screen4-pool.svg";
+import screen5PrimitivesSvg from "../../../assets/welcome_images/screen5-primitives.svg";
+import screen5PrimitivesOverlayLeftSvg from "../../../assets/welcome_images/screen5-primitives-overlay-left.svg";
+import screen5PrimitivesOverlayRightSvg from "../../../assets/welcome_images/screen5-primitives-overlay-right.svg";
+import screen5PrimitivesOverlayTopSvg from "../../../assets/welcome_images/screen5-primitives-overlay-top.svg";
+import screen6Heart2Svg from "../../../assets/welcome_images/screen6-heart2.svg";
+import TitleText from "../../common/TitleText/TitleText";
 
 const WelcomeTourPage: FC = () => {
    const { setAsShowed } = useWelcomeShowed();
    const { navigateWithoutHistory } = useNavigation();
    const [currentStep, setCurrentStep] = useState<number>(0);
    const { colors } = useTheme();
-   const iconSize = Dimensions.get("window").width * 0.35;
-   const totalSteps = 5;
+   const totalSteps = 6;
 
    const handleContinuePress = useCallback(() => {
       if (currentStep + 1 < totalSteps) {
@@ -36,94 +43,187 @@ const WelcomeTourPage: FC = () => {
 
    const topColor = color(colors.background).lightness(82).toString();
 
+   const renderButtonContinue = (props?: { color?: string }) => {
+      const { color = colors.textLogin } = props ?? {};
+
+      return (
+         <View style={styles.buttonContainer}>
+            <ButtonStyled
+               color={color}
+               onPress={handleContinuePress}
+               style={[styles.button, { borderColor: color }]}
+               contentStyle={styles.buttonContent}
+            >
+               <Text style={[styles.buttonText, { color }]}>Entendido</Text>
+            </ButtonStyled>
+         </View>
+      );
+   };
+
    return (
-      <BackgroundArtistic>
+      <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
          <ScreensStepper
             currentScreen={currentStep}
             onScreenChange={newStep => setCurrentStep(newStep)}
             swipeEnabled
          >
-            <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
-                  <Text style={[styles.bigText, { color: topColor }]}>¡Bienvenidx!</Text>
-               </View>
-               <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                     GroupDate es la primera app de citas grupales.{"\n"}
-                     <Text style={styles.textBold}>
-                        Se habilita un chat grupal cuando se gustan entre 4 o más.
+            <BackgroundArtistic
+               gradientColor1="#9A55FF"
+               gradientColor2="#6D94FF"
+               gradientStart={0}
+               gradientEnd={1}
+            >
+               <View style={styles.mainContainer}>
+                  <View style={styles.imageContainer}>
+                     <Svg
+                        src={screen1PortalSvg}
+                        style={{ transform: [{ scale: 1.7 }, { translateX: -10 }] }}
+                     />
+                  </View>
+                  <View style={styles.textContainer}>
+                     <TitleText style={styles.title} adjustsFontSizeToFit>
+                        BIENVENIDX!
+                     </TitleText>
+                     <Text style={styles.text}>
+                        GroupDate es la primera app de citas grupales. Cuando se gustan entre muchxs
+                        se habilita un chat grupal.
                      </Text>
-                  </Text>
+                     {renderButtonContinue()}
+                  </View>
                </View>
-            </View>
-            <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
-                  <GraphSvg2
-                     lineColor={topColor}
-                     circleColor={topColor}
-                     filled={false}
-                     style={styles.logoSvg}
+            </BackgroundArtistic>
+            <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground3 }]}>
+               <View style={styles.imageContainer}>
+                  <Svg
+                     src={screen2HeartSvg}
+                     style={{ transform: [{ scale: 0.9 }, { translateX: -6 }] }}
                   />
                </View>
                <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                     Es para <Text style={styles.textBold}>disfrutar el hecho de ser muchxs</Text>{" "}
-                     en una cita. {"\n"}Una situación que no se da en nuestra cultura contemporánea
-                     pero si antiguamente.
+                  <TitleText style={[styles.title, { color: "#502E92" }]}>Es para todxs</TitleText>
+                  <Text style={[styles.text, { color: "#502E92" }]}>
+                     Todas las orientaciones y tipos de vínculos pueden ser parte de una cita
+                     grupal.
                   </Text>
+                  {renderButtonContinue({ color: "#502E92" })}
                </View>
             </View>
-            <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
-                  <Text style={[styles.bigText, { color: topColor }]}>¡Hetero Friendly!</Text>
+            <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground4 }]}>
+               <View style={styles.imageContainer}>
+                  <Svg
+                     src={screen3HeadSvg}
+                     style={{
+                        transform: [{ scale: 2.15 }, { translateX: 15 }, { translateY: 36 }]
+                     }}
+                  />
                </View>
                <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                     Para que la app forme un grupo{" "}
-                     <Text style={styles.textBold}>
-                        no hace falta que se gusten todxs entre sí al 100%
-                     </Text>
-                     , todas las orientaciones y tipos de vínculos pueden ser parte de una cita
-                     grupal
+                  <TitleText style={[styles.title, { color: "#502E92" }]}>
+                     SIN PRECONCEPTOS
+                  </TitleText>
+                  <Text style={[styles.text, { color: "#502E92" }]}>
+                     No hace falta que se gusten todxs entre sí al 100% ni que cumplas un rol o una
+                     expectativa en particular.
                   </Text>
+                  {renderButtonContinue({ color: "#502E92" })}
                </View>
             </View>
-            <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
-                  <LogoSvg color={topColor} style={styles.logoSvg} />
-               </View>
-               <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                     No se espera que sepas o hagas algo en particular, solo disfrutar de amistades
-                     y vínculos{" "}
-                     <Text style={styles.textBold}>
-                        sin perspectivas monógamas que consideramos del patriarcado
+            <BackgroundArtistic
+               gradientColor1="#9A55FF"
+               gradientColor2="#6D94FF"
+               gradientStart={0}
+               gradientEnd={1}
+            >
+               <View style={styles.mainContainer}>
+                  <View style={styles.imageContainer}>
+                     <Svg
+                        src={screen4PoolSvg}
+                        style={{
+                           transform: [{ scale: 0.9 }, { translateY: 0 }]
+                        }}
+                     />
+                  </View>
+                  <View style={styles.textContainer}>
+                     <TitleText style={styles.title}>COMPARTIR Y DIVERTIRNOS</TitleText>
+                     <Text style={styles.text}>
+                        Es para conocernos todxs a la vez, probar que pasa cuando no formamos
+                        parejas, probar una forma de pensar en grupo
                      </Text>
-                  </Text>
+                     {renderButtonContinue()}
+                  </View>
                </View>
-            </View>
-            <View style={styles.mainContainer}>
-               <View style={styles.logoContainer}>
-                  <Icon name={"account-multiple-plus"} color={topColor} size={iconSize} />
-               </View>
-               <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                     No tenemos interés monetario y funcionamos gracias a colaboraciones diversas.
-                     {"\n"}
-                     <Text style={styles.textBold}>
-                        Si te gusta la app no olvides mencionarla en las redes o donde creas
-                        oportuno
+            </BackgroundArtistic>
+            <BackgroundArtistic
+               gradientColor1="#9A55FF"
+               gradientColor2="#6D94FF"
+               gradientStart={0}
+               gradientEnd={1}
+            >
+               <View style={styles.mainContainer}>
+                  <View style={styles.imageContainer}>
+                     <Svg
+                        src={screen5PrimitivesSvg}
+                        style={{
+                           transform: [{ scale: 0.95 }, { translateY: -25 }]
+                        }}
+                     />
+                     <Svg
+                        src={screen5PrimitivesOverlayLeftSvg}
+                        style={{ position: "absolute", left: -15 }}
+                        width={"40%"}
+                     />
+                     <Svg
+                        src={screen5PrimitivesOverlayRightSvg}
+                        style={{ position: "absolute", right: -15, top: 10 }}
+                        width={"40%"}
+                     />
+                     <Svg
+                        src={screen5PrimitivesOverlayTopSvg}
+                        style={{ position: "absolute", top: 20 }}
+                        height={"25%"}
+                     />
+                  </View>
+                  <View style={styles.textContainer}>
+                     <TitleText style={styles.title}>ACERCARNOS{"\n"}A LO NATURAL</TitleText>
+                     <Text style={styles.text}>
+                        El poliamor (no-monogamia) en grupo fue lo más común hasta un cambio en la
+                        forma de pensar hace 10 mil años.
                      </Text>
-                  </Text>
+                     {renderButtonContinue()}
+                  </View>
                </View>
-            </View>
+            </BackgroundArtistic>
+            <BackgroundArtistic
+               gradientColor1="#9A55FF"
+               gradientColor2="#6D94FF"
+               gradientStart={0}
+               gradientEnd={1}
+            >
+               <View style={styles.mainContainer}>
+                  <View style={styles.imageContainer}>
+                     <Svg
+                        src={screen6Heart2Svg}
+                        style={{
+                           transform: [{ scale: 2.3 }, { translateX: -17 }, { translateY: 10 }]
+                        }}
+                     />
+                  </View>
+                  <View style={styles.textContainer}>
+                     <TitleText style={styles.title}>HECHA CON AMOR</TitleText>
+                     <Text style={styles.text}>
+                        Siempre será gratis y ética. Si te gusta, no olvides mencionarla en las
+                        redes o dónde lo creas oportuno.
+                     </Text>
+                     {renderButtonContinue()}
+                  </View>
+               </View>
+            </BackgroundArtistic>
          </ScreensStepper>
-         <ButtonStyled color={colors.textLogin} onPress={handleContinuePress} style={styles.button}>
-            Entendido
-         </ButtonStyled>
-      </BackgroundArtistic>
+      </View>
    );
 };
+
+const padding = 40;
 
 const styles: Styles = StyleSheet.create({
    mainContainer: {
@@ -131,11 +231,12 @@ const styles: Styles = StyleSheet.create({
       width: "100%",
       alignItems: "center",
       justifyContent: "center",
-      padding: 30
+      overflow: "hidden"
    },
-   logoContainer: {
+   imageContainer: {
       width: "100%",
-      height: "50%",
+      height: "60%",
+      paddingTop: "20%",
       alignItems: "center",
       justifyContent: "center"
    },
@@ -144,14 +245,28 @@ const styles: Styles = StyleSheet.create({
       height: 100
    },
    textContainer: {
+      width: "100%",
       height: "50%"
    },
-   text: {
+   title: {
       textAlign: "center",
-      fontFamily: currentTheme.font.light,
+      fontFamily: currentTheme.font.semiBold,
+      textTransform: "uppercase",
+      fontSize: 32,
+      color: currentTheme.colors.textLogin,
+      marginBottom: 30,
+      width: "100%",
+      paddingLeft: 10,
+      paddingRight: 10
+   },
+   text: {
+      textAlign: Platform.OS === "ios" ? "justify" : "center",
+      fontFamily: currentTheme.font.medium,
       fontSize: 18,
       lineHeight: 25,
-      color: currentTheme.colors.textLogin
+      color: currentTheme.colors.textLogin,
+      paddingLeft: padding,
+      paddingRight: padding
    },
    textBold: {
       textAlign: "center",
@@ -161,15 +276,26 @@ const styles: Styles = StyleSheet.create({
       color: currentTheme.colors.textLogin
    },
    bigText: {
-      textAlign: "center",
+      textAlign: Platform.OS === "ios" ? "justify" : "center",
       fontFamily: currentTheme.font.medium,
       fontSize: 40
    },
-   button: {
+   buttonContainer: {
       position: "absolute",
-      bottom: 40,
-      maxWidth: "80%",
-      borderColor: currentTheme.colors.textLogin
+      bottom: 60,
+      width: "100%",
+      paddingLeft: padding,
+      paddingRight: padding
+   },
+   button: {
+      borderWidth: 1
+   },
+   buttonContent: {
+      height: 34
+   },
+   buttonText: {
+      fontSize: 15,
+      letterSpacing: 0.5
    }
 });
 

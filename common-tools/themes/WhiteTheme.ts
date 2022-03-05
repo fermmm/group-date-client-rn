@@ -1,5 +1,6 @@
 import color from "color";
-import { montserratForPaper, montserrat } from "./fonts/montserrat";
+import { montserrat, montserratForPaper } from "./fonts/montserrat";
+import { polly, pollyForPaper } from "./fonts/polly";
 
 export default {
    dark: false,
@@ -16,11 +17,13 @@ export default {
       backgroundBottomGradient: "#DFE4EC",
       specialBackground1: "#9B63F8",
       specialBackground2: "#809FFC",
+      specialBackground3: "#FFD997",
+      specialBackground4: "#00FDF3",
       surface: "#FFFFFF",
       error: "#FF7A8F",
       text: "#000000",
       text2: "#FFFFFF",
-      textLogin: "#ECEFFB",
+      textLogin: "#FFFFFF",
       logoColor: "#FF84A2",
       logoColor2: "#FF7AB4",
       statusOk: "#00C781",
