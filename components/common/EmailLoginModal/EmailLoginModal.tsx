@@ -42,7 +42,7 @@ const EmailLoginModal: FC<PropsEmailLoginModal> = ({ onLogin, onDismiss, close }
    const handleSignUp = async (token: string) => {
       onLogin?.(token);
       openDialogModal({
-         message: "Has creado tu cuenta con éxito =)",
+         message: "Has creado tu cuenta con éxito",
          buttons: [{ label: "Ok" }]
       });
       close();
