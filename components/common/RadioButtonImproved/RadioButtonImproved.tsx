@@ -38,7 +38,7 @@ const RadioButtonImproved: FC<RadioButtonImprovedProps> = props => {
    return (
       <ViewTouchable onPress={() => onPress()} style={[style, styles.mainContainer]}>
          <>
-            <View style={{ marginRight: 15 }}>
+            <View style={{ marginRight: 15 }} pointerEvents={"none"}>
                {iconElement != null ? (
                   iconElement(checked)
                ) : (
