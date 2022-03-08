@@ -50,7 +50,7 @@ const GenderForm: FC<PropsGenderForm> = props => {
       }
 
       if (!includesAnyOf(gendersSelected, CIS_GENDERS)) {
-         return "Debes seleccionar al menos un género cis";
+         return "Es necesario seleccionar al menos un género cis, es por una razón técnica. Puedes seleccionar ambos géneros cis como una forma de dar a entender que lo anulas. En el futuro mejoraremos esto.";
       }
 
       return null;
