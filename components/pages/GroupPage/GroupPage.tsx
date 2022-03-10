@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useFocusEffect, useIsFocused, useRoute } from "@react-navigation/native";
-import { Button, List } from "react-native-paper";
+import { Button, List, Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import AppBarHeader from "../../common/AppBarHeader/AppBarHeader";
 import Avatar from "../../common/Avatar/Avatar";
@@ -28,6 +28,7 @@ import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/Lo
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 import { useGroupSeenChecker } from "../GroupsListPage/tools/useGroupSeenChecker";
+import { Gender } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 
 export interface ParamsGroupPage {
    groupId: string;
@@ -98,6 +99,17 @@ const GroupPage: FC = () => {
                   >
                      Elegir
                   </Button>
+               </SurfaceStyled>
+            )}
+            {localUser.genders.find(g => g === Gender.Woman || g === Gender.TransgenderWoman) && (
+               <SurfaceStyled>
+                  <TitleText>Seguridad para mujeres</TitleText>
+                  <Text style={styles.textNormal}>
+                     Consideramos esta app mucho más segura que las de monogamia y no tenemos
+                     registro de ningún problema pero por si acaso recomendamos encontrarse un rato
+                     antes entre mujeres. Ten especial cuidado si vas a ser la única mujer en la
+                     cita grupal, recomendamos evitar esa situación.
+                  </Text>
                </SurfaceStyled>
             )}
             <SurfaceStyled>
@@ -175,6 +187,12 @@ const styles: Styles = StyleSheet.create({
    sectionTitle: {
       fontFamily: currentTheme.font.regular,
       fontSize: 15
+   },
+   textNormal: {
+      fontFamily: currentTheme.font.medium,
+      fontSize: 15,
+      flex: 1,
+      flexWrap: "wrap"
    },
    subItem: {
       paddingLeft: 26

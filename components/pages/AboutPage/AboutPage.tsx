@@ -57,16 +57,16 @@ const AboutPage: FC = () => {
                esta app hay más de una mujer pudiendo cuidarse mutuamente igual que en cualquier
                salida grupal. No tenemos ninguna queja sobre seguridad hasta ahora. Por si acaso
                también incluimos un mensaje para las mujeres recomendando que cuando asistan a una
-               cita se encuentren antes entre mujeres y todo sea en un lugar público y seguro (como
-               en cualquier app de este tipo). También tenemos los mismos sistemas que las otras
-               apps para denunciar.
+               cita se encuentren antes entre mujeres. También tenemos los mismos sistemas que las
+               otras apps para denunciar.
             </Text>
+            <EmptySpace height={15} />
             <Text style={styles.text}>
                Por último les compartimos una opinión: pensamos que a las personas irrespetuosas o
                violentas no les interesa esta app, les interesan formas de relación donde pueden
                ejercer jerarquía fácilmente como en las parejas, multiples parejas o agregando una
                persona a su pareja, esta app solo soporta citas grupales no-jerárquicas (conocernos
-               a la vez sin centralismos), más info en pregunta anterior.
+               a la vez sin centralismo), más info en pregunta anterior.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿En la cita grupal van a ser todxs del género y sexualidad que me gusta?
