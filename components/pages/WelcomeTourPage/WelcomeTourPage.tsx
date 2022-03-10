@@ -226,8 +226,8 @@ const WelcomeTourPage: FC = () => {
                      <View style={styles.textContainer}>
                         <TitleText style={styles.title}>GRATIS Y ÉTICA</TitleText>
                         <Text style={styles.text}>
-                           Esta app siempre será gratis y ética. Si te gusta, no olvides mencionarla
-                           en las redes o dónde lo creas oportuno.
+                           GroupDate siempre será gratis, ética y segura. Si te gusta, no olvides
+                           mencionarla en las redes o dónde lo creas oportuno.
                         </Text>
                         {renderButtonContinue()}
                      </View>

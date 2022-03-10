@@ -47,7 +47,26 @@ const AboutPage: FC = () => {
             <Text style={styles.text}>
                No. Solo se generan grupos más o menos equilibrados. Esto también genera que en las
                citas 100% heterosexuales la cantidad de mujeres y hombres siempre va a ser mas o
-               menos la misma.
+               menos la misma, esto último es importante para una mayor seguridad de las mujeres.
+            </Text>
+            <TitleText extraSize style={styles.title}>
+               ¿Es segura una cita grupal para las mujeres?
+            </TitleText>
+            <Text style={styles.text}>
+               Si, es incluso mas segura que las apps de monogamia ya que en las citas grupales que
+               la app genera va a haber mas de una mujer dando la posibilidad de cuidarse mutuamente
+               igual que en cualquier salida grupal. No tenemos ninguna queja sobre seguridad hasta
+               ahora. Por si acaso incluimos un mensaje de advertencia para las mujeres indicando
+               que cuando asistan a una cita primero se encuentren entre ellas y luego se conozcan
+               todxs en un lugar público y seguro (como en cualquier app de este tipo). También
+               tenemos todos los sistemas de seguridad de las apps de este tipo como el botón de la
+               bandera (flag) junto al de like para denunciar usuarios sospechosos.
+            </Text>
+            <Text style={styles.text}>
+               Por último como una simple opinión nuestra, pensamos que a las personas irrespetuosas
+               o violentas les interesan prácticas donde pueden ejercer jerarquía como en la
+               monogamia, múltiples parejas o agregar gente a la pareja, esta app propone y apoya
+               solo citas grupales no-jerárquicas (nos conocemos todxs a la vez).
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿En la cita grupal van a ser todxs del género y sexualidad que me gusta?
@@ -99,8 +118,8 @@ const AboutPage: FC = () => {
             <EmptySpace height={15} />
             <Text style={styles.text}>
                Hay muchos libros de ciencia sobre el tema, algunos muy conocidos como los de Cacilda
-               Jethá y Christopher Ryan o también el de Friedrich Engels: "El origen de la familia,
-               la propiedad privada y el estado".
+               Jethá y Christopher Ryan o también el de Marx y Engels: "El origen de la familia, la
+               propiedad privada y el estado".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
