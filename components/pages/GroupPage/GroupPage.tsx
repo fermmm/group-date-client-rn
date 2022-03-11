@@ -101,17 +101,6 @@ const GroupPage: FC = () => {
                   </Button>
                </SurfaceStyled>
             )}
-            {localUser.genders.find(g => g === Gender.Woman || g === Gender.TransgenderWoman) && (
-               <SurfaceStyled>
-                  <TitleText>Seguridad para mujeres</TitleText>
-                  <Text style={styles.textNormal}>
-                     Consideramos esta app mucho más segura que las de monogamia y no tenemos
-                     registro de ningún problema pero por si acaso recomendamos encontrarse un rato
-                     antes entre mujeres. Ten especial cuidado si vas a ser la única mujer en la
-                     cita grupal, recomendamos evitar esa situación.
-                  </Text>
-               </SurfaceStyled>
-            )}
             <SurfaceStyled>
                <TitleText>Miembros del grupo:</TitleText>
                <List.Section>

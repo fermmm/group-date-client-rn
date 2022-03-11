@@ -45,20 +45,17 @@ const AboutPage: FC = () => {
                gustan entre ellas
             </TitleText>
             <Text style={styles.text}>
-               No. Solo se generan grupos más o menos equilibrados. Esto también genera que en las
-               citas 100% heterosexuales la cantidad de mujeres y hombres siempre va a ser mas o
-               menos la misma, esto último es importante para una mayor seguridad de las mujeres.
+               No. Solo se generan grupos más o menos equilibrados. Esto también genera que cuando
+               se da una cita de 100% heterosexuales la cantidad de mujeres y hombres siempre va a
+               ser mas o menos la misma.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Es segura una cita grupal para las mujeres?
+               ¿Es segura una cita grupal?
             </TitleText>
             <Text style={styles.text}>
-               Si, es mucho más segura que las apps de monogamia ya que en las citas grupales de
-               esta app hay más de una mujer pudiendo cuidarse mutuamente igual que en cualquier
-               salida grupal. No tenemos ninguna queja sobre seguridad hasta ahora. Por si acaso
-               también incluimos un mensaje para las mujeres recomendando que cuando asistan a una
-               cita se encuentren antes entre mujeres. También tenemos los mismos sistemas que las
-               otras apps para denunciar.
+               Tenemos los mismos sistemas que las otras apps para denunciar y no tenemos ninguna
+               queja sobre seguridad hasta ahora. También ayuda el funcionamiento de la app ya que
+               genera citas equilibradas (mas info en la pregunta anterior).
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
@@ -66,7 +63,7 @@ const AboutPage: FC = () => {
                violentas no les interesa esta app, les interesan formas de relación donde pueden
                ejercer jerarquía fácilmente como en las parejas, multiples parejas o agregando una
                persona a su pareja, esta app solo soporta citas grupales no-jerárquicas (conocernos
-               a la vez sin centralismo), más info en pregunta anterior.
+               a la vez), más info en la pregunta anterior.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿En la cita grupal van a ser todxs del género y sexualidad que me gusta?
