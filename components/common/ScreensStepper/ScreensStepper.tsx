@@ -13,6 +13,7 @@ export interface ScreenStepperProps {
    screensWidth?: number;
    animated?: boolean;
    swipeEnabled?: boolean;
+   onMomentumScrollEnd?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
    /**
     * This triggers when the user press the back button or when
     * swiping is enabled and the user changes the screen.
@@ -39,6 +40,7 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
       currentScreen,
       onScreenChange,
       onBackPressAndNoHistory,
+      onMomentumScrollEnd,
       children,
       goBackTrigger
    } = props;
@@ -93,16 +95,6 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
       }
    };
 
-   /**
-    * This is triggered when the user finishes swiping to another screen
-    */
-   const onMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>): void => {
-      const newScreenIndex: number = Math.round(event.nativeEvent.contentOffset.x / screensWidth);
-      if (newScreenIndex !== currentScreen) {
-         onScreenChange(newScreenIndex);
-      }
-   };
-
    const scrollToScreen = (screenIndex: number, animated: boolean = false): void => {
       ref.current.scrollTo({ x: screensWidth * screenIndex, animated });
    };
@@ -146,6 +138,7 @@ export const ScreensStepper: FC<ScreenStepperProps> = props => {
          if (newScreenIndex !== currentScreen) {
             onScreenChange(newScreenIndex);
          }
+         onMomentumScrollEnd?.(event);
       },
       [screensWidth, currentScreen, onScreenChange]
    );

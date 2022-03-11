@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import color from "color";
@@ -26,18 +26,30 @@ const WelcomeTourPage: FC = () => {
    const { setAsShowed } = useWelcomeShowed();
    const { navigateWithoutHistory } = useNavigation();
    const [currentStep, setCurrentStep] = useState<number>(0);
+   const currentStepRef = useRef(0);
    const [amountToRender, setAmountToRender] = useState<number>(2);
    const { colors } = useTheme();
    const totalSteps = 6;
 
+   const changeStep = (newStep: number) => {
+      setCurrentStep(newStep);
+      currentStepRef.current = newStep;
+      setAmountToRender(currentStepRef.current + 1);
+   };
+
    const handleContinuePress = useCallback(() => {
       if (currentStep + 1 < totalSteps) {
-         setCurrentStep(currentStep + 1);
-         setAmountToRender(amountToRender + 1);
+         changeStep(currentStep + 1);
       } else {
          navigateWithoutHistory("Login");
       }
    }, [currentStep]);
+
+   const handleMomentumScrollEnd = () => {
+      if (amountToRender < currentStepRef.current + 2) {
+         setAmountToRender(currentStepRef.current + 2);
+      }
+   };
 
    useEffect(() => {
       setAsShowed();
@@ -66,10 +78,11 @@ const WelcomeTourPage: FC = () => {
       <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
          <ScreensStepper
             currentScreen={currentStep}
-            onScreenChange={newStep => setCurrentStep(newStep)}
+            onScreenChange={newStep => changeStep(newStep)}
+            onMomentumScrollEnd={handleMomentumScrollEnd}
             swipeEnabled
          >
-            {amountToRender >= 1 && (
+            {amountToRender >= 0 && (
                <BackgroundArtistic
                   gradientColor1="#9A55FF"
                   gradientColor2="#6D94FF"
@@ -96,7 +109,7 @@ const WelcomeTourPage: FC = () => {
                   </View>
                </BackgroundArtistic>
             )}
-            {amountToRender >= 2 && (
+            {amountToRender >= 1 && (
                <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground3 }]}>
                   <View style={styles.imageContainer}>
                      <Svg
@@ -116,7 +129,7 @@ const WelcomeTourPage: FC = () => {
                   </View>
                </View>
             )}
-            {amountToRender >= 3 && (
+            {amountToRender >= 2 && (
                <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground4 }]}>
                   <View style={styles.imageContainer}>
                      <Svg
@@ -138,7 +151,7 @@ const WelcomeTourPage: FC = () => {
                   </View>
                </View>
             )}
-            {amountToRender >= 4 && (
+            {amountToRender >= 3 && (
                <BackgroundArtistic
                   gradientColor1="#9A55FF"
                   gradientColor2="#6D94FF"
@@ -165,7 +178,7 @@ const WelcomeTourPage: FC = () => {
                   </View>
                </BackgroundArtistic>
             )}
-            {amountToRender >= 5 && (
+            {amountToRender >= 4 && (
                <BackgroundArtistic
                   gradientColor1="#9A55FF"
                   gradientColor2="#6D94FF"
@@ -207,7 +220,7 @@ const WelcomeTourPage: FC = () => {
                   </View>
                </BackgroundArtistic>
             )}
-            {amountToRender >= 6 && (
+            {amountToRender >= 5 && (
                <BackgroundArtistic
                   gradientColor1="#9A55FF"
                   gradientColor2="#6D94FF"
