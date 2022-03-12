@@ -11,7 +11,7 @@
 
 "NSLocationWhenInUseUsageDescription" = "Será utilizada para obtener el nombre de tu ciudad al registrarte y luego para mostrarte usuarios cercanos.";
 
-"NSCameraUsageDescription" = "Solo se accede a la cámara mientras sacas la foto.";
+"NSCameraUsageDescription" = "Será utilizado al hacer fotos para tu perfil. Solo se accede a la cámara mientras sacas la foto.";
 
 "NSMicrophoneUsageDescription" = "Este permiso se necesita para la cámara, la app no utiliza el micrófono.";
 

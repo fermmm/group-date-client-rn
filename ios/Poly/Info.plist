@@ -65,7 +65,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>It will only access your camera while you take the photo.</string>
+	<string>It will be used when taking photos for your profile. It will only access your camera while you take the photo.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>It will be used to find people in your area and auto complete your city name at registration.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
