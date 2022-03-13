@@ -59,11 +59,12 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Por último les compartimos una opinión personal nuestra: pensamos que a las personas
-               irrespetuosas o violentas no les interesa esta app, les interesan formas de relación
-               donde pueden ejercer jerarquía fácilmente como en las parejas, multiples parejas o
-               agregando una persona a su pareja, esta app solo soporta citas grupales
-               no-jerárquicas (conocernos muchxs a la vez), más info en la pregunta anterior.
+               Por último les compartimos una opinión personal nuestra: pensamos que las personas
+               irrespetuosas o violentas prefieren otras apps que no sean como esta, les interesan
+               formas de relación donde pueden ejercer jerarquía fácilmente como en las parejas,
+               multiples parejas o agregando una persona a su pareja, esta app solo soporta citas
+               grupales no-jerárquicas (conocernos muchxs a la vez), más info en la pregunta
+               anterior.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿En la cita grupal van a ser todxs del género y sexualidad que me gusta?

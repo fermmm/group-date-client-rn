@@ -168,10 +168,9 @@ const WelcomeTourPage: FC = () => {
                         />
                      </View>
                      <View style={styles.textContainer}>
-                        <TitleText style={styles.title}>COMPARTIR Y DIVERTIRNOS</TitleText>
+                        <TitleText style={styles.title}>PENSAMIENTO DE GRUPO</TitleText>
                         <Text style={styles.text}>
-                           Es para conocernos todxs a la vez, probar que pasa cuando no formamos
-                           parejas, probar una forma de pensar en grupo
+                           Es para probar que pasa cuando no formamos parejas pero si grupos.
                         </Text>
                         {renderButtonContinue()}
                      </View>
@@ -239,7 +238,7 @@ const WelcomeTourPage: FC = () => {
                      <View style={styles.textContainer}>
                         <TitleText style={styles.title}>GRATIS Y ÉTICA</TitleText>
                         <Text style={styles.text}>
-                           GroupDate siempre será gratis, ética y segura. Si te gusta, no olvides
+                           GroupDate siempre será gratis y ética. Si te gusta, no olvides
                            mencionarla en las redes o dónde lo creas oportuno.
                         </Text>
                         {renderButtonContinue()}
