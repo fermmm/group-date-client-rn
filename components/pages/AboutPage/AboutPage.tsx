@@ -99,9 +99,9 @@ const AboutPage: FC = () => {
                <Text style={styles.text}>
                   En la prehistoria del humano inteligente los padres de lxs hijxs eran todas las
                   personas de una comunidad, compartían la crianza y el alimento de forma
-                  igualitaria, potenciado por el sexo que era mucho más abundante, público y podía
-                  ser grupal tanto como en pareja. Este pasado se puede ignorar pero existió durante
-                  toda nuestra evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo
+                  igualitaria, potenciado por el sexo que era mucho más abundante, público y
+                  generalmente grupal. Este pasado se puede ignorar pero existió durante toda
+                  nuestra evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo
                   representativo: Los "gemidos sexuales" son un instinto que en las otras especies
                   (primates) cumple la función de llamar a lxs que están cerca.
                </Text>
@@ -115,9 +115,9 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Hay muchos libros de ciencia sobre el tema, algunos muy conocidos como los de Cacilda
-               Jethá y Christopher Ryan o también el de Marx y Engels: "El origen de la familia, la
-               propiedad privada y el estado".
+               Hay muchos libros prestigiosos y conocidos sobre el tema, como los de Cacilda Jethá y
+               Christopher Ryan y también de Marx y Engels: "El origen de la familia, la propiedad
+               privada y el estado".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
