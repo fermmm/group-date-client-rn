@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
-import color from "color";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { ScreensStepper } from "../../common/ScreensStepper/ScreensStepper";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
@@ -41,6 +40,7 @@ const WelcomeTourPage: FC = () => {
       if (currentStep + 1 < totalSteps) {
          changeStep(currentStep + 1);
       } else {
+         setAsShowed();
          navigateWithoutHistory("Login");
       }
    }, [currentStep]);
@@ -50,12 +50,6 @@ const WelcomeTourPage: FC = () => {
          setAmountToRender(currentStepRef.current + 2);
       }
    };
-
-   useEffect(() => {
-      setAsShowed();
-   }, []);
-
-   const topColor = color(colors.background).lightness(82).toString();
 
    const renderButtonContinue = (props?: { color?: string }) => {
       const { color = colors.textLogin } = props ?? {};
