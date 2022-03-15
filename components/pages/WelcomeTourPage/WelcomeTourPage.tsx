@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, { FC, useCallback, useRef, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
@@ -164,7 +164,8 @@ const WelcomeTourPage: FC = () => {
                      <View style={styles.textContainer}>
                         <TitleText style={styles.title}>PENSAMIENTO DE GRUPO</TitleText>
                         <Text style={styles.text}>
-                           Es para probar que pasa cuando no formamos parejas pero si grupos.
+                           GroupDate es para probar que pasa cuando no formamos parejas pero si
+                           grupos.
                         </Text>
                         {renderButtonContinue()}
                      </View>
@@ -203,10 +204,10 @@ const WelcomeTourPage: FC = () => {
                         />
                      </View>
                      <View style={styles.textContainer}>
-                        <TitleText style={styles.title}>ACERCARNOS{"\n"}A LO NATURAL</TitleText>
+                        <TitleText style={styles.title}>MÁS CERCA{"\n"}DE LO NATURAL</TitleText>
                         <Text style={styles.text}>
                            El poliamor (no-monogamia) en grupo fue lo más común hasta un cambio en
-                           la forma de pensar hace 10 mil años.
+                           la forma de pensar hace 10 mil años (neolítico).
                         </Text>
                         {renderButtonContinue()}
                      </View>
