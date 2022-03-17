@@ -41,16 +41,16 @@ const AboutPage: FC = () => {
                poliamor grupal.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
+               ¿Se pueden generar grupos desequilibrados? Ej: 1 persona se gusta con 5 que no se
                gustan entre ellas
             </TitleText>
             <Text style={styles.text}>
-               No. Solo se generan grupos más o menos equilibrados. Esto también genera que cuando
-               se da una cita de 100% heterosexuales la cantidad de mujeres y hombres siempre va a
-               ser mas o menos la misma.
+               No. Solo se generan grupos más o menos equilibrados, por ejemplo cuando se da un
+               grupo de 100% heterosexuales la cantidad de mujeres y hombres siempre va a ser mas o
+               menos la misma.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Es segura una cita grupal?
+               Sobre seguridad
             </TitleText>
             <Text style={styles.text}>
                Tenemos los mismos sistemas que las otras apps para denunciar. También puede ser de
@@ -60,19 +60,18 @@ const AboutPage: FC = () => {
             <EmptySpace height={15} />
             <Text style={styles.text}>
                Por último les compartimos una opinión personal nuestra: pensamos que las personas
-               irrespetuosas o violentas prefieren otras apps que no sean como esta, les interesan
-               formas de relación donde pueden ejercer jerarquía fácilmente como en las parejas,
-               multiples parejas o agregando una persona a su pareja, esta app solo soporta citas
-               grupales no-jerárquicas (conocernos muchxs a la vez), más info en la pregunta
-               anterior.
+               irrespetuosas prefieren otras apps que no sean como esta, les interesan formas de
+               relación donde pueden ejercer jerarquía fácilmente como en las parejas, multiples
+               parejas o agregando una persona a su pareja, esta app solo soporta citas grupales
+               no-jerárquicas (conocernos muchxs a la vez), más info en la pregunta anterior.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿En la cita grupal van a ser todxs del género y sexualidad que me gusta?
             </TitleText>
             <Text style={styles.text}>
-               No. Para estar en una cita grupal te tienes que gustar con un mínimo porcentaje de
-               sus integrantes y no necesariamente con la totalidad, es probable que haya personas
-               en tus citas que pueden ser de cualquier género y sexualidad.
+               No. Para estar en una cita grupal te tienes que gustar con una cantidad mínima de sus
+               integrantes y no necesariamente con la totalidad, es probable que haya personas en
+               tus citas que pueden ser de cualquier género y sexualidad.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es fácil que se genere una cita grupal?
@@ -142,7 +141,7 @@ const AboutPage: FC = () => {
             <Text style={styles.text}>
                El algoritmo busca un grupo de usuarios activos al azar que te pusieron like y otro
                que aún no, luego combina ambos en una sola lista con orden al azar, luego pone en
-               primer lugar a quienes tienen mas tags en comun o tags bloqueados en común.
+               primer lugar a quienes tienen mas tags en común o tags bloqueados en común.
             </Text>
             <EmptySpace height={80} />
          </BasicScreenContainer>

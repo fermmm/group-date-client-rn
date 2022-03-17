@@ -96,7 +96,7 @@ const WelcomeTourPage: FC = () => {
                         </TitleText>
                         <Text style={styles.text}>
                            GroupDate es la primera app de citas grupales. Cuando se gustan entre
-                           muchxs se habilita un chat grupal.
+                           muchxs se habilita un chat grupal
                         </Text>
                         {renderButtonContinue()}
                      </View>
@@ -113,39 +113,17 @@ const WelcomeTourPage: FC = () => {
                   </View>
                   <View style={styles.textContainer}>
                      <TitleText style={[styles.title, { color: "#502E92" }]}>
-                        Es para todxs
+                        PENSAMIENTO DE GRUPO
                      </TitleText>
                      <Text style={[styles.text, { color: "#502E92" }]}>
-                        Todas las orientaciones y tipos de vínculos pueden ser parte de una cita
-                        grupal.
+                        GroupDate es para que puedas probar que pasa cuando no formamos parejas pero
+                        sí grupos
                      </Text>
                      {renderButtonContinue({ color: "#502E92" })}
                   </View>
                </View>
             )}
             {amountToRender >= 2 && (
-               <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground4 }]}>
-                  <View style={styles.imageContainer}>
-                     <Svg
-                        src={screen3HeadSvg}
-                        style={{
-                           transform: [{ scale: 2.15 }, { translateX: 15 }, { translateY: 36 }]
-                        }}
-                     />
-                  </View>
-                  <View style={styles.textContainer}>
-                     <TitleText style={[styles.title, { color: "#502E92" }]}>
-                        SIN PRECONCEPTOS
-                     </TitleText>
-                     <Text style={[styles.text, { color: "#502E92" }]}>
-                        No hace falta que se gusten todxs entre sí al 100% ni que cumplas un rol o
-                        una expectativa en particular.
-                     </Text>
-                     {renderButtonContinue({ color: "#502E92" })}
-                  </View>
-               </View>
-            )}
-            {amountToRender >= 3 && (
                <BackgroundArtistic
                   gradientColor1="#9A55FF"
                   gradientColor2="#6D94FF"
@@ -162,17 +140,18 @@ const WelcomeTourPage: FC = () => {
                         />
                      </View>
                      <View style={styles.textContainer}>
-                        <TitleText style={styles.title}>PENSAMIENTO DE GRUPO</TitleText>
+                        <TitleText style={styles.title}>VENTAJAS DE UNA CITA GRUPAL</TitleText>
                         <Text style={styles.text}>
-                           GroupDate es para probar que pasa cuando no formamos parejas pero si
-                           grupos.
+                           Conocerás cómo es cada persona frente a los demás, habrá mayor
+                           relajación, la sexualidad suele ser mucho más tentadora e infinitas
+                           ventajas más
                         </Text>
                         {renderButtonContinue()}
                      </View>
                   </View>
                </BackgroundArtistic>
             )}
-            {amountToRender >= 4 && (
+            {amountToRender >= 3 && (
                <BackgroundArtistic
                   gradientColor1="#9A55FF"
                   gradientColor2="#6D94FF"
@@ -206,13 +185,36 @@ const WelcomeTourPage: FC = () => {
                      <View style={styles.textContainer}>
                         <TitleText style={styles.title}>MÁS CERCA{"\n"}DE LO NATURAL</TitleText>
                         <Text style={styles.text}>
-                           El poliamor (no-monogamia) en grupo fue lo más común hasta un cambio en
-                           la forma de pensar hace 10 mil años (neolítico).
+                           El poliamor (no-monogamia) en grupo y la crianza grupal fueron sempre lo
+                           más común hasta un cambio en la forma de pensar hace 10 mil años
+                           (neolítico)
                         </Text>
                         {renderButtonContinue()}
                      </View>
                   </View>
                </BackgroundArtistic>
+            )}
+            {amountToRender >= 4 && (
+               <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground4 }]}>
+                  <View style={styles.imageContainer}>
+                     <Svg
+                        src={screen3HeadSvg}
+                        style={{
+                           transform: [{ scale: 2.15 }, { translateX: 15 }, { translateY: 36 }]
+                        }}
+                     />
+                  </View>
+                  <View style={styles.textContainer}>
+                     <TitleText style={[styles.title, { color: "#502E92" }]}>
+                        SIN PRECONCEPTOS
+                     </TitleText>
+                     <Text style={[styles.text, { color: "#502E92" }]}>
+                        No hace falta que se gusten todxs entre sí al 100% ni que cumplas un rol o
+                        una expectativa en particular
+                     </Text>
+                     {renderButtonContinue({ color: "#502E92" })}
+                  </View>
+               </View>
             )}
             {amountToRender >= 5 && (
                <BackgroundArtistic
