@@ -186,8 +186,7 @@ const WelcomeTourPage: FC = () => {
                         <TitleText style={styles.title}>MÁS CERCA{"\n"}DE LO NATURAL</TitleText>
                         <Text style={styles.text}>
                            El poliamor (no-monogamia) en grupo y la crianza grupal fueron sempre lo
-                           más común hasta un cambio en la forma de pensar hace 10 mil años
-                           (neolítico)
+                           más común hasta un cambio económico hace 10 mil años (neolítico)
                         </Text>
                         {renderButtonContinue()}
                      </View>
