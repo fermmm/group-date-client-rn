@@ -92,7 +92,7 @@ const WelcomeTourPage: FC = () => {
                      </View>
                      <View style={styles.textContainer}>
                         <TitleText style={styles.title} adjustsFontSizeToFit>
-                           BIENVENIDX!
+                           ¡BIENVENIDX!
                         </TitleText>
                         <Text style={styles.text}>
                            GroupDate es la primera app de citas grupales. Cuando se gustan entre
@@ -135,7 +135,7 @@ const WelcomeTourPage: FC = () => {
                         <Svg
                            src={screen4PoolSvg}
                            style={{
-                              transform: [{ scale: 0.9 }, { translateY: 0 }]
+                              transform: [{ scale: 1 }, { translateY: 0 }]
                            }}
                         />
                      </View>
@@ -260,7 +260,7 @@ const styles: Styles = StyleSheet.create({
    },
    imageContainer: {
       width: "100%",
-      height: "60%",
+      height: "50%",
       paddingTop: "20%",
       alignItems: "center",
       justifyContent: "center"
@@ -307,7 +307,7 @@ const styles: Styles = StyleSheet.create({
    },
    buttonContainer: {
       position: "absolute",
-      bottom: 60,
+      bottom: 40,
       width: "100%",
       paddingLeft: padding,
       paddingRight: padding
