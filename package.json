@@ -19,7 +19,8 @@
     "credentials:eas": "eas credentials",
     "reinstall-pods": "cd ios && rm -rf Pods && pod install && cd ..",
     "logcat": "adb logcat *:W",
-    "inspector": "react-devtools"
+    "inspector": "react-devtools",
+    "clear-asset-cache": "rm -fr $TMPDIR/haste-map-*; rm -rf $TMPDIR/metro-cache"
   },
   "dependencies": {
     "@breeffy/react-native-popup-menu": "^0.8.0",

@@ -279,7 +279,7 @@ const styles: Styles = StyleSheet.create({
       textTransform: "uppercase",
       fontSize: 32,
       color: currentTheme.colors.textLogin,
-      marginBottom: 30,
+      marginBottom: 10,
       width: "100%",
       paddingLeft: 10,
       paddingRight: 10
@@ -287,8 +287,8 @@ const styles: Styles = StyleSheet.create({
    text: {
       textAlign: Platform.OS === "ios" ? "justify" : "center",
       fontFamily: currentTheme.font.medium,
-      fontSize: 17,
-      lineHeight: 25,
+      fontSize: 15,
+      lineHeight: 20,
       color: currentTheme.colors.textLogin,
       paddingLeft: padding,
       paddingRight: padding
