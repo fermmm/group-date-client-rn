@@ -116,8 +116,7 @@ const WelcomeTourPage: FC = () => {
                         PENSAMIENTO DE GRUPO
                      </TitleText>
                      <Text style={[styles.text, { color: "#502E92" }]}>
-                        GroupDate es para que puedas probar que pasa cuando no formamos parejas pero
-                        sí grupos
+                        Podrás saber que pasa si no formamos parejas pero sí grupos
                      </Text>
                      {renderButtonContinue({ color: "#502E92" })}
                   </View>
