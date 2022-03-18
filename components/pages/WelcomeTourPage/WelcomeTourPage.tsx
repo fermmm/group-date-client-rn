@@ -142,9 +142,9 @@ const WelcomeTourPage: FC = () => {
                      <View style={styles.textContainer}>
                         <TitleText style={styles.title}>VENTAJAS DE UNA CITA GRUPAL</TitleText>
                         <Text style={styles.text}>
-                           Conocerás cómo es cada persona frente a los demás, habrá mayor
-                           relajación, la sexualidad suele ser mucho más tentadora e infinitas
-                           ventajas más
+                           Conocerás mejor a los demás por como son estando en grupo, mayor
+                           relajación, la sexualidad puede ser más tentadora e infinitas ventajas
+                           más
                         </Text>
                         {renderButtonContinue()}
                      </View>
