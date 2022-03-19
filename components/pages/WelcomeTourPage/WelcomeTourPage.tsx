@@ -116,7 +116,7 @@ const WelcomeTourPage: FC = () => {
                         PENSAMIENTO DE GRUPO
                      </TitleText>
                      <Text style={[styles.text, { color: "#502E92" }]}>
-                        Podrás saber que pasa si no formamos parejas pero sí grupos
+                        Ahora podrás saber que pasa cuando formamos grupos y no parejas
                      </Text>
                      {renderButtonContinue({ color: "#502E92" })}
                   </View>
