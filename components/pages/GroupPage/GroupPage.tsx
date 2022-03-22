@@ -88,19 +88,15 @@ const GroupPage: FC = () => {
                onModifyVotePress={() => navigate("DateVoting", { group })}
                loading={voteResultsFromServer == null}
             />
-            {group.isActive === false && (
-               <SurfaceStyled>
-                  <TitleText>
-                     Puedes elegir a quien volver a ver en tu próxima cita grupal
-                  </TitleText>
-                  <Button
-                     uppercase={false}
-                     onPress={() => navigate("RemoveSeenWizardPage", { groupId: group.groupId })}
-                  >
-                     Elegir
-                  </Button>
-               </SurfaceStyled>
-            )}
+            <SurfaceStyled>
+               <TitleText>Puedes elegir a quien volver a ver en tu próxima cita grupal</TitleText>
+               <Button
+                  uppercase={false}
+                  onPress={() => navigate("RemoveSeenWizardPage", { groupId: group.groupId })}
+               >
+                  Elegir
+               </Button>
+            </SurfaceStyled>
             <SurfaceStyled>
                <TitleText>Miembros del grupo:</TitleText>
                <List.Section>
