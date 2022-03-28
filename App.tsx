@@ -1,6 +1,5 @@
-import * as Localization from "expo-localization";
-import i18n from "i18n-js";
 import React, { FC, useEffect, useState } from "react";
+import i18n from "i18n-js";
 import AppLoading from "expo-app-loading";
 import { Provider as PaperProvider } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
@@ -34,6 +33,7 @@ import GlobalModalsProvider from "./components/common/GlobalModalsProvider/Globa
 import KeyboardAvoidingViewExtended from "./components/common/KeyboardAvoidingViewExtended/KeyboardAvoidingViewExtended";
 import { loadFontPolly } from "./common-tools/font-loaders/loadFontPolly";
 import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
+import { getSystemLanguage } from "./common-tools/device-native-api/configuration/getSystemLanguage";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -41,8 +41,10 @@ i18n.translations = {
    es
 };
 i18n.defaultLocale = "en";
-i18n.locale = Localization.locale.split("-")[0];
-// i18n.locale = "en";    // Uncomment to force setting a language for debugging
+i18n.locale = getSystemLanguage().mainLanguage;
+// i18n.locale = "en";    // Uncomment to force a language
+
+console.log(getSystemLanguage());
 
 const Stack = createStackNavigator();
 
