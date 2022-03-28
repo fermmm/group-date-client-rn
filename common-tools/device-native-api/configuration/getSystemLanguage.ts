@@ -9,7 +9,7 @@ export function getSystemLanguage(): SystemLanguage {
          ? NativeModules.SettingsManager.settings.AppleLocale ??
            NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
          : NativeModules.I18nManager.localeIdentifier) ?? "en-US";
-   fullLanguageCode = fullLanguageCode.replaceAll("_", "-"); // Different platforms use different separators
+   fullLanguageCode = fullLanguageCode.replace("_", "-"); // Different platforms use different separators
 
    const mainLanguage = fullLanguageCode.split("-")[0];
 

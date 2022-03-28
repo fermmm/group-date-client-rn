@@ -32,7 +32,12 @@ export interface AdminConvertPostParams extends TokenParameter {
 }
 
 export interface AdminLogGetParams extends AdminProtectionParams {
-   fileName: string;
+   logId: string;
+}
+
+export interface AdminDeleteLogEntryParams extends AdminProtectionParams {
+   logId: string;
+   entryId: string;
 }
 
 export interface AdminGroupGetParams extends AdminProtectionParams {
@@ -41,6 +46,7 @@ export interface AdminGroupGetParams extends AdminProtectionParams {
 
 export interface UsageReport {
    amountOfUsers: number;
+   wantedUsers: number;
    incompleteUsers: number;
    amountOfGroups: number;
    totalOpenGroups: number;
@@ -106,6 +112,10 @@ export interface AdminCommandPostParams extends AdminProtectionParams {
    command: string;
 }
 
+export interface AdminCodePostParams extends AdminProtectionParams {
+   code: string;
+}
+
 export interface SendEmailPostParams extends AdminProtectionParams {
    to: string;
    subject: string;
@@ -133,4 +143,18 @@ export interface RemoveBanFromUserPostParams extends AdminProtectionParams {
 
 export interface RemoveAllBanReasonsFromUserPostParams extends AdminProtectionParams {
    userId: string;
+}
+
+export interface LogFileListResponse {
+   logId: string;
+   category: string;
+   description: string;
+}
+
+export interface LogResponse {
+   id: string;
+   category: string;
+   description: string;
+   separator: string;
+   log: string;
 }

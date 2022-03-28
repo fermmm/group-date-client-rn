@@ -24,9 +24,9 @@ export function useUserTags(tagsFromServer: Tag[]) {
       );
 
       /*
-       * Users may potentially move from one country to another: All the tags that the user
-       * subscribed in a different country will be null here, so we have to remove them.
-       * This is because tagList is per country.
+       * Users may potentially change language : All the tags that the user subscribed in a
+       * different language will be null here, so we have to remove them.
+       * This is because tagList is per language.
        */
       tagsSubscribedCompleteInfo = tagsSubscribedCompleteInfo.filter(tag => tag != null);
       tagsBlockedCompleteInfo = tagsBlockedCompleteInfo.filter(tag => tag != null);

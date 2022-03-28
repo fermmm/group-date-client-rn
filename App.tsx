@@ -44,8 +44,6 @@ i18n.defaultLocale = "en";
 i18n.locale = getSystemLanguage().mainLanguage;
 // i18n.locale = "en";    // Uncomment to force a language
 
-console.log(getSystemLanguage());
-
 const Stack = createStackNavigator();
 
 setupNotificationPressListener();
