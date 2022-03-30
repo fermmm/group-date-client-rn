@@ -46,7 +46,7 @@ export const IsCoupleQuestion: FC<PropsIsCoupleQuestion> = props => {
 
          const isUnicornHunterInsisting = await AlertAsync({
             message:
-               "Aquí no hay mucho público para parejas que buscan trio, esta app es de encuentros entre muchxs (más de 3) y sin jerarquías formadas por personas que se conocen de antes, es una propuesta nueva. La app 3Fun tiene el público que buscas.",
+               'Aquí no hay mucho público para parejas que buscan trio, para eso recomendamos la app "3Fun". Se debe a que la experiencia en esta app es libre de jerarquías: las parejas que se conocen y se entienden hace tiempo cuando suman a alguien implica una jerarquía.',
             buttons: [
                {
                   text: "Cancelar",
