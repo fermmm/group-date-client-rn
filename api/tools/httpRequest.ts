@@ -5,6 +5,7 @@ import { showRequestErrorAlert } from "./showRequestErrorAlert";
 import { finishMeasureTime, measureTime } from "../../common-tools/js-tools/measureTime";
 import { analyticsResponseTimeLog } from "../../common-tools/analytics/tools/analyticsRequestTimeLog";
 import { SERVER_URL_DEVELOPMENT, SERVER_URL_PRODUCTION } from "../../env.config";
+import { LOCALHOST_MODE } from "../../config";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
    handleErrors?: boolean;
@@ -15,6 +16,7 @@ export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
 
 /**
  * Axios request wrapper with optional error handling and other react native expo related features.
+ * Use this function to make requests to external services, don't use this function to call the app server API use defaultHttpRequest() instead.
  * @param options Axios request options, example: {url: "search/users", method: "GET", data: {myBodyProp: "bodyValue"}}
  * @param showAlertOnError Shows a native alert to the user when the request has a network error
  * @returns When there is an error in the request returns a string resolved promise with the error text.
@@ -107,6 +109,9 @@ export function tryToGetErrorMessage(error: any): string {
    return "No information found";
 }
 
+/**
+ * This request function should be used to call the app server since it contains any of it's requirements.
+ */
 export async function defaultHttpRequest<Params = void, Response = void>(
    url: string,
    method: Method,
@@ -146,31 +151,34 @@ export async function defaultHttpRequest<Params = void, Response = void>(
    return response;
 }
 
+export function getServerUrl(): string {
+   if ((__DEV__ && Constants.appOwnership === AppOwnership.Expo) || LOCALHOST_MODE) {
+      return prepareUrl(SERVER_URL_DEVELOPMENT);
+   }
+
+   return prepareUrl(SERVER_URL_PRODUCTION);
+}
+
 /**
  * Currently this function only replaces the localhost part of the url by the local address of the development
  * machine otherwise localhost will be the localhost of the phone and not the machine one, if the app is
  * executing in production there is no localhost part on the url so it remains unchanged.
  */
 export function prepareUrl(url: string): string {
-   if (url.includes("localhost") || url.includes("127.0.0.1")) {
-      if (url.includes("localhost")) {
-         return url.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
-      }
-
-      if (url.includes("127.0.0.1")) {
-         return url.replace("127.0.0.1", Constants.manifest.debuggerHost.split(`:`).shift());
-      }
-   } else {
+   if (Constants.appOwnership !== AppOwnership.Expo) {
       return url;
    }
-}
 
-export function getServerUrl(): string {
-   if (__DEV__ && Constants.appOwnership === AppOwnership.Expo) {
-      return prepareUrl(SERVER_URL_DEVELOPMENT);
+   if (!url.includes("localhost") && !url.includes("127.0.0.1")) {
+      return url;
    }
 
-   return prepareUrl(SERVER_URL_PRODUCTION);
+   let newUrl = url;
+
+   newUrl = url.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
+   newUrl = url.replace("127.0.0.1", Constants.manifest.debuggerHost.split(`:`).shift());
+
+   return newUrl;
 }
 
 export interface RequestError {
