@@ -1,16 +1,14 @@
-import { useGeolocation } from "../../../../common-tools/device-native-api/geolocation/useGeolocation";
 import { useEffect, useState } from "react";
 import { getExpoPushToken } from "../../../../common-tools/device-native-api/notifications/getPermissionTokenForNotifications";
-import { sendUserProps, useUserProfileStatus } from "../../../../api/server/user";
+import { sendUserProps } from "../../../../api/server/user";
 import { ServerInfoResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/server-info";
 import { User } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import { useNotificationPermission } from "../../../../common-tools/device-native-api/notifications/useNotificationsPermissions";
 
 /**
  * At every login there are some user props that need to be updated: The user may be in a different
- * location, the notifications token may be different and other user props may need to be updated at
- * login, this hook collects all this information and sends it to the server. It's meant to be called
- * at login.
+ * location, this hook collects all this information and sends it to the server. It's meant to be called
+ * at login. Currently only the notification toquen makes sense to keep it here.
  */
 export function useSendPropsToUpdateAtLogin(
    token: string,
@@ -22,27 +20,7 @@ export function useSendPropsToUpdateAtLogin(
    const [expoPushToken, setExpoPushToken] = useState<string>();
    const [notificationsPossible, setNotificationsPossible] = useState<boolean>();
    const [notificationTokenRequested, setNotificationTokenRequested] = useState(false);
-   const [locationLat, setLocationLat] = useState<number>();
-   const [locationLon, setLocationLon] = useState<number>();
-   const [country, setCountry] = useState<string>();
-   const { data: profileStatusData } = useUserProfileStatus();
-   const { geolocation, isLoading: geolocationLoading } = useGeolocation({ enabled });
    const notificationPermissionGranted = useNotificationPermission({ enabled });
-
-   // Effect to set the geolocation state when geolocation is ready
-   useEffect(() => {
-      if (geolocationLoading) {
-         return;
-      }
-
-      if (geolocation?.coords?.latitude != null && geolocation?.coords?.longitude != null) {
-         setLocationLat(geolocation.coords.latitude);
-         setLocationLon(geolocation.coords.longitude);
-         setCountry(
-            geolocation.address?.isoCountryCode ?? profileStatusData?.user?.country ?? "UNKNOWN"
-         );
-      }
-   }, [geolocation, geolocationLoading]);
 
    // Effect to set notification state when is ready
    useEffect(() => {
@@ -65,8 +43,8 @@ export function useSendPropsToUpdateAtLogin(
          const notificationsTokenResponse = await getExpoPushToken(
             serverInfo.pushNotificationsChannels
          );
-         setExpoPushToken(notificationsTokenResponse.notificationsToken);
-         setNotificationsPossible(notificationsTokenResponse.notificationsArePossible);
+         setExpoPushToken(notificationsTokenResponse?.notificationsToken);
+         setNotificationsPossible(notificationsTokenResponse?.notificationsArePossible);
       })();
    }, [
       serverInfo?.pushNotificationsChannels,
@@ -78,19 +56,12 @@ export function useSendPropsToUpdateAtLogin(
    // Effect to send the data to the server when all the information is gathered
    useEffect(() => {
       if (
-         locationLat != null &&
-         locationLon != null &&
-         country != null &&
          (expoPushToken != null || notificationsPossible === false) &&
          token != null &&
          enabled === true &&
          completed === false
       ) {
-         let props: Partial<User> = {
-            locationLat,
-            locationLon,
-            country
-         };
+         let props: Partial<User> = {};
 
          if (notificationsPossible) {
             props.notificationsToken = expoPushToken;
@@ -101,16 +72,7 @@ export function useSendPropsToUpdateAtLogin(
             setCompleted(true);
          })();
       }
-   }, [
-      expoPushToken,
-      locationLat,
-      locationLon,
-      country,
-      token,
-      enabled,
-      completed,
-      notificationsPossible
-   ]);
+   }, [expoPushToken, token, enabled, completed, notificationsPossible]);
 
    return completed;
 }

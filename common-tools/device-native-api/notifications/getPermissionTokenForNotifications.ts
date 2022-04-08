@@ -3,6 +3,7 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { NotificationChannelInfo } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import { PUSH_NOTIFICATIONS_SETTINGS } from "../../../config";
+import { withTimeout } from "../../withTimeout/withTimeout";
 
 export async function getExpoPushToken(
    notificationsChannels: NotificationChannelInfo[]
@@ -10,9 +11,17 @@ export async function getExpoPushToken(
    let result: GetPermissionTokenForNotifications;
 
    if (Device.isDevice) {
+      const notificationsToken =
+         (await withTimeout(Notifications.getExpoPushTokenAsync(), { rejectOnTimeout: false }))
+            ?.data ?? null;
+
+      if (notificationsToken == null) {
+         console.warn("Notifications.getExpoPushTokenAsync() didn't work");
+      }
+
       result = {
-         notificationsToken: (await Notifications.getExpoPushTokenAsync()).data,
-         notificationsArePossible: true
+         notificationsToken,
+         notificationsArePossible: notificationsToken != null
       };
    } else {
       console.warn("Must use physical device for Push Notifications");

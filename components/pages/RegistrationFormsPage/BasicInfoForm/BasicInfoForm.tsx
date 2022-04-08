@@ -1,12 +1,13 @@
 import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import * as Location from "expo-location";
 import moment from "moment";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import TitleText from "../../../common/TitleText/TitleText";
 import { formValidators } from "../../../../common-tools/forms/formValidators";
 import { currentTheme } from "../../../../config";
 import TextInputExtended from "../../../common/TextInputExtended/TextInputExtended";
-import { useGeolocation } from "../../../../common-tools/device-native-api/geolocation/useGeolocation";
+import { getGeolocationPosition } from "../../../../common-tools/device-native-api/geolocation/getGeolocationPosition";
 import { RegistrationFormName } from "../tools/useRequiredFormList";
 import { fromAgeToBirthDate } from "../../../../api/tools/date-tools";
 import MonthSelector from "../../../common/MonthSelector/MonthSelector";
@@ -17,6 +18,10 @@ import {
    LoadingAnimation
 } from "../../../common/LoadingAnimation/LoadingAnimation";
 import { OnChangeFormParams } from "../RegistrationFormsPage";
+import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
+import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
+import { askForPermission } from "../../../../common-tools/device-native-api/permissions/askForPermissions";
+import { getGeolocationAddress } from "../../../../common-tools/device-native-api/geolocation/getGeolocationAddress";
 
 export interface PropsBasicInfoForm {
    formName: RegistrationFormName;
@@ -35,7 +40,11 @@ export interface FormDataBasicInfo {
 }
 
 export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, formName }) => {
-   const { geolocation, isLoading } = useGeolocation();
+   const isLoading = false;
+   const [locationLat, setLocationLat] = useState<number>(initialData?.locationLat);
+   const [locationLon, setLocationLon] = useState<number>(initialData?.locationLon);
+   const [loadingCityName, setLoadingCityName] = useState<boolean>(false);
+   const { colors } = useTheme();
    const [name, setName] = useState(initialData?.name);
    const [birthMonth, setBirthMonth] = useState<number>(
       initialData?.birthDate ? moment(initialData.birthDate, "X").month() : 0
@@ -45,29 +54,70 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
    );
    const [height, setHeight] = useState(initialData?.height);
    const [cityName, setCityName] = useState(initialData?.cityName);
-   const [cityNameModified, setCityNameModified] = useState(false);
 
    useEffect(() => {
-      onChange({
-         formName,
-         newProps: {
-            name,
-            birthDate: birthYear ? moment().month(birthMonth).year(birthYear).unix() : null,
-            height: height ?? 0,
-            locationLat: geolocation?.coords?.latitude,
-            locationLon: geolocation?.coords?.longitude,
-            country: geolocation?.address?.isoCountryCode,
-            cityName
-         },
-         error: getError()
-      });
-   }, [name, birthMonth, birthYear, height, cityName, geolocation, formName]);
+      const newProps: Partial<FormDataBasicInfo> = {
+         name,
+         birthDate: birthYear
+            ? moment()
+                 .month(birthMonth)
+                 .year(birthYear)
+                 .day(0)
+                 .hour(0)
+                 .minute(0)
+                 .second(0)
+                 .millisecond(0)
+                 .unix()
+            : null,
+         height: height ?? 0,
+         cityName
+      };
 
-   useEffect(() => {
-      if (!cityName && !cityNameModified) {
-         setCityName(geolocation?.address?.district ?? geolocation?.address?.region ?? "");
+      if (locationLat != initialData?.locationLat && locationLon != initialData?.locationLon) {
+         newProps.locationLat = locationLat;
+         newProps.locationLon = locationLon;
       }
-   }, [geolocation]);
+
+      onChange({ formName, newProps, error: getError() });
+   }, [name, birthMonth, birthYear, height, cityName, locationLat, locationLon, formName]);
+
+   const handleCityAutocompletePress = async () => {
+      setLoadingCityName(true);
+      try {
+         const permissionGranted = await askForPermission(
+            {
+               getter: () => Location.getForegroundPermissionsAsync(),
+               requester: () => Location.requestForegroundPermissionsAsync()
+            },
+            { allowContinueWithoutAccepting: true }
+         );
+
+         if (!permissionGranted) {
+            setLoadingCityName(false);
+            return;
+         }
+
+         const coords = await getGeolocationPosition({
+            allowContinueWithGeolocationDisabled: true
+         });
+
+         if (coords?.latitude == null || coords.longitude == null) {
+            setLoadingCityName(false);
+            return;
+         }
+
+         setLocationLat(coords.latitude);
+         setLocationLon(coords.longitude);
+
+         const address = await getGeolocationAddress(coords);
+
+         setCityName(address.city);
+      } catch (e) {
+         setLoadingCityName(false);
+      }
+
+      setLoadingCityName(false);
+   };
 
    const getError = () => {
       return getNameError() || getBirthYearError() || getCityNameError() || getHeightError();
@@ -172,10 +222,23 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
             errorText={getCityNameError()}
             mode="outlined"
             value={cityName}
-            onChangeText={t => {
-               setCityNameModified(true);
-               setCityName(t);
-            }}
+            onChangeText={t => setCityName(t)}
+            renderBottomElement={() =>
+               !loadingCityName ? (
+                  <ButtonStyled
+                     mode="text"
+                     onPress={handleCityAutocompletePress}
+                     color={colors.accent2}
+                  >
+                     Auto-completar
+                  </ButtonStyled>
+               ) : (
+                  <LoadingAnimation
+                     centeredMethod={CenteredMethod.Relative}
+                     style={{ height: 60, marginTop: 10 }}
+                  />
+               )
+            }
          />
          <TextInputExtended
             title="Tu altura en centímetros (opcional) ej: 160"

@@ -67,11 +67,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>It will be used when taking photos for your profile. It will only access your camera while you take the photo.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>It will be used to find people in your area and auto complete your city name at registration.</string>
+	<string>It will be used to find people in your area or auto complete your city name at registration.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>It will be used to find people in your area and auto complete your city name at registration.</string>
+	<string>It will be used to find people in your area or auto complete your city name at registration.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>It will be used to find people in your area and auto complete your city name at registration.</string>
+	<string>It will be used to find people in your area or auto complete your city name at registration.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This is required to make the camera work, we don&apos;t use the microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>

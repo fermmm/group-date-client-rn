@@ -43,6 +43,7 @@ export interface TextInputExtendedProps {
    onChangeText?: ((text: string) => void) & Function;
    iconButton?: string;
    onIconButtonPress?: () => void;
+   renderBottomElement?: () => JSX.Element;
    value: string;
    secureTextEntry?: boolean;
    returnKeyType?: ReturnKeyTypeOptions;
@@ -114,7 +115,8 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
       secureTextEntry,
       returnKeyType,
       autoCompleteType,
-      textContentType
+      textContentType,
+      renderBottomElement
    } = props;
    const theme = useTheme();
    const [fullScreenMode, setFullScreenMode] = useState(false);
@@ -202,6 +204,7 @@ const TextInputExtended: FC<TextInputExtendedProps> = props => {
             {errorText && canShowError && (
                <TitleMediumText style={styles.errorText}>{errorText}</TitleMediumText>
             )}
+            {renderBottomElement?.()}
          </View>
          {fullScreenMode && (
             <Modal

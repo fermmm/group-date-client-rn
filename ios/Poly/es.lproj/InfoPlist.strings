@@ -5,11 +5,11 @@
   Created by Fer on 16/02/2022.
   
 */
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "Será utilizada para obtener el nombre de tu ciudad al registrarte y luego para mostrarte usuarios cercanos.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Será utilizada para mostrarte personas cercanas o para obtener el nombre de tu ciudad al registrarte.";
 
-"NSLocationAlwaysUsageDescription" = "Será utilizada para obtener el nombre de tu ciudad al registrarte y luego para mostrarte usuarios cercanos.";
+"NSLocationAlwaysUsageDescription" = "Será utilizada para mostrarte personas cercanas o para obtener el nombre de tu ciudad al registrarte.";
 
-"NSLocationWhenInUseUsageDescription" = "Será utilizada para obtener el nombre de tu ciudad al registrarte y luego para mostrarte usuarios cercanos.";
+"NSLocationWhenInUseUsageDescription" = "Será utilizada para mostrarte personas cercanas o para obtener el nombre de tu ciudad al registrarte.";
 
 "NSCameraUsageDescription" = "Será utilizado al hacer fotos para tu perfil. Solo se accede a la cámara mientras sacas la foto.";
 

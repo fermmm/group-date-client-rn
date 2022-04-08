@@ -8,11 +8,10 @@ import {
 /**
  * Ask the user for a permission, shows error dialogs when the user rejects permission, the dialog offers the user
  * to go to permission settings of the app and enable permissions from there.
- * The Promise of this function is resolved when the user enabled the permissions by clicking allow, by
- * going to the permission settings or when the permissions were already granted.
- * Also the promise resolves if the user already granted the permissions in the past.
+ * If the permission is not yet determined it returns null.
  * To change dialog texts use the settings parameter.
  * Official info about this flow in the following video: https://youtu.be/iZqDdvhTZj0?list=PLWz5rJ2EKKc-YUddw59dYq61o3ynn3A4X&t=283
+ * If you want to use a non-hook version of this code use askForPermission() instead.
  * @param permissionsSource An object with a getter and requester: {getter: () => Location.getPermissionsAsync(), requester: () => Location.requestPermissionsAsync()}
  * @param settings Use this parameter to disable dialogs or change dialogs texts.
  */

@@ -11,7 +11,7 @@ const ButtonStyled: FC<ButtonStyledProps> = props => {
          mode="outlined"
          uppercase={false}
          {...props}
-         style={[styles.button, props.style]}
+         style={[props.color ? { borderColor: props.color } : {}, styles.button, props.style]}
          contentStyle={[styles.buttonContent, props.contentStyle]}
       >
          {props.children}

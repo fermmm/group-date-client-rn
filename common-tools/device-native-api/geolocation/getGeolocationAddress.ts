@@ -1,0 +1,75 @@
+import * as Location from "expo-location";
+import { tryToGetErrorMessage } from "../../../api/tools/httpRequest";
+import { tryToStringifyObject } from "../../debug-tools/tryToStringifyObject";
+import { showAddressDisabledDialog } from "./dialogAddressDisabled/dialogAddressDisabled";
+import { withTimeout } from "../../withTimeout/withTimeout";
+import { GetGeolocationParams, LocationCoords } from "./typings";
+
+/**
+ * Gets geolocation data, the permissions (Permissions.LOCATION) should be already granted, if the geolocation
+ * is disabled for other reason (airplane mode or something like that) shows a error dialog requesting the user
+ * to fix the problem by disabling airplane mode or checking what's wrong.
+ * To change dialog texts use the settings parameter.
+ * For some locations this function demonstrated to be not reliable, the app should be able to continue without
+ * the information returned here.
+ * About the permission:
+ * Sadly this function requires full accurate Location permissions on Android because is required by reverseGeocodeAsync()
+ *
+ * @param settings Use this parameter to disable dialogs or change dialogs texts.
+ */
+export async function getGeolocationAddress(
+   coords: LocationCoords,
+   settings?: GetGeolocationParams
+): Promise<Location.LocationGeocodedAddress> {
+   const {
+      allowContinueWithGeolocationDisabled = false,
+      errorDialogSettings = {},
+      permissionGranted
+   } = settings ?? {};
+
+   try {
+      let reverseGeocoding: Location.LocationGeocodedAddress[];
+
+      try {
+         reverseGeocoding = await withTimeout(Location.reverseGeocodeAsync(coords));
+      } catch (e) {
+         throw new Error("Location.reverseGeocodeAsync failed:\n" + tryToGetErrorMessage(e));
+      }
+
+      let result: Location.LocationGeocodedAddress = null;
+      if (
+         reverseGeocoding != null &&
+         Array.isArray(reverseGeocoding) &&
+         reverseGeocoding.length > 0
+      ) {
+         result = reverseGeocoding[0];
+      } else {
+         throw new Error(
+            "Location.reverseGeocodeAsync returned unexpected response:\n" +
+               tryToStringifyObject(reverseGeocoding)
+         );
+      }
+
+      return Promise.resolve(result);
+   } catch (error) {
+      console.error(error);
+
+      if (permissionGranted === false && allowContinueWithGeolocationDisabled) {
+         return Promise.resolve(null);
+      }
+
+      const retry = await showAddressDisabledDialog({
+         ...errorDialogSettings,
+         errorDetails: `${
+            errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""
+         }getGeolocationAddress\n${tryToStringifyObject(coords)}\n${tryToGetErrorMessage(error)}`,
+         cancelable: true // This is always cancellable since we should be able to continue without this info, an input where the user selects the country or city can be implemented.
+      });
+
+      if (retry) {
+         return getGeolocationAddress(coords, settings);
+      } else {
+         throw new Error(error);
+      }
+   }
+}

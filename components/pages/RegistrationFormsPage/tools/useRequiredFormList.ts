@@ -25,12 +25,6 @@ export const useRequiredFormList = (
     * Also this list determines the order in which the screens will be displayed.
     */
    const formsForProps: FormsAndTheirProps = {
-      CoupleProfileForm: ["isCoupleProfile"],
-      GenderForm: ["genders"],
-      TagsAsQuestionsForms: [], // This empty element will be replaced later
-      UnknownPropsQuestionForms: [], // This empty element will be replaced later
-      TargetGenderForm: ["likesGenders"],
-      DateIdeaForm: ["dateIdea"],
       BasicInfoForm: [
          "name",
          "birthDate",
@@ -40,6 +34,13 @@ export const useRequiredFormList = (
          "cityName",
          "country"
       ],
+      CoupleProfileForm: ["isCoupleProfile"],
+      GenderForm: ["genders"],
+      TagsAsQuestionsForms: [], // This empty element will be replaced later
+      UnknownPropsQuestionForms: [], // This empty element will be replaced later
+      TargetGenderForm: ["likesGenders"],
+      DateIdeaForm: ["dateIdea"],
+
       FiltersForm: ["targetAgeMin", "targetAgeMax", "targetDistance"],
       ProfileImagesForm: ["images"],
       ProfileDescriptionForm: ["profileDescription"]

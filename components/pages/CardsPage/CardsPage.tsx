@@ -21,6 +21,8 @@ import { useCardsSourceAutomaticChange } from "./tools/useCardsSourceAutomaticCh
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 import { useAnalyticsForCardsPage } from "../../../common-tools/analytics/cardsPage/useAnalyticsForCardsPage";
 import { useUser } from "../../../api/server/user";
+import NeedLocationMessage from "./NeedLocationMessage/NeedLocationMessage";
+import { useUpdateGeolocationIfPossible } from "./tools/useUpdateGeolocationIfPossible";
 
 export interface ParamsCardsPage {
    cardsSource?: CardsSource;
@@ -31,8 +33,12 @@ export interface ParamsCardsPage {
 const CardsPage: FC = () => {
    const { params } = useRoute<RouteProps<ParamsCardsPage>>();
    const { data: user } = useUser();
+   const updateResult = useUpdateGeolocationIfPossible();
    const [cardsSource, setCardsSource] = useState(CardsSource.Recommendations);
-   const cardsFromServer = useCardsFromServer(cardsSource, { tagId: params?.tagId });
+   const cardsFromServer = useCardsFromServer(cardsSource, {
+      tagId: params?.tagId,
+      enabled: user?.locationLat != null && user?.locationLon != null && updateResult != null
+   });
    const manager = useCardsDataManager(cardsFromServer);
    useRequestMoreCardsWhenNeeded({
       manager,
@@ -67,7 +73,21 @@ const CardsPage: FC = () => {
       setCardsSource(CardsSource.Recommendations);
    }, []);
 
-   if (manager.isLoading) {
+   if (!user) {
+      return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
+   }
+
+   if (user?.locationLat == null || user?.locationLon == null) {
+      return (
+         <View style={styles.mainContainer}>
+            <NeedLocationMessage />
+         </View>
+      );
+   }
+
+   const isLoading = updateResult == null || manager.isLoading;
+
+   if (isLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
    }
 
