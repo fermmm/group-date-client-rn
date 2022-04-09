@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Animated, View } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
-import { LogoSvg } from "../../../../assets/LogoSvg";
+import { PolyamorySymbol } from "../../../../assets/PolyamorySymbol";
 import color from "color";
 import { currentTheme } from "../../../../config";
 import { CardAnimation, CardAnimatedStyles } from "./animations/interface/CardAnimation";
@@ -98,7 +98,7 @@ const CardAnimator: FC<CardAnimatorProps> = props => {
                   pointerEvents="none"
                >
                   <View style={styles.logoContainer} pointerEvents="none">
-                     <LogoSvg color={colors.primary2} style={styles.logo} />
+                     <PolyamorySymbol color={colors.primary2} style={styles.logo} />
                   </View>
                </Animated.View>
             )}

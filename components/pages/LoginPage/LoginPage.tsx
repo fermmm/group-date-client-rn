@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
-import { LogoSvg } from "../../../assets/LogoSvg";
+import { LogoSvg } from "../../../assets/Logo";
 import { currentTheme } from "../../../config";
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
@@ -122,7 +122,7 @@ const LoginPage: FC = () => {
             <View style={styles.logo}>
                <LogoAnimator>
                   <ViewTouchable onPress={() => navigate("WelcomeTour")}>
-                     <LogoSvg color={colors.logoColor} style={styles.logoSvg} />
+                     <LogoSvg style={styles.logoSvg} />
                   </ViewTouchable>
                </LogoAnimator>
             </View>
@@ -147,7 +147,8 @@ const styles: Styles = StyleSheet.create({
    logo: {
       position: "absolute",
       top: "30%",
-      width: "55%"
+      width: "70%",
+      transform: [{ translateX: 5 }]
    },
    looSvg: {
       width: "100%",

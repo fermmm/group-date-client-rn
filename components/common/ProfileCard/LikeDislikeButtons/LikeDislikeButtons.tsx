@@ -3,7 +3,7 @@ import { StyleSheet, View, ViewStyle, StyleProp } from "react-native";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { FAB } from "react-native-paper";
 import color from "color";
-import { LogoSvg } from "../../../../assets/LogoSvg";
+import { PolyamorySymbol } from "../../../../assets/PolyamorySymbol";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { currentTheme } from "../../../../config";
 
@@ -33,7 +33,7 @@ const LikeDislikeButtons: FC<LikeDislikeProps> = props => {
                <FAB
                   style={styles.likeButton}
                   color={color(colors.accent).darken(0.04).string()}
-                  icon={({ color: c }) => <LogoSvg color={c} style={styles.logo} />}
+                  icon={({ color: c }) => <PolyamorySymbol color={c} style={styles.logo} />}
                   onPress={props.onLikePress}
                />
             </View>
