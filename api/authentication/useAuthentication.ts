@@ -219,15 +219,21 @@ function useTokenCheck(props: {
 function useAutomaticReLogin(params: { token: UseToken; enabled: boolean }) {
    const { token, enabled } = params;
    const attemptedSilentLogin = useRef(false);
+   const tokenProvider = getTokenInfo(token?.token)?.provider;
 
    useEffect(() => {
-      if (attemptedSilentLogin.current === true || token?.token == null || enabled !== true) {
+      if (
+         attemptedSilentLogin.current === true ||
+         token?.token == null ||
+         enabled !== true ||
+         tokenProvider == null ||
+         tokenProvider === AuthenticationProvider.Email // This whole hook does not make sens for email login
+      ) {
          return;
       }
-      let tokenInfo = getTokenInfo(token.token);
-      token.getNewToken(tokenInfo.provider);
+      token.getNewToken(tokenProvider);
       attemptedSilentLogin.current = true;
-   }, [enabled]);
+   }, [enabled, tokenProvider, token]);
 }
 
 export interface UseAuthentication extends UseToken {
