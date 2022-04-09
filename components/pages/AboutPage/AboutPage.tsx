@@ -21,36 +21,43 @@ const AboutPage: FC = () => {
          <AppBarHeader onBackPress={goBack} />
          <BasicScreenContainer style={styles.mainContainer}>
             <TitleText extraSize style={styles.title}>
-               ¿De cuántas personas son las citas grupales de la app?
+               ¿De cuántas personas son las citas grupales?
             </TitleText>
             <Text style={styles.text}>
                El mínimo de personas necesario son 3, el máximo es de 20.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Con el paso del tiempo las citas van siendo de mas personas ya que se necesita tiempo
-               dando likes para generar mas coincidencias.
+               Con suficiente tiempo y coincidencias las citas irán aumentando en cantidad de
+               personas.
             </Text>
+            <TitleText extraSize style={styles.title}>
+               ¿Por qué directo a lo grupal y no de a poco primero en pareja buscando trío?
+            </TitleText>
             <Text style={styles.text}>
-               No se puede elegir el tamaño de las citas por que no todxs en un grupo van a tener la
-               misma preferencia.
+               El concepto de pareja suele traer jerarquías, pensamos que detectar y evitar
+               jerarquías es lo que conduce a lo bello y divertido de la vida.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Las citas tradicionales de 2 personas no suceden en esta app, solo tiene soporte para
-               poliamor grupal.
+               Concretamente una pareja donde se conocen y se entienden hace tiempo, luego cuando
+               quieren agregar una tercera persona le están proponiendo una jerarquía de forma
+               inevitable, es raro que aparezca esa tercera persona que quiere algo así, por eso se
+               les dice unicornio.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿Se pueden generar grupos desequilibrados? Ej: 1 persona se gusta con 5 que no se
+               ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
                gustan entre ellas
             </TitleText>
             <Text style={styles.text}>
                No. Solo se generan grupos más o menos equilibrados, por ejemplo cuando se da un
                grupo de 100% heterosexuales la cantidad de mujeres y hombres siempre va a ser mas o
-               menos la misma.
+               menos la misma. Se debe a que no queremos promover jerarquías (mas info en la
+               pregunta anterior).
             </Text>
-            <TitleText extraSize style={styles.title}>
-               Sobre seguridad
+            {/* This part is suspended until is required */}
+            {/* <TitleText extraSize style={styles.title}>
+               Sobre el comportamiento
             </TitleText>
             <Text style={styles.text}>
                Tenemos los mismos sistemas que las otras apps para denunciar. También puede ser de
@@ -59,36 +66,36 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Por último les compartimos una opinión personal nuestra: pensamos que las personas
-               irrespetuosas prefieren otras apps que no sean como esta, les interesan formas de
-               relación donde pueden ejercer jerarquía fácilmente como en las parejas, multiples
-               parejas o agregando una persona a su pareja, esta app solo soporta citas grupales
-               no-jerárquicas (conocernos muchxs a la vez), más info en la pregunta anterior.
+               Por último les compartimos una opinión personal nuestra:{" "}
             </Text>
+            <Text style={styles.text}>
+               Pensamos que las personas irrespetuosas prefieren apps de parejas y no esta, les
+               interesan formas de relación donde pueden ejercer jerarquía fácilmente como en las
+               parejas, multiples parejas o agregando una persona a su pareja, esta app solo fomenta
+               citas grupales no-jerárquicas, más info en la pregunta anterior.
+            </Text> */}
             <TitleText extraSize style={styles.title}>
                ¿En la cita grupal van a ser todxs del género y sexualidad que me gusta?
             </TitleText>
             <Text style={styles.text}>
-               No. Para estar en una cita grupal te tienes que gustar con una cantidad mínima de sus
-               integrantes y no necesariamente con la totalidad, es probable que haya personas en
-               tus citas que pueden ser de cualquier género y sexualidad.
+               Probablemente no. Te tienes que gustar con una cantidad mínima de sus integrantes y
+               no necesariamente con la totalidad, es probable que haya personas en tus citas que
+               pueden ser de cualquier género y sexualidad.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Es fácil que se genere una cita grupal?
             </TitleText>
             <Text style={styles.text}>
-               Si, matemáticamente es igual de fácil que en las apps tradicionales. A quienes les va
-               muy bien en esas apps y reciben resultados instantáneos, aquí necesitarán paciencia
-               ya que muchos likes recibidos no siempre se traducen en una coincidencia grupal.
+               Si, matemáticamente es igual de fácil que en las apps tradicionales.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               El poliamor ayuda: en las citas tradicionales te ves con una sola persona por lo que
-               tiene que tener todo lo que buscas, en el poliamor te ves con multiples personas en
-               una lógica diferente que genera más likes y coincidencias en la app.
+               La no-monogamia ayuda: en las citas tradicionales te ves con una sola persona por lo
+               que tiene que tener todo lo que buscas, en cambio sin monogamia te ves con multiples
+               personas en una lógica diferente que genera más likes y coincidencias en la app.
             </Text>
             <TitleText extraSize style={styles.title}>
-               Breve historia del poliamor grupal
+               Breve historia del poliamor (no-monogamia)
             </TitleText>
             <AnalyticsTrackWhenVisible
                onLogShouldSend={logPolyHistory}
@@ -114,9 +121,9 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Hay muchos libros prestigiosos y conocidos sobre el tema, como los de Cacilda Jethá y
-               Christopher Ryan y también de Marx y Engels: "El origen de la familia, la propiedad
-               privada y el estado".
+               Hay mucha ciencia dedicada al tema, en libros como los de Cacilda Jethá y Christopher
+               Ryan, también de Marx y Engels: "El origen de la familia, la propiedad privada y el
+               estado" o casi cualquier libro de autoras feministas que traten el tema.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
@@ -130,8 +137,8 @@ const AboutPage: FC = () => {
             </TitleText>
             <Text style={styles.text}>
                La idea inicial viene de un informático de Argentina quién también escribió el
-               software, pero luego se agregaron múltiples detalles que multiplican su calidad y son
-               colaboraciones de muchas personas interesadas en el proyecto pertenecientes a
+               software, pero luego se agregaron múltiples detalles que multiplicaron su calidad y
+               son colaboraciones de muchas personas interesadas en el proyecto pertenecientes a
                organizaciones de poliamor, amor libre, feminismo, profesionales de diferentes
                disciplinas: desde ciencias sociales hasta otrxs informáticxs.
             </Text>
