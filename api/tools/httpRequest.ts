@@ -175,8 +175,8 @@ export function prepareUrl(url: string): string {
 
    let newUrl = url;
 
-   newUrl = url.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
-   newUrl = url.replace("127.0.0.1", Constants.manifest.debuggerHost.split(`:`).shift());
+   newUrl = newUrl.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
+   newUrl = newUrl.replace("127.0.0.1", Constants.manifest.debuggerHost.split(`:`).shift());
 
    return newUrl;
 }
