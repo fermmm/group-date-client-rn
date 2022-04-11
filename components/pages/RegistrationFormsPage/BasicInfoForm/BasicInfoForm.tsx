@@ -98,10 +98,11 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
          }
 
          const coords = await getGeolocationPosition({
-            allowContinueWithGeolocationDisabled: true
+            errorMessageCancellable: true,
+            enableBackupCoords: false
          });
 
-         if (coords?.latitude == null || coords.longitude == null) {
+         if (coords?.latitude == null || coords?.longitude == null) {
             setLoadingCityName(false);
             return;
          }

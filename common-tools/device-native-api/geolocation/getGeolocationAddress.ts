@@ -4,6 +4,7 @@ import { tryToStringifyObject } from "../../debug-tools/tryToStringifyObject";
 import { showAddressDisabledDialog } from "./dialogAddressDisabled/dialogAddressDisabled";
 import { withTimeout } from "../../withTimeout/withTimeout";
 import { GetGeolocationParams, LocationCoords } from "./typings";
+import { getPermissionStatus } from "../permissions/askForPermissions";
 
 /**
  * Gets geolocation data, the permissions (Permissions.LOCATION) should be already granted, if the geolocation
@@ -22,9 +23,9 @@ export async function getGeolocationAddress(
    settings?: GetGeolocationParams
 ): Promise<Location.LocationGeocodedAddress> {
    const {
-      allowContinueWithGeolocationDisabled = false,
+      errorMessageCancellable = false,
       errorDialogSettings = {},
-      permissionGranted
+      showError = true
    } = settings ?? {};
 
    try {
@@ -54,17 +55,25 @@ export async function getGeolocationAddress(
    } catch (error) {
       console.error(error);
 
-      if (permissionGranted === false && allowContinueWithGeolocationDisabled) {
+      const permissionGranted = await getPermissionStatus(Location.getForegroundPermissionsAsync);
+
+      if (permissionGranted === false && errorMessageCancellable) {
          return Promise.resolve(null);
       }
 
-      const retry = await showAddressDisabledDialog({
-         ...errorDialogSettings,
-         errorDetails: `${
-            errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""
-         }getGeolocationAddress\n${tryToStringifyObject(coords)}\n${tryToGetErrorMessage(error)}`,
-         cancelable: true // This is always cancellable since we should be able to continue without this info, an input where the user selects the country or city can be implemented.
-      });
+      let retry = false;
+
+      if (showError) {
+         retry = await showAddressDisabledDialog({
+            ...errorDialogSettings,
+            errorDetails: `${
+               errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""
+            }getGeolocationAddress\n${tryToStringifyObject(coords)}\n${tryToGetErrorMessage(
+               error
+            )}`,
+            cancelable: true
+         });
+      }
 
       if (retry) {
          return getGeolocationAddress(coords, settings);

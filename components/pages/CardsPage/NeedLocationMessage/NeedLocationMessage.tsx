@@ -4,7 +4,7 @@ import { Text } from "react-native-paper";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 import { currentTheme } from "../../../../config";
-import { sendUserProps, useUser } from "../../../../api/server/user";
+import { useUser } from "../../../../api/server/user";
 import {
    CenteredMethod,
    LoadingAnimation
@@ -12,9 +12,8 @@ import {
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
 import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
-import { getGeolocationPosition } from "../../../../common-tools/device-native-api/geolocation/getGeolocationPosition";
 import { useAuthentication } from "../../../../api/authentication/useAuthentication";
-import { askGeolocationPermission } from "../../../../common-tools/device-native-api/geolocation/askGeolocationPermission";
+import { sendLocationDataToServer } from "../tools/sendLocationDataToServer";
 
 interface PropsNeedLocationMessage {}
 
@@ -29,27 +28,13 @@ const NeedLocationMessage: FC<PropsNeedLocationMessage> = () => {
    }, []);
 
    const handleAllowButtonPress = async () => {
-      const permissionGranted = await askGeolocationPermission({
-         allowContinueWithoutAccepting: true,
-         insistOnAcceptingOnce: true
-      });
-
-      if (!permissionGranted) {
-         return;
-      }
-
-      const coords = await getGeolocationPosition({
-         allowContinueWithGeolocationDisabled: false
-      });
-
-      if (coords?.latitude == null || coords?.longitude == null) {
-         return;
-      }
-
-      await sendUserProps({
+      await sendLocationDataToServer({
          token,
-         props: { locationLat: coords.latitude, locationLon: coords.longitude },
-         updateProfileCompletedProp: false
+         user,
+         settings: {
+            errorMessageCancellable: true,
+            enableBackupCoords: false
+         }
       });
    };
 

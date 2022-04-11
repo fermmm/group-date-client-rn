@@ -7,9 +7,10 @@ export interface GetGeolocationParams {
     */
    enabled?: boolean;
    /**
-    * Default = false. If false shows a dialog asking the user to enable geolocation and it does not allow the user to continue using the app until the geolocation is retrieved.
+    * Default = false. When trying to retrieve geolocation and an error occurs (not related with permission) a dialog is showed to the user indicating that there may be a setting that disabled access to location, this
+    * setting controls if the dialog is cancelable or not. Use backupCoords to make this function return the last coords or fake ones in case the dialog is canceled.
     */
-   allowContinueWithGeolocationDisabled?: boolean;
+   errorMessageCancellable?: boolean;
    /**
     * Default = {}. Texts to show in the location not available error dialog, if this is not set then translated generic texts are used.
     */
@@ -19,13 +20,18 @@ export interface GetGeolocationParams {
     */
    removePrecisionInCoordinates?: boolean;
    /**
-    * If the user does not provide location permission or there is any problem getting the coords then cords on this prop will be used, if not provided in this prop then an island in the middle of nowhere will be the location.
+    * If the user does not provide location permission or there is any problem getting the coords then the coords on this prop will be used, if not provided in this prop then an island in the middle of nowhere will be the location.
+    * To disable this feature use enableBackupCoords prop.
     */
    backupCoords?: LocationCoords;
    /**
-    * The result of requesting location permissions.
+    * Default = true. If there is any problem getting the information show an error.
     */
-   permissionGranted?: boolean;
+   showError?: boolean;
+   /**
+    * Default = true. If this is false when coordinates cannot be retrieved the promise resolves to error without the coordinates. If this is true it will return the backupCoords or any coords, also allowContinueWithGeolocationDisabled needs to be true.
+    */
+   enableBackupCoords?: boolean;
 }
 
 export interface LocationData {

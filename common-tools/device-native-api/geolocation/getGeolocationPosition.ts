@@ -4,6 +4,7 @@ import { removeDigitsFromNumber } from "../../math/math-tools";
 import { tryToGetErrorMessage } from "../../../api/tools/httpRequest";
 import { withTimeout } from "../../withTimeout/withTimeout";
 import { GetGeolocationParams, LocationCoords } from "./typings";
+import { getPermissionStatus } from "../permissions/askForPermissions";
 
 /**
  * Gets geolocation data, the permissions (Permissions.LOCATION) should be already granted, if the geolocation
@@ -26,10 +27,10 @@ export async function getGeolocationPosition(
    settings?: GetGeolocationParams
 ): Promise<LocationCoords> {
    const {
-      allowContinueWithGeolocationDisabled = false,
+      errorMessageCancellable = false,
+      enableBackupCoords = true,
       errorDialogSettings = {},
       removePrecisionInCoordinates = true,
-      permissionGranted,
       backupCoords
    } = settings ?? {};
 
@@ -66,13 +67,14 @@ export async function getGeolocationPosition(
    } catch (error) {
       console.error(error);
 
-      let retry: boolean = false;
+      const permissionGranted = await getPermissionStatus(Location.getForegroundPermissionsAsync);
 
+      let retry: boolean = false;
       // If permissions are granted then we have an error to show to the user, otherwise we know what is happening, no error dialog needed.
       if (permissionGranted) {
          retry = await showLocationDisabledDialog({
             ...errorDialogSettings,
-            cancelable: allowContinueWithGeolocationDisabled,
+            cancelable: errorMessageCancellable,
             errorDetails: `${
                errorDialogSettings?.errorDetails ? errorDialogSettings?.errorDetails + " " : ""
             }getGeolocationPosition\n${tryToGetErrorMessage(error)}`
@@ -82,7 +84,7 @@ export async function getGeolocationPosition(
       if (retry) {
          return getGeolocationPosition(settings);
       } else {
-         if (allowContinueWithGeolocationDisabled) {
+         if (enableBackupCoords) {
             return Promise.resolve(backupCoords ?? { latitude: 2.0, longitude: -157.39 });
          } else {
             throw new Error(error);

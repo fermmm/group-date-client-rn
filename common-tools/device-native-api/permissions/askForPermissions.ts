@@ -4,6 +4,7 @@ import {
    showRejectedPermissionsDialog,
    RejectedDialogSettings
 } from "./dialogRejectedPermissions/dialogRejectedPermissions";
+import { withTimeout } from "../../withTimeout/withTimeout";
 
 /**
  * Ask the user for a permission, shows error dialogs when the user rejects permission, the dialog offers the user
@@ -66,13 +67,13 @@ export async function askForPermission(
       permissionName
    } = settings ?? {};
 
-   let result: PermissionResponse = await permissionsSource.getter();
+   let result: PermissionResponse = await withTimeout(permissionsSource.getter());
 
-   if (result.status !== "granted") {
+   if (result?.status !== "granted") {
       result = await permissionsSource.requester();
    }
 
-   if (result.status !== "granted") {
+   if (result?.status !== "granted") {
       let dialogResponse = { retry: false };
 
       if (insistOnAcceptingOnce && allowContinueWithoutAccepting) {
@@ -98,6 +99,17 @@ export async function askForPermission(
    }
 
    return Promise.resolve(true);
+}
+
+/**
+ * Gets the status of a permission.
+ * @example const granted = await getPermissionStatus(Location.getPermissionsAsync);
+ * @param permissionGetter
+ * @returns
+ */
+export async function getPermissionStatus(permissionGetter: () => Promise<PermissionResponse>) {
+   let result: PermissionResponse = await withTimeout(permissionGetter());
+   return result?.status !== "granted";
 }
 
 export interface AskPermissionSettings {

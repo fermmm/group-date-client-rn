@@ -36,7 +36,7 @@ const AboutPage: FC = () => {
             </TitleText>
             <Text style={styles.text}>
                El concepto de pareja suele traer jerarquías, pensamos que detectar y evitar
-               jerarquías es lo que conduce a lo bello y divertido de la vida.
+               jerarquías conduce a lo bello y divertido de la vida.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
