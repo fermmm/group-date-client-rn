@@ -139,11 +139,11 @@ const WelcomeTourPage: FC = () => {
                         />
                      </View>
                      <View style={styles.textContainer}>
-                        <TitleText style={styles.title}>VENTAJAS DE UNA CITA GRUPAL</TitleText>
+                        <TitleText style={styles.title}>VENTAJAS DE LAS CITAS GRUPALES</TitleText>
                         <Text style={styles.text}>
-                           Conocerás mejor a los demás por como son estando en grupo, mayor
-                           relajación, la sexualidad puede ser más tentadora, conocer muchas
-                           personas con poco esfuerzo e infinitas ventajas más
+                           Conocer más fácil a los demás por ver como son con otras personas, la
+                           sexualidad suele ser múltiples veces más tentadora en grupo, conocer más
+                           gente en menos tiempo e infinitas ventajas más
                         </Text>
                         {renderButtonContinue()}
                      </View>
