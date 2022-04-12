@@ -1,18 +1,25 @@
 import { Alert } from "react-native";
 import Constants, { AppOwnership } from "expo-constants";
+import { useServerInfo } from "../../api/server/server-info";
 
-export function showIntroMessage() {
-   if (Constants.appOwnership === AppOwnership.Expo) {
-      return;
-   }
+export function useIntroMessage() {
+   const { data } = useServerInfo();
 
-   Alert.alert(
-      "",
-      "Esta app acaba de ser terminada y ahora estamos planificando la difusión. Puede que aún no encuentres a nadie por tu zona",
-      [
-         {
-            text: "Entendido"
+   return {
+      showIntroMessage: () => {
+         if (Constants.appOwnership === AppOwnership.Expo) {
+            return;
          }
-      ]
-   );
+
+         if (data?.postLoginMessage == null || data?.postLoginMessage?.length < 1) {
+            return;
+         }
+
+         Alert.alert("", data.postLoginMessage, [
+            {
+               text: "Entendido"
+            }
+         ]);
+      }
+   };
 }

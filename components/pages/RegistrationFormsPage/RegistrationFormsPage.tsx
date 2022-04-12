@@ -28,7 +28,6 @@ import { useAuthentication, useLogout } from "../../../api/authentication/useAut
 import { revalidate } from "../../../api/tools/useCache/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
 import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
-import { showIntroMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 import GenderForm from "./GenderForm/GenderForm";
 import { IsCoupleQuestion } from "./IsCoupleQuestion/IsCoupleQuestion";
 import { useAnalyticsForRegistration } from "../../../common-tools/analytics/registrationFormsPage/useAnalyticsForRegistration";
@@ -36,6 +35,7 @@ import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyti
 import TitleMediumText from "../../common/TitleMediumText/TitleMediumText";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { useShouldRedirectToRequiredPage } from "../../../common-tools/navigation/useShouldRedirectToRequiredPage";
+import { useIntroMessage } from "../../../common-tools/messages/showBetaVersionMessage";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -77,6 +77,7 @@ const RegistrationFormsPage: FC = () => {
    const { token } = useAuthentication(profileStatus?.user?.token);
    useAnalyticsForRegistration(profileStatus?.user, formsRequired, currentStep);
    const { logout } = useLogout();
+   const { showIntroMessage } = useIntroMessage();
 
    const handleOnChangeForm = useCallback(
       (params: OnChangeFormParams) => {
