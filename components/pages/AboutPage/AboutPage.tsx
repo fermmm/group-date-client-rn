@@ -122,8 +122,8 @@ const AboutPage: FC = () => {
             <EmptySpace height={15} />
             <Text style={styles.text}>
                Hay mucha ciencia dedicada al tema, en libros como los de Cacilda Jethá y Christopher
-               Ryan, también de Marx y Engels: "El origen de la familia, la propiedad privada y el
-               estado" o casi cualquier libro de autoras feministas que traten el tema.
+               Ryan, diversas autoras feministas o Marx y Engels: "El origen de la familia, la
+               propiedad privada y el estado".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?

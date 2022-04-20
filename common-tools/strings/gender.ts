@@ -1,5 +1,8 @@
 import I18n from "i18n-js";
-import { CIS_GENDERS } from "./../../api/server/shared-tools/endpoints-interfaces/user";
+import {
+   CIS_GENDERS,
+   NON_CIS_GENDERS
+} from "./../../api/server/shared-tools/endpoints-interfaces/user";
 import { Gender } from "../../api/server/shared-tools/endpoints-interfaces/user";
 
 export function getGenderName(
@@ -15,10 +18,20 @@ export function getGenderName(
       return "Género desconocido";
    }
 
+   let finalVisualizedGenders = [...genders];
+
+   // non-cis gender users want to display only non-cis genders in their profile, so we hide cis genders if there is any.
+   if (!userIsCisGender(genders)) {
+      // Remove cis genders
+      finalVisualizedGenders = finalVisualizedGenders.filter(gender =>
+         NON_CIS_GENDERS.includes(gender)
+      );
+   }
+
    if (translate) {
-      return genders.map(gender => I18n.t(gender)).join(", ");
+      return finalVisualizedGenders.map(gender => I18n.t(gender)).join(", ");
    } else {
-      return genders.join(", ");
+      return finalVisualizedGenders.join(", ");
    }
 }
 
@@ -46,4 +59,8 @@ export function isAttractedToOppositeSex(
    }
 
    return false;
+}
+
+export function userIsCisGender(userGenders: Gender[]) {
+   return userGenders.find(gender => NON_CIS_GENDERS.includes(gender)) == null;
 }

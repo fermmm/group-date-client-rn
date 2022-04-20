@@ -15,17 +15,25 @@ import ButtonStyled from "../../../../common/ButtonStyled/ButtonStyled";
 
 export interface PropsGendersChecklist {
    title: string;
-   initiallySelected?: Gender[];
+   disabledGenders?: Gender[];
    initiallyExpanded?: boolean;
+   selection: Gender[];
    onChange: (newSelection: Gender[]) => void;
+   onDisabledGenderPress?: (genderPressed: Gender) => void;
 }
 
 const GendersChecklist: FC<PropsGendersChecklist> = props => {
-   const { title, initiallySelected, onChange, initiallyExpanded = true } = props;
+   const {
+      title,
+      selection = [],
+      onChange,
+      onDisabledGenderPress,
+      initiallyExpanded = true,
+      disabledGenders
+   } = props;
 
    const [expanded, setExpanded] = useState(initiallyExpanded);
    const { colors } = useTheme();
-   const [selection, setSelection] = useState<Gender[]>(initiallySelected ?? []);
    const cisGenders = [Gender.Woman, Gender.Man];
    const nonCisGenders = useMemo(
       () =>
@@ -36,18 +44,21 @@ const GendersChecklist: FC<PropsGendersChecklist> = props => {
    );
 
    const addOrRemoveFromSelection = (gender: Gender) => {
-      let newSelection: Gender[] = [...selection];
+      if (disabledGenders?.includes(gender)) {
+         onDisabledGenderPress?.(gender);
+         return;
+      }
 
-      if (selection.includes(gender)) {
-         newSelection = selection.filter(g => g !== gender);
+      let newSelection: Gender[] = [...(selection ?? [])];
+
+      if (newSelection.includes(gender)) {
+         newSelection = newSelection.filter(g => g !== gender);
       } else {
          newSelection.push(gender);
       }
 
-      setSelection(newSelection);
+      onChange(newSelection);
    };
-
-   useEffect(() => onChange(selection), [selection]);
 
    return (
       <>
@@ -65,7 +76,9 @@ const GendersChecklist: FC<PropsGendersChecklist> = props => {
             <TitleText style={styles.cisTitleText}>Cis</TitleText>
             {cisGenders.map((gender: Gender) => (
                <CheckboxButton
-                  checked={selection?.includes(gender)}
+                  checked={
+                     selection?.includes(gender) && !(disabledGenders?.includes(gender) ?? false)
+                  }
                   onPress={() => addOrRemoveFromSelection(gender)}
                   key={gender}
                >
@@ -86,7 +99,10 @@ const GendersChecklist: FC<PropsGendersChecklist> = props => {
                   <TitleText style={styles.otherGendersTitleText}>Otros géneros</TitleText>
                   {nonCisGenders.map((gender: Gender) => (
                      <CheckboxButton
-                        checked={selection?.includes(gender)}
+                        checked={
+                           selection?.includes(gender) &&
+                           !(disabledGenders?.includes(gender) ?? false)
+                        }
                         onPress={() => addOrRemoveFromSelection(gender)}
                         key={gender}
                      >
