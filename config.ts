@@ -55,6 +55,8 @@ export const LOCK_IMAGES_ASPECT_RATIO: boolean = false;
 /**
  * Only works if LOCK_IMAGES_ASPECT_RATIO = true. The aspect ratio can be configured here. It's recommended
  * that the aspect ratio fits the design of the profile page.
+ *
+ * CURRENTLY NOT WORKING: This is a feature of expo-image-picker but that library has problems so this no longer works
  */
 export const IMAGES_ASPECT_RATIO: [number, number] = [4, 4];
 

@@ -142,6 +142,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 139
         versionName "1.3.9"
+        vectorDrawables.useSupportLibrary = true
     }
     splits {
         abi {
