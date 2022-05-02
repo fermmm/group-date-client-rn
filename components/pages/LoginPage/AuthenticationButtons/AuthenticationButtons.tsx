@@ -11,7 +11,12 @@ import {
 } from "../../../../common-tools/analytics/loginPage/loginSteps";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
-import { currentTheme } from "../../../../config";
+import {
+   currentTheme,
+   EMAIL_LOGIN_ENABLED,
+   FACEBOOK_LOGIN_ENABLED,
+   GOOGLE_LOGIN_ENABLED
+} from "../../../../config";
 import { FACEBOOK_APP_ID, FACEBOOK_APP_NAME, GOOGLE_CLIENT_WEB_EXPO } from "../../../../env.config";
 import { useAdultConfirmDialog } from "../../../common/AdultConfirmModal/tools/useAdultConfirmModa";
 import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
@@ -28,10 +33,18 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
    const { openAdultConfirmDialog } = useAdultConfirmDialog();
    const { colors } = useTheme();
    const color = colors.textLogin;
+
    const facebookLoginAvailable =
-      Boolean(FACEBOOK_APP_ID) && Boolean(FACEBOOK_APP_NAME) && Platform.OS !== "ios";
-   const googleLoginAvailable = Boolean(GOOGLE_CLIENT_WEB_EXPO) && Platform.OS !== "ios";
-   const emailLoginAvailable = serverInfo?.emailLoginEnabled;
+      Boolean(FACEBOOK_APP_ID) &&
+      Boolean(FACEBOOK_APP_NAME) &&
+      Platform.OS !== "ios" &&
+      FACEBOOK_LOGIN_ENABLED;
+
+   const googleLoginAvailable =
+      Boolean(GOOGLE_CLIENT_WEB_EXPO) && Platform.OS !== "ios" && GOOGLE_LOGIN_ENABLED;
+
+   const emailLoginAvailable = serverInfo?.emailLoginEnabled && EMAIL_LOGIN_ENABLED;
+
    const anyLoginAvailable = facebookLoginAvailable || googleLoginAvailable || emailLoginAvailable;
 
    const handleGoogleButtonPress = () => {
@@ -101,7 +114,7 @@ export const AuthenticationButtons: FC<PropsAuthenticationButtons> = props => {
                icon={() => <Icon name={"email-outline"} color={color} size={23} />}
                onPress={handleEmailButtonPress}
             >
-               {"Iniciar sesión con tu email"}
+               {"Iniciar sesión con email"}
             </ButtonStyled>
          )}
          {!anyLoginAvailable && (

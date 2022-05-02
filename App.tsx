@@ -34,6 +34,7 @@ import KeyboardAvoidingViewExtended from "./components/common/KeyboardAvoidingVi
 import { loadFontPolly } from "./common-tools/font-loaders/loadFontPolly";
 import { loadFontMontserrat } from "./common-tools/font-loaders/loadFontMontserrat";
 import { getSystemLanguage } from "./common-tools/device-native-api/configuration/getSystemLanguage";
+import { GlobalContextProvider } from "./common-tools/contexts/GlobalContext";
 
 i18n.fallbacks = true;
 i18n.translations = {
@@ -66,38 +67,43 @@ const App: FC = () => {
    }
 
    return (
-      <KeyboardAvoidingViewExtended disableOnAndroid>
-         <CacheConfigProvider>
-            <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
-               <GlobalModalsProvider>
-                  <StatusBar style="light" translucent backgroundColor={"transparent"} />
-                  <NavigationContainerWithNotifications>
-                     <Stack.Navigator
-                        initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}
-                        headerMode={"none"}
-                     >
-                        <Stack.Screen name="WelcomeTour" component={WelcomeTourPage} />
-                        <Stack.Screen name="Login" component={LoginPage} />
-                        <Stack.Screen name="RegistrationForms" component={RegistrationFormsPage} />
-                        <Stack.Screen name="Main" component={MainPage} />
-                        <Stack.Screen name="Profile" component={ProfilePage} />
-                        <Stack.Screen name="About" component={AboutPage} />
-                        <Stack.Screen name="Group" component={GroupPage} />
-                        <Stack.Screen name="Chat" component={ChatPage} />
-                        <Stack.Screen name="DateVoting" component={DateVotingPage} />
-                        <Stack.Screen name="Admin" component={AdminPage} />
-                        <Stack.Screen name="CreateTag" component={CreateTagPage} />
-                        <Stack.Screen name="ContactPage" component={ContactPage} />
-                        <Stack.Screen
-                           name="RemoveSeenWizardPage"
-                           component={RemoveSeenWizardPage}
-                        />
-                     </Stack.Navigator>
-                  </NavigationContainerWithNotifications>
-               </GlobalModalsProvider>
-            </PaperProvider>
-         </CacheConfigProvider>
-      </KeyboardAvoidingViewExtended>
+      <GlobalContextProvider>
+         <KeyboardAvoidingViewExtended disableOnAndroid>
+            <CacheConfigProvider>
+               <PaperProvider theme={currentTheme as unknown as ReactNativePaper.Theme}>
+                  <GlobalModalsProvider>
+                     <StatusBar style="light" translucent backgroundColor={"transparent"} />
+                     <NavigationContainerWithNotifications>
+                        <Stack.Navigator
+                           initialRouteName={welcomeShowed ? "Login" : "WelcomeTour"}
+                           headerMode={"none"}
+                        >
+                           <Stack.Screen name="WelcomeTour" component={WelcomeTourPage} />
+                           <Stack.Screen name="Login" component={LoginPage} />
+                           <Stack.Screen
+                              name="RegistrationForms"
+                              component={RegistrationFormsPage}
+                           />
+                           <Stack.Screen name="Main" component={MainPage} />
+                           <Stack.Screen name="Profile" component={ProfilePage} />
+                           <Stack.Screen name="About" component={AboutPage} />
+                           <Stack.Screen name="Group" component={GroupPage} />
+                           <Stack.Screen name="Chat" component={ChatPage} />
+                           <Stack.Screen name="DateVoting" component={DateVotingPage} />
+                           <Stack.Screen name="Admin" component={AdminPage} />
+                           <Stack.Screen name="CreateTag" component={CreateTagPage} />
+                           <Stack.Screen name="ContactPage" component={ContactPage} />
+                           <Stack.Screen
+                              name="RemoveSeenWizardPage"
+                              component={RemoveSeenWizardPage}
+                           />
+                        </Stack.Navigator>
+                     </NavigationContainerWithNotifications>
+                  </GlobalModalsProvider>
+               </PaperProvider>
+            </CacheConfigProvider>
+         </KeyboardAvoidingViewExtended>
+      </GlobalContextProvider>
    );
 };
 

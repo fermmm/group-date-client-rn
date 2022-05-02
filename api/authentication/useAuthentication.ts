@@ -4,7 +4,7 @@ import {
    removeFromDevice,
    saveOnDevice
 } from "../../common-tools/device-native-api/storage/storage";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LocalStorageKey } from "../../common-tools/strings/LocalStorageKey";
 import { checkFacebookToken } from "./providers/facebook/checkFacebookToken";
 import { checkGoogleToken } from "./providers/google/checkGoogleToken";
@@ -18,6 +18,8 @@ import { useEmailToken } from "./providers/email/getEmailToken";
 import { checkEmailToken } from "./providers/email/checkEmailToken";
 import { useNavigation } from "../../common-tools/navigation/useNavigation";
 import { getFacebookToken } from "./providers/facebook/getFacebookToken";
+import { GlobalContext } from "../../common-tools/contexts/GlobalContext";
+import { EMAIL_LOGIN_ENABLED, FACEBOOK_LOGIN_ENABLED, GOOGLE_LOGIN_ENABLED } from "../../config";
 
 let fasterTokenCache: string = null;
 
@@ -40,13 +42,16 @@ export function useAuthentication(
    const { isValid: tokenIsValid, isLoading: tokenCheckLoading } = useTokenCheck({
       token: token.token,
       onTokenInvalidFormat: logout,
+      onTokenFromDisabledLoginProvider: logout,
       enabled: checkTokenIsValid && token.token != null && enabled
    });
 
-   useAutomaticReLogin({
-      token,
-      enabled: tokenIsValid === false && checkTokenIsValid && enabled
-   });
+   // This is commented because when the token expires it throws some errors instead of re login.
+   // This was made for google login but it's now disabled.
+   // useAutomaticReLogin({
+   //    token,
+   //    enabled: tokenIsValid === false && checkTokenIsValid && enabled
+   // });
 
    const isLoading =
       token.isLoading || (options?.checkTokenIsValid === true ? tokenCheckLoading : false);
@@ -159,9 +164,10 @@ function useToken(externallyProvidedToken?: string): UseToken {
 function useTokenCheck(props: {
    token: string;
    onTokenInvalidFormat: () => void;
+   onTokenFromDisabledLoginProvider: () => void;
    enabled: boolean;
 }) {
-   const { token, onTokenInvalidFormat, enabled } = props;
+   const { token, onTokenInvalidFormat, onTokenFromDisabledLoginProvider, enabled } = props;
    const [isValid, setIsValid] = useState<boolean>(null);
    const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -174,6 +180,18 @@ function useTokenCheck(props: {
 
       if (token != null && tokenInfo == null) {
          onTokenInvalidFormat();
+         setIsValid(false);
+         return;
+      }
+
+      // This if checks if the user has a token form a login system that is now disabled
+      if (
+         token != null &&
+         ((tokenInfo.provider === AuthenticationProvider.Google && !GOOGLE_LOGIN_ENABLED) ||
+            (tokenInfo.provider === AuthenticationProvider.Email && !EMAIL_LOGIN_ENABLED) ||
+            (tokenInfo.provider === AuthenticationProvider.Facebook && !FACEBOOK_LOGIN_ENABLED))
+      ) {
+         onTokenFromDisabledLoginProvider();
          setIsValid(false);
          return;
       }
@@ -218,12 +236,13 @@ function useTokenCheck(props: {
  */
 function useAutomaticReLogin(params: { token: UseToken; enabled: boolean }) {
    const { token, enabled } = params;
-   const attemptedSilentLogin = useRef(false);
+   // Context is used here because this should be executed once per app run, after a failed login attempt we may change the page to Login or reset Login page and local state is lost.
+   const { automaticReLoginDone, setAutomaticReLoginDone } = useContext(GlobalContext);
    const tokenProvider = getTokenInfo(token?.token)?.provider;
 
    useEffect(() => {
       if (
-         attemptedSilentLogin.current === true ||
+         automaticReLoginDone === true ||
          token?.token == null ||
          enabled !== true ||
          tokenProvider == null ||
@@ -231,8 +250,9 @@ function useAutomaticReLogin(params: { token: UseToken; enabled: boolean }) {
       ) {
          return;
       }
+
       token.getNewToken(tokenProvider);
-      attemptedSilentLogin.current = true;
+      setAutomaticReLoginDone(true);
    }, [enabled, tokenProvider, token]);
 }
 
