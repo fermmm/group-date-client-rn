@@ -1,9 +1,9 @@
-// import * as ImagePicker from "expo-image-picker";
-// import {
-//    ImageInfo,
-//    UIImagePickerPresentationStyle
-// } from "expo-image-picker/build/ImagePicker.types";
-import ImagePicker from "react-native-image-crop-picker";
+import * as ImagePicker from "expo-image-picker";
+import {
+   ImageInfo,
+   UIImagePickerPresentationStyle
+} from "expo-image-picker/build/ImagePicker.types";
+import Constants, { AppOwnership } from "expo-constants";
 import { IMAGES_ASPECT_RATIO, LOCK_IMAGES_ASPECT_RATIO } from "../../../config";
 
 export const callImagePicker = async (): Promise<string | null> => {
@@ -26,39 +26,40 @@ export const callImagePicker = async (): Promise<string | null> => {
    //       }
    //    );
 
-   // Currently expo-image-picker has problems on some devices. react-native-image-crop-picker is a better alternative
+   // Here we use react-native-image-crop-picker because expo as always has issues with some devices
+   if (Constants.appOwnership !== AppOwnership.Expo) {
+      // This is imported using require() to not break Expo Go
+      const ImageCropPicker = require("react-native-image-crop-picker");
 
-   // const result: ImageInfo = (await ImagePicker.launchImageLibraryAsync({
-   //    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-   //    allowsEditing: true,
-   //    quality: 1,
-   //    presentationStyle: UIImagePickerPresentationStyle.FullScreen,
-   //    aspect: LOCK_IMAGES_ASPECT_RATIO ? IMAGES_ASPECT_RATIO : null
-   // })) as unknown as ImageInfo;
+      const result = await ImageCropPicker.openPicker({
+         mediaType: "photo",
+         showCropFrame: true,
+         cropping: !LOCK_IMAGES_ASPECT_RATIO,
+         freeStyleCropEnabled: true,
+         showCropGuidelines: true,
+         enableRotationGesture: true,
+         hideBottomControls: true,
+         cropperToolbarColor: "black",
+         cropperToolbarWidgetColor: "white",
+         cropperToolbarTitle: "Recortar imagen",
+         loadingLabelText: "Cargando",
+         cropperChooseText: "Elegir",
+         cropperCancelText: "Cancelar",
+         cropperTintColor: "white",
+         cropperStatusBarColor: "black",
+         cropperActiveWidgetColor: "white"
+      });
 
-   // const result = await launchImageLibrary({
-   //    mediaType: "photo",
-   //    quality: 1
-   // });
+      return Promise.resolve(result?.path ?? null);
+   } else {
+      const result: ImageInfo = (await ImagePicker.launchImageLibraryAsync({
+         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+         allowsEditing: true,
+         quality: 1,
+         presentationStyle: UIImagePickerPresentationStyle.FullScreen,
+         aspect: LOCK_IMAGES_ASPECT_RATIO ? IMAGES_ASPECT_RATIO : null
+      })) as unknown as ImageInfo;
 
-   const result = await ImagePicker.openPicker({
-      mediaType: "photo",
-      showCropFrame: true,
-      cropping: !LOCK_IMAGES_ASPECT_RATIO,
-      freeStyleCropEnabled: true,
-      showCropGuidelines: true,
-      enableRotationGesture: true,
-      hideBottomControls: true,
-      cropperToolbarColor: "black",
-      cropperToolbarWidgetColor: "white",
-      cropperToolbarTitle: "Recortar imagen",
-      loadingLabelText: "Cargando",
-      cropperChooseText: "Elegir",
-      cropperCancelText: "Cancelar",
-      cropperTintColor: "white",
-      cropperStatusBarColor: "black",
-      cropperActiveWidgetColor: "white"
-   });
-
-   return Promise.resolve(result?.path ?? null);
+      return Promise.resolve(result?.uri ?? null);
+   }
 };
