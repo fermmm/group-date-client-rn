@@ -21,39 +21,38 @@ const AboutPage: FC = () => {
          <AppBarHeader onBackPress={goBack} />
          <BasicScreenContainer style={styles.mainContainer}>
             <TitleText extraSize style={styles.title}>
-               ¿De cuántas personas son las citas grupales?
+               ¿Cual es el máximo de personas en una cita?
             </TitleText>
             <Text style={styles.text}>
-               El mínimo de personas necesario son 3, el máximo es de 20.
+               El máximo es de 20 pero es poco probable que se alcance ese número
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Con suficiente tiempo y coincidencias las citas irán aumentando en cantidad de
-               personas.
+               El tamaño de las citas depende de cuantas personas se gustan
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Por qué directo a lo grupal y no de a poco primero en pareja buscando trío?
             </TitleText>
             <Text style={styles.text}>
-               El concepto de pareja suele traer jerarquías, pensamos que detectar y evitar
-               jerarquías conduce a lo bello y divertido de la vida.
+               No necesariamente lo mas fácil es en esa "escalera". Pensamos que el concepto de
+               pareja impide avanzar al siguiente "escalón".
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Concretamente una pareja donde se conocen y se entienden hace tiempo, luego cuando
-               quieren agregar una tercera persona le están proponiendo una jerarquía de forma
-               inevitable, es raro que aparezca esa tercera persona que quiere algo así, por eso se
-               les dice unicornio.
+               Por ejemplo una pareja donde se conocen y se entienden hace tiempo van a tener más
+               control sobre todo lo que suceda que esa tercera persona que se les suma. Esa
+               propuesta no solo es de trio si no también de jerarquía, por eso es difícil que
+               aparezca esa tercera persona y se les dice "unicornio".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
-               gustan entre ellas
+               gustan entre ellas (estilo harem)
             </TitleText>
             <Text style={styles.text}>
                No. Solo se generan grupos más o menos equilibrados, por ejemplo cuando se da un
                grupo de 100% heterosexuales la cantidad de mujeres y hombres siempre va a ser mas o
-               menos la misma. Se debe a que no queremos promover jerarquías (mas info en la
-               pregunta anterior).
+               menos equilibrada. Se debe a que no queremos generar jerarquías o situaciones
+               injustas.
             </Text>
             {/* This part is suspended until is required */}
             {/* <TitleText extraSize style={styles.title}>
@@ -108,16 +107,16 @@ const AboutPage: FC = () => {
                   igualitaria, potenciado por el sexo que era mucho más abundante, público y
                   generalmente grupal. Este pasado se puede ignorar pero existió durante toda
                   nuestra evolución por lo que no se va a ir de nuestro cuerpo, un ejemplo
-                  representativo: Los "gemidos sexuales" son un instinto que en las otras especies
-                  (primates) cumple la función de llamar a lxs que están cerca.
+                  representativo: Los "gemidos sexuales" son un instinto que en su origen cumplía la
+                  función de llamar a lxs que están cerca.
                </Text>
             </AnalyticsTrackWhenVisible>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Durante el neolítico aparecen tecnologías que hacen posible la riqueza y el comercio,
-               los padres inculcan ideas monógamas para casar a sus hijos por motivos comerciales y
-               la familia pequeña favorece la acumulación personal, poniendo en un lugar hegemónico
-               a las ideas de la monogamia y familia nuclear.
+               Luego durante el neolítico aparecen tecnologías que hacen posible la riqueza y el
+               comercio, se inventa la monogamia para casar a hijos por motivos comerciales y la
+               familia pequeña favorece la acumulación personal de la riqueza, poniendo en un lugar
+               hegemónico a las ideas de la monogamia y familia nuclear.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
@@ -129,18 +128,16 @@ const AboutPage: FC = () => {
                ¿Hay que pagar algo?
             </TitleText>
             <Text style={styles.text}>
-               No, esta app es y será siempre gratis, sin fines comerciales y financiada con
-               donaciones a voluntad.
+               No, esta app es y será siempre gratis, sin fines comerciales. Todavía no pensamos
+               como generar ingresos, probablemente sea por donaciones.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Quienes hicieron esta app?
             </TitleText>
             <Text style={styles.text}>
                La idea inicial viene de un informático de Argentina quién también escribió el
-               software, pero luego se agregaron múltiples detalles que multiplicaron su calidad y
-               son colaboraciones de muchas personas interesadas en el proyecto pertenecientes a
-               organizaciones de poliamor, amor libre, feminismo, profesionales de diferentes
-               disciplinas: desde ciencias sociales hasta otrxs informáticxs.
+               software, pero luego se agregaron múltiples detalles que multiplican su calidad y son
+               colaboraciones de otras personas interesadas en el proyecto.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿En base a que criterios me recomienda personas la app?
