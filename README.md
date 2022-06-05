@@ -1,4 +1,4 @@
-# Poly - Mobile Android / IOS app.
+# GroupDate - Mobile Android / IOS app client.
 
 This project uses TypeScript + React Native + Expo with "bare" workflow (not the "managed" workflow).
 
