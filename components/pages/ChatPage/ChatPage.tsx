@@ -27,6 +27,9 @@ import Chat, { ChatMessageProps } from "../../common/Chat/Chat";
 import ChatAppBar from "./ChatAppBar/ChatAppBar";
 import { ChatMessage } from "../../../api/server/shared-tools/endpoints-interfaces/common";
 import { useGroupSeenChecker } from "../GroupsListPage/tools/useGroupSeenChecker";
+import { decodeString } from "../../../api/server/shared-tools/utility-functions/decodeString";
+import { GroupChat } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
+import { useDialogModal } from "../../common/DialogModal/tools/useDialogModal";
 
 export interface ChatPageState {
    isContactChat: boolean;
@@ -45,6 +48,7 @@ const ChatPage: FC = () => {
    const [messages, setMessages] = useState<ChatMessageProps[]>([]);
    const [messageSelected, setMessageSelected] = useState<ChatMessageProps>();
    const [respondingToMessage, setRespondingToMessage] = useState<ChatMessageProps>();
+   const { openDialogModal } = useDialogModal();
    const isContactChat = params?.contactChat ?? false;
    const { token } = useAuthentication();
    const { data: user } = useUser();
@@ -84,13 +88,33 @@ const ChatPage: FC = () => {
     * Also revalidate the chat request when an unknown user is found.
     */
    useEffect(() => {
-      if (groupChatFromServer == null || groupChatFromServer.messages == null) {
+      if (groupChatFromServer == null) {
+         return;
+      }
+
+      let groupChatFromServerParsed: GroupChat;
+
+      try {
+         groupChatFromServerParsed = JSON.parse(
+            decodeString(groupChatFromServer as unknown as string)
+         );
+      } catch (error) {
+         // Just in case, but it should never br "object" since groupChatFromServer is an encoded string that cannot be parsed just from server, decodeString() needs to be called first.
+         if (typeof groupChatFromServer === "object") {
+            groupChatFromServerParsed = groupChatFromServer;
+         } else {
+            openDialogModal({ message: "Error while parsing the chat" });
+            return;
+         }
+      }
+
+      if (groupChatFromServerParsed.messages == null) {
          return;
       }
 
       setMessages([
-         ...groupChatFromServer.messages.map(message =>
-            fromMessageDataToChatMessageProps(groupChatFromServer.messages, message)
+         ...groupChatFromServerParsed.messages.map(message =>
+            fromMessageDataToChatMessageProps(groupChatFromServerParsed.messages, message)
          )
       ]);
 
