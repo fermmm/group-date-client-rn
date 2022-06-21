@@ -15,7 +15,6 @@ type V = ValidationRule;
 const REQUIRED_USER_PROPS_SCHEMA = {
    name: { type: "string", min: 2, max: 32, optional: true } as V,
    birthDate: { type: "number", optional: true } as V,
-   isCoupleProfile: { type: "boolean", optional: true } as V,
    cityName: { type: "string", min: 2, max: 32, optional: true } as V,
    images: { type: "array", items: { type: "string", min: 1, max: 800 }, min: 0, max: 6, optional: true } as V,
    targetAgeMin: { type: "number", min: 18, max: 200, optional: true } as V,
@@ -25,7 +24,6 @@ const REQUIRED_USER_PROPS_SCHEMA = {
    profileDescription: { type: "string", max: 4000, optional: true } as V,
    height: { type: "number", min: 0, max: 300, optional: true } as V,
    sendNewUsersNotification: { type: "number", min: 0, max: 50, optional: true } as V,
-   questionsShowed: { type: "array", items: { type: "string", min: 1, max: 20 }, max: 50, optional: true } as V,
    genders: {
       type: "array",
       items: { type: "string", min: 1, max: 100 },
@@ -68,11 +66,25 @@ export const USER_PROPS_TO_ENCODE = new Set<keyof User>([
    "country",
    "language",
    "images",
-   "questionsShowed",
+   "questionsResponded",
    "notificationsToken",
    "genders",
    "likesGenders",
 ]);
+
+/**
+ * If you added a prop that is an array or object add it here in order to be converted to JSON string when saving to the database
+ */
+export const USER_PROPS_TO_STRINGIFY: Array<keyof User> = [
+   "images",
+   "notifications",
+   "questionsResponded",
+   "genders",
+   "likesGenders",
+   "banReasons",
+   "requiredTasks",
+];
+
 export const USER_PROPS_TO_ENCODE_AS_ARRAY = Array.from(USER_PROPS_TO_ENCODE);
 
 /**

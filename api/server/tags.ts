@@ -5,8 +5,7 @@ import {
    BasicTagParams,
    Tag,
    TagCreateParams,
-   TagGetParams,
-   TagsAsQuestion
+   TagGetParams
 } from "./shared-tools/endpoints-interfaces/tags";
 import { showNativeFeedbackMessage } from "../../common-tools/device-native-api/native-ui/nativeFeedbackMessage";
 
@@ -23,16 +22,6 @@ export function useTags<T extends Tag[]>(props?: {
          ...(props?.config ?? {}),
          enabled: token != null && props?.config?.enabled !== false
       }
-   );
-}
-
-export function useTagsAsQuestions<T extends TagsAsQuestion[]>(props?: {
-   config?: UseCacheOptions<T>;
-}) {
-   return useCache<T>(
-      "tags/questions",
-      () => defaultHttpRequest("tags/questions", "GET"),
-      props?.config
    );
 }
 

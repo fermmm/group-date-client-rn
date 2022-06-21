@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import {
-   ProfileStatusServerResponse,
-   UserPropAsQuestion
-} from "../../../../api/server/shared-tools/endpoints-interfaces/user";
+import { ProfileStatusServerResponse } from "../../../../api/server/shared-tools/endpoints-interfaces/user";
 import {
    EditableUserPropKey,
    RequiredUserPropKey
 } from "../../../../api/server/shared-tools/validators/user";
-import { usePropsAsQuestions } from "../../../../api/server/user";
+import { useQuestions } from "../../../../api/server/user";
 import { mergeArraysAt } from "../../../../common-tools/js-tools/js-tools";
 import { ParamsRegistrationFormsPage } from "../RegistrationFormsPage";
 
@@ -34,10 +31,8 @@ export const useRequiredFormList = (
          "cityName",
          "country"
       ],
-      CoupleProfileForm: ["isCoupleProfile"],
       GenderForm: ["genders"],
-      TagsAsQuestionsForms: [], // This empty element will be replaced later
-      UnknownPropsQuestionForms: [], // This empty element will be replaced later
+      QuestionsForm: [], // This empty element will be replaced later
       TargetGenderForm: ["likesGenders"],
       DateIdeaForm: ["dateIdea"],
 
@@ -47,19 +42,23 @@ export const useRequiredFormList = (
    };
 
    const [formsRequired, setFormsRequired] = useState<string[]>([]);
-   const { data: allPropsAsQuestions, isLoading } = usePropsAsQuestions({
+   const { data: allQuestions, isLoading } = useQuestions({
       config: {
-         enabled: requirementSource.fromParams == null
+         enabled:
+            requirementSource.fromParams?.questionToShow != null ||
+            requirementSource.fromProfileStatus != null
       }
    });
-   const [unknownPropsQuestions, setUnknownPropsQuestions] = useState<string[]>([]);
-   const [tagsAsQuestionsToShow, setTagsAsQuestionsToShow] = useState<string[]>([]);
 
+   console.log(allQuestions);
+   const [questionsToShow, setQuestionsToShow] = useState<string[]>([]);
+
+   // This effect only executes for registration, not from the settings menu
    useEffect(() => {
       if (
          requirementSource.fromParams != null ||
          requirementSource.fromProfileStatus == null ||
-         !allPropsAsQuestions
+         !allQuestions
       ) {
          return;
       }
@@ -74,53 +73,49 @@ export const useRequiredFormList = (
          requirementSource.fromProfileStatus
       );
 
-      /*
-       * The server could return props that are not known by the client but are present in the question list, this means
-       * we should show the question and update the required props. Here we filter the unknown props to get only the ones
-       * that are questions.
-       */
-      const unknownProps = getUnknownQuestionsProps(
-         requirementSource.fromProfileStatus.missingEditableUserProps,
-         formsForProps,
-         allPropsAsQuestions
-      );
-
       /**
-       * Replace "UnknownPropsQuestionForms" with the list of unknown props, if there are no unknown props then
-       * "UnknownPropsQuestionForms" gets removed anyway.
+       * Replace "QuestionsForm" with the list of tag as questions ids, if there are none then
+       * "QuestionsForm" gets removed anyway.
        */
       _formsRequired = mergeArraysAt(
-         _formsRequired.indexOf("UnknownPropsQuestionForms"),
-         unknownProps,
-         _formsRequired,
-         { replace: true } // In case nothing is merged because unknownProps = [] the UnknownPropsQuestionForms item is removed with this parameter
-      );
-
-      /**
-       * Replace "TagsAsQuestionsForms" with the list of tag as questions ids, if there are none then
-       * "TagsAsQuestionsForms" gets removed anyway.
-       */
-      _formsRequired = mergeArraysAt(
-         _formsRequired.indexOf("TagsAsQuestionsForms"),
-         requirementSource.fromProfileStatus.notShowedTagQuestions,
+         _formsRequired.indexOf("QuestionsForm"),
+         requirementSource.fromProfileStatus.notRespondedQuestions,
          _formsRequired,
          { replace: true }
       );
 
       setFormsRequired(_formsRequired);
-      setUnknownPropsQuestions(unknownProps);
-      setTagsAsQuestionsToShow(requirementSource.fromProfileStatus.notShowedTagQuestions ?? []);
-   }, [requirementSource.fromProfileStatus, allPropsAsQuestions]);
+      setQuestionsToShow(requirementSource.fromProfileStatus.notRespondedQuestions ?? []);
+   }, [requirementSource.fromProfileStatus, allQuestions]);
+
+   // This effect only executes for settings page, not from registration
+   useEffect(() => {
+      if (requirementSource.fromProfileStatus != null || requirementSource.fromParams == null) {
+         return;
+      }
+
+      /**
+       * Replace "QuestionsForm" with the list of tag as questions ids, if there are none then
+       * "QuestionsForm" gets removed anyway.
+       */
+      const _formsRequired = requirementSource.fromParams?.formsToShow ?? [];
+
+      // TODO: Esto es todo muy raro tal vez se podria repensar, parace que tengo que agregarle al array algo que esta fuera del tipo que es el ID de la pregunta
+      if (requirementSource.fromParams?.questionToShow?.length > 0) {
+         _formsRequired.push(
+            // @ts-ignore
+            ...(requirementSource.fromParams?.questionToShow as RegistrationFormName)
+         );
+      }
+
+      setFormsRequired(_formsRequired);
+      setQuestionsToShow(requirementSource.fromParams?.questionToShow ?? []);
+   }, [requirementSource.fromParams]);
 
    return {
       isLoading,
-      formsRequired:
-         requirementSource.fromParams != null
-            ? requirementSource.fromParams?.formsToShow
-            : formsRequired,
-      knownFormsWithPropsTheyChange: formsForProps,
-      unknownPropsQuestions,
-      tagsAsQuestionsToShow
+      formsRequired,
+      questionsToShow
    };
 };
 
@@ -128,17 +123,9 @@ export interface RequiredScreensResult {
    isLoading: boolean;
    /**
     * This list contains all form names of the forms that are required to be rendered, in order.
-    * For the tags as questions, the tag id is present.
-    * For the unknown props that are questions, the prop is present.
-    * Also the same information of this list is present divided into the other 3 lists:
-    *    knownFormsWithPropsTheyChange
-    *    unknownQuestionsProps
-    *    tagsAsQuestionsToShow
     */
    formsRequired: string[];
-   knownFormsWithPropsTheyChange: FormsAndTheirProps;
-   unknownPropsQuestions: string[];
-   tagsAsQuestionsToShow: string[];
+   questionsToShow: string[];
 }
 
 export type FormsAndTheirProps = Partial<
@@ -155,28 +142,7 @@ export type RegistrationFormName =
    | "TargetGenderForm"
    | "GenderForm"
    | "CoupleProfileForm"
-   | "TagsAsQuestionsForms"
-   | "UnknownPropsQuestionForms";
-
-function getUnknownQuestionsProps(
-   missingEditableUserProps: string[],
-   formsForProps: FormsAndTheirProps,
-   allPropsAsQuestions: UserPropAsQuestion[]
-): string[] {
-   return missingEditableUserProps.filter(missingProp =>
-      isUnknownQuestionProp(missingProp, formsForProps, allPropsAsQuestions)
-   );
-}
-
-function isUnknownQuestionProp(
-   prop: string,
-   formsForProps: FormsAndTheirProps,
-   allPropsAsQuestions: UserPropAsQuestion[]
-): boolean {
-   const isQuestionProp =
-      allPropsAsQuestions.filter(q => q.answers.find(a => a.propName === prop) != null).length > 0;
-   return Object.values(formsForProps).filter(p => p.includes(prop)).length === 0 && isQuestionProp;
-}
+   | "QuestionsForm";
 
 function getOnlyRequired(
    formNames: RegistrationFormName[],
@@ -184,8 +150,8 @@ function getOnlyRequired(
    profileStatus: ProfileStatusServerResponse
 ): RegistrationFormName[] {
    return formNames.filter(formName => {
-      // These forms will be included always because are removed in another place
-      if (formName === "UnknownPropsQuestionForms" || formName === "TagsAsQuestionsForms") {
+      // This form will be included always because is removed in another place
+      if (formName === "QuestionsForm") {
          return true;
       }
 

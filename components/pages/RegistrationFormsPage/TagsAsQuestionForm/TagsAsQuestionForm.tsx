@@ -1,57 +1,32 @@
 import React, { FC, useEffect, useState } from "react";
-import {
-   TagBasicInfo,
-   TagsAsQuestion
-} from "../../../../api/server/shared-tools/endpoints-interfaces/tags";
+import { useQuestions } from "../../../../api/server/user";
 import {
    CenteredMethod,
    LoadingAnimation
 } from "../../../common/LoadingAnimation/LoadingAnimation";
 import Question, { QuestionOnChange } from "../../../common/Question/Question";
-import { OnChangeFormParams, TagsToUpdate } from "../RegistrationFormsPage";
-import { useTagAsQuestionInfo } from "./hooks/useTagAsQuestionInfo";
+import { OnChangeFormParams } from "../RegistrationFormsPage";
 
-export interface PropsTagsAsQuestionForm {
+export interface PropsQuestionForm {
    formName: string;
-   initialData: TagsInfo;
    questionId: string;
-   mandatoryQuestion: boolean;
-   tagsAsQuestions: TagsAsQuestion[];
+   /** The answer id initially selected if any */
+   initialData?: string;
    onChange: (props: OnChangeFormParams) => void;
 }
 
-export interface TagsInfo {
-   tagsSubscribed?: TagBasicInfo[];
-   tagsBlocked?: TagBasicInfo[];
-}
-
-const TagsAsQuestionForm: FC<PropsTagsAsQuestionForm> = props => {
-   const { questionId, initialData, onChange, formName, mandatoryQuestion, tagsAsQuestions } =
-      props;
+const QuestionForm: FC<PropsQuestionForm> = props => {
+   const { questionId, initialData, onChange, formName } = props;
    const [selectedAnswer, setSelectedAnswer] = useState<string>(null);
-   const [itsImportantChecked, setItsImportantChecked] = useState<boolean>(null);
-   const {
-      isLoading,
-      question,
-      initiallySelectedAnswer,
-      initiallyItsImportantChecked,
-      tagsToUpdate,
-      itsImportantSelectorInvisible
-   } = useTagAsQuestionInfo(
-      tagsAsQuestions,
-      questionId,
-      initialData,
-      selectedAnswer,
-      itsImportantChecked
-   );
+   const { data: questionsData } = useQuestions();
+   const question = questionsData?.find(q => q.questionId === questionId);
 
    useEffect(() => {
-      onChange({ formName, error: mandatoryQuestion ? getError() : null, tagsToUpdate });
-   }, [selectedAnswer, itsImportantChecked]);
+      onChange({ formName, error: getError(), answerId: selectedAnswer });
+   }, [selectedAnswer]);
 
    const handleQuestionChange = ({ selectedAnswer, itsImportantChecked }: QuestionOnChange) => {
       setSelectedAnswer(selectedAnswer);
-      setItsImportantChecked(itsImportantChecked);
    };
 
    const getError = (): string | null => {
@@ -62,7 +37,7 @@ const TagsAsQuestionForm: FC<PropsTagsAsQuestionForm> = props => {
       return null;
    };
 
-   if (isLoading) {
+   if (!questionsData) {
       return <LoadingAnimation centeredMethod={CenteredMethod.Relative} />;
    }
 
@@ -71,16 +46,16 @@ const TagsAsQuestionForm: FC<PropsTagsAsQuestionForm> = props => {
          questionText={question.text}
          answers={question.answers.map((a, i) => ({
             text: a.text,
-            id: a.tagId ?? `no tag ${String(i)}`
+            id: a.answerId
          }))}
-         incompatibilitiesBetweenAnswers={question.incompatibilitiesBetweenAnswers}
-         multipleAnswersAllowed={false}
-         initiallySelected={[initiallySelectedAnswer]}
-         initiallyItsImportantChecked={initiallyItsImportantChecked}
-         itsImportantInvisible={itsImportantSelectorInvisible}
+         initiallySelected={[initialData]}
          onChange={handleQuestionChange}
+         // The following props are features not fully implemented yet
+         itsImportantInvisible={false}
+         multipleAnswersAllowed={false}
+         incompatibilitiesBetweenAnswers={null}
       />
    );
 };
 
-export default React.memo(TagsAsQuestionForm);
+export default React.memo(QuestionForm);

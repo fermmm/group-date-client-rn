@@ -81,8 +81,10 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
       <BasicScreenContainer>
          <View style={styles.mainContainer}>
             <Text style={styles.text}>
-               Eso es todo por ahora, en poco tiempo habrá más personas, todos los días entra gente.
+               Por ahora se terminaron las personas para ver, pero siempre entran más
             </Text>
+            <EmptySpace />
+            <Text style={styles.text}>En esta aplicación hay que ser paciente</Text>
             <EmptySpace />
             <NewUsersNotificationSelector
                checked={sendNotificationChecked}
@@ -92,7 +94,13 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
             />
             <EmptySpace />
             <Text style={styles.text}>
-               Si te sirve puedes repasar a las personas que ocultaste:
+               No olvides entrar a dar likes cuando haya más personas y así podrás lograr que se
+               forme un grupo
+            </Text>
+            <EmptySpace />
+            <Text style={styles.text}>
+               Si te sirve puedes cambiar tus preferencias de filtros o repasar a las personas que
+               ocultaste:
             </Text>
             <Button mode="outlined" onPress={onViewDislikedUsersPress} style={{ marginTop: 20 }}>
                Repasar ocultadxs

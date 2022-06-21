@@ -44,7 +44,7 @@ export function useSendPropsToUpdateAtLogin(
             serverInfo.pushNotificationsChannels
          );
          setExpoPushToken(notificationsTokenResponse?.notificationsToken);
-         setNotificationsPossible(notificationsTokenResponse?.notificationsArePossible);
+         setNotificationsPossible(Boolean(notificationsTokenResponse?.notificationsArePossible));
       })();
    }, [
       serverInfo?.pushNotificationsChannels,

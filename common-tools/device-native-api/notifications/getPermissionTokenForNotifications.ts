@@ -11,9 +11,11 @@ export async function getExpoPushToken(
    let result: GetPermissionTokenForNotifications;
 
    if (Device.isDevice) {
-      const notificationsToken =
-         (await withTimeout(Notifications.getExpoPushTokenAsync(), { rejectOnTimeout: false }))
-            ?.data ?? null;
+      let notificationsToken = null;
+      try {
+         notificationsToken =
+            (await withTimeout(Notifications.getExpoPushTokenAsync()))?.data ?? null;
+      } catch (e) {}
 
       if (notificationsToken == null) {
          console.warn("Notifications.getExpoPushTokenAsync() didn't work");

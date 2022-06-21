@@ -11,7 +11,6 @@ import {
    User,
    UserGetParams,
    UserPostParams,
-   UserPropAsQuestion,
    Notification,
    ReportUserPostParams,
    DeleteAccountPostParams,
@@ -20,7 +19,8 @@ import {
    SetSeenResponse,
    TaskCompletedPostParams,
    TaskCompletedResponse,
-   BlockOrUnblockUserParams
+   BlockOrUnblockUserParams,
+   Question
 } from "./shared-tools/endpoints-interfaces/user";
 import { FileSystemUploadType } from "expo-file-system";
 import { IMAGE_QUALITY_WHEN_UPLOADING, RESIZE_IMAGE_BEFORE_UPLOADING_TO_WIDTH } from "../../config";
@@ -67,12 +67,10 @@ export function useUser<T extends User>(props?: {
    );
 }
 
-export function usePropsAsQuestions<T = UserPropAsQuestion[]>(props?: {
-   config?: UseCacheOptions<T>;
-}) {
+export function useQuestions<T extends Question[]>(props?: { config?: UseCacheOptions<T> }) {
    return useCache<T>(
-      "user/props-as-questions",
-      () => defaultHttpRequest("user/props-as-questions", "GET"),
+      "user/questions",
+      () => defaultHttpRequest("user/questions", "GET"),
       props?.config
    );
 }

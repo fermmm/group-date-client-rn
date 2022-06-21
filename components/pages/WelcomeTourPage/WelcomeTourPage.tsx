@@ -28,7 +28,7 @@ const WelcomeTourPage: FC = () => {
    const currentStepRef = useRef(0);
    const [amountToRender, setAmountToRender] = useState<number>(2);
    const { colors } = useTheme();
-   const totalSteps = 6;
+   const totalSteps = 5;
 
    const changeStep = (newStep: number) => {
       setCurrentStep(newStep);
@@ -122,7 +122,10 @@ const WelcomeTourPage: FC = () => {
                   </View>
                </View>
             )}
-            {amountToRender >= 2 && (
+            {/**
+             * This step text is meant to promote the app idea, not required when the users are already here
+             */
+            /* {amountToRender >= 2 && (
                <BackgroundArtistic
                   gradientColor1="#9A55FF"
                   gradientColor2="#6D94FF"
@@ -139,18 +142,18 @@ const WelcomeTourPage: FC = () => {
                         />
                      </View>
                      <View style={styles.textContainer}>
-                        <TitleText style={styles.title}>VENTAJAS DE LAS CITAS GRUPALES</TitleText>
+                        <TitleText style={styles.title}>LAS RELACIONES GRUPALES</TitleText>
                         <Text style={styles.text}>
-                           Conocer más fácil a los demás por ver como son con otras personas, la
-                           sexualidad suele ser múltiples veces más tentadora en grupo, conocer más
-                           gente en menos tiempo e infinitas ventajas más
+                           Estas implican conocer más fácil a los demás por ver como son con otras
+                           personas, la sexualidad suele ser múltiples veces más tentadora en grupo
+                           o simplemente conocer más gente en menos tiempo
                         </Text>
                         {renderButtonContinue()}
                      </View>
                   </View>
                </BackgroundArtistic>
-            )}
-            {amountToRender >= 3 && (
+            )} */}
+            {amountToRender >= 2 && (
                <BackgroundArtistic
                   gradientColor1="#9A55FF"
                   gradientColor2="#6D94FF"
@@ -182,17 +185,17 @@ const WelcomeTourPage: FC = () => {
                         />
                      </View>
                      <View style={styles.textContainer}>
-                        <TitleText style={styles.title}>MÁS CERCA{"\n"}DE LO NATURAL</TitleText>
+                        <TitleText style={styles.title}>COMO ANTES</TitleText>
                         <Text style={styles.text}>
-                           El poliamor (no-monogamia) en grupo y la crianza grupal fueron sempre lo
-                           más común hasta un cambio económico hace 10 mil años (neolítico)
+                           Las relaciones en grupo, sin parejas, fueron sempre una opción popular
+                           hasta que se dió un cambio en la cultura forzado por el sistema económico
                         </Text>
                         {renderButtonContinue()}
                      </View>
                   </View>
                </BackgroundArtistic>
             )}
-            {amountToRender >= 4 && (
+            {amountToRender >= 3 && (
                <View style={[styles.mainContainer, { backgroundColor: colors.specialBackground4 }]}>
                   <View style={styles.imageContainer}>
                      <Svg
@@ -214,7 +217,7 @@ const WelcomeTourPage: FC = () => {
                   </View>
                </View>
             )}
-            {amountToRender >= 5 && (
+            {amountToRender >= 4 && (
                <BackgroundArtistic
                   gradientColor1="#9A55FF"
                   gradientColor2="#6D94FF"

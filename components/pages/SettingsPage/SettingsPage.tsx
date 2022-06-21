@@ -69,7 +69,7 @@ const SettingsPage: FC = () => {
             )}
             onPress={() =>
                navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
-                  formsToShow: ["CoupleProfileForm"]
+                  questionToShow: ["q05", "q06"]
                })
             }
          />

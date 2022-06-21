@@ -16,12 +16,9 @@ import {
 } from "../../../api/server/shared-tools/validators/user";
 import { RegistrationFormName, useRequiredFormList } from "./tools/useRequiredFormList";
 import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
-import { User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
-import PropAsQuestionForm from "./PropAsQuestionForm/PropAsQuestionForm";
+import { AnswerIds, User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import FiltersForm from "./FiltersForm/FiltersForm";
-import TagsAsQuestionForm from "./TagsAsQuestionForm/TagsAsQuestionForm";
-import { getUnifiedTagsToUpdate } from "./tools/useUnifiedTagsToUpdate";
-import { sendTags, TagEditAction, useTagsAsQuestions } from "../../../api/server/tags";
+import QuestionForm from "./TagsAsQuestionForm/TagsAsQuestionForm";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useAuthentication, useLogout } from "../../../api/authentication/useAuthentication";
@@ -29,7 +26,6 @@ import { revalidate } from "../../../api/tools/useCache/useCache";
 import { filterNotReallyChangedProps } from "./tools/filterNotReallyChangedProps";
 import { useCustomBackButtonAction } from "../../../common-tools/device-native-api/hardware-buttons/useCustomBackButtonAction";
 import GenderForm from "./GenderForm/GenderForm";
-import { IsCoupleQuestion } from "./IsCoupleQuestion/IsCoupleQuestion";
 import { useAnalyticsForRegistration } from "../../../common-tools/analytics/registrationFormsPage/useAnalyticsForRegistration";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 import TitleMediumText from "../../common/TitleMediumText/TitleMediumText";
@@ -39,7 +35,7 @@ import { useIntroMessage } from "../../../common-tools/messages/showBetaVersionM
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
-   tagsAsQuestionsToShow?: string[];
+   questionToShow?: string[];
 }
 
 /**
@@ -59,18 +55,15 @@ const RegistrationFormsPage: FC = () => {
    const propsGathered = useRef<EditableUserProps>({});
    const goToNextStepIsPossible = useRef<() => Promise<boolean>>();
    const tagsToUpdate = useRef<Record<string, TagsToUpdate>>({});
-   const questionsShowed = useRef<string[]>(null);
+   const questionsShowed = useRef<AnswerIds[]>(null);
    // With this we get the info required to know where to redirect on finish
    const { shouldRedirectToRequiredPage, redirectToRequiredPage, shouldRedirectIsLoading } =
       useShouldRedirectToRequiredPage();
    const { data: profileStatus } = useUserProfileStatus();
-   const { data: tagsAsQuestions } = useTagsAsQuestions();
    const {
       isLoading: requiredFormListLoading,
       formsRequired,
-      knownFormsWithPropsTheyChange,
-      unknownPropsQuestions,
-      tagsAsQuestionsToShow
+      questionsToShow
    } = useRequiredFormList(
       params != null ? { fromParams: params } : { fromProfileStatus: profileStatus }
    );
@@ -82,7 +75,9 @@ const RegistrationFormsPage: FC = () => {
    const handleOnChangeForm = useCallback(
       (params: OnChangeFormParams) => {
          goToNextStepIsPossible.current = params.goToNextStepIsPossible;
-         updateQuestionsShowed(params.formName);
+         if (params.answerId) {
+            updateQuestionsResponded(params.formName, params.answerId);
+         }
 
          propsGathered.current = {
             ...propsGathered.current,
@@ -100,21 +95,14 @@ const RegistrationFormsPage: FC = () => {
             tagsToUpdate.current[params.formName] = params.tagsToUpdate;
          }
       },
-      [tagsAsQuestionsToShow]
+      [questionsToShow]
    );
 
-   const updateQuestionsShowed = (formName: string) => {
-      if (
-         tagsAsQuestionsToShow.includes(formName) &&
-         !questionsShowed.current?.includes(formName) &&
-         !profileStatus?.user?.questionsShowed?.includes(formName)
-      ) {
-         questionsShowed.current = [
-            ...(questionsShowed.current ?? []),
-            ...(profileStatus?.user?.questionsShowed ?? []),
-            formName
-         ];
-      }
+   const updateQuestionsResponded = (questionId: string, answerId: string) => {
+      // Remove the question (if present) that we are going to add in the next line
+      questionsShowed.current = questionsShowed.current?.filter(q => q.questionId !== questionId);
+      // Add the question
+      questionsShowed.current = [...(questionsShowed.current ?? []), { questionId, answerId }];
    };
 
    const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
@@ -198,53 +186,10 @@ const RegistrationFormsPage: FC = () => {
    }, [shouldExit, shouldRedirectToRequiredPage]);
 
    const sendDataToServer = async () => {
-      let propsToSend: EditableUserProps = propsGathered.current;
-      const unifiedTagsToUpdate = getUnifiedTagsToUpdate(tagsToUpdate.current);
-      let thereAreTagsChanges: boolean = false;
+      let propsToSend: EditableUserProps = propsGathered.current ?? {};
 
-      if (questionsShowed.current?.length > 0) {
-         propsToSend.questionsShowed = questionsShowed.current;
-      }
       if ((propsToSend?.name as string)?.endsWith(" ")) {
          propsToSend.name = (propsToSend.name as string).slice(0, -1);
-      }
-
-      if (unifiedTagsToUpdate?.tagsToSubscribe?.length > 0) {
-         setSendingToServer(true);
-         thereAreTagsChanges = true;
-         await sendTags({
-            action: TagEditAction.Subscribe,
-            tagIds: unifiedTagsToUpdate.tagsToSubscribe,
-            token
-         });
-      }
-      if (unifiedTagsToUpdate?.tagsToBlock?.length > 0) {
-         setSendingToServer(true);
-         thereAreTagsChanges = true;
-         await sendTags({
-            action: TagEditAction.Block,
-            tagIds: unifiedTagsToUpdate.tagsToBlock,
-            token
-         });
-      }
-      if (unifiedTagsToUpdate?.tagsToUnsubscribe?.length > 0) {
-         setSendingToServer(true);
-         thereAreTagsChanges = true;
-         await sendTags({
-            action: TagEditAction.RemoveSubscription,
-            tagIds: unifiedTagsToUpdate.tagsToUnsubscribe,
-            token
-         });
-      }
-
-      if (unifiedTagsToUpdate?.tagsToUnblock?.length > 0) {
-         setSendingToServer(true);
-         thereAreTagsChanges = true;
-         await sendTags({
-            action: TagEditAction.RemoveBlock,
-            tagIds: unifiedTagsToUpdate.tagsToUnblock,
-            token
-         });
       }
 
       /**
@@ -261,22 +206,28 @@ const RegistrationFormsPage: FC = () => {
          recommendationsRelatedKeys.includes(key)
       );
       const thereAreRecommendationsRelatedChanges = recommendationsRelatedProps.length > 0;
-      const thereArePropsToSend = Object.keys(propsToSend).length > 0;
+      const thereArePropsToSend =
+         Object.keys(propsToSend).length > 0 || questionsShowed.current?.length > 0;
 
       // We send user props last because it contains questionsShowed prop, which means that the tags were sent
       if (thereArePropsToSend) {
          setSendingToServer(true);
          await sendUserProps(
-            { token, props: propsToSend as User, updateProfileCompletedProp: true },
+            {
+               token,
+               props: (propsToSend ?? {}) as User,
+               questionAnswers: questionsShowed.current ?? [],
+               updateProfileCompletedProp: true
+            },
             true
          );
       }
 
-      if (thereAreRecommendationsRelatedChanges || thereAreTagsChanges) {
+      if (thereAreRecommendationsRelatedChanges) {
          await revalidate("cards-game/recommendations");
       }
 
-      if (thereArePropsToSend || thereAreTagsChanges) {
+      if (thereArePropsToSend) {
          // This component uses profileStatus.user to update the components status so this is required to have the updated data next time this component mounts
          await revalidate("user/profile-status");
       }
@@ -287,16 +238,7 @@ const RegistrationFormsPage: FC = () => {
    };
 
    const userChangedSomething = () => {
-      const unifiedTagsToUpdate = getUnifiedTagsToUpdate(tagsToUpdate.current);
-
-      return (
-         questionsShowed.current?.length > 0 ||
-         unifiedTagsToUpdate?.tagsToSubscribe?.length > 0 ||
-         unifiedTagsToUpdate?.tagsToBlock?.length > 0 ||
-         unifiedTagsToUpdate?.tagsToUnsubscribe?.length > 0 ||
-         unifiedTagsToUpdate?.tagsToUnblock?.length > 0 ||
-         Object.keys(propsGathered.current).length > 0
-      );
+      return Object.keys(propsGathered.current).length > 0 || questionsShowed.current?.length > 0;
    };
 
    const getCurrentFormError = useCallback(
@@ -351,10 +293,7 @@ const RegistrationFormsPage: FC = () => {
                         <ProfileImagesForm
                            formName={formName}
                            initialData={profileStatus.user as User}
-                           isCoupleProfile={
-                              (propsGathered.current?.isCoupleProfile as boolean) ??
-                              profileStatus.user?.isCoupleProfile
-                           }
+                           isCoupleProfile={false} // This used to contain the real value but now it's part of a question so we don't ave it
                            onChange={handleOnChangeForm}
                         />
                      )}
@@ -389,30 +328,15 @@ const RegistrationFormsPage: FC = () => {
                            onChange={handleOnChangeForm}
                         />
                      )}
-                     {formName === "CoupleProfileForm" && (
-                        <IsCoupleQuestion
-                           formName={formName}
-                           propNamesToChange={knownFormsWithPropsTheyChange[formName]}
-                           initialData={profileStatus.user}
-                           isOnFocus={currentStep === i}
-                           onChange={handleOnChangeForm}
-                        />
-                     )}
-                     {unknownPropsQuestions.includes(formName) && (
-                        <PropAsQuestionForm
-                           formName={formName}
-                           propNamesToChange={knownFormsWithPropsTheyChange[formName]}
-                           initialData={profileStatus.user}
-                           onChange={handleOnChangeForm}
-                        />
-                     )}
-                     {tagsAsQuestionsToShow.includes(formName) && (
-                        <TagsAsQuestionForm
+                     {questionsToShow.includes(formName) && (
+                        <QuestionForm
                            formName={formName}
                            questionId={formName}
-                           initialData={profileStatus.user}
-                           mandatoryQuestion={true}
-                           tagsAsQuestions={tagsAsQuestions}
+                           initialData={
+                              profileStatus?.user?.questionsResponded?.find(
+                                 q => q.questionId === formName
+                              )?.answerId ?? null
+                           }
                            onChange={handleOnChangeForm}
                         />
                      )}
@@ -457,6 +381,7 @@ export interface OnChangeFormParams {
    newProps?: EditableUserProps;
    error?: string | null;
    tagsToUpdate?: TagsToUpdate;
+   answerId?: string;
    goToNextStepIsPossible?: () => Promise<boolean>;
 }
 

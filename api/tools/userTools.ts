@@ -5,7 +5,7 @@ export function userHasFinishedRegistration(profileStatus: ProfileStatusServerRe
       return null;
    }
 
-   const { missingEditableUserProps = [], notShowedTagQuestions = [] } = profileStatus;
+   const { missingEditableUserProps = [], notRespondedQuestions = [] } = profileStatus;
 
-   return missingEditableUserProps.length === 0 && notShowedTagQuestions.length === 0;
+   return missingEditableUserProps.length === 0 && notRespondedQuestions.length === 0;
 }
