@@ -81,8 +81,8 @@ const AboutPage: FC = () => {
                Breve historia del poliamor (no-monogamia)
             </TitleText>
             <Text style={styles.text}>
-               Este proyecto propone que nos divirtamos sin más, pero nunca viene mal saber en que
-               momento estamos en la historia del poliamor:
+               Este proyecto propone que nos divirtamos sin más, pero nunca viene mal conocer la
+               historia de estos temas:
             </Text>
             <EmptySpace height={15} />
             <AnalyticsTrackWhenVisible
@@ -96,13 +96,13 @@ const AboutPage: FC = () => {
                   recursos de forma igualitaria, potenciado por el sexo que era mucho más abundante
                   con opciones grupales. Si bien esto quedó en la historia, no es algo que
                   desapareció realmente, por ejemplo: Los "gemidos sexuales" aparecen originalmente
-                  para llamar a los que están cerca y todavía los tenemos.
+                  para llamar a lxs que están cerca y todavía existen.
                </Text>
             </AnalyticsTrackWhenVisible>
             <EmptySpace height={15} />
             <Text style={styles.text}>
                En el neolítico se inventa la monogamia para casar hijxs por motivos comerciales y la
-               familia pequeña favorece la acumulación personal de la riqueza, durante la
+               familia pequeña favorece la acumulación personal de la riqueza, finalmente durante la
                inquisición queda la monogamia como la única opción impuesta a la fuerza.
             </Text>
             <EmptySpace height={15} />
@@ -115,8 +115,8 @@ const AboutPage: FC = () => {
                ¿Hay que pagar algo?
             </TitleText>
             <Text style={styles.text}>
-               No, esta app es y será siempre gratis, sin fines comerciales. Tal vez habilitemos
-               para enviar donaciones en algún momento.
+               No, esta app es y será siempre gratis, sin fines comerciales. Tal vez pidamos
+               donaciones en algún momento.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Quienes hicieron este proyecto?
