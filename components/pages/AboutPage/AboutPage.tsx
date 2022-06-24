@@ -24,7 +24,8 @@ const AboutPage: FC = () => {
                ¿Cual es el máximo de personas en una cita?
             </TitleText>
             <Text style={styles.text}>
-               El máximo es de 20 pero es muy poco probable que se alcance ese número
+               El máximo es de 20 pero es casi imposible que se de la casualidad de un grupo tan
+               grande
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
@@ -55,7 +56,7 @@ const AboutPage: FC = () => {
             <Text style={styles.text}>
                No. Solo se generan grupos más o menos equilibrados, por ejemplo cuando se da un
                grupo 100% heterosexual la cantidad de mujeres y hombres siempre va a ser mas o menos
-               igual. Si no funcionara así habría un caos arbitrario de situaciones injustas o
+               igual. Si no funcionara así habrían casos al azar de situaciones injustas o
                jerarquías no solicitadas.
             </Text>
             <TitleText extraSize style={styles.title}>
@@ -78,11 +79,11 @@ const AboutPage: FC = () => {
                like.
             </Text>
             <TitleText extraSize style={styles.title}>
-               Breve historia del poliamor (no-monogamia)
+               ¿No es como "de otro mundo" esto?
             </TitleText>
             <Text style={styles.text}>
-               Este proyecto propone que nos divirtamos sin más, pero nunca viene mal conocer la
-               historia de estos temas:
+               Este proyecto propone que nos divirtamos sin más, pero para que no se considere como
+               "de otro mundo" divulgamos un poco sobre su historia:
             </Text>
             <EmptySpace height={15} />
             <AnalyticsTrackWhenVisible
@@ -103,7 +104,8 @@ const AboutPage: FC = () => {
             <Text style={styles.text}>
                En el neolítico se inventa la monogamia para casar hijxs por motivos comerciales y la
                familia pequeña favorece la acumulación personal de la riqueza, finalmente durante la
-               inquisición queda la monogamia como la única opción impuesta a la fuerza.
+               inquisición queda la monogamia como la única opción luego de ser impuesta a la
+               fuerza.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
@@ -122,9 +124,9 @@ const AboutPage: FC = () => {
                ¿Quienes hicieron este proyecto?
             </TitleText>
             <Text style={styles.text}>
-               La idea y dirección es de un informático de Argentina con varios profesionales más
-               que colaboran ig: @group.date. Ilustraciones por "Fiebre" ig: @fiebrediseno.
-               Presencia en redes por "Amor Libre y Memes" ig: @amorlibreymemes
+               La idea y dirección es de un informático de Argentina, junto con el trabajo de
+               diferentes profesionales colaborando ig: @group.date. Ilustraciones por "Fiebre" ig:
+               @fiebrediseno. Presencia en redes por "Amor Libre y Memes" ig: @amorlibreymemes
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿En base a que criterios me recomienda personas la app?

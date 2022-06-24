@@ -185,10 +185,11 @@ const WelcomeTourPage: FC = () => {
                         />
                      </View>
                      <View style={styles.textContainer}>
-                        <TitleText style={styles.title}>COMO ANTES</TitleText>
+                        <TitleText style={styles.title}>COMO EN OTRAS ÉPOCAS</TitleText>
                         <Text style={styles.text}>
-                           Las relaciones en grupo, sin parejas, fueron sempre una opción popular
-                           hasta que se dió un cambio en la cultura forzado por el sistema económico
+                           Puede parecer una propuesta de otro mundo pero las relaciones en grupo,
+                           sin parejas, fueron siempre lo más popular hasta que se dió un cambio
+                           cultural forzado por el sistema económico
                         </Text>
                         {renderButtonContinue()}
                      </View>
@@ -210,8 +211,8 @@ const WelcomeTourPage: FC = () => {
                         SIN PRECONCEPTOS
                      </TitleText>
                      <Text style={[styles.text, { color: "#502E92" }]}>
-                        No hace falta que se gusten todxs entre sí al 100% ni que cumplas un rol o
-                        una expectativa en particular
+                        No hacen falta grandes casualidades, que se gusten todxs entre sí al 100% ni
+                        que cumplas un rol o una expectativa en particular
                      </Text>
                      {renderButtonContinue({ color: "#502E92" })}
                   </View>
@@ -236,8 +237,8 @@ const WelcomeTourPage: FC = () => {
                      <View style={styles.textContainer}>
                         <TitleText style={styles.title}>GRATIS Y ÉTICA</TitleText>
                         <Text style={styles.text}>
-                           GroupDate siempre será gratis y ética. Si te gusta, no olvides
-                           mencionarla en las redes o dónde lo creas oportuno.
+                           GroupDate siempre será gratis y ética. Si te gusta, no olvides ayudar a
+                           difundirla desde tus posibilidades
                         </Text>
                         {renderButtonContinue()}
                      </View>
