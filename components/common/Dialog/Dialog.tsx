@@ -22,7 +22,7 @@ const Dialog: FC<PropsDialog & React.ComponentProps<typeof PaperDialog>> = props
             {buttons.map((button, i) => (
                <Button
                   onPress={() => {
-                     button.onTouch();
+                     button.onTouch?.();
                      props.onDismiss();
                   }}
                   key={i}

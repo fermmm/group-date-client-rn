@@ -69,7 +69,7 @@ const SettingsPage: FC = () => {
             )}
             onPress={() =>
                navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
-                  questionToShow: ["q05", "q06"]
+                  questionToShow: ["q05"]
                })
             }
          />

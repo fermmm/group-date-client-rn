@@ -8,7 +8,7 @@ import Dialog from "../../common/Dialog/Dialog";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
 import BasicInfoForm from "./BasicInfoForm/BasicInfoForm";
 import DateIdeaForm from "./DateIdeaForm/DateIdeaForm";
-import { sendUserProps, useUserProfileStatus } from "../../../api/server/user";
+import { sendUserProps, useQuestions, useUserProfileStatus } from "../../../api/server/user";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import {
    EditableUserPropKey,
@@ -32,6 +32,7 @@ import TitleMediumText from "../../common/TitleMediumText/TitleMediumText";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { useShouldRedirectToRequiredPage } from "../../../common-tools/navigation/useShouldRedirectToRequiredPage";
 import { useIntroMessage } from "../../../common-tools/messages/showBetaVersionMessage";
+import { removeQuestionsRespondedByOtherQuestions } from "./tools/questions-tools";
 
 export interface ParamsRegistrationFormsPage {
    formsToShow?: RegistrationFormName[];
@@ -39,104 +40,144 @@ export interface ParamsRegistrationFormsPage {
 }
 
 /**
- * This component shows one or more registration forms, is used by both the registration process and also when
- * changing the profile. It can receive a list of required forms to show in the params. Currently when modifying
- * profile only one form is showed because of how the UI flow is designed.
+ * This page shows one or more registration forms, is used by both the registration process and also when
+ * changing the profile. It can receive a list of required forms to show in the navigation params and of not present
+ * it will check in the server for missing registration steps. When editing the profile you should call this page
+ * showing only one form because it's the best for the user experience.
  */
 const RegistrationFormsPage: FC = () => {
    const { params } = useRoute<RouteProps<ParamsRegistrationFormsPage>>();
+   const registrationMode = params == null;
    const { navigateWithoutHistory, goBack, canGoBack, isFocused } = useNavigation();
    const [currentStep, setCurrentStep] = useState(0);
    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
    const [exitDialogVisible, setExitDialogVisible] = useState(false);
+   const [confirmLogoutDialogVisible, setConfirmLogoutDialogVisible] = useState(false);
    const [sendingToServer, setSendingToServer] = useState(null);
    const [shouldExit, setShouldExit] = useState(false);
    const errorOnForms = useRef<Partial<Record<RegistrationFormName, string>>>({});
    const propsGathered = useRef<EditableUserProps>({});
    const goToNextStepIsPossible = useRef<() => Promise<boolean>>();
    const tagsToUpdate = useRef<Record<string, TagsToUpdate>>({});
-   const questionsShowed = useRef<AnswerIds[]>(null);
+   const questionsResponded = useRef<AnswerIds[]>(null);
+   const { data: allQuestions, isLoading: loadingAllQuestions } = useQuestions();
    // With this we get the info required to know where to redirect on finish
    const { shouldRedirectToRequiredPage, redirectToRequiredPage, shouldRedirectIsLoading } =
       useShouldRedirectToRequiredPage();
    const { data: profileStatus } = useUserProfileStatus();
    const {
-      isLoading: requiredFormListLoading,
       formsRequired,
-      questionsToShow
+      questionsToShow,
+      update: updateRequiredForms
    } = useRequiredFormList(
-      params != null ? { fromParams: params } : { fromProfileStatus: profileStatus }
+      registrationMode ? { fromProfileStatus: profileStatus } : { fromParams: params },
+      allQuestions
    );
+
    const { token } = useAuthentication(profileStatus?.user?.token);
    useAnalyticsForRegistration(profileStatus?.user, formsRequired, currentStep);
    const { logout } = useLogout();
    const { showIntroMessage } = useIntroMessage();
 
-   const handleOnChangeForm = useCallback(
-      (params: OnChangeFormParams) => {
-         goToNextStepIsPossible.current = params.goToNextStepIsPossible;
-         if (params.answerId) {
-            updateQuestionsResponded(params.formName, params.answerId);
-         }
+   const handleOnChangeForm = useCallback((params: OnChangeFormParams) => {
+      goToNextStepIsPossible.current = params.goToNextStepIsPossible;
+      if (params.answerId) {
+         updateQuestionsResponded(params.formName, params.answerId);
+      }
 
-         propsGathered.current = {
-            ...propsGathered.current,
-            ...(params.newProps ?? {})
-         };
+      propsGathered.current = {
+         ...propsGathered.current,
+         ...(params.newProps ?? {})
+      };
 
-         propsGathered.current = filterNotReallyChangedProps(
-            propsGathered.current,
-            profileStatus?.user
-         );
+      propsGathered.current = filterNotReallyChangedProps(
+         propsGathered.current,
+         profileStatus?.user
+      );
 
-         errorOnForms.current[params.formName] = params.error;
+      errorOnForms.current[params.formName] = params.error;
 
-         if (params.tagsToUpdate != null) {
-            tagsToUpdate.current[params.formName] = params.tagsToUpdate;
-         }
-      },
-      [questionsToShow]
-   );
+      if (params.tagsToUpdate != null) {
+         tagsToUpdate.current[params.formName] = params.tagsToUpdate;
+      }
+   }, []);
 
    const updateQuestionsResponded = (questionId: string, answerId: string) => {
       // Remove the question (if present) that we are going to add in the next line
-      questionsShowed.current = questionsShowed.current?.filter(q => q.questionId !== questionId);
+      questionsResponded.current = questionsResponded.current?.filter(
+         q => q.questionId !== questionId
+      );
+
       // Add the question
-      questionsShowed.current = [...(questionsShowed.current ?? []), { questionId, answerId }];
+      questionsResponded.current = [
+         ...(questionsResponded.current ?? []),
+         { questionId, answerId }
+      ];
+
+      // Clean the list because it may contain answers that are already answer by previous questions, this happens if the user answers and then goes back and change the answer
+      questionsResponded.current = removeQuestionsRespondedByOtherQuestions(
+         questionsResponded.current,
+         allQuestions
+      );
    };
 
    const showErrorDialog = useCallback(() => setErrorDialogVisible(true), []);
    const hideErrorDialog = useCallback(() => setErrorDialogVisible(false), []);
    const showExitDialog = useCallback(() => setExitDialogVisible(true), []);
    const hideExitDialog = useCallback(() => setExitDialogVisible(false), []);
+   const showConfirmLogoutDialog = useCallback(() => setConfirmLogoutDialogVisible(true), []);
+   const hideConfirmLogoutDialog = useCallback(() => setConfirmLogoutDialogVisible(false), []);
 
-   // Called when clicking the back button rendered on the bottom of the screen
-   const handleBackButtonClick = useCallback(() => {
+   const userChangedSomething = useCallback(() => {
+      return (
+         Object.keys(propsGathered.current).length > 0 || questionsResponded.current?.length > 0
+      );
+   }, []);
+
+   /**
+    * Called when touching the back button rendered on the bottom of the screen, this button is not present on the first step or when there is only 1 step
+    */
+   const handleBackStepPress = useCallback(() => {
       if (currentStep > 0) {
          setCurrentStep(currentStep - 1);
       }
    }, [currentStep]);
 
-   // Called by back button/gesture when there are multiple steps
+   /**
+    * This triggers when the current step is not the first one and the user presses the android device back button/gesture or when horizontal scroll swiping is
+    * enabled and the user swipes (Swiping not enabled right now, it's problematic to enable it).
+    */
    const handleScreenChange = useCallback((newScreen: number) => {
       setCurrentStep(newScreen);
    }, []);
 
-   // Called when the back button/gesture on the device is pressed before leaving the screen
-   const handleGoBack = useCustomBackButtonAction(() => {
-      if (canGoBack() && userChangedSomething() && isFocused()) {
-         showExitDialog();
+   /**
+    * This triggers when the current step is the first one and the user presses the android
+    * device back button/gesture or the back button located at the header of the screen.
+    * The button at the header of the screen only is visible on the first step.
+    */
+   const handleFirstStepBack = useCustomBackButtonAction(() => {
+      if (!isFocused()) {
+         return false;
+      }
+
+      if (registrationMode) {
+         showConfirmLogoutDialog();
       } else {
-         if (canGoBack()) {
-            goBack();
+         if (userChangedSomething()) {
+            showExitDialog();
          } else {
-            logout();
+            goBack();
          }
       }
 
       return true;
-   }, []);
+   }, [registrationMode, userChangedSomething]);
 
+   /**
+    * his triggers when the continue button at the bottom of the screen is pressed or when the save
+    * button is pressed in the "Do you want to save?" dialog on exit
+    */
    const handleContinueButtonClick = useCallback(async () => {
       if (goToNextStepIsPossible.current != null && !(await goToNextStepIsPossible.current())) {
          return;
@@ -148,6 +189,8 @@ const RegistrationFormsPage: FC = () => {
       }
 
       if (currentStep < formsRequired.length - 1) {
+         // Before moving to the next step we refresh the required forms because responding some questions may remove other questions
+         updateRequiredForms({ questionsResponded: questionsResponded.current });
          setCurrentStep(currentStep + 1);
       } else {
          await sendDataToServer();
@@ -158,29 +201,25 @@ const RegistrationFormsPage: FC = () => {
       formsRequired,
       propsGathered.current,
       tagsToUpdate.current,
-      questionsShowed.current
+      questionsResponded.current
    ]);
 
-   // Effect in charge of exiting and determining where to exit
+   /**
+    * When data is sent to server we exit, this effect is in charge of determining where to exit (only when data was saved and not when cancelling)
+    * */
    useEffect(() => {
       if (!shouldExit) {
          return;
       }
 
-      if (userChangedSomething()) {
-         if (params != null) {
+      if (shouldRedirectToRequiredPage) {
+         redirectToRequiredPage();
+      } else {
+         if (!registrationMode) {
             goBack();
          } else {
-            if (shouldRedirectToRequiredPage) {
-               redirectToRequiredPage();
-            } else {
-               navigateWithoutHistory("Main");
-               showIntroMessage();
-            }
-         }
-      } else {
-         if (canGoBack()) {
-            goBack();
+            navigateWithoutHistory("Main");
+            showIntroMessage();
          }
       }
    }, [shouldExit, shouldRedirectToRequiredPage]);
@@ -207,7 +246,7 @@ const RegistrationFormsPage: FC = () => {
       );
       const thereAreRecommendationsRelatedChanges = recommendationsRelatedProps.length > 0;
       const thereArePropsToSend =
-         Object.keys(propsToSend).length > 0 || questionsShowed.current?.length > 0;
+         Object.keys(propsToSend).length > 0 || questionsResponded.current?.length > 0;
 
       // We send user props last because it contains questionsShowed prop, which means that the tags were sent
       if (thereArePropsToSend) {
@@ -216,7 +255,7 @@ const RegistrationFormsPage: FC = () => {
             {
                token,
                props: (propsToSend ?? {}) as User,
-               questionAnswers: questionsShowed.current ?? [],
+               questionAnswers: questionsResponded.current ?? [],
                updateProfileCompletedProp: true
             },
             true
@@ -237,20 +276,17 @@ const RegistrationFormsPage: FC = () => {
       }
    };
 
-   const userChangedSomething = () => {
-      return Object.keys(propsGathered.current).length > 0 || questionsShowed.current?.length > 0;
-   };
-
    const getCurrentFormError = useCallback(
       (): string => errorOnForms.current[formsRequired[currentStep]],
       [formsRequired, currentStep]
    );
 
-   const isLoading: boolean = !profileStatus || requiredFormListLoading || sendingToServer;
+   const isLoading: boolean =
+      !profileStatus || sendingToServer || loadingAllQuestions || shouldRedirectIsLoading;
 
    return (
       <>
-         <AppBarHeader onBackPress={handleGoBack} showBackButton={params != null} />
+         <AppBarHeader onBackPress={handleFirstStepBack} showBackButton={currentStep === 0} />
          {isLoading ? (
             <LoadingAnimation renderMethod={RenderMethod.FullScreen} />
          ) : (
@@ -263,7 +299,7 @@ const RegistrationFormsPage: FC = () => {
                   <BasicScreenContainer
                      showBottomGradient={true}
                      onContinuePress={handleContinueButtonClick}
-                     onBackPress={handleBackButtonClick}
+                     onBackPress={handleBackStepPress}
                      showBackButton={i > 0}
                      continueButtonTextFinishMode={i === formsRequired.length - 1}
                      showContinueButton
@@ -356,6 +392,13 @@ const RegistrationFormsPage: FC = () => {
             ]}
          >
             ¿Guardar cambios?
+         </Dialog>
+         <Dialog
+            visible={confirmLogoutDialogVisible}
+            onDismiss={hideConfirmLogoutDialog}
+            buttons={[{ label: "Cerrar sesión", onTouch: logout }, { label: "Cancelar" }]}
+         >
+            Debes responder las preguntas para continuar, puedes cerrar la sesión si lo deseas
          </Dialog>
       </>
    );

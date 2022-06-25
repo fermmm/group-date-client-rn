@@ -50,7 +50,7 @@ const QuestionForm: FC<PropsQuestionForm> = props => {
          }))}
          initiallySelected={[initialData]}
          onChange={handleQuestionChange}
-         // The following props are features not fully implemented yet
+         // The following props are features that used to work but now the system changed and became "not implemented"
          itsImportantInvisible={false}
          multipleAnswersAllowed={false}
          incompatibilitiesBetweenAnswers={null}
