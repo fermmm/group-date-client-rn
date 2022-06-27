@@ -44,8 +44,10 @@ const QuestionForm: FC<PropsQuestionForm> = props => {
    return (
       <Question
          questionText={question.text}
-         answers={question.answers.map((a, i) => ({
+         questionExtraText={question.extraText}
+         answers={question.answers.map(a => ({
             text: a.text,
+            extraText: a.extraText,
             id: a.answerId
          }))}
          initiallySelected={[initialData]}

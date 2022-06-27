@@ -18,7 +18,7 @@ import { RegistrationFormName, useRequiredFormList } from "./tools/useRequiredFo
 import ProfileImagesForm from "./ProfileImagesForm/ProfileImagesForm";
 import { AnswerIds, User } from "../../../api/server/shared-tools/endpoints-interfaces/user";
 import FiltersForm from "./FiltersForm/FiltersForm";
-import QuestionForm from "./TagsAsQuestionForm/TagsAsQuestionForm";
+import QuestionForm from "./QuestionForm/QuestionForm";
 import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { useNavigation } from "../../../common-tools/navigation/useNavigation";
 import { useAuthentication, useLogout } from "../../../api/authentication/useAuthentication";
