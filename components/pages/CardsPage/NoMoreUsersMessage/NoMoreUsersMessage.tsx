@@ -5,30 +5,27 @@ import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import EmptySpace from "../../../common/EmptySpace/EmptySpace";
 import NewUsersNotificationSelector from "../../../common/NewUsersNotificationSelector/NewUsersNotificationSelector";
 import { currentTheme } from "../../../../config";
-import { LinearGradient } from "expo-linear-gradient";
-import color from "color";
-import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { sendUserProps, useUser } from "../../../../api/server/user";
 import { useAuthentication } from "../../../../api/authentication/useAuthentication";
 import {
    CenteredMethod,
    LoadingAnimation
 } from "../../../common/LoadingAnimation/LoadingAnimation";
-import {
-   loadFromDevice,
-   saveOnDevice
-} from "../../../../common-tools/device-native-api/storage/storage";
 import BasicScreenContainer from "../../../common/BasicScreenContainer/BasicScreenContainer";
+import { useLocalStorage } from "../../../../common-tools/device-native-api/storage/useLocalStorage";
+import { LocalStorageKey } from "../../../../common-tools/strings/LocalStorageKey";
 
 interface PropsNoMoreUsersMessage {
    onViewDislikedUsersPress: () => void;
 }
 
 const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPress }) => {
-   const defaultValue = 1;
-   const [sendNotificationChecked, setSendNotificationChecked] = useState(true);
-   const [sendNewUsersNotification, setSendNewUsersNotification] = useState<number>(null);
-   const { colors } = useTheme();
+   const [sendNewUsersNotification, setSendNewUsersNotification] = useState<number>(1);
+   const {
+      value: sendNotificationChecked,
+      setValue: setSendNotificationChecked,
+      refresh: refreshSendNotificationChecked
+   } = useLocalStorage<boolean>(LocalStorageKey.NewUsersNotificationTempCheckbox);
    const { token } = useAuthentication();
    const { data: user } = useUser();
 
@@ -38,40 +35,33 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
          return;
       }
 
-      if (!sendNotificationChecked && user.sendNewUsersNotification !== 0) {
-         sendUserProps({ props: { sendNewUsersNotification: 0 }, token }, false);
-         saveOnDevice("noUsersLastSelected", 0);
-         return;
-      }
-
-      if (sendNotificationChecked && user.sendNewUsersNotification != sendNewUsersNotification) {
-         sendUserProps({ props: { sendNewUsersNotification }, token }, false);
-         saveOnDevice("noUsersLastSelected", sendNewUsersNotification);
-      }
-   }, [sendNewUsersNotification, sendNotificationChecked]);
+      sendUserProps({ props: { sendNewUsersNotification }, token }, false);
+   }, [sendNewUsersNotification]);
 
    // Effect to update the UI when the server changes
    useEffect(() => {
-      if (user == null || user.sendNewUsersNotification == null) {
+      if (user == null) {
          return;
       }
 
-      if (user.sendNewUsersNotification === 0) {
-         setSendNotificationChecked(false);
+      // sendNewUsersNotification default value is -1, by sending sendNewUsersNotification to 1 or more we enable the notification
+      if (user.sendNewUsersNotification == null || user.sendNewUsersNotification === -1) {
+         sendUserProps({ props: { sendNewUsersNotification }, token }, false);
          return;
       }
 
-      if (user.sendNewUsersNotification === -1) {
-         loadFromDevice<number>("noUsersLastSelected").then(value => {
-            setSendNotificationChecked(true);
-            setSendNewUsersNotification(value != null ? value : defaultValue);
-         });
-         return;
-      }
-
-      setSendNotificationChecked(true);
       setSendNewUsersNotification(user.sendNewUsersNotification);
    }, [user]);
+
+   /**
+    * TODO: sendNewUsersNotification should be re done with a boolean in the server and a time prop in the server.
+    * Until that is implemented we show a checkbox to disable new user notifications but it's fake and has no
+    * effect, it's just persisted in local storage.
+    */
+   const handleNewUsersNotificationChange = () => {
+      setSendNotificationChecked(!sendNotificationChecked);
+      refreshSendNotificationChecked();
+   };
 
    if (!user) {
       return <LoadingAnimation centeredMethod={CenteredMethod.Absolute} />;
@@ -84,13 +74,13 @@ const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPr
                Por ahora se terminaron las personas para ver, pero siempre entran más
             </Text>
             <EmptySpace />
-            <Text style={styles.text}>En esta aplicación hay que ser paciente</Text>
+            <Text style={styles.text}>Aquí es necesario ser pacientes</Text>
             <EmptySpace />
             <NewUsersNotificationSelector
                checked={sendNotificationChecked}
                amountSelected={sendNewUsersNotification}
                onAmountChange={v => setSendNewUsersNotification(v)}
-               onCheckChange={() => setSendNotificationChecked(!sendNotificationChecked)}
+               onCheckChange={handleNewUsersNotificationChange}
             />
             <EmptySpace />
             <Text style={styles.text}>
