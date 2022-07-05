@@ -21,14 +21,20 @@ import { RouteProps } from "../../../common-tools/ts-tools/router-tools";
 import { getMatchesOf } from "../../../common-tools/groups/groups-tools";
 import { toFirstUpperCase } from "../../../common-tools/js-tools/js-tools";
 import { useUser } from "../../../api/server/user";
-import { useGroup, useUnreadMessagesAmount, useVoteResults } from "../../../api/server/groups";
+import {
+   useGroup,
+   useUnreadMessagesAmount,
+   useUserGroupList,
+   useVoteResults
+} from "../../../api/server/groups";
 import { useVotingResultToRender } from "../DateVotingPage/tools/useVotingResults";
 import { revalidate } from "../../../api/tools/useCache/useCache";
 import { LoadingAnimation, RenderMethod } from "../../common/LoadingAnimation/LoadingAnimation";
 import { useGoBackExtended } from "../../../common-tools/navigation/useGoBackExtended";
 import { analyticsLogEvent } from "../../../common-tools/analytics/tools/analyticsLog";
 import { useGroupSeenChecker } from "../GroupsListPage/tools/useGroupSeenChecker";
-import { Gender } from "../../../api/server/shared-tools/endpoints-interfaces/user";
+import { useServerInfo } from "../../../api/server/server-info";
+import { getSlotStatusInfoText } from "../GroupsListPage/tools/getSlotsInfoText";
 
 export interface ParamsGroupPage {
    groupId: string;
@@ -38,6 +44,9 @@ const GroupPage: FC = () => {
    const { navigate } = useNavigation();
    const focused = useIsFocused();
    const { data: localUser } = useUser();
+   const { data: groups } = useUserGroupList();
+   const { data: serverInfo } = useServerInfo();
+   let slotsStatusInfoText = getSlotStatusInfoText(serverInfo, groups);
    const [expandedUser, setExpandedUser] = useState<number>();
    const { params } = useRoute<RouteProps<ParamsGroupPage>>();
    const { data: group } = useGroup({ groupId: params?.groupId });
@@ -82,6 +91,26 @@ const GroupPage: FC = () => {
             </View>
          </AppBarHeader>
          <BasicScreenContainer>
+            <SurfaceStyled>
+               <TitleText>Chat grupal</TitleText>
+               {unreadChatMessages?.unread > 0 && (
+                  <Text style={styles.textNormal}>
+                     Hay {unreadChatMessages?.unread} mensajes sin leer
+                  </Text>
+               )}
+               <Button
+                  uppercase={false}
+                  onPress={() => navigate("Chat", { groupId: group.groupId })}
+               >
+                  Ver chat grupal
+               </Button>
+            </SurfaceStyled>
+            {slotsStatusInfoText != null && (
+               <SurfaceStyled>
+                  <TitleText>Próximo grupo</TitleText>
+                  <Text style={styles.textNormal}>{slotsStatusInfoText}</Text>
+               </SurfaceStyled>
+            )}
             <CardDateInfo
                day={votingResults?.day}
                idea={votingResults?.idea}
@@ -100,7 +129,7 @@ const GroupPage: FC = () => {
                </SurfaceStyled>
             )}
             <SurfaceStyled>
-               <TitleText>Miembros del grupo:</TitleText>
+               <TitleText>Miembros del grupo</TitleText>
                <List.Section>
                   {group.members?.map((user, i) => (
                      <List.Accordion
@@ -176,7 +205,7 @@ const styles: Styles = StyleSheet.create({
       fontSize: 15
    },
    textNormal: {
-      fontFamily: currentTheme.font.medium,
+      fontFamily: currentTheme.font.light,
       fontSize: 15,
       flex: 1,
       flexWrap: "wrap"
