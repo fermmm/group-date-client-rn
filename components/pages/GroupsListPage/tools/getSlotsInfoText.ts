@@ -20,12 +20,12 @@ export function getSlotStatusInfoText(
       if (groupsOfSlot.length >= slot.amount) {
          const creationDate = Math.min(...groupsOfSlot.map(g => g.creationDate));
          const timeSinceGroupCreated = moment().unix() - creationDate;
-         const releaseDaysLeft = slot.releaseTime - timeSinceGroupCreated;
+         const releaseTimeLeft = slot.releaseTime - timeSinceGroupCreated;
 
          result = `Se permite ${slot.amount} cita${
             slot.amount > 1 ? "s" : ""
          } al mismo tiempo, dentro de ${humanizeUnixTime(
-            releaseDaysLeft
+            releaseTimeLeft
          )} podrás tener una nueva. Si se forma una cita grande se ignora la restricción.`;
       }
    });
