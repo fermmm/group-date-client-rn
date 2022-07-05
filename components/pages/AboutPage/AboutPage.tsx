@@ -79,11 +79,11 @@ const AboutPage: FC = () => {
                like.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿No es como "de otro mundo" esto?
+               ¿No es como "de otro mundo" esta propuesta?
             </TitleText>
             <Text style={styles.text}>
-               Este proyecto propone que nos divirtamos sin más, pero para que no se considere como
-               "de otro mundo" divulgamos un poco sobre su historia:
+               Proponemos divertirnos y ya, pero para que no se considere como "de otro mundo"
+               divulgamos un poco sobre su historia por si a alguien le interesa:
             </Text>
             <EmptySpace height={15} />
             <AnalyticsTrackWhenVisible
@@ -97,21 +97,26 @@ const AboutPage: FC = () => {
                   recursos de forma igualitaria, potenciado por el sexo que era mucho más abundante
                   con opciones grupales. Si bien esto quedó en la historia, no es algo que
                   desapareció realmente, por ejemplo: Los "gemidos sexuales" aparecen originalmente
-                  para llamar a lxs que están cerca y todavía existen.
+                  para llamar a lxs que están cerca y todavía existen aunque las personas sean
+                  monógamas.
                </Text>
             </AnalyticsTrackWhenVisible>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               En el neolítico se inventa la monogamia para casar hijxs por motivos comerciales y la
-               familia pequeña favorece la acumulación personal de la riqueza, finalmente durante la
-               inquisición queda la monogamia como la única opción luego de ser impuesta a la
-               fuerza.
+               En el neolítico aparece la monogamia por que convenía para casar hijxs por motivos
+               comerciales y la familia pequeña favorece la acumulación personal de la riqueza. Pero
+               es durante la inquisición cuando queda la monogamia como la única opción luego de ser
+               impuesta a la fuerza por la clase dominante debido a que la sexualidad grupal,
+               familia grupal y otras formas de agrupación generaban vínculos entre personas que
+               decantaban en cooperación e intercambio sin dinero, haciendo menos necesario el
+               salario y menos necesario el trabajar para la clase dominante a cambio de ese
+               salario.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Hay mucha investigación sobre el tema, en libros como los de Cacilda Jethá y
-               Christopher Ryan, diversas autoras feministas o Marx y Engels: "El origen de la
-               familia, la propiedad privada y el estado".
+               Esta información se encuentra una y otra vez en muchos libros de historia como los de
+               Cacilda Jethá y Christopher Ryan, diversas autoras feministas o el libro de Marx y
+               Engels: "El origen de la familia, la propiedad privada y el estado".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
@@ -124,8 +129,8 @@ const AboutPage: FC = () => {
                ¿Quienes hicieron este proyecto?
             </TitleText>
             <Text style={styles.text}>
-               La idea y dirección es de un informático de Argentina, junto con el trabajo de
-               diferentes profesionales colaborando ig: @group.date. Ilustraciones por "Fiebre" ig:
+               La idea y dirección es de un informático de Argentina, junto con el trabajo de otros
+               informáticos que colaboran ig: @group.date. Ilustraciones por "Fiebre" ig:
                @fiebrediseno. Presencia en redes por "Amor Libre y Memes" ig: @amorlibreymemes
             </Text>
             <TitleText extraSize style={styles.title}>
