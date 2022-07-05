@@ -47,13 +47,13 @@ const ContactPage: FC = () => {
       <>
          <AppBarHeader onBackPress={goBack} />
          <BasicScreenContainer style={styles.mainContainer}>
-            <TitleText extraSize style={styles.title}>
+            {/* <TitleText extraSize style={styles.title}>
                Grupo de Facebook para intercambiar ideas y aportes
             </TitleText>
             <EmptySpace height={15} />
             <Button onPress={handleCollaborationGroupPress} mode="text" color={colors.accent2}>
                Visitar grupo de Facebook
-            </Button>
+            </Button> */}
             <EmptySpace height={15} />
             <TitleText extraSize style={styles.title}>
                Nuestras cuentas en redes sociales
