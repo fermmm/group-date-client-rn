@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { List, Text } from "react-native-paper";
 import { ActivityAction } from "expo-intent-launcher";
+import moment from "moment";
 import { openDeviceAction } from "../../../common-tools/device-native-api/device-action/openDeviceAction";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import BasicScreenContainer from "../../common/BasicScreenContainer/BasicScreenContainer";
@@ -16,12 +17,17 @@ import { getAppVersion } from "../../../common-tools/device-native-api/versions/
 import { useAuthentication } from "../../../api/authentication/useAuthentication";
 import { useAccountDelete } from "./tools/useAccountDelete";
 import LegalLinks from "../LoginPage/LegalLinks/LegalLinks";
+import { useDialogModal } from "../../common/DialogModal/tools/useDialogModal";
+import { DAY_IN_SECONDS } from "../../../api/tools/date-tools";
+import { humanizeUnixTime } from "../../../common-tools/strings/humanizeUnixTime";
 
 const SettingsPage: FC = () => {
    const { navigate } = useNavigation();
    const { logout } = useAuthentication();
    const { data: localUser } = useUser();
    const { handleAccountDelete, isLoading: accountDeleteLoading } = useAccountDelete();
+   const { openDialogModal } = useDialogModal();
+   const ALLOW_COUPLE_PROFILE_CHANGE_AFTER_DAYS = 10;
 
    if (!localUser || accountDeleteLoading) {
       return <LoadingAnimation renderMethod={RenderMethod.FullScreen} />;
@@ -68,9 +74,19 @@ const SettingsPage: FC = () => {
                <List.Icon {...props} style={styles.optionIcon} icon="account-multiple" />
             )}
             onPress={() =>
-               navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
-                  questionToShow: ["q05"]
-               })
+               (localUser.coupleProfileLastChangeDate ?? 0) <
+                  moment().unix() - DAY_IN_SECONDS * ALLOW_COUPLE_PROFILE_CHANGE_AFTER_DAYS ||
+               localUser.isAdmin
+                  ? navigate<ParamsRegistrationFormsPage>("RegistrationForms", {
+                       questionToShow: ["q05"]
+                    })
+                  : openDialogModal({
+                       message: `Se puede cambiar el tipo de perfil cada ${ALLOW_COUPLE_PROFILE_CHANGE_AFTER_DAYS} días, dentro de ${humanizeUnixTime(
+                          DAY_IN_SECONDS * ALLOW_COUPLE_PROFILE_CHANGE_AFTER_DAYS -
+                             (moment().unix() - (localUser.coupleProfileLastChangeDate ?? 0))
+                       )} lo podrás cambiar`,
+                       buttons: [{ label: "Entendido" }]
+                    })
             }
          />
          <List.Item
@@ -128,7 +144,7 @@ const SettingsPage: FC = () => {
             onPress={() => navigate("Chat", { contactChat: true })}
          /> */}
          <List.Item
-            title="Participa y contactanos"
+            title="Participa y contáctanos"
             description="Descubre nuestros canales de participación y comunicación"
             left={props => <List.Icon {...props} style={styles.optionIcon} icon="forum" />}
             onPress={() => navigate("ContactPage")}

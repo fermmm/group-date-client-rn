@@ -114,6 +114,8 @@ export const editableUserPropsList: EditableUserPropKey[] = Object.keys({
    ...OTHER_USER_PROPS_SCHEMA,
 }) as EditableUserPropKey[];
 
+export const editableUserPropListAsSet = new Set(editableUserPropsList);
+
 // Function to validate user props
 export const validateUserProps = v.compile({
    ...REQUIRED_USER_PROPS_SCHEMA,
