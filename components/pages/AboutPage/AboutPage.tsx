@@ -79,7 +79,7 @@ const AboutPage: FC = () => {
                like.
             </Text>
             <TitleText extraSize style={styles.title}>
-               ¿No es como "de otro mundo" esta propuesta?
+               Esta propuesta me parece "de otro mundo"
             </TitleText>
             <Text style={styles.text}>
                Proponemos divertirnos y ya, pero para que no se considere como "de otro mundo"
@@ -114,9 +114,10 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Esta información se encuentra una y otra vez en muchos libros de historia como los de
-               Cacilda Jethá y Christopher Ryan, diversas autoras feministas o el libro de Marx y
-               Engels: "El origen de la familia, la propiedad privada y el estado".
+               Esta información se encuentra una y otra vez en muchos libros como los de Cacilda
+               Jethá y Christopher Ryan, diversas autoras feministas, "Caliban y la bruja" de Silvia
+               Federici o el libro de Marx y Engels: "El origen de la familia, la propiedad privada
+               y el estado".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
@@ -129,9 +130,14 @@ const AboutPage: FC = () => {
                ¿Quienes hicieron este proyecto?
             </TitleText>
             <Text style={styles.text}>
-               La idea y dirección es de un informático de Argentina, junto con el trabajo de otros
-               informáticos que colaboran ig: @group.date. Ilustraciones por "Fiebre" ig:
-               @fiebrediseno. Presencia en redes por "Amor Libre y Memes" ig: @amorlibreymemes
+               La idea y dirección es de un informático de Argentina, con colaboración de otros
+               informáticos ig: @group.date
+            </Text>
+            <EmptySpace height={15} />
+            <Text style={styles.text}>Ilustraciones por "Fiebre" ig: @fiebrediseno</Text>
+            <EmptySpace height={15} />
+            <Text style={styles.text}>
+               Presencia en redes por "Amor Libre y Memes" ig: @amorlibreymemes
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿En base a que criterios me recomienda personas la app?

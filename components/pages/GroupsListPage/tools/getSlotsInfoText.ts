@@ -22,11 +22,11 @@ export function getSlotStatusInfoText(
          const timeSinceGroupCreated = moment().unix() - creationDate;
          const releaseTimeLeft = slot.releaseTime - timeSinceGroupCreated;
 
-         result = `Se permite ${slot.amount} cita${
+         result = `Se permite ${slot.amount} grupo${
             slot.amount > 1 ? "s" : ""
          } al mismo tiempo, dentro de ${humanizeUnixTime(
             releaseTimeLeft
-         )} podrás tener una nueva. Si se forma una cita grande se ignora la restricción.`;
+         )} podrás tener uno nuevo. Si se forma uno muy grande se ignora la restricción.`;
       }
    });
 
