@@ -24,17 +24,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       resizeMode: "cover",
       backgroundColor: "#000000"
    },
-   version: "1.4.3",
+   version: "1.4.4",
    android: {
       package: "com.poly.dates",
-      versionCode: 143,
+      versionCode: 144,
       useNextNotificationsApi: true,
       permissions: ["CAMERA", "CAMERA_ROLL", "ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       googleServicesFile: "./android/app/google-services.json"
    },
    ios: {
       bundleIdentifier: "com.poly.dates",
-      buildNumber: "1.4.3",
+      buildNumber: "1.4.4",
       supportsTablet: false,
       infoPlist: {
          CFBundleAllowMixedLocalizations: true,
