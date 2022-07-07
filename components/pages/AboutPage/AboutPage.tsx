@@ -114,10 +114,10 @@ const AboutPage: FC = () => {
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>
-               Esta información se encuentra una y otra vez en muchos libros como los de Cacilda
-               Jethá y Christopher Ryan, diversas autoras feministas, "Caliban y la bruja" de Silvia
-               Federici o el libro de Marx y Engels: "El origen de la familia, la propiedad privada
-               y el estado".
+               Esta información se encuentra una y otra vez en casi todos los libros que buscan
+               informar sobre el tema, de los cuales recomendamos los de Cacilda Jethá y Christopher
+               Ryan, "Caliban y la bruja" de Silvia Federici o el libro de Marx y Engels: "El origen
+               de la familia, la propiedad privada y el estado".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Hay que pagar algo?
