@@ -21,13 +21,17 @@ interface PropsNoMoreUsersMessage {
 
 const NoMoreUsersMessage: FC<PropsNoMoreUsersMessage> = ({ onViewDislikedUsersPress }) => {
    const [sendNewUsersNotification, setSendNewUsersNotification] = useState<number>(1);
-   const {
+   let {
       value: sendNotificationChecked,
       setValue: setSendNotificationChecked,
       refresh: refreshSendNotificationChecked
    } = useLocalStorage<boolean>(LocalStorageKey.NewUsersNotificationTempCheckbox);
    const { token } = useAuthentication();
    const { data: user } = useUser();
+   // This is currently the way to set the default value without any side effect:
+   if (sendNotificationChecked === null) {
+      sendNotificationChecked = true;
+   }
 
    // Effect to mutate the server when the UI changes
    useEffect(() => {
