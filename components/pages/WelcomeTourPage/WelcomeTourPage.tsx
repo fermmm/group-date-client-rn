@@ -188,8 +188,8 @@ const WelcomeTourPage: FC = () => {
                         <TitleText style={styles.title}>COMO EN OTRAS ÉPOCAS</TitleText>
                         <Text style={styles.text}>
                            Puede parecer una propuesta de otro mundo pero las relaciones en grupo,
-                           sin parejas, fueron siempre lo más popular hasta que se dió un cambio
-                           cultural forzado por el sistema económico
+                           sin parejas, fueron algo común hasta que se dió un cambio cultural de
+                           manera forzada
                         </Text>
                         {renderButtonContinue()}
                      </View>
