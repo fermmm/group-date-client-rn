@@ -187,9 +187,9 @@ const WelcomeTourPage: FC = () => {
                      <View style={styles.textContainer}>
                         <TitleText style={styles.title}>COMO EN OTRAS ÉPOCAS</TitleText>
                         <Text style={styles.text}>
-                           Puede parecer una propuesta de otro mundo pero las relaciones en grupo,
-                           sin parejas, fueron algo común hasta que se dió un cambio cultural de
-                           manera forzada
+                           Puede parecer una propuesta de otro mundo pero relacionarse en grupo, sin
+                           parejas, fue siempre una costumbre muy común hasta que se dió un cambio
+                           cultural de manera forzada
                         </Text>
                         {renderButtonContinue()}
                      </View>
