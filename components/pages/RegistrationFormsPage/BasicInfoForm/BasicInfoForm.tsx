@@ -218,6 +218,14 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
          <MonthSelector value={birthMonth} onChange={newMonth => setBirthMonth(newMonth)} />
          <EmptySpace />
          <TextInputExtended
+            title="Tu altura en centímetros (opcional) ej: 160"
+            titleLine2="Este dato para algunxs es muy importante y a otrxs no les importa"
+            mode="outlined"
+            keyboardType="number-pad"
+            value={height ? height.toString() : ""}
+            onChangeText={t => setHeight(Number(formValidators.bodyHeight(t).result.text) || 0)}
+         />
+         <TextInputExtended
             title="¿Con qué nombre se conoce mejor tu ciudad o región?"
             titleLine2="Este dato les servirá a lxs demás para saber más o menos de donde eres"
             errorText={getCityNameError()}
@@ -240,14 +248,6 @@ export const BasicInfoForm: FC<PropsBasicInfoForm> = ({ initialData, onChange, f
                   />
                )
             }
-         />
-         <TextInputExtended
-            title="Tu altura en centímetros (opcional) ej: 160"
-            titleLine2="Este dato para algunxs es muy importante y a otrxs no les importa"
-            mode="outlined"
-            keyboardType="number-pad"
-            value={height ? height.toString() : ""}
-            onChangeText={t => setHeight(Number(formValidators.bodyHeight(t).result.text) || 0)}
          />
       </View>
    );
