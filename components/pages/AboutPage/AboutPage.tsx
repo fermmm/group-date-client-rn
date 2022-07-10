@@ -42,12 +42,8 @@ const AboutPage: FC = () => {
             <Text style={styles.text}>
                Por ejemplo una pareja donde se conocen y se entienden hace tiempo van a tener más
                control en todo lo que suceda sobre esa tercera persona que se les suma, es una
-               propuesta de trio pero también de jerarquía oculta. Es difícil encontrar a esa
-               tercera persona y se les dice "unicornio".
-            </Text>
-            <EmptySpace height={15} />
-            <Text style={styles.text}>
-               El swinger tiene más éxito pero también es problemático por el concepto de pareja.
+               propuesta de trio pero también de jerarquía oculta. Es difícil encontrar a la tercera
+               persona que acepta esa relación y por eso se les dice "unicornio".
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
@@ -79,11 +75,12 @@ const AboutPage: FC = () => {
                like.
             </Text>
             <TitleText extraSize style={styles.title}>
-               Esta propuesta me parece "de otro mundo"
+               Esta propuesta me parece de otro mundo
             </TitleText>
             <Text style={styles.text}>
-               Proponemos divertirnos y ya, pero para que no se considere como "de otro mundo"
-               divulgamos un poco sobre su historia por si a alguien le interesa:
+               Proponemos divertirnos y ya, pero queremos aclarar que esta propuesta es muy de este
+               mundo y para eso divulgamos un poco sobre historia del poliamor por si a alguien le
+               interesa:
             </Text>
             <EmptySpace height={15} />
             <AnalyticsTrackWhenVisible
