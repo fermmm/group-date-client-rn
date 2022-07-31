@@ -237,8 +237,9 @@ const WelcomeTourPage: FC = () => {
                      <View style={styles.textContainer}>
                         <TitleText style={styles.title}>GRATIS Y ÉTICA</TitleText>
                         <Text style={styles.text}>
-                           GroupDate siempre será gratis y ética. Si te gusta, no olvides ayudar a
-                           difundirla desde tus posibilidades
+                           GroupDate es gratis, hecha solo por diversión y disponible en todo el
+                           mundo. Si te gusta, no olvides ayudarnos a difundirla desde tus
+                           posibilidades
                         </Text>
                         {renderButtonContinue()}
                      </View>

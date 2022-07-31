@@ -227,7 +227,7 @@ const ProfileCard: FC<ProfileCardProps> = props => {
                               }
                            />
                         )}
-                        {tagsSubscribedInCommon && (
+                        {tagsSubscribedInCommon?.length > 0 && (
                            <>
                               <Text style={styles.tagsTitleText}>Tags en común:</Text>
                               <View style={styles.tagsListContainer}>

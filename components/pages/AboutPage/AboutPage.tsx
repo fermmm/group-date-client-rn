@@ -47,13 +47,12 @@ const AboutPage: FC = () => {
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Se pueden generar citas desequilibradas? Ej: 1 persona se gusta con 5 que no se
-               gustan entre ellas (estilo harem)
+               gustan entre ellas (estilo árabes)
             </TitleText>
             <Text style={styles.text}>
                No. Solo se generan grupos más o menos equilibrados, por ejemplo cuando se da un
                grupo 100% heterosexual la cantidad de mujeres y hombres siempre va a ser mas o menos
-               igual. Si no funcionara así habrían casos al azar de situaciones injustas o
-               jerarquías no solicitadas.
+               igual. Si no funcionara así habrían casos al azar de situaciones injustas.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿En la cita grupal van a ser todxs del género y sexualidad que me gusta?
@@ -120,15 +119,15 @@ const AboutPage: FC = () => {
                ¿Hay que pagar algo?
             </TitleText>
             <Text style={styles.text}>
-               No, esta app es y será siempre gratis, sin fines comerciales. Tal vez pidamos
-               donaciones en algún momento.
+               No, esta app es y será siempre gratis sin fines comerciales, la hicimos solo por
+               diversión. Tal vez pidamos donaciones en algún momento.
             </Text>
             <TitleText extraSize style={styles.title}>
                ¿Quienes hicieron este proyecto?
             </TitleText>
             <Text style={styles.text}>
-               La idea y dirección es de un informático de Argentina, con colaboración de otros
-               informáticos ig: @group.date
+               La idea y dirección es de un informático de Argentina, con aportaciones de otrxs
+               informáticxs ig: @group.date
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>Ilustraciones por "Fiebre" ig: @fiebrediseno</Text>
