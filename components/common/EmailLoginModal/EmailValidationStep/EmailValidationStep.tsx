@@ -5,7 +5,7 @@ import { EmailLoginCredentials } from "../../../../api/server/shared-tools/endpo
 import { useAppState } from "../../../../common-tools/device-native-api/state/useAppState";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
-import { currentTheme } from "../../../../config";
+import { currentTheme, LOCALHOST_MODE } from "../../../../config";
 import TitleMediumText from "../../TitleMediumText/TitleMediumText";
 import TitleText from "../../TitleText/TitleText";
 import {
@@ -95,7 +95,7 @@ const EmailValidationStep: FC<PropsEmailValidationStep> = props => {
       const appUrl = getLinkToApp();
 
       setIsLoading(true);
-      emailLoginCreateAccountPost({ ...credentials, appUrl })
+      emailLoginCreateAccountPost({ ...credentials, appUrl, logLinkOnConsole: LOCALHOST_MODE })
          .then(() => {
             setIsLoading(false);
          })

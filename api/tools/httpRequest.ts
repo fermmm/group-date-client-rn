@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import I18n from "i18n-js";
 import Constants, { AppOwnership } from "expo-constants";
@@ -161,22 +162,26 @@ export function getServerUrl(): string {
 
 /**
  * Currently this function only replaces the localhost part of the url by the local address of the development
- * machine otherwise localhost will be the localhost of the phone and not the machine one, if the app is
- * executing in production there is no localhost part on the url so it remains unchanged.
+ * machine otherwise localhost will be the localhost of the phone (or emulator) and not the machine one, if the app is
+ * executing in production there is no localhost part on the url so this function does nothing and returns the string unchanged.
  */
 export function prepareUrl(url: string): string {
-   if (Constants.appOwnership !== AppOwnership.Expo) {
-      return url;
-   }
-
    if (!url.includes("localhost") && !url.includes("127.0.0.1")) {
       return url;
    }
 
    let newUrl = url;
 
-   newUrl = newUrl.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
-   newUrl = newUrl.replace("127.0.0.1", Constants.manifest.debuggerHost.split(`:`).shift());
+   if (Constants.appOwnership === AppOwnership.Expo) {
+      // Expo maps Constants.manifest.debuggerHost to the localhost address of the development machine (we need to remove the port part)
+      newUrl = newUrl.replace("localhost", Constants.manifest.debuggerHost.split(`:`).shift());
+      newUrl = newUrl.replace("127.0.0.1", Constants.manifest.debuggerHost.split(`:`).shift());
+   } else if (Platform.OS === "android") {
+      // Android emulator maps 10.0.2.2 to the localhost address of the development machine
+      newUrl = newUrl.replace("localhost", "10.0.2.2");
+      newUrl = newUrl.replace("127.0.0.1", "10.0.2.2");
+   }
+   // IOS emulator does not need any of this because maps localhost address of the development machine to the localhost address of the phone (or emulator)
 
    return newUrl;
 }
