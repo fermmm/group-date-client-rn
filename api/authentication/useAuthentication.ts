@@ -227,6 +227,23 @@ function useTokenCheck(props: {
    return { isValid, isLoading };
 }
 
+export function useCustomToken(token?: string) {
+   const [isLoading, setIsLoading] = useState<boolean>(true);
+   const [done, setDone] = useState<boolean>(false);
+
+   if (!token) {
+      return { isLoading: false, done: true };
+   }
+
+   saveOnDevice(LocalStorageKey.AuthenticationToken, token, { secure: true }).then(() => {
+      fasterTokenCache = token;
+      setDone(true);
+      setIsLoading(false);
+   });
+
+   return { isLoading, done };
+}
+
 /**
  * Calls getNewToken() only once if cannot login but the token is present, has the same effect of
  * the user pressing the login button (once) but without requiring the user to do it. If cannot login

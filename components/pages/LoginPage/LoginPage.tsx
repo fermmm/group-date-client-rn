@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Styles } from "../../../common-tools/ts-tools/Styles";
 import { LogoSvg } from "../../../assets/Logo";
 import { currentTheme } from "../../../config";
-import { useAuthentication } from "../../../api/authentication/useAuthentication";
+import { useAuthentication, useCustomToken } from "../../../api/authentication/useAuthentication";
 import { useTheme } from "../../../common-tools/themes/useTheme/useTheme";
 import { useIsFocused } from "@react-navigation/native";
 import { useServerInfo } from "../../../api/server/server-info";
@@ -28,6 +28,10 @@ import { useShouldRedirectToRequiredPage } from "../../../common-tools/navigatio
 import LegalLinks from "./LegalLinks/LegalLinks";
 import LoginError from "./LoginError/LoginError";
 
+// DONT COMMIT A CHANGE ON THIS LINE. This allows to login as a user if you have the token, use it for temporal debug sessions.
+// const customToken = "asd[asd]1234";
+const customToken = null; // This disables the login as another user.
+
 const LoginPage: FC = () => {
    const { colors } = useTheme();
    const { navigateWithoutHistory, navigate } = useNavigation();
@@ -44,9 +48,10 @@ const LoginPage: FC = () => {
       serverInfoData.buildVersionIsCompatible;
 
    // Authenticate user
+   const { done: customTokenDone } = useCustomToken(customToken); // For debugging purposes
    const auth = useAuthentication(null, {
       checkTokenIsValid: true,
-      enabled: canUseServer === true
+      enabled: canUseServer === true && customTokenDone === true
    });
 
    // If we have a valid user token and finished updating the login props we check if there is any user
