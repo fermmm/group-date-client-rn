@@ -38,7 +38,9 @@ export const MAX_AGE_ALLOWED: number = 90;
 /**
  * Distances values available in KM
  */
-export const AVAILABLE_DISTANCES: number[] = [50, 60, 70, 80, 90, 200, 600, 1000];
+export const AVAILABLE_DISTANCES: number[] = [
+   50, 60, 70, 80, 90, 100, 140, 180, 200, 400, 800, 1000
+];
 
 /**
  * If USE_AUTOMATIC_TARGET_DISTANCE is true then the target distance is this value. It must be a value from
