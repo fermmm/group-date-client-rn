@@ -95,7 +95,7 @@ const WelcomeTourPage: FC = () => {
                            ¡BIENVENIDX!
                         </TitleText>
                         <Text style={styles.text}>
-                           GroupDate es la primera app de citas grupales. Cuando se gustan entre
+                           GroupDate es la primera app de citas grupales. Cuando se dan like entre
                            muchxs se habilita un chat grupal
                         </Text>
                         {renderButtonContinue()}
@@ -116,7 +116,8 @@ const WelcomeTourPage: FC = () => {
                         PENSAMIENTO DE GRUPO
                      </TitleText>
                      <Text style={[styles.text, { color: "#502E92" }]}>
-                        Ahora podrás saber que pasa cuando formamos grupos y no parejas
+                        Ahora podrás saber que pasa cuando formamos grupos y no parejas. Se puede
+                        usar para fiestas, no-monogamia, amistad y cualquier actividad grupal.
                      </Text>
                      {renderButtonContinue({ color: "#502E92" })}
                   </View>
@@ -211,8 +212,8 @@ const WelcomeTourPage: FC = () => {
                         SIN PRECONCEPTOS
                      </TitleText>
                      <Text style={[styles.text, { color: "#502E92" }]}>
-                        No hacen falta grandes casualidades, que se gusten todxs entre sí al 100% ni
-                        que cumplas un rol o una expectativa en particular
+                        No hacen falta grandes casualidades, que se den like todxs entre sí al 100%
+                        ni que cumplas un rol o una expectativa en particular
                      </Text>
                      {renderButtonContinue({ color: "#502E92" })}
                   </View>
@@ -237,9 +238,8 @@ const WelcomeTourPage: FC = () => {
                      <View style={styles.textContainer}>
                         <TitleText style={styles.title}>GRATIS Y ÉTICA</TitleText>
                         <Text style={styles.text}>
-                           GroupDate es gratis, hecha solo por diversión y disponible en todo el
-                           mundo. Si te gusta, no olvides ayudarnos a difundirla desde tus
-                           posibilidades
+                           GroupDate es gratis, hecha solo por diversión. Si te gusta, no olvides
+                           ayudarnos a difundirla desde tus posibilidades
                         </Text>
                         {renderButtonContinue()}
                      </View>
