@@ -28,6 +28,7 @@ export interface PropsBubble {
    ownMessageBubbleColor?: string;
    ownMessageNameColor?: string;
    externalMessageBubbleColor?: string;
+   maxLines?: number;
 }
 
 const Bubble: FC<PropsBubble> = props => {
@@ -45,7 +46,8 @@ const Bubble: FC<PropsBubble> = props => {
       extraDarkBackground = false,
       ownMessageBubbleColor,
       ownMessageNameColor,
-      externalMessageBubbleColor
+      externalMessageBubbleColor,
+      maxLines
    } = props;
    const {
       authorName,
@@ -117,7 +119,13 @@ const Bubble: FC<PropsBubble> = props => {
                   <Text style={[styles.nameText, { color: finalNameColor }]}>{authorName}</Text>
                )}
                {textContent && (
-                  <Text style={[styles.textContent, { color: textColor }]}>{textContent}</Text>
+                  <Text
+                     style={[styles.textContent, { color: textColor }]}
+                     numberOfLines={maxLines || undefined}
+                     ellipsizeMode="tail"
+                  >
+                     {textContent}
+                  </Text>
                )}
                {time != null && !compact && showDate && (
                   <Text style={[styles.timeText, { color: finalNameColor }]}>

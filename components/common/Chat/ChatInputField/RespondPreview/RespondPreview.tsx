@@ -48,6 +48,7 @@ const RespondPreview: FC<PropsRespondPreview> = props => {
                ownMessageBubbleColor={ownMessageBubbleColor}
                ownMessageNameColor={ownMessageNameColor}
                externalMessageBubbleColor={externalMessageBubbleColor}
+               maxLines={2}
             />
          </View>
       </View>
