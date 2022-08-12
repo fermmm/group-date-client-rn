@@ -30,6 +30,8 @@ import { useGroupSeenChecker } from "../GroupsListPage/tools/useGroupSeenChecker
 import { decodeString } from "../../../api/server/shared-tools/utility-functions/decodeString";
 import { GroupChat } from "../../../api/server/shared-tools/endpoints-interfaces/groups";
 import { useDialogModal } from "../../common/DialogModal/tools/useDialogModal";
+import { HelpBanner } from "../../common/HelpBanner/HelpBanner";
+import { DAY_IN_SECONDS } from "../../../api/tools/date-tools";
 
 export interface ChatPageState {
    isContactChat: boolean;
@@ -261,19 +263,15 @@ const ChatPage: FC = () => {
             onReplyPress={handleMessageReply}
          />
          <PageBackgroundGradient>
-            {/* 
-               !isContactChat && (
-                  <HelpBanner
-                     showCloseButton
-                     animate={false}
-                     text={
-                        "Concejo: El medio escrito desmotiva a socializar en persona, es mejor usarlo con moderación."
-                     }
-                     rememberClose={true}
-                     rememberCloseTimeInSeconds={DAY_IN_SECONDS * 3}
-                  />
-               )
-            */}
+            {/* {!isContactChat && (
+               <HelpBanner
+                  showCloseButton
+                  animate={false}
+                  text={"Recuerda que nuestra propuesta es que salgas de tu casa."}
+                  rememberClose={true}
+                  rememberCloseTimeInSeconds={DAY_IN_SECONDS * 2}
+               />
+            )} */}
             <Chat
                messages={messages}
                onSend={handleSend}
