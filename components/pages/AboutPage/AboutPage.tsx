@@ -103,10 +103,9 @@ const AboutPage: FC = () => {
                comerciales y la familia pequeña favorece la acumulación personal de la riqueza. Pero
                es durante la inquisición cuando queda la monogamia como la única opción luego de ser
                impuesta a la fuerza por la clase dominante debido a que la sexualidad grupal,
-               familia grupal y otras formas de agrupación generaban vínculos entre personas que
-               decantaban en cooperación e intercambio sin dinero, haciendo menos necesario el
-               salario y menos necesario el trabajar para la clase dominante a cambio de ese
-               salario.
+               familia grupal y otras formas de agrupación conducen a cooperación e intercambio sin
+               dinero, haciendo menos necesario el salario y menos necesario el trabajar para la
+               clase dominante a cambio de ese salario.
             </Text>
             <EmptySpace height={15} />
             <Text style={styles.text}>

@@ -1,6 +1,6 @@
 module.exports = {
    SERVER_URL_DEVELOPMENT: "http://localhost:8080/api/",
-   SERVER_URL_PRODUCTION: "http://poly-env.eba-mce3nhsg.us-east-1.elasticbeanstalk.com/api/",
+   SERVER_URL_PRODUCTION: "https://groupdateapp.com/api/",
 
    // Authentication:
    GOOGLE_CLIENT_WEB_EXPO:
