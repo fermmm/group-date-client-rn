@@ -17,7 +17,11 @@ import {
    FACEBOOK_LOGIN_ENABLED,
    GOOGLE_LOGIN_ENABLED
 } from "../../../../config";
-import { FACEBOOK_APP_ID, FACEBOOK_APP_NAME, GOOGLE_CLIENT_WEB_EXPO } from "../../../../env.config";
+import {
+   FACEBOOK_APP_ID,
+   FACEBOOK_APP_NAME,
+   GOOGLE_CLIENT_WEB_EXPO
+} from "../../../../.env.config";
 import { useAdultConfirmDialog } from "../../../common/AdultConfirmModal/tools/useAdultConfirmModa";
 import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
 

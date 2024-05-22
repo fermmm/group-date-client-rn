@@ -8,7 +8,7 @@ import {
    MESSAGE_SENDER_ID,
    PROJECT_ID,
    STORAGE_BUCKET
-} from "./env.config";
+} from "./.env.config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
    ...config,

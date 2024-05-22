@@ -4,7 +4,7 @@ import { Text } from "react-native-paper";
 import { useTheme } from "../../../../common-tools/themes/useTheme/useTheme";
 import { Styles } from "../../../../common-tools/ts-tools/Styles";
 import { currentTheme } from "../../../../config";
-import { WEBSITE_URL } from "../../../../env.config";
+import { WEBSITE_URL } from "../../../../.env.config";
 import ButtonStyled from "../../../common/ButtonStyled/ButtonStyled";
 
 interface PropsErrorText {

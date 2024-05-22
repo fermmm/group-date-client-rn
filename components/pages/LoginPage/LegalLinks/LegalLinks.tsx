@@ -9,7 +9,7 @@ import {
    COMMUNITY_GUIDELINES_URL,
    PRIVACY_POLICY_URL,
    TERMS_AND_CONDITIONS_URL
-} from "../../../../env.config";
+} from "../../../../.env.config";
 
 interface PropsLegalLinks {
    visible?: boolean;

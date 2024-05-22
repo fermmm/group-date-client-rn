@@ -4,7 +4,7 @@ import * as Google from "expo-auth-session/providers/google";
 import Constants, { AppOwnership } from "expo-constants";
 import { showRequestErrorAlert } from "../../../tools/showRequestErrorAlert";
 import { tryToGetErrorMessage } from "../../../tools/httpRequest";
-import { GOOGLE_CLIENT_WEB_EXPO } from "../../../../env.config";
+import { GOOGLE_CLIENT_WEB_EXPO } from "../../../../.env.config";
 
 WebBrowser.maybeCompleteAuthSession();
 

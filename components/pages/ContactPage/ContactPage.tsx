@@ -16,7 +16,7 @@ import {
    FACEBOOK_PAGE,
    INSTAGRAM_PAGE,
    WEBSITE_URL
-} from "../../../env.config";
+} from "../../../.env.config";
 
 const ContactPage: FC = () => {
    const { goBack } = useGoBackExtended({

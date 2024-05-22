@@ -5,7 +5,7 @@ import Constants, { AppOwnership } from "expo-constants";
 import { showRequestErrorAlert } from "./showRequestErrorAlert";
 import { finishMeasureTime, measureTime } from "../../common-tools/js-tools/measureTime";
 import { analyticsResponseTimeLog } from "../../common-tools/analytics/tools/analyticsRequestTimeLog";
-import { SERVER_URL_DEVELOPMENT, SERVER_URL_PRODUCTION } from "../../env.config";
+import { SERVER_URL_DEVELOPMENT, SERVER_URL_PRODUCTION } from "../../.env.config";
 import { LOCALHOST_MODE } from "../../config";
 
 export interface AxiosRequestConfigExtended extends AxiosRequestConfig {
