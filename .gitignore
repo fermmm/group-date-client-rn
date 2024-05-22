@@ -7,7 +7,8 @@ npm-debug.*
 *.mobileprovision
 package-lock.json
 .env
-env.config.ts
+env.config.js
+android/app/src/main/res/values/strings.xml
 .DS_Store
 google-services.json
 /builds
